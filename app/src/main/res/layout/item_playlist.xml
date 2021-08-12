@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@android:color/black"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_song_item"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/padding_left_right_item"
+    android:paddingRight="@dimen/padding_left_right_item">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_item_5"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_item_5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/tvNamePlaylist"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#fff"
+                android:textSize="@dimen/text_size_20"
+                android:textStyle="bold"
+                font:fontText="fonts/BebasNeue_Book.otf"
+                tools:text="DE-STRESS" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/txt_delete"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size_large"
+                    font:fontText="fonts/BebasNeue_Book.otf" />
+
+                <ImageView
+                    android:id="@+id/imvLocked"
+                    android:layout_width="@dimen/width_add_icon"
+                    android:layout_height="@dimen/width_add_icon"
+                    android:layout_gravity="center"
+                    android:padding="2dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_lock"
+                    android:visibility="gone"
+                    font:tint="#808080" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="@string/txt_total_time"
+                android:textColor="#fff"
+                android:textSize="@dimen/text_size_small_11"
+                font:fontText="fonts/BebasNeue_Book.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="0:25:00"
+                android:textColor="#fff"
+                android:textSize="@dimen/text_size_small_11"
+                font:fontText="fonts/BebasNeue_Book.otf" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFFFFF" />
+</LinearLayout>

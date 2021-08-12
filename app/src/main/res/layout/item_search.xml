@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/padding_left_right_item"
+    android:layout_height="wrap_content">
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:singleLine="true"
+        android:layout_marginLeft="@dimen/margin_item_5"
+        android:layout_marginRight="@dimen/margin_item_5"
+        android:background="@color/transparent"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size_nomarl"
+        tools:text="Life Force the Source of Qi"
+        app:fontText="fonts/HelveticaNeue_Thin.otf" />
+</LinearLayout>

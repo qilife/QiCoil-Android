@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#283266">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_item_dialog"
+                android:layout_marginTop="@dimen/margin_item_dialog"
+                android:layout_marginRight="@dimen/margin_item_dialog"
+                android:layout_marginBottom="@dimen/margin_item_dialog"
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/mTvTitleTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:padding="@dimen/margin_right_ic_delete"
+                    android:text="@string/tv_sign_in"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_large"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <ImageView
+                    android:layout_width="@dimen/image_size_54"
+                    android:layout_height="@dimen/image_size_54"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/launcher"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:id="@+id/mViewSignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginRight="@dimen/margin_item_dialog"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/mViewEdEmailSignIn"
+                        android:layout_width="@dimen/minwidth_dialog"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/padding_edittext_dialog"
+                        android:layout_marginTop="@dimen/margin_item_5"
+                        android:layout_marginRight="@dimen/padding_edittext_dialog"
+                        android:orientation="vertical">
+
+                        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
+                            android:id="@+id/mEdEmailSignIn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:gravity="center"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:textColor="#FFF"
+                            android:textColorHint="#FFF"
+                            font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="2.5dp"
+                            android:contentDescription="@string/tv_email"
+                            android:src="@drawable/bg_line_edittext" />
+                    </LinearLayout>
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/padding_left_right_item_title"
+                        android:text="@string/tv_email"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small_11"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <LinearLayout
+                        android:id="@+id/mViewEdPasswordSignIn"
+                        android:layout_width="@dimen/minwidth_dialog"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/padding_edittext_dialog"
+                        android:layout_marginTop="@dimen/margin_item_5"
+                        android:layout_marginRight="@dimen/padding_edittext_dialog"
+                        android:orientation="vertical">
+
+                        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
+                            android:id="@+id/mEdPasswordSignIn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:gravity="center"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPassword"
+                            android:textColor="#FFF"
+                            android:textColorHint="#FFF"
+                            font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="2.5dp"
+                            android:contentDescription="@string/tv_password"
+                            android:src="@drawable/bg_line_edittext" />
+                    </LinearLayout>
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/padding_left_right_item_title"
+                        android:text="@string/tv_password"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small_11"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/mBtnSignIn"
+                        android:layout_width="@dimen/width_button"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_item_5"
+                        android:background="@drawable/bg_continue_subscription"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/padding_top_icon"
+                        android:paddingBottom="@dimen/padding_top_icon"
+                        android:text="@string/tv_sign_in"
+                        android:textColor="@color/text_title_button"
+                        android:textSize="@dimen/text_size_small_11"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/mTvForgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/padding_left_right_item_title"
+                        android:text="@string/tv_forgotten_password"
+                        android:textColor="@color/text_title_profile"
+                        android:textSize="@dimen/text_size_small_11"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/padding_left_right_item_title">
+
+                        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_signUp"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_small_11"
+                            font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                            android:id="@+id/mTvSignUp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginLeft="2dp"
+                            android:text="@string/tv_link_sign_up"
+                            android:textColor="@color/text_title_profile"
+                            android:textSize="@dimen/text_size_small_11"
+                            font:fontText="fonts/MyriadPro_Semibold.otf" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+</FrameLayout>

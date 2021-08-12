@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "890559022542",
+    "firebase_url": "https://qicoil-e83d2.firebaseio.com",
+    "project_id": "qicoil-e83d2",
+    "storage_bucket": "qicoil-e83d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890559022542:android:8489d8a29ccbb64578179f",
+        "android_client_info": {
+          "package_name": "com.Meditation.Sounds.frequencies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890559022542-8mj4gre6js45vlg81bjt0p61m7520apc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Meditation.Sounds.frequencies",
+            "certificate_hash": "22075dff5fb623190282168093b44588c0ab27ea"
+          }
+        },
+        {
+          "client_id": "890559022542-e6cubir15jol3klbbv5af94l627u3shn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsIo_T6py8tvZFIjYIM0RcjEozy5R3aEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890559022542-e6cubir15jol3klbbv5af94l627u3shn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

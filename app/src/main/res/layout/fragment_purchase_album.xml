@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".lemeor.ui.purchase.new_flow.PurchaseAlbumFragment">
+
+    <com.github.siyamed.shapeimageview.RoundedImageView
+        android:id="@+id/purchase_album_image"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/indent_16"
+        android:layout_marginTop="@dimen/indent_32"
+        tools:src="@drawable/ic_album_1"
+        tools:ignore="ContentDescription"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/purchase_album_description_recycler"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_description">
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

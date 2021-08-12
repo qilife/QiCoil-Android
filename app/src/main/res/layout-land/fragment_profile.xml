@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/mViewProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/mTvUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_dialog"
+                android:layout_marginLeft="@dimen/margin_item_dialog"
+                android:layout_marginTop="@dimen/padding_left_right_item"
+                android:padding="@dimen/padding_left_right_item_title"
+                android:text="Marvin Dela Cruz"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/mViewTimerFlashSale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_left_right_item_title"
+                    android:layout_marginTop="@dimen/margin_right_ic_delete"
+                    android:layout_marginRight="@dimen/padding_left_right_item_title"
+                    android:background="@drawable/bg_time_flash_sale"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_left_right_item">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/padding_left_right_item"
+                        android:layout_marginLeft="@dimen/padding_left_right_item"
+                        android:src="@drawable/ic_flash" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:text="@string/flash_sale_50_off"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:ellipsize="marquee"
+                        android:text="@string/tv_offer_expires_in"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/tvHoursC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:text="24"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:text=":"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/tvMinutes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:text="00"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:text=":"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/tvSeconds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_item_5"
+                        android:layout_marginLeft="@dimen/margin_item_5"
+                        android:layout_marginEnd="@dimen/padding_left_right_item"
+                        android:layout_marginRight="@dimen/padding_left_right_item"
+                        android:text="00"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_small"
+                        font:fontText="fonts/MyriadPro_Semibold.otf" />
+                </LinearLayout>
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnSubscription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:layout_marginRight="@dimen/margin_item_dialog"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/margin_right_ic_delete"
+                    android:text="@string/profile_lbl_subscription"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/mBtnRedeem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_item_dialog"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/padding_left_right_item_title"
+                    android:text="@string/tv_redeem"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    android:visibility="gone"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/mBtnMyCustomPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_item_dialog"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/padding_left_right_item_title"
+                    android:text="@string/tv_my_custom_playlists"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    android:visibility="gone"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnInstructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:layout_marginRight="@dimen/margin_item_dialog"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/margin_right_ic_delete"
+                    android:text="@string/profile_lbl_instructions"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnDisclaimerInfor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:layout_marginRight="@dimen/margin_item_dialog"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/margin_right_ic_delete"
+                    android:text="@string/profile_lbl_disclaimer"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_item_dialog"
+                    android:layout_marginTop="@dimen/padding_left_right_item"
+                    android:layout_marginRight="@dimen/margin_item_dialog"
+                    android:background="@drawable/bg_button_options"
+                    android:padding="@dimen/margin_right_ic_delete"
+                    android:text="@string/profile_lbl_about"
+                    android:textColor="@drawable/bg_text"
+                    android:textSize="@dimen/text_size_small_11"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</FrameLayout>

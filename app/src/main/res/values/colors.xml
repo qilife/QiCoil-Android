@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="item_select">#33FFFFFF</color>
+    <color name="item_normal">#00FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="text_press">#0e1a40</color>
+
+
+
+    <color name="color_main_activity_background">#283266</color>
+    <color name="color_main_activity_navigation">#3A426C</color>
+
+    <color name="dark_blue_background">#1C1E31</color>
+    <color name="rounded_album_category_color">#F5AF43</color>
+    <color name="track_name_background">#202F4E</color>
+    <color name="subs_buy_now_color">#2C3070</color>
+    <color name="subs_buy_now_color2">#fff000</color>
+    <color name="color_gray">#808080</color>
+    <color name="color_launcher">#2B1653</color>
+</resources>

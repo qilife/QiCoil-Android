@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/tv_favorites"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        android:visibility="invisible"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/tv_favorites"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        android:visibility="invisible"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_left_right_item"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:layout_marginRight="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/tv_favorites"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvChangePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_left_right_item"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:layout_marginRight="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/tv_change_password"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_left_right_item"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:layout_marginRight="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/tv_sign_in"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/mBtnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_left_right_item"
+        android:layout_marginTop="@dimen/padding_left_right_item"
+        android:layout_marginRight="@dimen/padding_left_right_item"
+        android:padding="@dimen/padding_left_right_item_title"
+        android:text="@string/options_log_out"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+</LinearLayout>

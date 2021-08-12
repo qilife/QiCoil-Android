@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_buttons"
+    android:paddingRight="@dimen/margin_buttons"
+    android:paddingBottom="@dimen/margin_buttons">
+
+    <ImageView
+        android:id="@+id/mImvVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_album_1" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/mTvTitleVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_item_5"
+        android:layout_marginRight="@dimen/margin_buttons"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingTop="@dimen/margin_item_5"
+        android:paddingBottom="@dimen/margin_item_5"
+        android:textAllCaps="false"
+        android:textColor="@color/text_title_color"
+        android:textSize="@dimen/text_size_small_11"
+        font:fontText="fonts/HelveticaNeue_Thin.otf" />
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_albums"
+        android:icon="@drawable/ic_navigation_albums"
+        android:title="@string/navigation_lbl_albums" />
+
+    <item
+        android:id="@+id/navigation_programs"
+        android:icon="@drawable/ic_navigation_playlist"
+        android:title="@string/navigation_lbl_programs" />
+
+    <item
+        android:id="@+id/navigation_videos"
+        android:icon="@drawable/ic_navigation_video"
+        android:title="@string/navigation_lbl_videos" />
+
+    <item
+        android:id="@+id/navigation_discover"
+        android:icon="@drawable/ic_explore"
+        android:title="@string/navigation_lbl_discover" />
+
+    <item
+        android:id="@+id/navigation_options"
+        android:icon="@drawable/ic_navigation_option"
+        android:title="@string/navigation_lbl_options" />
+</menu>

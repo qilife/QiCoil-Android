@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@android:color/black"
+    android:orientation="horizontal"
+    android:padding="@dimen/height_seekbar_2">
+
+    <ImageView
+        android:id="@+id/ivTitleImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/padding_icon_actionbar"
+        android:layout_marginRight="@dimen/padding_icon_actionbar"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_check_higher" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvTitleHigher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="Title name"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_small_11"
+        app:fontText="fonts/MyriadPro_Semibold.otf" />
+</LinearLayout>

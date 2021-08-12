@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item android:drawable="@drawable/bg_button_options_press" android:state_selected="true"></item>-->
+    <!--<item android:drawable="@drawable/bg_button_options_press" android:state_pressed="true"></item>-->
+    <!--<item android:drawable="@drawable/btn_options_disable" android:state_enabled="false"></item>-->
+    <!--<item android:drawable="@drawable/bg_button_options_active"></item>-->
+
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#16ffffff"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#16ffffff"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutDetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_track_list"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/height_button_cancel_dialog"
+        android:layout_height="@dimen/height_button_cancel_dialog"
+        android:layout_gravity="center|end"
+        android:layout_margin="5dp"
+        android:contentDescription="@null"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="0dp"
+        android:src="@drawable/ic_close"
+        android:tint="#fff" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_item_5"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:layout_marginRight="@dimen/margin_item_5"
+                android:layout_marginBottom="@dimen/margin_item_5"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.github.siyamed.shapeimageview.RoundedImageView
+                    android:id="@+id/imvAlbumArt2"
+                    android:layout_width="@dimen/width_button"
+                    android:layout_height="@dimen/width_button"
+                    android:src="@drawable/ic_album_1"
+                    app:siBorderColor="@color/transparent"
+                    app:siBorderWidth="0dp"
+                    android:layout_gravity="center"
+                    app:siRadius="@dimen/corner_radius_album"
+                    app:siSquare="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/tvAlbumName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:textColor="#FFF"
+                        android:textSize="@dimen/text_size_25"
+                        android:textStyle="bold"
+                        app:fontText="fonts/Bebas Neue.ttf"
+                        tools:text="MY PLAYLIST 1" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFF"
+                        android:textSize="@dimen/text_size_nomarl"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:fontText="fonts/BebasNeue Book.ttf"
+                        tools:text="Description" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_item_5"
+                    android:layout_weight="0.5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btnPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_medium_icon"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_btn_play"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/image_size_40"
+                    android:paddingRight="@dimen/image_size_40"
+                    android:text="@string/btn_play"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/text_size_large_14"
+                    app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcAlbum"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_item_10"
+                    android:layout_marginBottom="@dimen/margin_item_5" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
