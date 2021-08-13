@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qicoil-android.iml" filepath="$PROJECT_DIR$/.idea/modules/qicoil-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/qicoil-android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/qicoil-android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/QiCoil.iml" filepath="$PROJECT_DIR$/.idea/modules/QiCoil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/QiCoil.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/QiCoil.app.iml" />
     </modules>
   </component>
 </project>

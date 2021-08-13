@@ -71,7 +71,6 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
     override fun onLoginInteraction(email: String, password: String) {
         if(email.toString().equals("guest"))
         {
-            preference(applicationContext).isLogged = true
             sendData()
         }
         else {

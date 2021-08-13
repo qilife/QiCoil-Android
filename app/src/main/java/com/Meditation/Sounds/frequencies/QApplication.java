@@ -19,6 +19,7 @@ import com.Meditation.Sounds.frequencies.utils.Constants;
 import com.Meditation.Sounds.frequencies.utils.FileUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -33,6 +34,7 @@ public class QApplication extends MultiDexApplication implements ApiListener {
     public void onCreate() {
         super.onCreate();
         FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         MultiDex.install(this);
         INSTANCE = this;
         int version = SharedPreferenceHelper.getInstance().getInt(SharedPreferenceHelper.SHARED_PREF_APP_VERSION);
@@ -49,6 +51,7 @@ public class QApplication extends MultiDexApplication implements ApiListener {
             }
         }
         mStacksActivity = new ArrayList<>();
+
     }
 
     public void addActivityToStack(BaseActivity activity){

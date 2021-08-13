@@ -298,5 +298,7 @@ class Constants {
         var CURRENT_VOLUME = -1
 
         var tracks = ArrayList<Track>()
+
+        var isGuestLogin = false
     }
 }

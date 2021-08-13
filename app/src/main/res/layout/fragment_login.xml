@@ -214,7 +214,7 @@
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
                         android:layout_gravity="center"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">
                         <RelativeLayout
@@ -222,17 +222,19 @@
                             android:layout_width="@dimen/indent_48"
                             android:layout_height="match_parent"
                             android:background="@drawable/bg_white_login">
+
                             <ImageView
                                 android:layout_width="@dimen/indent_32"
                                 android:layout_height="@dimen/indent_32"
-                                android:src="@drawable/google_button"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/google_button" />
                         </RelativeLayout>
+
                         <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_centerVertical="true"
+                            android:layout_gravity="center"
                             android:layout_toRightOf="@+id/rlgoogle"
                             android:paddingLeft="@dimen/padding_left_right_item"
                             android:text="@string/tv_google"
@@ -241,11 +243,14 @@
                             font:fontText="fonts/MyriadPro_Semibold.otf" />
                     </RelativeLayout>
 
+
+
                     <RelativeLayout
+                        android:id="@+id/rlfacebook_signin"
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
                         android:layout_gravity="center"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">
                         <RelativeLayout
@@ -253,17 +258,19 @@
                             android:layout_width="@dimen/indent_48"
                             android:layout_height="match_parent"
                             android:background="@drawable/bg_white_login">
+
                             <ImageView
                                 android:layout_width="@dimen/indent_32"
                                 android:layout_height="@dimen/indent_32"
-                                android:src="@drawable/fb_button"
-                                android:layout_centerInParent="true"/>
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/fb_button" />
                         </RelativeLayout>
+
                         <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_centerVertical="true"
+                            android:layout_gravity="center"
                             android:layout_toRightOf="@+id/rlfacebook"
                             android:paddingLeft="@dimen/padding_left_right_item"
                             android:text="@string/tv_facebook"
@@ -276,15 +283,16 @@
                         android:id="@+id/btn_guest"
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_gravity="center"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">
+
                         <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:paddingLeft="@dimen/padding_left_right_item"
                             android:text="@string/tv_guest"
                             android:textColor="@color/white"

@@ -206,14 +206,15 @@
 
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/options_delete_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginRight="24dp"
                 android:layout_marginBottom="@dimen/indent_48"
                 android:gravity="right"
-                android:layout_alignParentBottom="true"
                 android:text="@string/options_delete_user"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />

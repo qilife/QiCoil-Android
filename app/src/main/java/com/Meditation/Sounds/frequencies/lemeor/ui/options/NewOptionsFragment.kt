@@ -31,6 +31,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_YEAR_FLASHSALE
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE
@@ -79,12 +80,7 @@ class NewOptionsFragment : Fragment() {
         if (user != null) {
             options_user_name.visibility = View.VISIBLE
             options_log_out.visibility = View.VISIBLE
-        } else {
-            options_user_name.text = "Guest"
-            //options_user_name.visibility = View.GONE
-           // options_log_out.visibility = View.GONE
         }
-        //endregion
 
         options_restore_purchase.setOnClickListener {
             val billingClient: BillingClient
@@ -204,6 +200,12 @@ class NewOptionsFragment : Fragment() {
             options_flash_sale.visibility = View.GONE
             options_subscription.visibility = View.GONE
             options_restore_purchase.visibility = View.GONE
+        }
+
+        if(Constants.isGuestLogin){
+            options_delete_user.visibility = View.GONE
+            options_log_out.visibility = View.GONE
+            options_change_pass.visibility = View.GONE
         }
     }
 
