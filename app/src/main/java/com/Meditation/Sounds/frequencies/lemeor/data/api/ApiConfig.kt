@@ -22,6 +22,7 @@ object ApiConfig {
     const val API_USER_LOGOUT = "user/logout"
     const val API_USER_DELETE = "user/profile/delete"
     const val API_APK = "apk"
+
     private const val API_RESET_PASS = "password/reset"
 
     fun getBaseUrl(): String {

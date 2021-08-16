@@ -18,6 +18,12 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
             uuid: String
     ) = apiService.register(email, password, password_confirmation, name, uuid, 0)
 
+    suspend fun googleLogin(
+        email: String,
+        gg_id: String,
+        name: String,
+    ) = apiService.googleLogin(email, gg_id, name, 0)
+
     suspend fun logout() = apiService.logout()
 
     suspend fun deleteuser(password: String) = apiService.deleteuser(password)

@@ -129,4 +129,29 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
     override fun onOpenForgotPassword() {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getPassResetUrl())))
     }
+
+    override fun onGoogleLogin(email: String, name: String, google_id: String) {
+        mViewModel.googleLogin(email, google_id, name).observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+                        HudHelper.hide()
+
+                        saveAuthData(resource)
+
+                        sendData()
+                    }
+                    Resource.Status.ERROR -> {
+                        HudHelper.hide()
+                        Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Resource.Status.LOADING -> {
+                        HudHelper.show(this)
+                    }
+                }
+            }
+        })
+    }
+
+
 }

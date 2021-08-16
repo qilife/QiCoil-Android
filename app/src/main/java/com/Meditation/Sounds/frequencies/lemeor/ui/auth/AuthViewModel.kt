@@ -39,4 +39,19 @@ class AuthViewModel (private val repository: AuthRepository) : ViewModel() {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
+
+    fun googleLogin(
+        email: String,
+        gg_id: String,
+        name: String
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = repository.googleLogin(email, gg_id, name)))
+        } catch (exception: HttpException) {
+            emit(Resource.error(data = null, message = getErrorMsg(exception)))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+        }
+    }
 }

@@ -24,6 +24,15 @@ interface ApiService {
             @Query("os") os: Int
     ): AuthResponse
 
+    @GET(ApiConfig.API_USER_LOGIN)
+    suspend fun googleLogin(
+        @Query("gg_id") password: String,
+        @Query("emailid") email: String,
+        @Query("name") name: String,
+        @Query("os") os: Int
+    ): AuthResponse
+
+
     @GET(ApiConfig.API_USER_PROFILE)
     suspend fun getProfile(): User
 
