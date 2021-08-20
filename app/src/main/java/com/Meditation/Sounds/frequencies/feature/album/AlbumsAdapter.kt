@@ -32,11 +32,9 @@ class AlbumsAdapter(private val mContext: Context?, var data: List<Album>, priva
         holder.itemView.image.requestLayout()
         holder.itemView.image_lock.requestLayout()
         val album = data[position]
-//        if (isAdvanced) {
-//            holder.itemView.image.radius = mContext?.resources!!.getDimensionPixelOffset(R.dimen.no_radius_album)
-//        } else {
+
             holder.itemView.image.radius = mContext?.resources!!.getDimensionPixelOffset(R.dimen.corner_radius_album)
-//        }
+
         if (album.isPurchase) {
             holder.itemView.image_lock.visibility = View.GONE
         } else {

@@ -338,8 +338,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     if (preference(applicationContext).isFirstSync) {
-                        preference(applicationContext).isFirstSync = false
-
+                       preference(applicationContext).isFirstSync = false
                         if (it.data == null && !BuildConfig.IS_FREE) {
                             mViewModel.loadFromCache(applicationContext)
                         }

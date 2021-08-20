@@ -18,9 +18,13 @@ class AuthRepository(private val apiHelper: ApiHelper, private val localData: Da
             uuid: String
     ) = apiHelper.register(email, password, password_confirmation, name, uuid)
 
+    suspend fun fbLogin(email: String,
+                        name: String,
+                        fb_id: String)= apiHelper.fbLogin(email, name,fb_id)
+
     suspend fun googleLogin(
         email: String,
-        gg_id: String,
         name: String,
-    ) = apiHelper.googleLogin(email, gg_id, name)
+        gg_id: String,
+    ) = apiHelper.googleLogin(email, name,gg_id)
 }

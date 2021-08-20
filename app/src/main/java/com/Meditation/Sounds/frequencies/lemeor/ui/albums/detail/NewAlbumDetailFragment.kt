@@ -167,6 +167,7 @@ class NewAlbumDetailFragment : Fragment() {
         album_play.setOnClickListener { playOrDownload(album) }
 
         mTrackAdapter = AlbumTrackAdapter(requireContext(), album.tracks, album)
+
         mTrackAdapter!!.setOnClickListener(object : AlbumTrackAdapter.Listener {
             override fun onTrackClick(track: Track, i: Int, isDownloaded: Boolean) {
                 if (this@NewAlbumDetailFragment.isDownloaded) {
@@ -176,7 +177,6 @@ class NewAlbumDetailFragment : Fragment() {
                     Handler(Looper.getMainLooper()).postDelayed({ EventBus.getDefault().post(PlayerSelected(i)) }, 200)
                 }
             }
-
             override fun onTrackOptions(track: Track, i: Int) {
                 startActivityForResult(TrackOptionsPopUpActivity.newIntent(requireContext(), track.id), 1001)
             }

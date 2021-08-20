@@ -20,9 +20,15 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
 
     suspend fun googleLogin(
         email: String,
-        gg_id: String,
         name: String,
-    ) = apiService.googleLogin(email, gg_id, name, 0)
+        gg_id: String,
+    ) = apiService.googleLogin(email, name, gg_id , 0)
+
+    suspend fun fbLogin(
+        email: String,
+        name: String,
+        fb_id: String
+    ) = apiService.fbLogin(email, name,fb_id, 0)
 
     suspend fun logout() = apiService.logout()
 

@@ -34,6 +34,7 @@ class LoginFragment : Fragment() {
         fun onOpenRegistration()
         fun onOpenForgotPassword()
         fun onGoogleLogin(email: String,name:String,google_id : String)
+        fun onFbLogin(email: String,name:String,fb_id : String)
     }
 
     private var mListener: OnLoginListener? = null
@@ -84,7 +85,7 @@ class LoginFragment : Fragment() {
         val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
 
         val account = GoogleSignIn.getLastSignedInAccount(activity)
-        //updateUI(account)
+
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -112,8 +113,6 @@ class LoginFragment : Fragment() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-
-
         rlfacebook_signin.setOnClickListener {
             LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
         }
@@ -123,6 +122,7 @@ class LoginFragment : Fragment() {
             override fun onSuccess(loginResult: LoginResult?) {
                 Log.d("TAG", "Success Login")
                 getUserProfile(loginResult?.accessToken, loginResult?.accessToken?.userId)
+
             }
 
             override fun onCancel() {
@@ -291,6 +291,8 @@ class LoginFragment : Fragment() {
                     Log.i("Facebook Email: ", "Not exists")
                     email = "Not exists"
                 }
+
+                mListener?.onFbLogin(email,name,id)
 
                 //openDetailsActivity()
             }).executeAsync()

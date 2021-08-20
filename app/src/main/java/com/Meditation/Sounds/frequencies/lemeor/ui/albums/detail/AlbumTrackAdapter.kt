@@ -50,9 +50,11 @@ class AlbumTrackAdapter(
 
       //  holder.itemView.item_track_name.text = convertedTrackName(mAlbum, track)
 
+
         holder.itemView.item_track_name.text = track.name
 
         holder.itemView.item_album_name.text = mAlbum.name
+
         holder.itemView.item_track_options.setOnClickListener {  mListener?.onTrackOptions(track, position) }
         holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position, mAlbum.isDownloaded) }
 

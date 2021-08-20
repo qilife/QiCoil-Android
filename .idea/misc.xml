@@ -3,10 +3,73 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_line.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_price_flash_sale_subscription.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_search_home.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_song_item.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_starter_free_in_app.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_subscription.xml" value="0.6125" />
+        <entry key="app/src/main/res/drawable/bg_tab_album_basic.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_tab_albums_advanced.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_tab_albums_basic.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_tab_videos.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_text.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_text_free_trial.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_time_flash_sale.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_timer.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_title_from.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_title_now.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_track_list.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_videos.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_videos_v2.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/bg_white_login.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/btn_options_disable.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/btn_play.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/edittext_bottom_line.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_drag_reorder.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/launch_screen.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/navigation_item_state_color.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/pop_bg.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/progress_drawable.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/rounded_album_category_background.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/rounded_album_category_selected.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/rounded_btn_play.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/rounded_dark_blue_background.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/sh_download.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/sh_price_left.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/sh_price_right.xml" value="0.1814814814814815" />
         <entry key="app/src/main/res/layout-land/fragment_login.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/layout/activity_auth.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/album_item.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/fragment_album_group.xml" value="0.16875" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_new_album_detail.xml" value="0.13949275362318841" />
         <entry key="app/src/main/res/layout/fragment_new_options.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_album_advanced.xml" value="0.17617753623188406" />
+        <entry key="app/src/main/res/layout/item_album_detail.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_album_higher.xml" value="0.17617753623188406" />
+        <entry key="app/src/main/res/layout/item_album_horizontal.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_album_track.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_category.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_description.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_download.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_playlist.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_playlist_detail.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_playlist_song.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_program.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_program_track.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_search.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_title_higher.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/menu_item.xml" value="0.11955420466058764" />
+        <entry key="app/src/main/res/layout/player_ui_fragment.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/playlist_album_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/popup_detail_album.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/layout/popup_detail_playlist.xml" value="0.12447916666666667" />
       </map>
     </option>
   </component>

@@ -38,7 +38,6 @@ interface PlaylistItemSongDAO {
     @Query("UPDATE playlist_item_songs SET start_offset=:startOffset, end_offset=:endOffset WHERE playlist_songs_id = :playlistSongId")
     fun updateStartEndOffset(playlistSongId : Long, startOffset: Long, endOffset: Long)
 
-//    @Query("SELECT * FROM playlist_items INNER JOIN playlist_songs ON playlist_items.id = playlist_songs.playlist_item_id  WHERE playlist_id=:playlistId ")
-//    fun getByPlayList(playlistId: Long):List<PlaylistItemSong>
+
 
 }

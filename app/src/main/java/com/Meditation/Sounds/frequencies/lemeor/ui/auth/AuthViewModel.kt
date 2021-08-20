@@ -42,12 +42,27 @@ class AuthViewModel (private val repository: AuthRepository) : ViewModel() {
 
     fun googleLogin(
         email: String,
-        gg_id: String,
-        name: String
+        name: String,
+        gg_id: String
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
-            emit(Resource.success(data = repository.googleLogin(email, gg_id, name)))
+            emit(Resource.success(data = repository.googleLogin(email, name, gg_id)))
+        } catch (exception: HttpException) {
+            emit(Resource.error(data = null, message = getErrorMsg(exception)))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+        }
+    }
+
+    fun fbLogin(
+        email: String,
+        name: String,
+        fb_id: String
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = repository.fbLogin(email, name,fb_id)))
         } catch (exception: HttpException) {
             emit(Resource.error(data = null, message = getErrorMsg(exception)))
         } catch (exception: Exception) {

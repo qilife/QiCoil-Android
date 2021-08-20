@@ -30,7 +30,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
         AlbumConverter::class,
         PlaylistConverter::class,
         ProgramConverter::class,
-
         TrackConverter::class,
         IntConverter::class,
         StringConverter::class
