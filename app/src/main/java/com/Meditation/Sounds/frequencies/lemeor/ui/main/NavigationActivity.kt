@@ -95,6 +95,16 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
+
+
+
+import android.R.drawable
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
+import com.codemybrainsout.ratingdialog.RatingDialog
+import com.codemybrainsout.ratingdialog.RatingDialog.Builder.RatingDialogFormListener
+
+
 const val REQUEST_CODE_PERMISSION = 1111
 
 class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
@@ -375,6 +385,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
         when (item.itemId) {
             R.id.navigation_albums -> {
                 search_layout.visibility = View.VISIBLE
@@ -398,11 +409,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 return true
             }
             R.id.navigation_options -> {
+                askRating()
                 search_layout.visibility = View.VISIBLE
                 setFragment(NewOptionsFragment())
                 return true
             }
+
         }
+
         return false
     }
 
@@ -829,4 +843,26 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             }
         }
     }
+
+    fun askRating(){
+        val ratingDialog = RatingDialog.Builder(this)
+            .session(1)
+            .threshold(4f)
+            .ratingBarColor(R.color.rounded_album_category_color)
+            .playstoreUrl("https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies")
+            .onRatingBarFormSumbit { feedback ->
+                Log.i(
+                    "TAG",
+                    "Feedback:$feedback"
+                )
+            }
+            .build()
+
+
+        ratingDialog.show()
+
+    }
+
+
+
 }

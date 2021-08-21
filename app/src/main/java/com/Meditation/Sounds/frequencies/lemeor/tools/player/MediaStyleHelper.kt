@@ -10,7 +10,7 @@ fun styleThis(context: Context?, mediaSession: MediaSessionCompat): Notification
     val controller = mediaSession.controller
     val mediaMetadata = controller.metadata
     val description = mediaMetadata.description
-    val builder: NotificationCompat.Builder = NotificationCompat.Builder(context)
+    val builder: NotificationCompat.Builder = NotificationCompat.Builder(context!!)
     builder
             .setContentTitle(description.title)
             .setContentText(description.subtitle)
