@@ -240,6 +240,8 @@ class NewPurchaseActivity : AppCompatActivity() {
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku)
+        inappList.add(HIGHER_QUANTUM_TIER_INAPP_DMT.sku)
+        inappList.add(HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku)
 
         val inappParams = SkuDetailsParams.newBuilder()
         inappParams.setSkusList(inappList).setType(BillingClient.SkuType.INAPP)
@@ -341,6 +343,14 @@ class NewPurchaseActivity : AppCompatActivity() {
 
                             HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku -> {
                                 albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId)
+                            }
+
+                            HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
+                            }
+
+                            HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
                             }
                         }
                     }
