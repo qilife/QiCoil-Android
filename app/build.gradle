@@ -207,5 +207,6 @@ dependencies {
     implementation 'com.kaopiz:kprogresshud:1.1.0'
 
     // For Rating
-    implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'
+   // implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'
+    implementation 'com.suddenh4x.ratingdialog:awesome-app-rating:2.4.0'
 }
