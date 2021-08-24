@@ -89,7 +89,7 @@ class AlbumsRecyclerFragment : Fragment() {
         if (album.isUnlocked) {
             mListener?.onStartAlbumDetail(album)
         } else {
-            startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id))
+            startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
         }
     }
 

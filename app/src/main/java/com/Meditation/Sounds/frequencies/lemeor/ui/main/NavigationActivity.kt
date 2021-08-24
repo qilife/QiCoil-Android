@@ -597,7 +597,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     .replace(R.id.nav_host_fragment, NewAlbumDetailFragment.newInstance(album.id), NewAlbumDetailFragment().javaClass.simpleName)
                     .commit()
         } else {
-            startActivity(NewPurchaseActivity.newIntent(applicationContext, album.category_id, album.tier_id))
+            startActivity(NewPurchaseActivity.newIntent(applicationContext, album.category_id, album.tier_id,album.id))
         }
     }
 

@@ -37,6 +37,7 @@ class NewPurchaseActivity : AppCompatActivity() {
 
     private var categoryId = EXTRA_DEFAULT_INT
     private var tierId = QUANTUM_TIER_ID
+    private var Id = QUANTUM_TIER_ID
 
     private val mSubsList = ArrayList<SkuDetails>()
     private var billingClient: BillingClient? = null
@@ -60,6 +61,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         if (intent != null) {
             categoryId = intent.getIntExtra(EXTRA_CATEGORY_ID, EXTRA_DEFAULT_INT)
             tierId = intent.getIntExtra(EXTRA_TIER_ID, EXTRA_DEFAULT_INT)
+            Id = intent.getIntExtra(EXTRA_ALBUM_ID, EXTRA_DEFAULT_INT)
         }
 
         purchase_back.setOnClickListener { onBackPressed() }
@@ -77,7 +79,13 @@ class NewPurchaseActivity : AppCompatActivity() {
                 albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
                 tierDao.getTierNameById(tierId)?.let { screenName = it }
             } else {
-                albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
+                //albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
+                if (Id == 219 || Id == 220) {
+                    albumDao.getAlbumById(Id)?.let { albumList.add(it) }
+                } else {
+                    albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
+                }
+                //albumDao.getAlbumById(219)?.let { albumList.add(it) }
                 categoryDao.getCategoryNameById(categoryId)?.let { screenName = it }
             }
 
@@ -250,7 +258,11 @@ class NewPurchaseActivity : AppCompatActivity() {
             // Process the result.
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !skuDetailsList.isNullOrEmpty()) {
                 val enum = InappPurchase.getCategoryId(categoryId)
-                skuDetailsList.forEach { if (it.sku == enum.sku) { mInapp = it } }
+                skuDetailsList.forEach {
+                    if (it.sku == enum.sku) {
+                        mInapp = it
+                    }
+                }
 
                 if (tierId != QUANTUM_TIER_ID) {
                     purchase_price.text = getString(R.string.inapp_purchase_info, mInapp?.price)
@@ -346,17 +358,18 @@ class NewPurchaseActivity : AppCompatActivity() {
                             }
 
                             HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
-                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
+                                albumDao.setNewUnlockedById(true, Id)
                             }
 
                             HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
-                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
+                                albumDao.setNewUnlockedById(true, Id)
                             }
                         }
                     }
 
                     finish()
-                } else -> {
+                }
+                else -> {
                     Log.e("TAG_INAPP", billingResult.debugMessage)
                 }
             }
@@ -396,11 +409,13 @@ class NewPurchaseActivity : AppCompatActivity() {
         private const val EXTRA_DEFAULT_INT = -1
         private const val EXTRA_TIER_ID = "tier_id"
         private const val EXTRA_CATEGORY_ID = "category_id"
+        private const val EXTRA_ALBUM_ID = "album_id"
 
-        fun newIntent(context: Context, categoryId: Int, tierId: Int): Intent {
+        fun newIntent(context: Context, categoryId: Int, tierId: Int, Id: Int): Intent {
             val intent = Intent(context, NewPurchaseActivity::class.java)
             intent.putExtra(EXTRA_CATEGORY_ID, categoryId)
             intent.putExtra(EXTRA_TIER_ID, tierId)
+            intent.putExtra(EXTRA_ALBUM_ID, Id)
             return intent
         }
     }

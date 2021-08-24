@@ -155,7 +155,7 @@ class NewProgramFragment : Fragment() {
                             .replace(R.id.nav_host_fragment, ProgramDetailFragment.newInstance(program.id), ProgramDetailFragment().javaClass.simpleName)
                             .commit()
                 } else {
-                    startActivity(NewPurchaseActivity.newIntent(requireContext(), QUANTUM_TIER_ID, QUANTUM_TIER_ID))
+                    startActivity(NewPurchaseActivity.newIntent(requireContext(), QUANTUM_TIER_ID, QUANTUM_TIER_ID,1))
                 }
             }
 
