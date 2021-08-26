@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -274,10 +275,12 @@ class NewAlbumDetailFragment : Fragment() {
               //  val multiplay = track?.duration!! / 300000
 
                 val track = db.trackDao().getTrackById(it.id)
-                if (track?.duration == 0.toLong()) { track.duration = 300000 }
+               // if (track?.duration == 0.toLong()) { track.duration = 300000 }
+               // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
+                Log.e("DURATION",getDuration(file).toString())
                 val multiplay = track?.duration!! / 300000
+                data.add(MusicRepository.Track(it.name, album.name, album, R.drawable.launcher, uri!!, getDuration(file), 0, multiplay.toInt()))
 
-                data.add(MusicRepository.Track(it.name, album.name, album, R.drawable.launcher, uri!!, track.duration, 0, multiplay.toInt()))
             }
 
             trackList = data
