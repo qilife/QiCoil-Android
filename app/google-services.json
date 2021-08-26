@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "942446389344-1556nijru41pkk3mi8jvbtcvhchtm02p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Meditation.Sounds.frequencies",
+            "certificate_hash": "0f72854a5d627e0be9ad85d1e205041b59c2e8cf"
+          }
+        },
+        {
           "client_id": "942446389344-enu5kv3t8gr36r4hfqcr577r67ohak6j.apps.googleusercontent.com",
           "client_type": 3
         }
