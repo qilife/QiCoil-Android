@@ -203,6 +203,10 @@ class NewOptionsFragment : Fragment() {
             }
         }
 
+        options_sign_in.setOnClickListener {
+            startActivity(Intent(requireContext(), AuthActivity::class.java))
+        }
+
         if (BuildConfig.IS_FREE) {
             options_flash_sale.visibility = View.GONE
             options_subscription.visibility = View.GONE
@@ -213,6 +217,7 @@ class NewOptionsFragment : Fragment() {
             options_delete_user.visibility = View.GONE
             options_log_out.visibility = View.GONE
             options_change_pass.visibility = View.GONE
+            options_sign_in.visibility = View.VISIBLE
         }
     }
 

@@ -204,6 +204,16 @@
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/options_sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/options_sign_in"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone"
+                    android:textStyle="bold" />
+
 
             </LinearLayout>
 
