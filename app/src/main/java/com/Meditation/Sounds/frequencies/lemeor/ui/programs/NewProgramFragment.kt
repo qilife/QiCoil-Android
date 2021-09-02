@@ -135,6 +135,7 @@ class NewProgramFragment : Fragment() {
         }
 
         mProgramAdapter = ProgramAdapter(requireContext(), mListProgram)
+
         mProgramAdapter!!.setOnClickListener(object : ProgramAdapter.Listener {
             override fun onClickItem(program: Program, i: Int) {
                 if (program.isUnlocked) {
