@@ -147,9 +147,12 @@ class NewOptionsFragment : Fragment() {
 
                                         HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId) }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.Id) }
+                                        HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
+                                            //albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.Id)
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.Id) }
+                                        HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId) }
                                     }
                                 }
                             }

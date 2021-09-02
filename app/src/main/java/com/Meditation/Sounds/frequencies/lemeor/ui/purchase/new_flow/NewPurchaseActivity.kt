@@ -79,13 +79,13 @@ class NewPurchaseActivity : AppCompatActivity() {
                 albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
                 tierDao.getTierNameById(tierId)?.let { screenName = it }
             } else {
-                //albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
-                if (Id == 219 || Id == 220) {
+                albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
+               /* if (Id == 219 || Id == 220) {
                     albumDao.getAlbumById(Id)?.let { albumList.add(it) }
                 } else {
                     albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
-                }
-                //albumDao.getAlbumById(219)?.let { albumList.add(it) }
+                }*/
+
                 categoryDao.getCategoryNameById(categoryId)?.let { screenName = it }
             }
 
@@ -358,11 +358,12 @@ class NewPurchaseActivity : AppCompatActivity() {
                             }
 
                             HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
-                                albumDao.setNewUnlockedById(true, Id)
+                                //albumDao.setNewUnlockedById(true, Id)
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
                             }
 
                             HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
-                                albumDao.setNewUnlockedById(true, Id)
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
                             }
                         }
                     }
