@@ -81,7 +81,10 @@ class NewProgramFragment : Fragment() {
                 var isUnlocked = true
 
                 tracks.forEach { t->
-                    if (!t.isUnlocked) {
+
+                     val temp_album = mViewModel.getAlbumById(t.albumId);
+
+                    if (temp_album?.isUnlocked==false) {
                         isUnlocked = false
                     }
                 }

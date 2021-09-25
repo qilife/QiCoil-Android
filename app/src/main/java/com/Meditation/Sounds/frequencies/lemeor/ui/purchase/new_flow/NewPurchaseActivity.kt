@@ -158,7 +158,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         mSpannableText.setSpan(clickTerms, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         mSpannableText.setSpan(clickPrivacy, 10, mSpannableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        if (tierId == QUANTUM_TIER_ID) {
+        if (tierId == QUANTUM_TIER_ID || tierId == HIGHER_QUANTUM_TIER_ID) {
             purchase_info.text = getString(R.string.tv_title_subscription_new)
         } else {
             purchase_info.visibility = View.GONE
@@ -250,6 +250,8 @@ class NewPurchaseActivity : AppCompatActivity() {
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_DMT.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku)
+        inappList.add(HIGHER_QUANTUM_TIER_INAPP_NAD.sku)
+        inappList.add(HIGHER_QUANTUM_TIER_INAPP_NMN.sku)
 
         val inappParams = SkuDetailsParams.newBuilder()
         inappParams.setSkusList(inappList).setType(BillingClient.SkuType.INAPP)
@@ -365,6 +367,14 @@ class NewPurchaseActivity : AppCompatActivity() {
                             HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
                                 albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
                             }
+
+                            HIGHER_QUANTUM_TIER_INAPP_NAD.sku -> {
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId)
+                            }
+
+                            HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> {
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId)
+                            }
                         }
                     }
 
@@ -407,6 +417,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         private const val QUANTUM_SUBS_MONTH = "P1M"
         private const val QUANTUM_SUBS_YEAR = "P1Y"
         const val QUANTUM_TIER_ID = 1
+        const val HIGHER_QUANTUM_TIER_ID = 2
         private const val EXTRA_DEFAULT_INT = -1
         private const val EXTRA_TIER_ID = "tier_id"
         private const val EXTRA_CATEGORY_ID = "category_id"
