@@ -2,6 +2,7 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 
@@ -25,5 +26,9 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
 
     fun getTrackById(id: Int): Track? {
         return repository.getTrackById(id)
+    }
+
+    fun getAlbumById(id: Int): Album? {
+        return repository.getAlbumById(id)
     }
 }

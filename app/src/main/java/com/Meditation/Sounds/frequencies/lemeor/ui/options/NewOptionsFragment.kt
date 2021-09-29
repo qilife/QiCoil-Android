@@ -153,6 +153,10 @@ class NewOptionsFragment : Fragment() {
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId) }
+
+                                        HIGHER_QUANTUM_TIER_INAPP_NAD.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId) }
+
+                                        HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId) }
                                     }
                                 }
                             }

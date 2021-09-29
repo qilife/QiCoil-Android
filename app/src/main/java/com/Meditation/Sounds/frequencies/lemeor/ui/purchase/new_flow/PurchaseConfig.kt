@@ -6,6 +6,8 @@ const val QUANTUM_TIER_SUBS_ANNUAL = "new.qicoil.subs.quantum.tier.annual"
 enum class InappPurchase(val sku: String, val categoryId: Int,val Id: Int) {
     NULL("", -1, -1),
 
+    HIGHER_QUANTUM_TIER_INAPP_NMN("new.qicoil.inapp.nmn", 37, -1),
+    HIGHER_QUANTUM_TIER_INAPP_NAD("new.qicoil.inapp.nad", 36, -1),
     HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA("new.qicoil.inapp.ayahuasca", 34,220),
     HIGHER_QUANTUM_TIER_INAPP_DMT("new.qicoil.inapp.dmt", 35,219),
     HIGHER_QUANTUM_TIER_INAPP_FITNESS("new.qicoil.inapp.higher.quantum.tier.fitness", 24, -1),
