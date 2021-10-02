@@ -26,7 +26,6 @@ android {
         versionName "0.0.1"
         multiDexEnabled = true
         testInstrumentationRunner 'androidx.launcher.runner.AndroidJUnitRunner'
-
         buildConfigField "String", "PREF_TITLE", ""
         buildConfigField "String", "DB_NAME", ""
         buildConfigField "boolean", "IS_FREE", "false"
