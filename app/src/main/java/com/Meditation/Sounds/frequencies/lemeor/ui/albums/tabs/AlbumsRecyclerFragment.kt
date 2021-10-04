@@ -65,6 +65,7 @@ class AlbumsRecyclerFragment : Fragment() {
             mAlbumAdapter!!.setData(it)
         })
 
+
         mAlbumAdapter = AlbumsAdapter(requireContext(), mListAlbum)
         mAlbumAdapter!!.setOnClickListener(object : AlbumsAdapter.Listener {
             override fun onClickItem(album: Album) {

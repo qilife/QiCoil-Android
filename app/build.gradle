@@ -9,8 +9,8 @@ android {
 
     signingConfigs {
         qicoilrelease {
-            storeFile file('B:\\WORK\\CLIENT\\MAHESH\\Michel\\Qicoil\\qicoil-android\\keystore\\qicoil.jks')
-           //storeFile file( '/Users/sam/Desktop/new work/Adil Clint Work/QiCoil/keystore/qicoil.jks')
+            //storeFile file('B:\\WORK\\CLIENT\\MAHESH\\Michel\\Qicoil\\qicoil-android\\keystore\\qicoil.jks')
+            storeFile file( '/Users/sam/Desktop/new work/Adil Clint Work/QiCoil/keystore/qicoil.jks')
             storePassword var2
             keyAlias var1
             keyPassword var
@@ -208,4 +208,6 @@ dependencies {
     // For Rating
    // implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'
     implementation 'com.suddenh4x.ratingdialog:awesome-app-rating:2.4.0'
+
+
 }

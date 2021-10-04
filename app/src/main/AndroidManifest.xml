@@ -28,10 +28,16 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:allowBackup">
-        <activity android:name=".lemeor.ui.main.SplashActivity"
+        <activity
+            android:name=".lemeor.ui.AdvActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent"/>
+        <activity
+            android:name=".lemeor.ui.main.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -63,9 +69,7 @@
             android:theme="@style/AppTheme.PopUpStyle" />
         <activity
             android:name=".lemeor.ui.main.NavigationActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-
-        </activity>
+            android:configChanges="keyboardHidden|orientation|screenSize"></activity>
         <activity
             android:name=".lemeor.InstructionsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />

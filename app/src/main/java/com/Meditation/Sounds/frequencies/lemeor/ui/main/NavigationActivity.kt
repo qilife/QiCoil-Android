@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
+
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.AlertDialog
 import android.app.DownloadManager
@@ -7,10 +8,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.Build
-import android.os.Bundle
-import android.os.CountDownTimer
+import android.os.*
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -51,6 +49,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadInfo
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerUIFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.AdvActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.AlbumsSearchAdapter
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.ProgramsSearchAdapter
@@ -79,6 +78,9 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.gson.Gson
+import com.suddenh4x.ratingdialog.AppRating
+import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
+import com.suddenh4x.ratingdialog.preferences.RatingThreshold
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.activity_navigation.mTvDownloadPercent
@@ -96,21 +98,10 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
 
-
-
-import android.R.drawable
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentActivity
-
-import com.suddenh4x.ratingdialog.AppRating
-import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
-import com.suddenh4x.ratingdialog.preferences.RatingThreshold
-
-
 const val REQUEST_CODE_PERMISSION = 1111
 
 class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
-        CategoriesPagerListener, OnTiersFragmentListener, ApiListener<Any> {
+    CategoriesPagerListener, OnTiersFragmentListener, ApiListener<Any> {
 
     private lateinit var mViewModel: HomeViewModel
     private var playerUI: PlayerUIFragment? = null
@@ -133,7 +124,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     fun onEvent(event: Any?) {
         if (event?.javaClass == DownloadInfo::class.java) {
             val download = event as DownloadInfo
-            mTvDownloadPercent.text = getString(R.string.downloader_quantity_collapse, download.completed + 1, download.total)
+            mTvDownloadPercent.text = getString(
+                R.string.downloader_quantity_collapse,
+                download.completed + 1,
+                download.total
+            )
             viewGroupDownload.visibility = View.VISIBLE
         }
 
@@ -166,7 +161,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
                 if (newVs.size == 3 && currentVs.size == 3) {
                     if ((newVs[0].toInt() * 100 + newVs[1].toInt() * 10 + newVs[2].toInt())
-                            > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()) {
+                        > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()
+                    ) {
 
                         CoroutineScope(Dispatchers.Main).launch { dialogConfirmUpdateApk(apkUrl) }
                     }
@@ -174,14 +170,25 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             }
         }
 
-        registerReceiver(downloadNewApkReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        registerReceiver(
+            downloadNewApkReceiver,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        )
 
         checkPermissions()
     }
 
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(WRITE_EXTERNAL_STORAGE),
+                REQUEST_CODE_PERMISSION
+            )
         } else {
             deleteOldFiles()
         }
@@ -198,7 +205,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         oldFolder2.deleteRecursively()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSION) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -241,6 +252,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             startActivity(Intent(applicationContext, AuthActivity::class.java))
         }
 
+        val handler = Handler()
+        handler.postDelayed(Runnable {
+            // yourMethod();
+            val intent = Intent(this, AdvActivity::class.java)
+            startActivity(intent)
+        }, 30000)
+
+
         if (BuildConfig.IS_FREE) {
             quantumOnCreate()
         }
@@ -279,6 +298,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         album_search_clear.setOnClickListener { closeSearch() }
 
         orientationChangesUI(resources.configuration.orientation)
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -288,7 +308,6 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     private fun orientationChangesUI(orientation: Int) {
         val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(0, 0)
-
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             params.weight = 2.0f
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -306,9 +325,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
     private fun init() {
-        mViewModel = ViewModelProvider(this, ViewModelFactory(
+        mViewModel = ViewModelProvider(
+            this, ViewModelFactory(
                 ApiHelper(RetrofitBuilder(applicationContext).apiService),
-                DataBase.getInstance(applicationContext))
+                DataBase.getInstance(applicationContext)
+            )
         ).get(HomeViewModel::class.java)
 
         nav_view.setOnNavigationItemSelectedListener(this)
@@ -330,28 +351,29 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
 
         mCallbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance().registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                Log.d("FACEBOOK", "Login onSuccess")
-            }
+        LoginManager.getInstance()
+            .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+                    Log.d("FACEBOOK", "Login onSuccess")
+                }
 
-            override fun onCancel() {
-                Log.d("FACEBOOK", "Login onCancel")
-            }
+                override fun onCancel() {
+                    Log.d("FACEBOOK", "Login onCancel")
+                }
 
-            override fun onError(exception: FacebookException) {
-                Log.d("FACEBOOK", "Login onError")
-            }
-        })
+                override fun onError(exception: FacebookException) {
+                    Log.d("FACEBOOK", "Login onError")
+                }
+            })
     }
 
     private fun syncData() {
-        
+
         mViewModel.home.observe(this, {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     if (preference(applicationContext).isFirstSync) {
-                       preference(applicationContext).isFirstSync = true
+                        preference(applicationContext).isFirstSync = true
                         if (it.data == null && !BuildConfig.IS_FREE) {
                             mViewModel.loadFromCache(applicationContext)
                         }
@@ -366,13 +388,16 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
     private fun showDisclaimerDialog() {
-        val mDisclaimerDialog = DisclaimerDialog(this@NavigationActivity, true, object : DisclaimerDialog.IOnSubmitListener {
-            override fun submit(isCheck: Boolean) {
-                if (isCheck) {
-                    preference(applicationContext).isShowDisclaimer = false
+        val mDisclaimerDialog = DisclaimerDialog(
+            this@NavigationActivity,
+            true,
+            object : DisclaimerDialog.IOnSubmitListener {
+                override fun submit(isCheck: Boolean) {
+                    if (isCheck) {
+                        preference(applicationContext).isShowDisclaimer = false
+                    }
                 }
-            }
-        })
+            })
         mDisclaimerDialog.show()
     }
 
@@ -381,10 +406,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         album_search.clearFocus()
 
-        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,
-                fragment,
-                fragment.javaClass.simpleName)
-                .commit()
+        supportFragmentManager.beginTransaction().replace(
+            R.id.nav_host_fragment,
+            fragment,
+            fragment.javaClass.simpleName
+        )
+            .commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -428,18 +455,18 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             playerUI = PlayerUIFragment()
 
             supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.player_ui_container, playerUI!!, playerUI!!.javaClass.simpleName)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.player_ui_container, playerUI!!, playerUI!!.javaClass.simpleName)
+                .commitNow()
         }
     }
 
     fun hidePlayerUI() {
         playerUI?.let {
             supportFragmentManager
-                    .beginTransaction()
-                    .remove(it)
-                    .commitNow()
+                .beginTransaction()
+                .remove(it)
+                .commitNow()
         }
         playerUI = null
     }
@@ -476,10 +503,17 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         mProgramsSearchAdapter!!.setOnClickListener(object : ProgramsSearchAdapter.Listener {
             override fun onProgramSearchClick(program: Program, i: Int) {
                 supportFragmentManager
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out)
-                        .replace(R.id.nav_host_fragment, ProgramDetailFragment.newInstance(program.id), ProgramDetailFragment().javaClass.simpleName)
-                        .commit()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                        R.anim.trans_right_to_left_in,
+                        R.anim.trans_right_to_left_out
+                    )
+                    .replace(
+                        R.id.nav_host_fragment,
+                        ProgramDetailFragment.newInstance(program.id),
+                        ProgramDetailFragment().javaClass.simpleName
+                    )
+                    .commit()
             }
         })
         search_programs_recycler.adapter = mProgramsSearchAdapter
@@ -494,11 +528,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(album)
                 } else {
                     if (album.tier_id == 3
-                            && preference(applicationContext).isHighQuantum) {
+                        && preference(applicationContext).isHighQuantum
+                    ) {
                         converted.add(album)
                     }
                     if (album.tier_id == 4
-                            && preference(applicationContext).isInnerCircle) {
+                        && preference(applicationContext).isInnerCircle
+                    ) {
                         converted.add(album)
                     }
                 }
@@ -523,11 +559,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(track)
                 } else {
                     if (track.tier_id == 3
-                            && preference(applicationContext).isHighQuantum) {
+                        && preference(applicationContext).isHighQuantum
+                    ) {
                         converted.add(track)
                     }
                     if (track.tier_id == 4
-                            && preference(applicationContext).isInnerCircle) {
+                        && preference(applicationContext).isInnerCircle
+                    ) {
                         converted.add(track)
                     }
                 }
@@ -592,12 +630,28 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     private fun startAlbumDetails(album: Album) {
         if (album.isUnlocked) {
             supportFragmentManager
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out, R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
-                    .replace(R.id.nav_host_fragment, NewAlbumDetailFragment.newInstance(album.id), NewAlbumDetailFragment().javaClass.simpleName)
-                    .commit()
+                .beginTransaction()
+                .setCustomAnimations(
+                    R.anim.trans_right_to_left_in,
+                    R.anim.trans_right_to_left_out,
+                    R.anim.trans_left_to_right_in,
+                    R.anim.trans_left_to_right_out
+                )
+                .replace(
+                    R.id.nav_host_fragment,
+                    NewAlbumDetailFragment.newInstance(album.id),
+                    NewAlbumDetailFragment().javaClass.simpleName
+                )
+                .commit()
         } else {
-            startActivity(NewPurchaseActivity.newIntent(applicationContext, album.category_id, album.tier_id,album.id))
+            startActivity(
+                NewPurchaseActivity.newIntent(
+                    applicationContext,
+                    album.category_id,
+                    album.tier_id,
+                    album.id
+                )
+            )
         }
     }
 
@@ -606,16 +660,15 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
     //endregion
 
-    //region INSTALL NEW APK
     private fun dialogConfirmUpdateApk(apkUrl: String) {
         try {
             AlertDialog.Builder(this)
-                    .setTitle(R.string.txt_warning_update_newversion_title)
-                    .setMessage(R.string.txt_warning_update_newversion)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.txt_agree) { _, _ ->
-                        downloadAPK(apkUrl)
-                    }.setNegativeButton(R.string.txt_disagree) { _, _ -> }.show()
+                .setTitle(R.string.txt_warning_update_newversion_title)
+                .setMessage(R.string.txt_warning_update_newversion)
+                .setCancelable(false)
+                .setPositiveButton(R.string.txt_agree) { _, _ ->
+                    downloadAPK(apkUrl)
+                }.setNegativeButton(R.string.txt_disagree) { _, _ -> }.show()
         } catch (ex: WindowManager.BadTokenException) {
         }
     }
@@ -642,14 +695,22 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         request.setDestinationUri(Uri.fromFile(apkFile))
         refId = downloadManager.enqueue(request)
 
-        Toast.makeText(applicationContext, getString(R.string.txt_downloading_dot), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            applicationContext,
+            getString(R.string.txt_downloading_dot),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private val downloadNewApkReceiver = object : BroadcastReceiver() {
         override fun onReceive(ctxt: Context, intent: Intent) {
             val referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (refId == referenceId) {
-                Toast.makeText(applicationContext, getString(R.string.toast_download_complete), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.toast_download_complete),
+                    Toast.LENGTH_LONG
+                ).show()
 
                 autoInstallNewAPK()
                 unregisterReceiver(this)
@@ -660,8 +721,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     private fun autoInstallNewAPK() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!packageManager.canRequestPackageInstalls()) {
-                startActivityForResult(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                        .setData(Uri.parse(String.format("package:%s", packageName))), REQUEST_CODE_BEFORE_INSTALL)
+                startActivityForResult(
+                    Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                        .setData(Uri.parse(String.format("package:%s", packageName))),
+                    REQUEST_CODE_BEFORE_INSTALL
+                )
                 return
             }
         }
@@ -670,12 +734,16 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val install = Intent(Intent.ACTION_INSTALL_PACKAGE)
                 install.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                val apkUri = FileProvider.getUriForFile(this, "$packageName.provider", File(mLocalApkPath!!))
+                val apkUri =
+                    FileProvider.getUriForFile(this, "$packageName.provider", File(mLocalApkPath!!))
                 install.data = apkUri
                 startActivityForResult(install, REQUEST_CODE_AFTER_INSTALL)
             } else {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(Uri.fromFile(File(mLocalApkPath!!)), "application/vnd.android.package-archive")
+                intent.setDataAndType(
+                    Uri.fromFile(File(mLocalApkPath!!)),
+                    "application/vnd.android.package-archive"
+                )
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivityForResult(intent, REQUEST_CODE_AFTER_INSTALL)
             }
@@ -735,10 +803,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 if (jsonCurrent != null && jsonCurrent.flashSale != null) {
                     flashsaleCurrentString = Gson().toJson(jsonCurrent.flashSale)
                 }
-                val jsonOrgrialString = SharedPreferenceHelper.getInstance().get(Constants.PREF_FLASH_SALE)
+                val jsonOrgrialString =
+                    SharedPreferenceHelper.getInstance().get(Constants.PREF_FLASH_SALE)
                 var flashsaleOrgrialString = ""
                 if (jsonOrgrialString != null) {
-                    val jsonOrgrial = Gson().fromJson(jsonOrgrialString, GetFlashSaleOutput::class.java)
+                    val jsonOrgrial =
+                        Gson().fromJson(jsonOrgrialString, GetFlashSaleOutput::class.java)
                     if (jsonOrgrial != null && jsonOrgrial.flashSale != null) {
                         flashsaleOrgrialString = Gson().toJson(jsonOrgrial.flashSale)
                     }
@@ -747,13 +817,16 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 SharedPreferenceHelper.getInstance().set(Constants.PREF_FLASH_SALE, jsonFlashSale)
 
                 if (!flashsaleCurrentString.equals(flashsaleOrgrialString, ignoreCase = true)) {
-                    SharedPreferenceHelper.getInstance().setInt(Constants.PREF_FLASH_SALE_COUNTERED, 0)
+                    SharedPreferenceHelper.getInstance()
+                        .setInt(Constants.PREF_FLASH_SALE_COUNTERED, 0)
                     loadDs()
                 }
 
                 fetchInterstitialDs()
 
-                if (SharedPreferenceHelper.getInstance().getInt(Constants.PREF_FLASH_SALE_COUNTERED) <= jsonCurrent.flashSale.proposalsCount!!) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getInt(Constants.PREF_FLASH_SALE_COUNTERED) <= jsonCurrent.flashSale.proposalsCount!!
+                ) {
                     QcAlarmManager.createAlarms(this)
                 } else {
                     QcAlarmManager.clearAlarms(this)
@@ -785,7 +858,10 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     fun loadDs() {
         val jsonOrgrialString = SharedPreferenceHelper.getInstance().get(Constants.PREF_FLASH_SALE)
         if (jsonOrgrialString != null && jsonOrgrialString.length > 0) {
-            val flashSaleOutput = Gson().fromJson<GetFlashSaleOutput>(jsonOrgrialString, GetFlashSaleOutput::class.java!!)
+            val flashSaleOutput = Gson().fromJson<GetFlashSaleOutput>(
+                jsonOrgrialString,
+                GetFlashSaleOutput::class.java!!
+            )
 
             if (flashSaleOutput.advertisements != null && flashSaleOutput.advertisements.enableBanner!! && (this is NavigationActivity)) {
 
@@ -813,9 +889,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 var min: String = if (mins > 9) "" + mins else "0$mins"
                 var second: String = if (secs > 9) "" + secs else "0$secs"
                 if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)
-                        && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
-                        && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
-                        && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)) {
+                    && SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_ADVANCED)
+                    && SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+                    && SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)
+                ) {
                     flash_sale.visibility = View.GONE
                 } else {
                     flash_sale.visibility = View.VISIBLE
@@ -838,7 +918,10 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     fun fetchInterstitialDs() {
         val jsonOrgrialString = SharedPreferenceHelper.getInstance().get(Constants.PREF_FLASH_SALE)
         if (jsonOrgrialString != null && jsonOrgrialString.length > 0) {
-            val flashSaleOutput = Gson().fromJson<GetFlashSaleOutput>(jsonOrgrialString, GetFlashSaleOutput::class.java!!)
+            val flashSaleOutput = Gson().fromJson<GetFlashSaleOutput>(
+                jsonOrgrialString,
+                GetFlashSaleOutput::class.java!!
+            )
             if (flashSaleOutput != null && flashSaleOutput.advertisements != null && flashSaleOutput.advertisements.enable!!) {
                 if (!SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
 
@@ -847,18 +930,20 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         }
     }
 
-    fun askRating(){
+    fun askRating() {
         AppRating.Builder(this)
             .setMinimumLaunchTimes(9)
             .setMinimumDays(3)
             .setMinimumLaunchTimesToShowAgain(9)
             .setMinimumDaysToShowAgain(3)
             .setRatingThreshold(RatingThreshold.FOUR)
-            .setConfirmButtonClickListener(object : ConfirmButtonClickListener{
+            .setConfirmButtonClickListener(object : ConfirmButtonClickListener {
                 override fun onClick(userRating: Float) {
                     AppRating.openPlayStoreListing(this@NavigationActivity)
                 }
             })
             .showIfMeetsConditions()
     }
+
+
 }

@@ -49,6 +49,9 @@ interface AlbumDao {
     @Query("SELECT * FROM album WHERE id=:id")
     fun getAlbumById(id: Int) : Album?
 
+    @Query("SELECT * FROM album WHERE isUnlocked=:isUnlocked ORDER BY RANDOM() LIMIT 1")
+    fun getRandomAlbum(isUnlocked: Boolean) : Album?
+
     @Query("SELECT * FROM album ORDER BY `order` ASC")
     fun getData() : List<Album>?
 

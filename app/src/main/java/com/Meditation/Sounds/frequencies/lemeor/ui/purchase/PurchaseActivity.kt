@@ -271,7 +271,6 @@ class PurchaseActivity : AppCompatActivity() {
                 BillingResponseCode.OK -> {
                     // Handle the success of the consume operation.
                     Log.e("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
-
                     val db = DataBase.getInstance(applicationContext)
                     val categoryDao = db.categoryDao()
                     val albumDao = db.albumDao()
