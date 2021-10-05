@@ -11,9 +11,14 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.feature.album.detail.DescriptionAdapter
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.loadImage
+import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.AlbumsPagerAdapter
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_new_purchase.*
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -61,11 +66,16 @@ class AdvActivity : AppCompatActivity() {
             album_description_recycler?.adapter = mDescriptionAdapter
             adv_tital?.text = album?.name
 
-//            loadImage(
-//                this@AdvActivity,
-//                album_image!!,
-//                album!!
-//            )
+            CoroutineScope(Dispatchers.Main).launch {
+                loadImage(
+                    this@AdvActivity,
+                    album_image!!,
+                    album!!
+                )
+            }
         }
+
     }
+
+   
 }
