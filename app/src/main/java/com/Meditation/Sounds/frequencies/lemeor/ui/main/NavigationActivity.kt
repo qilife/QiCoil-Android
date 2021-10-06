@@ -257,7 +257,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             // yourMethod();
             val intent = Intent(this, AdvActivity::class.java)
             startActivity(intent)
-        }, 30000)
+        }, 5000)
 
 
         if (BuildConfig.IS_FREE) {

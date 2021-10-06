@@ -94,6 +94,13 @@ class NewPurchaseActivity : AppCompatActivity() {
 
                 val albumsPagerAdapter = AlbumsPagerAdapter(supportFragmentManager, albumList)
                 purchase_container.adapter = albumsPagerAdapter
+                val index = albumList.indexOfFirst{
+                    it.id == Id
+                }
+                purchase_container.setCurrentItem(index)
+
+
+
             }
         }
         purchase_container.clipToPadding = false
