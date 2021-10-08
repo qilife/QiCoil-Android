@@ -252,16 +252,22 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             startActivity(Intent(applicationContext, AuthActivity::class.java))
         }
 
-        val handler = Handler()
-        handler.postDelayed(Runnable {
-            // yourMethod();
-            val intent = Intent(this, AdvActivity::class.java)
-            startActivity(intent)
-        }, 5000)
+
 
 
         if (BuildConfig.IS_FREE) {
             quantumOnCreate()
+        }
+        else
+        {
+            if (preference(applicationContext).isLogged) {
+                val handler = Handler()
+                handler.postDelayed(Runnable {
+                    // yourMethod();
+                    val intent = Intent(this, AdvActivity::class.java)
+                    startActivity(intent)
+                }, 5000)
+            }
         }
 
         GetFlashSaleTask(this, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
