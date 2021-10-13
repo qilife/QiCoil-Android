@@ -123,12 +123,16 @@ fun getPreloadedSaveDir(context: Context, track: Track, album: Album): String {
 
 @RequiresApi(Build.VERSION_CODES.KITKAT)
 fun getSaveDir(context: Context, track: Track, album: Album): String {
-
+//    val oldFolder = File( context.getExternalFilesDir(
+//        Environment.DIRECTORY_DOCUMENTS).toString(), "tracks")
+//    val newFolder = File(context.getExternalFilesDir(
+//        Environment.DIRECTORY_DOCUMENTS).toString(), ".tracks")
+//    val success = oldFolder.renameTo(newFolder)
     if(BuildConfig.IS_FREE) {
         return context.getExternalFilesDir(
                 Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
-                "tracks" +
+                ".tracks" +
                 File.separator +
                 album.audio_folder +
                 File.separator +
