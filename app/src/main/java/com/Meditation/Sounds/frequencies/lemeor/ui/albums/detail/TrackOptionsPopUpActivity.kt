@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.*
@@ -78,6 +80,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setUI() {
         val trackId = intent.getIntExtra(EXTRA_TRACK_ID, -1)
         if (trackId == -1) {

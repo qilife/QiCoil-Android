@@ -1,12 +1,16 @@
 package com.Meditation.Sounds.frequencies.lemeor
 
 import android.content.Context
+import android.os.Build
+import android.os.Environment
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.exception.ApiException
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiConfig
@@ -92,24 +96,53 @@ fun getTrackUrl(album: Album?, track: Track): String {
     return uri.toASCIIString()
 }
 
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun getPreloadedSaveDir(context: Context, track: Track, album: Album): String {
-    return context.getExternalFilesDir(null).toString() +
-            File.separator +
-            ".tracks" +
-            File.separator +
-            album.audio_folder +
-            File.separator +
-            track.filename.replace("%", "")
+
+    if(BuildConfig.IS_FREE) {
+        return context.getExternalFilesDir(
+                Environment.DIRECTORY_DOCUMENTS).toString() +
+                File.separator +
+                "tracks" +
+                File.separator +
+                album.audio_folder +
+                File.separator +
+                track.filename.replace("%", "")
+    }
+    else
+    {
+        return context.getExternalFilesDir(null).toString() +
+                File.separator +
+                ".tracks" +
+                File.separator +
+                album.audio_folder +
+                File.separator +
+                track.filename.replace("%", "")
+    }
 }
 
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun getSaveDir(context: Context, track: Track, album: Album): String {
-    return context.filesDir.toString() +
-            File.separator +
-            ".tracks" +
-            File.separator +
-            album.audio_folder +
-            File.separator +
-            track.filename.replace("%", "")
+
+    if(BuildConfig.IS_FREE) {
+        return context.getExternalFilesDir(
+                Environment.DIRECTORY_DOCUMENTS).toString() +
+                File.separator +
+                "tracks" +
+                File.separator +
+                album.audio_folder +
+                File.separator +
+                track.filename.replace("%", "")
+    }
+    else{
+        return context.filesDir.toString() +
+                File.separator +
+                ".tracks" +
+                File.separator +
+                album.audio_folder +
+                File.separator +
+                track.filename.replace("%", "")
+    }
 }
 
 fun getConvertedTime(millis: Long) : String {

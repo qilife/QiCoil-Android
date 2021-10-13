@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -60,6 +62,7 @@ class NewAlbumDetailFragment : Fragment() {
     private var albumDao: AlbumDao? = null
     private var isDownloaded: Boolean = true
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
@@ -147,6 +150,7 @@ class NewAlbumDetailFragment : Fragment() {
         albumDao = DataBase.getInstance(requireContext()).albumDao()
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setUI(album: Album) {
         currentTrackIndex.observe(viewLifecycleOwner, {
             album.tracks.forEachIndexed { index, _ ->
@@ -209,6 +213,7 @@ class NewAlbumDetailFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun playOrDownload(album: Album) {
         if (!isDownloaded) {
             if (!Utils.isConnectedToNetwork(requireContext())) {
@@ -245,6 +250,7 @@ class NewAlbumDetailFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun play(album: Album) {
         val activity = activity as NavigationActivity
 

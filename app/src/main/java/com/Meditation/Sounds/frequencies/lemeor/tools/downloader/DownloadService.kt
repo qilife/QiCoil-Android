@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.Meditation.Sounds.frequencies.R
@@ -163,6 +164,7 @@ class DownloadService : Service() {
         return count
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun enqueueFiles() {
         val requestList: List<Request> = getRequests()
 
@@ -208,6 +210,7 @@ class DownloadService : Service() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun getRequests(): List<Request> {
         val requests: MutableList<Request> = ArrayList()
 
