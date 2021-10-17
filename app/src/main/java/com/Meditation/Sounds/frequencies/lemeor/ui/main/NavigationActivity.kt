@@ -77,6 +77,10 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.suddenh4x.ratingdialog.AppRating
 import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
@@ -119,6 +123,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     private var programsSearch = MutableLiveData<List<Program>>()
 
     private var mCallbackManager: CallbackManager? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
@@ -253,8 +258,6 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         }
 
 
-
-
         if (BuildConfig.IS_FREE) {
             quantumOnCreate()
         } else {
@@ -329,6 +332,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
     private fun init() {
+
+        firebaseAnalytics = Firebase.analytics
+
         mViewModel = ViewModelProvider(
             this, ViewModelFactory(
                 ApiHelper(RetrofitBuilder(applicationContext).apiService),
@@ -342,7 +348,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         flash_sale.visibility = View.GONE //At the request of the client
 
-        if (BuildConfig.IS_FREE) {
+       // if (BuildConfig.IS_FREE) {
             flash_sale.visibility = View.GONE
             nav_view.menu.removeItem(R.id.navigation_videos)
             val folder =
@@ -376,7 +382,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 val success = oldFolder.renameTo(newFolder)
                 Log.e("HIDE", "Directory is not empty")
             }
-        }
+      //  }
 
         viewGroupDownload.setOnClickListener {
             if (downloadedTracks != null) {
