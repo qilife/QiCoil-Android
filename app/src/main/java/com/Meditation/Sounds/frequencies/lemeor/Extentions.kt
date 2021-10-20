@@ -139,8 +139,9 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
                 track.filename.replace("%", "")
     }
     else{
-        return context.getExternalFilesDir(
-            Environment.DIRECTORY_DOCUMENTS).toString() +
+        return context.filesDir.toString() +
+//        return context.getExternalFilesDir(
+//            Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 ".tracks" +
                 File.separator +

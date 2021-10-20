@@ -100,6 +100,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
+import android.R.id
+
+import android.os.Bundle
+
+
+
 
 
 const val REQUEST_CODE_PERMISSION = 1111
@@ -247,6 +253,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         EventBus.getDefault().register(this)
 
+
         init()
 
         syncData()
@@ -333,7 +340,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     private fun init() {
 
-        firebaseAnalytics = Firebase.analytics
+//        firebaseAnalytics = Firebase.analytics
+//        val bundle = Bundle()
+//        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id")
+//        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "name")
+//        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+//        firebaseAnalytics.logEvent("Navigation_Activity_Test", bundle)
 
         mViewModel = ViewModelProvider(
             this, ViewModelFactory(

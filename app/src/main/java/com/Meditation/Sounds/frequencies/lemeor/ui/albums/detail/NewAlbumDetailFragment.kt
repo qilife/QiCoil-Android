@@ -36,6 +36,11 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragmen
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.utils.Utils
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.analytics.FirebaseAnalytics.Param
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.album_item.view.*
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
 import kotlinx.coroutines.CoroutineScope
@@ -56,7 +61,7 @@ class NewAlbumDetailFragment : Fragment() {
     private lateinit var mViewModel: NewAlbumDetailViewModel
     private var mDescriptionAdapter: DescriptionAdapter? = null
     private var mTrackAdapter: AlbumTrackAdapter? = null
-
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private var trackDao: TrackDao? = null
     private var albumDao: AlbumDao? = null
@@ -72,6 +77,7 @@ class NewAlbumDetailFragment : Fragment() {
                 var isDownloaded = true
 
                 album?.tracks?.forEach {
+                    Log.e("DIRRRRRRRR", getSaveDir(requireContext(), it, album!!))
                     val file = File(getSaveDir(requireContext(), it, album!!))
                     val preloaded = File(getPreloadedSaveDir(requireContext(), it, album!!))
 
@@ -96,6 +102,7 @@ class NewAlbumDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
+
     }
 
     override fun onDestroy() {
@@ -110,7 +117,7 @@ class NewAlbumDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        firebaseAnalytics = Firebase.analytics
         initUI()
 
         mViewModel.album(albumId)?.observe(viewLifecycleOwner, {
@@ -216,6 +223,11 @@ class NewAlbumDetailFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun playOrDownload(album: Album) {
         if (!isDownloaded) {
+            firebaseAnalytics.logEvent("Downloads") {
+                param("Album Id", album.id.toString())
+                param("Album Name", album.name)
+               // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+            }
             if (!Utils.isConnectedToNetwork(requireContext())) {
                 Toast.makeText(requireContext(), getString(R.string.err_network_available), Toast.LENGTH_SHORT).show()
                 return
@@ -227,8 +239,9 @@ class NewAlbumDetailFragment : Fragment() {
             GlobalScope.launch {
                 album.tracks.forEach { t->
                     val track = trackDao.getTrackById(t.id)
-
+                    // /data/user/0/com.Meditation.Sounds.frequencies/files/.tracks/06. Spiritual Awakening Bundle/Remove Negative Energy.mp3
                     //for preloaded tracks
+                    Log.e("DIRRRRRRRR", getSaveDir(requireContext(), t, Companion.album!!))
                     val file = File(getSaveDir(requireContext(), t, album))
                     val preloaded = File(getPreloadedSaveDir(requireContext(), t, album))
 
@@ -267,6 +280,7 @@ class NewAlbumDetailFragment : Fragment() {
 
         GlobalScope.launch {
             local.forEach {
+                 
                 val file = File(getSaveDir(requireContext(), it, album))
                 val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
 

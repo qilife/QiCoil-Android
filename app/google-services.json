@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "942446389344-vmitujdmhnndm7sfb3qcl34rvqp28p89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Meditation.Sounds.frequencies",
+            "certificate_hash": "a92efede46d064af7a29e4ffb594ca8eda9d1acc"
+          }
+        },
+        {
           "client_id": "942446389344-enu5kv3t8gr36r4hfqcr577r67ohak6j.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +45,14 @@
             {
               "client_id": "942446389344-enu5kv3t8gr36r4hfqcr577r67ohak6j.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "942446389344-dk3c00dq5fo6hlgqq0m8tg2o6etg4fq0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Meditation.Sounds.frequencies",
+                "app_store_id": "1456729917"
+              }
             }
           ]
         }
@@ -66,6 +82,14 @@
             {
               "client_id": "942446389344-enu5kv3t8gr36r4hfqcr577r67ohak6j.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "942446389344-dk3c00dq5fo6hlgqq0m8tg2o6etg4fq0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Meditation.Sounds.frequencies",
+                "app_store_id": "1456729917"
+              }
             }
           ]
         }

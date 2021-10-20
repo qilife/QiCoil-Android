@@ -25,6 +25,10 @@ import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_HIGH
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_MONTHLY
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.BillingResponseCode
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_purchase.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,11 +45,12 @@ class PurchaseActivity : AppCompatActivity() {
     private var pricesList = ArrayList<TextView>()
     private var fragmentList = arrayListOf(StarterFragment(), MasterFragment(), Abundance1Fragment(), Abundance2Fragment())
     private var index = Random().nextInt(fragmentList.size - 1) + 1
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_purchase)
-
+        firebaseAnalytics = Firebase.analytics
         initUI()
 
         setUpBillingClient()
@@ -253,11 +258,17 @@ class PurchaseActivity : AppCompatActivity() {
                 Log.e("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
 
                 if (billingResult.responseCode == BillingResponseCode.OK && purchases != null) {
+                    firebaseAnalytics.logEvent("In_App_Purchase") {
+                         param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase Complete")
+                    }
                     for (purchase in purchases) {
                         handleConsumedPurchases(purchase)
                     }
                 } else if (billingResult.responseCode == BillingResponseCode.USER_CANCELED) {
                     // Handle an error caused by a user cancelling the purchase flow.
+                    firebaseAnalytics.logEvent("In_App_Purchase") {
+                        param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase CANCELED")
+                    }
                 } else {
                     // Handle any other error codes.
                 }

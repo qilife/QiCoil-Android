@@ -24,6 +24,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.dialog_sign_up.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -50,7 +55,7 @@ class LoginFragment : Fragment() {
     var picture = ""
     var email = ""
     var accessToken = ""
-
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnLoginListener) {
@@ -73,7 +78,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        firebaseAnalytics = Firebase.analytics
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
 
@@ -178,6 +183,11 @@ class LoginFragment : Fragment() {
                 val personId = account.id
             }
             mListener?.onGoogleLogin(account.email,account.displayName,account.id)
+            firebaseAnalytics.logEvent("Sign_Up") {
+                param("Name", account.displayName)
+                param("Email", account.email)
+                // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+            }
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -293,6 +303,11 @@ class LoginFragment : Fragment() {
                 }
 
                 mListener?.onFbLogin(email,name,id)
+                firebaseAnalytics.logEvent("Sign_Up") {
+                    param("Name", name)
+                    param("Email", email)
+                    // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                }
 
                 //openDetailsActivity()
             }).executeAsync()

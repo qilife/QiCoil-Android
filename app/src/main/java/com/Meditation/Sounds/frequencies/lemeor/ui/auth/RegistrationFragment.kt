@@ -9,9 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.dialog_sign_up.*
 
+import com.google.firebase.analytics.FirebaseAnalytics.Param
+
 class RegistrationFragment : Fragment() {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     interface OnRegistrationListener {
         fun onRegistrationInteraction(name: String, email: String, pass: String, confirm: String, uuid: String)
@@ -42,13 +49,18 @@ class RegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        firebaseAnalytics = Firebase.analytics
         mTvSignIn.text = Html.fromHtml(getString(R.string.tv_link_sign_in))
 
         mTvSignIn.setOnClickListener { mListener?.onOpenLogin() }
 
         mBtnGetStartedRegister.setOnClickListener {
             if (isValidRegister()) {
+                firebaseAnalytics.logEvent("Sign_Up") {
+                    param("Name", mEdNameRegister.text.toString())
+                    param("Email", mEdEmailRegister.text.toString())
+                    // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                }
                 mListener?.onRegistrationInteraction(
                         mEdNameRegister.text.toString(),
                         mEdEmailRegister.text.toString(),
