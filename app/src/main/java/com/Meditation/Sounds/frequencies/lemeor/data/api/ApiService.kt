@@ -21,7 +21,8 @@ interface ApiService {
             @Query("password_confirmation") password_confirmation: String,
             @Query("name") name: String,
             @Query("uuid") uuid: String,
-            @Query("os") os: Int
+            @Query("os") os: Int,
+            @Query("flag") flag:Int
     ): AuthResponse
 
     @GET(ApiConfig.API_USER_LOGIN)
@@ -30,7 +31,8 @@ interface ApiService {
         @Query("emailid") email: String,
         @Query("name") name: String,
         @Query("gg_id") gg_id: String,
-        @Query("os") os: Int
+        @Query("os") os: Int,
+        @Query("flag") flag:Int
     ): AuthResponse
 
     @GET(ApiConfig.API_USER_LOGIN)
@@ -38,7 +40,8 @@ interface ApiService {
         @Query("emailid") email: String,
         @Query("name") name: String,
         @Query("fb_id") fb_id: String,
-        @Query("os") os: Int
+        @Query("os") os: Int,
+        @Query("flag") flag:Int
     ): AuthResponse
 
 

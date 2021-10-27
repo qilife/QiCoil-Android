@@ -16,19 +16,19 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
             password_confirmation: String,
             name: String,
             uuid: String
-    ) = apiService.register(email, password, password_confirmation, name, uuid, 0)
+    ) = apiService.register(email, password, password_confirmation, name, uuid, 0,1)
 
     suspend fun googleLogin(
         email: String,
         name: String,
         gg_id: String,
-    ) = apiService.googleLogin(email, name, gg_id , 0)
+    ) = apiService.googleLogin(email, name, gg_id , 0,1)
 
     suspend fun fbLogin(
         email: String,
         name: String,
         fb_id: String
-    ) = apiService.fbLogin(email, name,fb_id, 0)
+    ) = apiService.fbLogin(email, name,fb_id, 0,1)
 
     suspend fun logout() = apiService.logout()
 
