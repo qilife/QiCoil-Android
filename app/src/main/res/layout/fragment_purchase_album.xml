@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".lemeor.ui.purchase.new_flow.PurchaseAlbumFragment">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST"/>
     <com.github.siyamed.shapeimageview.RoundedImageView
         android:id="@+id/purchase_album_image"
         android:layout_width="175dp"

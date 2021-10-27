@@ -189,13 +189,22 @@ class NewPurchaseActivity : AppCompatActivity() {
 
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
 
-
+                    val eventValues = HashMap<String, Any>()
+                    eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                    AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                        "purchase",
+                        eventValues)
 
                     for (purchase in purchases) {
                         handleConsumedPurchases(purchase)
                     }
                 }else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    // Handle an error caused by a user cancelling the purchase flow.
+                    val eventValues = HashMap<String, Any>()
+                    eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                    AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                        "cancel_purchase",
+                        eventValues)
+                // Handle an error caused by a user cancelling the purchase flow.
                 }
             }
 

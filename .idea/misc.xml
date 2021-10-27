@@ -66,6 +66,7 @@
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_new_album_detail.xml" value="0.13949275362318841" />
         <entry key="app/src/main/res/layout/fragment_new_options.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_purchase_album.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_album_advanced.xml" value="0.17617753623188406" />
         <entry key="app/src/main/res/layout/item_album_detail.xml" value="0.12447916666666667" />
         <entry key="app/src/main/res/layout/item_album_higher.xml" value="0.17617753623188406" />

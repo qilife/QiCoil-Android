@@ -22,6 +22,8 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.saveUser
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.token
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.LoginFragment.OnLoginListener
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.RegistrationFragment.OnRegistrationListener
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AppsFlyerLib
 
 class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListener {
 
@@ -72,7 +74,11 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         if(email.toString().equals("guest"))
         {
             sendData()
-
+            val eventValues = HashMap<String, Any>()
+            eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+            AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                "guest_login",
+                eventValues)
         }
         else {
             mViewModel.login(email, password).observe(this, {
@@ -84,6 +90,11 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                             saveAuthData(resource)
 
                             sendData()
+                            val eventValues = HashMap<String, Any>()
+                            eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                            AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                                "login",
+                                eventValues)
                         }
                         Resource.Status.ERROR -> {
                             HudHelper.hide()
@@ -112,6 +123,11 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                         saveAuthData(resource)
 
                         sendData()
+                        val eventValues = HashMap<String, Any>()
+                        eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                            "register",
+                            eventValues)
                     }
                     Resource.Status.ERROR -> {
                         HudHelper.hide()
