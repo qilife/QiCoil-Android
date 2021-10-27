@@ -25,6 +25,9 @@ import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_MONTH
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.android.billingclient.api.*
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
 import kotlinx.android.synthetic.main.activity_new_purchase.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,9 +188,14 @@ class NewPurchaseActivity : AppCompatActivity() {
                 Log.d("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
 
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+
+
+
                     for (purchase in purchases) {
                         handleConsumedPurchases(purchase)
                     }
+                }else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+                    // Handle an error caused by a user cancelling the purchase flow.
                 }
             }
 
@@ -288,6 +296,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                     Log.d("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
 
                     val albumDao = DataBase.getInstance(applicationContext).albumDao()
+
 
                     GlobalScope.launch {
                         when (mSkuDetails?.sku) {

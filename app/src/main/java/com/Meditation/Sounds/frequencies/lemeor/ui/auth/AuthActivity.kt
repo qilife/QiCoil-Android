@@ -72,6 +72,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         if(email.toString().equals("guest"))
         {
             sendData()
+
         }
         else {
             mViewModel.login(email, password).observe(this, {

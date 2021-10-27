@@ -51,11 +51,13 @@
         <entry key="app/src/main/res/drawable/sh_price_left.xml" value="0.1814814814814815" />
         <entry key="app/src/main/res/drawable/sh_price_right.xml" value="0.1814814814814815" />
         <entry key="app/src/main/res/drawable/thumb.xml" value="0.178125" />
+        <entry key="app/src/main/res/layout-land/activity_new_purchase.xml" value="0.12447916666666667" />
         <entry key="app/src/main/res/layout-land/fragment_login.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/layout/activity_adv.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_adv2.xml" value="0.16197916666666667" />
         <entry key="app/src/main/res/layout/activity_auth.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.1634963768115942" />
+        <entry key="app/src/main/res/layout/activity_new_purchase.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_purchase.xml" value="0.11302083333333333" />
         <entry key="app/src/main/res/layout/album_item.xml" value="0.12447916666666667" />
         <entry key="app/src/main/res/layout/dialog_subscription_flash_sale.xml" value="0.1" />

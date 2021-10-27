@@ -36,7 +36,8 @@ class DiscoverFragment : BaseFragment()
                 return true
             }
         }
-        webview_discover.loadUrl("https://qilifestore.com/collections/qi-coils")
+       // webview_discover.loadUrl("https://qilifestore.com/collections/qi-coils")
+        webview_discover.loadUrl("https://qilifestore.com/collections/qi-coils?utm_source=app&utm_medium=android&utm_campaign=qicoilapp&utm_id=qicoilappandroid")
     }
 
     override fun addListener() {
