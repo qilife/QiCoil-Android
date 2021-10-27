@@ -120,12 +120,10 @@ class NewPurchaseActivity : AppCompatActivity() {
             purchase_container.setPadding(275, 0, 275, 0)
             purchase_container.pageMargin = 50
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             val width = displayMetrics.widthPixels
             val result = (width / 4.0).roundToInt()
-
             purchase_container.setPadding(result, 0, result, 0)
             purchase_container.pageMargin = 16
         }
@@ -293,6 +291,7 @@ class NewPurchaseActivity : AppCompatActivity() {
 
                     GlobalScope.launch {
                         when (mSkuDetails?.sku) {
+
                             QUANTUM_TIER_SUBS_MONTH,
                             QUANTUM_TIER_SUBS_ANNUAL -> {
                                 albumDao.setNewUnlockedByTierId(true, QUANTUM_TIER_ID)

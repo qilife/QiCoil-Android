@@ -1,9 +1,9 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.auth
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_CANCELED
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -28,7 +28,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.dialog_sign_up.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -38,8 +37,8 @@ class LoginFragment : Fragment() {
         fun onLoginInteraction(email: String, password: String)
         fun onOpenRegistration()
         fun onOpenForgotPassword()
-        fun onGoogleLogin(email: String,name:String,google_id : String)
-        fun onFbLogin(email: String,name:String,fb_id : String)
+        fun onGoogleLogin(email: String, name: String, google_id: String)
+        fun onFbLogin(email: String, name: String, fb_id: String)
     }
 
     private var mListener: OnLoginListener? = null
@@ -61,8 +60,10 @@ class LoginFragment : Fragment() {
         if (context is OnLoginListener) {
             mListener = context
         } else {
-            throw RuntimeException(context.toString()
-                    + " must implement OnLoginFragmentListener")
+            throw RuntimeException(
+                context.toString()
+                        + " must implement OnLoginFragmentListener"
+            )
         }
     }
 
@@ -71,8 +72,10 @@ class LoginFragment : Fragment() {
         mListener = null
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -83,8 +86,8 @@ class LoginFragment : Fragment() {
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build()
+            .requestEmail()
+            .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
         val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
@@ -97,7 +100,10 @@ class LoginFragment : Fragment() {
         mBtnSignIn.setOnClickListener {
             if (Utils.isConnectedToNetwork(requireContext())) {
                 if (isValidLogin()) {
-                    mListener?.onLoginInteraction(mEdEmailSignIn.text.toString(), mEdPasswordSignIn.text.toString())
+                    mListener?.onLoginInteraction(
+                        mEdEmailSignIn.text.toString(),
+                        mEdPasswordSignIn.text.toString()
+                    )
                 }
             } else {
                 showAlert(requireContext(), getString(R.string.err_network_available))
@@ -119,7 +125,8 @@ class LoginFragment : Fragment() {
         }
 
         rlfacebook_signin.setOnClickListener {
-            LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
+            LoginManager.getInstance()
+                .logInWithReadPermissions(this, listOf("public_profile", "email"))
         }
 
         LoginManager.getInstance().registerCallback(callbackManager, object :
@@ -160,15 +167,18 @@ class LoginFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode === RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-        }
-        else{
-            callbackManager.onActivityResult(requestCode, resultCode, data)
-        }
+        if (resultCode != RESULT_CANCELED)
+            if (requestCode === RC_SIGN_IN) {
+                // The Task returned from this call is always completed, no need to attach
+                // a listener.
+                if (data != null) {
+                    val task: Task<GoogleSignInAccount> =
+                        GoogleSignIn.getSignedInAccountFromIntent(data)
+                    handleSignInResult(task)
+                }
+            } else {
+                callbackManager.onActivityResult(requestCode, resultCode, data)
+            }
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -182,7 +192,7 @@ class LoginFragment : Fragment() {
                 val personEmail = account.email
                 val personId = account.id
             }
-            mListener?.onGoogleLogin(account.email,account.displayName,account.id)
+            mListener?.onGoogleLogin(account.email, account.displayName, account.id)
             firebaseAnalytics.logEvent("Sign_Up") {
                 param("Name", account.displayName)
                 param("Email", account.email)
@@ -302,7 +312,7 @@ class LoginFragment : Fragment() {
                     email = "Not exists"
                 }
 
-                mListener?.onFbLogin(email,name,id)
+                mListener?.onFbLogin(email, name, id)
                 firebaseAnalytics.logEvent("Sign_Up") {
                     param("Name", name)
                     param("Email", email)
