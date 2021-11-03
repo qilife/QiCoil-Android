@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TEST"/>
+        android:text=""/>
     <com.github.siyamed.shapeimageview.RoundedImageView
         android:id="@+id/purchase_album_image"
         android:layout_width="175dp"

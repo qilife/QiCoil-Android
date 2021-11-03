@@ -1,14 +1,18 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.Meditation.Sounds.frequencies.R
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -18,9 +22,21 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchase
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.ItemOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_albums_category.*
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.share.Sharer
+import com.tonyodev.fetch2core.FAILED_TO_CONNECT
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class AlbumsRecyclerFragment : Fragment() {
-
+    var callbackManager: CallbackManager? = null
+    var shareDialog: ShareDialog? = null
+    var selectedAlbum:Album?=null
     interface AlbumsRecyclerListener {
         fun onStartAlbumDetail(album: Album)
     }
@@ -35,6 +51,19 @@ class AlbumsRecyclerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         categoryId = arguments?.getInt(ARG_SECTION_NUMBER)
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog =  ShareDialog(this);
+        //shareDialog.registerCallback(callbackManager, FacebookCallback<Sharer.Result>() {})
+        shareDialog!!.registerCallback(
+            callbackManager!!,
+            object : FacebookCallback<Sharer.Result?> {
+                override fun onError(e: FacebookException) {}
+                override fun onCancel() {}
+                override fun onSuccess(result: Sharer.Result?) {
+                    //Toast.makeText(context,"Successs",Toast.LENGTH_LONG).show()
+                    unlockAlbum(selectedAlbum!!)
+                }
+            })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -90,10 +119,20 @@ class AlbumsRecyclerFragment : Fragment() {
         if (album.isUnlocked) {
             mListener?.onStartAlbumDetail(album)
         } else {
-            startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
+
+            val content = ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies"))
+                .build()
+            shareDialog?.show(content);
+            selectedAlbum = album
+            //startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
+    }
     companion object {
         private const val ARG_SECTION_NUMBER = "section_number"
         @JvmStatic
@@ -104,6 +143,13 @@ class AlbumsRecyclerFragment : Fragment() {
                     putInt(ARG_SECTION_NUMBER, sectionNumber)
                 }
             }
+        }
+    }
+
+    fun unlockAlbum(album: Album){
+        val albumDao = DataBase.getInstance(requireContext()).albumDao()
+        GlobalScope.launch {
+            albumDao.setNewUnlockedById(true, album.id)
         }
     }
 }

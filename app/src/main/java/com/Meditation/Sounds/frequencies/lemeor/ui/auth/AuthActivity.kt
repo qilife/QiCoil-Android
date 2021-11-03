@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiConfig.getPassResetUrl
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
@@ -20,6 +21,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isLogged
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.preference
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.saveUser
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.token
+import com.Meditation.Sounds.frequencies.lemeor.ui.TrialActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.LoginFragment.OnLoginListener
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.RegistrationFragment.OnRegistrationListener
 import com.appsflyer.AFInAppEventParameterName
@@ -29,16 +31,18 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
 
     private lateinit var mViewModel: AuthViewModel
 
-    override fun onBackPressed() { }
+    override fun onBackPressed() {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        mViewModel = ViewModelProvider(this,
-                ViewModelFactory(
-                        ApiHelper(RetrofitBuilder(applicationContext).apiService),
-                        DataBase.getInstance(applicationContext))
+        mViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(applicationContext).apiService),
+                DataBase.getInstance(applicationContext)
+            )
         ).get(AuthViewModel::class.java)
 
         replaceFragment(LoginFragment())
@@ -67,20 +71,24 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
     private fun sendData() {
         val intent = Intent()
         setResult(RESULT_OK, intent)
+        if (!BuildConfig.IS_FREE) {
+            val intent1 = Intent(this, TrialActivity::class.java)
+            startActivity(intent1)
+        }
         finish()
     }
 
     override fun onLoginInteraction(email: String, password: String) {
-        if(email.toString().equals("guest"))
-        {
+        if (email.toString().equals("guest")) {
             sendData()
             val eventValues = HashMap<String, Any>()
             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
-            AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+            AppsFlyerLib.getInstance().logEvent(
+                getApplicationContext(),
                 "guest_login",
-                eventValues)
-        }
-        else {
+                eventValues
+            )
+        } else {
             mViewModel.login(email, password).observe(this, {
                 it?.let { resource ->
                     when (resource.status) {
@@ -92,9 +100,11 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                             sendData()
                             val eventValues = HashMap<String, Any>()
                             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
-                            AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                            AppsFlyerLib.getInstance().logEvent(
+                                getApplicationContext(),
                                 "login",
-                                eventValues)
+                                eventValues
+                            )
                         }
                         Resource.Status.ERROR -> {
                             HudHelper.hide()
@@ -113,7 +123,13 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         replaceFragment(RegistrationFragment())
     }
 
-    override fun onRegistrationInteraction(name: String, email: String, pass: String, confirm: String, uuid: String) {
+    override fun onRegistrationInteraction(
+        name: String,
+        email: String,
+        pass: String,
+        confirm: String,
+        uuid: String
+    ) {
         mViewModel.register(email, pass, confirm, name, uuid).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
@@ -125,9 +141,11 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                         sendData()
                         val eventValues = HashMap<String, Any>()
                         eventValues.put(AFInAppEventParameterName.REVENUE, 0)
-                        AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
+                        AppsFlyerLib.getInstance().logEvent(
+                            getApplicationContext(),
                             "register",
-                            eventValues)
+                            eventValues
+                        )
                     }
                     Resource.Status.ERROR -> {
                         HudHelper.hide()
@@ -141,7 +159,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         })
     }
 
-    override fun onOpenLogin() { replaceFragment(LoginFragment()) }
+    override fun onOpenLogin() {
+        replaceFragment(LoginFragment())
+    }
 
     override fun onOpenForgotPassword() {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getPassResetUrl())))
@@ -172,7 +192,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
 
 
     override fun onFbLogin(email: String, name: String, fb_id: String) {
-        mViewModel.fbLogin(email, name,fb_id).observe(this, {
+        mViewModel.fbLogin(email, name, fb_id).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {

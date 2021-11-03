@@ -7,7 +7,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 class AlbumsRepository(private val localData: DataBase) {
 
     fun getTiers(): LiveData<List<Tier>>? {
-        return localData.tierDao().getTiers(isShow = true)
+        return localData.tierDao().getTiers()
     }
 
     fun getCategoriesByTierId(tierId: Int): LiveData<List<Category>>? {

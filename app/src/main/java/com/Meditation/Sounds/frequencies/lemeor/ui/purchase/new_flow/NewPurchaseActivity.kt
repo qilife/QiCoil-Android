@@ -21,6 +21,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.InappPurchase
 import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.*
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL
+import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_MONTH
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -230,6 +231,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         val subsList = ArrayList<String>()
         subsList.add(QUANTUM_TIER_SUBS_MONTH)
         subsList.add(QUANTUM_TIER_SUBS_ANNUAL)
+        subsList.add(QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL)
 
         val subsParams = SkuDetailsParams.newBuilder()
         subsParams.setSkusList(subsList).setType(BillingClient.SkuType.SUBS)

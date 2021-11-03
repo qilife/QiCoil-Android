@@ -361,7 +361,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         flash_sale.visibility = View.GONE //At the request of the client
 
        // if (BuildConfig.IS_FREE) {
-            flash_sale.visibility = View.GONE
+          //  flash_sale.visibility = View.GONE
             nav_view.menu.removeItem(R.id.navigation_videos)
             val folder =
                 File(

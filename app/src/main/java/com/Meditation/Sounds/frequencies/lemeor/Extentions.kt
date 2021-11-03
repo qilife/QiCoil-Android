@@ -130,7 +130,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
 //    val success = oldFolder.renameTo(newFolder)
     if(BuildConfig.IS_FREE) {
         return context.getExternalFilesDir(
-                Environment.DIRECTORY_DOCUMENTS).toString() +
+            Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 ".tracks" +
                 File.separator +

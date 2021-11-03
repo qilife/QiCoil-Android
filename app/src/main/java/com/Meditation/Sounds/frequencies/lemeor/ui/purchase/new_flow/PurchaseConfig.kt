@@ -2,6 +2,7 @@ package com.Meditation.Sounds.frequencies.lemeor
 
 const val QUANTUM_TIER_SUBS_MONTH = "new.qicoil.subs.quantum.tier.month"
 const val QUANTUM_TIER_SUBS_ANNUAL = "new.qicoil.subs.quantum.tier.annual"
+const val QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL="7_days_trial_yearly"
 
 enum class InappPurchase(val sku: String, val categoryId: Int,val Id: Int) {
     NULL("", -1, -1),

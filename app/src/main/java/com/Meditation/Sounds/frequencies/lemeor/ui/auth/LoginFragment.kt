@@ -232,7 +232,7 @@ class LoginFragment : Fragment() {
                 accessToken = token.toString()
 
                 // Facebook Id
-                if (jsonObject.has("id")) {
+                if (jsonObject!!.has("id")) {
                     val facebookId = jsonObject.getString("id")
                     Log.i("Facebook Id: ", facebookId.toString())
                     id = facebookId.toString()
