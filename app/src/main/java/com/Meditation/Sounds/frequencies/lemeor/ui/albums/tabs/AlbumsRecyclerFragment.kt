@@ -125,7 +125,7 @@ class AlbumsRecyclerFragment : Fragment() {
                 .build()
             shareDialog?.show(content);
             selectedAlbum = album
-            //startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
+           // startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
         }
     }
 

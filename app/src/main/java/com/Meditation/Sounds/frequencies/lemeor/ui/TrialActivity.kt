@@ -59,7 +59,6 @@ class TrialActivity : AppCompatActivity() {
 
         val albumDao = DataBase.getInstance(applicationContext).albumDao()
 
-
         GlobalScope.launch {
 
             var screenName = ""
@@ -67,9 +66,6 @@ class TrialActivity : AppCompatActivity() {
 
 
             albumDao.getAllAlbums()?.let { albumList.addAll(it) }
-
-
-
 
             CoroutineScope(Dispatchers.Main).launch {
                 // purchase_screen_name.text = screenName
@@ -117,7 +113,8 @@ class TrialActivity : AppCompatActivity() {
         PurchasesUpdatedListener { billingResult, purchases ->
             Log.d("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
 
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED && purchases != null) {
+
 
                 val eventValues = HashMap<String, Any>()
                 eventValues.put(AFInAppEventParameterName.REVENUE, 0)
@@ -159,8 +156,7 @@ class TrialActivity : AppCompatActivity() {
     private fun queryAvailableProducts() {
         val subsList = ArrayList<String>()
 
-        subsList.add(QUANTUM_TIER_SUBS_ANNUAL)
-
+        subsList.add(QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL)
 
         val subsParams = SkuDetailsParams.newBuilder()
         subsParams.setSkusList(subsList).setType(BillingClient.SkuType.SUBS)
@@ -204,24 +200,34 @@ class TrialActivity : AppCompatActivity() {
                 BillingClient.BillingResponseCode.OK -> {
                     // Handle the success of the consume operation.
                     Log.d("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
-
                     val albumDao = DataBase.getInstance(applicationContext).albumDao()
-
-
                     GlobalScope.launch {
                         when (mSkuDetails?.sku) {
-
-
-                            QUANTUM_TIER_SUBS_ANNUAL -> {
+                            QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL -> {
                                 albumDao.setNewUnlockedByTierId(
                                     true,
                                     QUANTUM_TIER_ID
                                 )
                             }
-
                         }
                     }
+                    finish()
+                }
 
+                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+                    // Handle the success of the consume operation.
+                    Log.d("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
+                    val albumDao = DataBase.getInstance(applicationContext).albumDao()
+                    GlobalScope.launch {
+                        when (mSkuDetails?.sku) {
+                            QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL -> {
+                                albumDao.setNewUnlockedByTierId(
+                                    true,
+                                    QUANTUM_TIER_ID
+                                )
+                            }
+                        }
+                    }
                     finish()
                 }
                 else -> {
