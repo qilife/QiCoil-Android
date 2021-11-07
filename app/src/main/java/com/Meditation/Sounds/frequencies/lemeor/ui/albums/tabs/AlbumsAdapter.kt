@@ -38,10 +38,20 @@ class AlbumsAdapter(
 
         holder.itemView.image.radius = mContext.resources!!.getDimensionPixelOffset(R.dimen.corner_radius_album)
 
-//        if (album.isUnlocked) { holder.itemView.image_lock.visibility = View.GONE }
-//        else { holder.itemView.image_lock.visibility = View.VISIBLE }
-        if (album.isUnlocked) { holder.itemView.lock.visibility = View.GONE }
-        else { holder.itemView.lock.visibility = View.VISIBLE }
+       if (album.isUnlocked) { holder.itemView.image_lock.visibility = View.GONE }
+       else {
+           if (album.id == 221 || album.id == 1) {
+               holder.itemView.image_lock.visibility = View.GONE
+               holder.itemView.lock.visibility = View.VISIBLE
+           } else {
+               holder.itemView.image_lock.visibility = View.VISIBLE
+               holder.itemView.lock.visibility = View.GONE
+           }
+
+       }
+           //holder.itemView.image_lock.visibility = View.VISIBLE }
+//        if (album.isUnlocked) { holder.itemView.lock.visibility = View.GONE }
+  //      else { holder.itemView.lock.visibility = View.VISIBLE }
         loadImage(mContext, holder.itemView.image, album)
 
         holder.itemView.setOnClickListener { mListener?.onClickItem(album) }

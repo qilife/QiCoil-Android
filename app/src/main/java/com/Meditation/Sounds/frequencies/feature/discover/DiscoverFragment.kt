@@ -29,7 +29,7 @@ class DiscoverFragment : BaseFragment()
 
     override fun initComponents() {
         webview_discover.settings.setJavaScriptEnabled(true)
-
+        webview_discover.settings.setDomStorageEnabled(true);
         webview_discover.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url.toString())

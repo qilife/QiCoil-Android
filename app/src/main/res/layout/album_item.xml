@@ -22,7 +22,7 @@
         app:siBorderColor="@color/transparent"
         app:siBorderWidth="0dp"
         app:siRadius="@dimen/corner_radius_album"
-        android:visibility="gone"
+        android:visibility="visible"
         app:siSquare="true" />
 
     <LinearLayout
@@ -31,6 +31,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:id="@+id/lock"
+        android:visibility="gone"
         android:orientation="vertical"
         android:background="#7EABABAB"
         >

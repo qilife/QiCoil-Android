@@ -40,6 +40,8 @@ class AlbumsAdapter(private val mContext: Context?, var data: List<Album>, priva
         } else {
             holder.itemView.image_lock.visibility = View.VISIBLE
         }
+
+
         if (!TextUtils.isEmpty(album.albumArt)) {
             if (album.albumArt!!.startsWith("http")) {
                 Glide.with(holder.itemView.context)

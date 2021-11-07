@@ -44,8 +44,8 @@ android {
     productFlavors {
         qicoil {
             applicationId 'com.Meditation.Sounds.frequencies'
-            versionCode 2215
-            versionName "2.2.15"
+            versionCode 2216
+            versionName "2.2.16"
 
             buildConfigField "String", "PREF_TITLE", '"pref_cache"'
             buildConfigField "String", "DB_NAME", '"new_qicoil"'

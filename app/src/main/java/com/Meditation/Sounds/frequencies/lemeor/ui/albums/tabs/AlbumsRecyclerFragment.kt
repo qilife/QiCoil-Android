@@ -36,7 +36,8 @@ import kotlinx.coroutines.launch
 class AlbumsRecyclerFragment : Fragment() {
     var callbackManager: CallbackManager? = null
     var shareDialog: ShareDialog? = null
-    var selectedAlbum:Album?=null
+    var selectedAlbum: Album? = null
+
     interface AlbumsRecyclerListener {
         fun onStartAlbumDetail(album: Album)
     }
@@ -52,18 +53,18 @@ class AlbumsRecyclerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         categoryId = arguments?.getInt(ARG_SECTION_NUMBER)
         callbackManager = CallbackManager.Factory.create();
-        shareDialog =  ShareDialog(this);
+        shareDialog = ShareDialog(this);
         //shareDialog.registerCallback(callbackManager, FacebookCallback<Sharer.Result>() {})
         shareDialog!!.registerCallback(
-            callbackManager!!,
-            object : FacebookCallback<Sharer.Result?> {
-                override fun onError(e: FacebookException) {}
-                override fun onCancel() {}
-                override fun onSuccess(result: Sharer.Result?) {
-                    //Toast.makeText(context,"Successs",Toast.LENGTH_LONG).show()
-                    unlockAlbum(selectedAlbum!!)
-                }
-            })
+                callbackManager!!,
+                object : FacebookCallback<Sharer.Result?> {
+                    override fun onError(e: FacebookException) {}
+                    override fun onCancel() {}
+                    override fun onSuccess(result: Sharer.Result?) {
+                        //Toast.makeText(context,"Successs",Toast.LENGTH_LONG).show()
+                        unlockAlbum(selectedAlbum!!)
+                    }
+                })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -76,7 +77,7 @@ class AlbumsRecyclerFragment : Fragment() {
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             albums_recycler_view.layoutManager = GridLayoutManager(context, 3)
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             albums_recycler_view.layoutManager = GridLayoutManager(context, 2)
         }
     }
@@ -105,7 +106,7 @@ class AlbumsRecyclerFragment : Fragment() {
         albums_recycler_view.setHasFixedSize(true)
         if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             albums_recycler_view.layoutManager = GridLayoutManager(context, 3)
-        } else if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
             albums_recycler_view.layoutManager = GridLayoutManager(context, 2)
         }
         albums_recycler_view.adapter = mAlbumAdapter
@@ -119,13 +120,14 @@ class AlbumsRecyclerFragment : Fragment() {
         if (album.isUnlocked) {
             mListener?.onStartAlbumDetail(album)
         } else {
-
-            val content = ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies"))
-                .build()
-            shareDialog?.show(content);
-            selectedAlbum = album
-           // startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id,album.id))
+            if (album.id == 1 || album.id == 201) {
+                val content = ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies"))
+                        .build()
+                shareDialog?.show(content);
+                selectedAlbum = album
+            } else
+                startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
         }
     }
 
@@ -133,8 +135,10 @@ class AlbumsRecyclerFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
+
     companion object {
         private const val ARG_SECTION_NUMBER = "section_number"
+
         @JvmStatic
         fun newInstance(sectionNumber: Int, listener: AlbumsRecyclerListener): AlbumsRecyclerFragment {
             return AlbumsRecyclerFragment().apply {
@@ -146,7 +150,7 @@ class AlbumsRecyclerFragment : Fragment() {
         }
     }
 
-    fun unlockAlbum(album: Album){
+    fun unlockAlbum(album: Album) {
         val albumDao = DataBase.getInstance(requireContext()).albumDao()
         GlobalScope.launch {
             albumDao.setNewUnlockedById(true, album.id)
