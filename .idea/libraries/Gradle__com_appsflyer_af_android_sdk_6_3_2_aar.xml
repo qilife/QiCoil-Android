@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89d223a481f7676cb3f73c3fc7317efc/jetified-af-android-sdk-6.3.2/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89d223a481f7676cb3f73c3fc7317efc/jetified-af-android-sdk-6.3.2/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89d223a481f7676cb3f73c3fc7317efc/jetified-af-android-sdk-6.3.2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5cae8ee61e973cc6cbd782f60b5e168d/jetified-af-android-sdk-6.3.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5cae8ee61e973cc6cbd782f60b5e168d/jetified-af-android-sdk-6.3.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5cae8ee61e973cc6cbd782f60b5e168d/jetified-af-android-sdk-6.3.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.appsflyer/af-android-sdk/6.3.2/92a661f6838ef6ab3d44b3d380cfd5a9350132f0/af-android-sdk-6.3.2-javadoc.jar!/" />
