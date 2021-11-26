@@ -363,37 +363,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
        // if (BuildConfig.IS_FREE) {
           //  flash_sale.visibility = View.GONE
             nav_view.menu.removeItem(R.id.navigation_videos)
-            val folder =
-                File(
-                    applicationContext.getExternalFilesDir(
-                        Environment.DIRECTORY_DOCUMENTS
-                    ).toString(), "tracks"
-                )
-            val Hfolder =
-                File(
-                    applicationContext.getExternalFilesDir(
-                        Environment.DIRECTORY_DOCUMENTS
-                    ).toString(), ".tracks"
-                )
-            if (!folder.exists() && !Hfolder.exists())
-                folder.mkdir()
-            // val parentDir: File = folder.getParentFile()
-            if (folder.isDirectory && folder.list().size == 0) {
-                Log.e("HIDE", "Directory is empty")
-            } else {
-                val oldFolder = File(
-                    applicationContext.getExternalFilesDir(
-                        Environment.DIRECTORY_DOCUMENTS
-                    ).toString(), "tracks"
-                )
-                val newFolder = File(
-                    applicationContext.getExternalFilesDir(
-                        Environment.DIRECTORY_DOCUMENTS
-                    ).toString(), ".tracks"
-                )
-                val success = oldFolder.renameTo(newFolder)
-                Log.e("HIDE", "Directory is not empty")
-            }
+
       //  }
 
         viewGroupDownload.setOnClickListener {
