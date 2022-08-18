@@ -35,18 +35,7 @@ import java.util.Locale;
  * Created by Admin on 3/28/2018.
  */
 
-public class FileUtils {
-
-    public static File getAvailableSdcard() {
-        File sdcard = getRemovabeStorageDir(QApplication.getInstance());
-        if (sdcard != null) {
-            if (new File(sdcard.getPath() + "/QuantumConsoleFrequenciesV3").exists()) {
-                return sdcard;
-            }
-        }
-        return Environment.getExternalStorageDirectory();
-    }
-
+public class FilesUtils {
     public static File getRemovabeStorageDir(Context context) {
         try {
             List<File> storages = getRemovabeStorages(context);
@@ -173,7 +162,7 @@ public class FileUtils {
     }
 
     public static void clearAllImageTmp(Context context) {
-        File cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath());
+        File cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath());
         if (cacheDir == null || (cacheDir != null && !cacheDir.exists())) {
             cacheDir = context.getCacheDir();
             String rootDir = cacheDir.getAbsolutePath() + "/TASKSAPP";
@@ -181,7 +170,7 @@ public class FileUtils {
             if (!cacheDir.exists())
                 cacheDir.mkdirs();
         } else {
-            cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
+            cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
@@ -208,7 +197,7 @@ public class FileUtils {
 //        if (!root.exists())
 //            root.mkdirs();
         SimpleDateFormat SDF = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
-        File cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath());
+        File cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath());
         if (cacheDir == null || (cacheDir != null && !cacheDir.exists())) {
             cacheDir = context.getCacheDir();
             String rootDir = cacheDir.getAbsolutePath() + "/TASKSAPP";
@@ -216,7 +205,7 @@ public class FileUtils {
             if (!cacheDir.exists())
                 cacheDir.mkdirs();
         } else {
-            cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
+            cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
@@ -307,7 +296,7 @@ public class FileUtils {
 
     public static File resizeImages2(final Context context, String path, boolean isReduceQuality) throws IOException {
         SimpleDateFormat SDF = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
-        File cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath());
+        File cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath());
         if (cacheDir == null || (cacheDir != null && !cacheDir.exists())) {
             cacheDir = context.getCacheDir();
             String rootDir = cacheDir.getAbsolutePath() + "/TASKSAPP";
@@ -315,7 +304,7 @@ public class FileUtils {
             if (!cacheDir.exists())
                 cacheDir.mkdirs();
         } else {
-            cacheDir = new File(FileUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
+            cacheDir = new File(FilesUtils.getSdcardStore().getAbsolutePath() + "/TASKSAPP");
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
@@ -423,7 +412,7 @@ public class FileUtils {
     }
 
     public static String getFileJsonDefaultLocal() {
-        File CACHE_FOLDER = new File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
+        File CACHE_FOLDER = new File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
         if (CACHE_FOLDER.exists()) {
             for (int i = 0; i < CACHE_FOLDER.listFiles().length; i++) {
                 String filePath = CACHE_FOLDER.listFiles()[i].getPath();
@@ -465,7 +454,7 @@ public class FileUtils {
 
     public static String getPlaylistDefaultQuantum() {
         String jString = null;
-        File CACHE_FOLDER = new File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
+        File CACHE_FOLDER = new File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
         if (CACHE_FOLDER.exists()) {
             File playlistPath = new File(CACHE_FOLDER.getPath(), "quantum_playlists.json");
             if (playlistPath.exists()) {
@@ -495,7 +484,7 @@ public class FileUtils {
     }
 
     public static boolean isExistPlaylistDefaultQuantumFile() {
-        File CACHE_FOLDER = new File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
+        File CACHE_FOLDER = new File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
         if (CACHE_FOLDER.exists()) {
             File playlistPath = new File(CACHE_FOLDER.getPath(), "quantum_playlists.json");
             return playlistPath.exists();
@@ -504,7 +493,7 @@ public class FileUtils {
     }
 
     public static void deletePlaylistDefaultQuantumFile() {
-        File CACHE_FOLDER = new File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
+        File CACHE_FOLDER = new File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER);
         if (CACHE_FOLDER.exists()) {
             File playlistPath = new File(CACHE_FOLDER.getPath(), "quantum_playlists.json");
             if (playlistPath.exists()) {

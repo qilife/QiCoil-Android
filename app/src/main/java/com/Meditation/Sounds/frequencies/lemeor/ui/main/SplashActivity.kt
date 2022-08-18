@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.DeadObjectException
 import android.os.Handler
 import android.util.Base64
 import android.util.Log
@@ -29,11 +30,17 @@ class SplashActivity : AppCompatActivity() {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         // Connection established.
-                        val response: ReferrerDetails = referrerClient.installReferrer
-                        val referrerUrl: String = response.installReferrer
-                        val referrerClickTime: Long = response.referrerClickTimestampSeconds
-                        val appInstallTime: Long = response.installBeginTimestampSeconds
-                        val instantExperienceLaunched: Boolean = response.googlePlayInstantParam
+                        try {
+                            val response: ReferrerDetails = referrerClient.installReferrer
+                            val referrerUrl: String = response.installReferrer
+                            val referrerClickTime: Long = response.referrerClickTimestampSeconds
+                            val appInstallTime: Long = response.installBeginTimestampSeconds
+                            val instantExperienceLaunched: Boolean = response.googlePlayInstantParam
+                        }
+                        catch (ex:DeadObjectException)
+                        {
+                            ex.printStackTrace()
+                        }
                     }
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
                         // API not available on the current Play Store app.

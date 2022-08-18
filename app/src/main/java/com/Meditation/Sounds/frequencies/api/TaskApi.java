@@ -13,6 +13,7 @@ import com.Meditation.Sounds.frequencies.api.models.GetTokenOutput;
 import com.Meditation.Sounds.frequencies.api.models.LoginOutput;
 import com.Meditation.Sounds.frequencies.api.models.RegisterOutput;
 import com.Meditation.Sounds.frequencies.api.objects.ChangePasswordInput;
+import com.Meditation.Sounds.frequencies.api.objects.CheckAlbumInput;
 import com.Meditation.Sounds.frequencies.api.objects.ForgotPasswordInput;
 import com.Meditation.Sounds.frequencies.api.objects.LoginInput;
 import com.Meditation.Sounds.frequencies.api.objects.RegisterInput;
@@ -63,6 +64,10 @@ public class TaskApi {
         return mDomainQiCoil + subUrl;
     }
 
+    public String getUrlQiCoil(String subUrl) {
+        return "https://www.combined.ingeniusstudios.com/public/api" + subUrl;
+    }
+
     public GetTokenOutput getToken() throws ApiException, JSONException, IOException {
         JSONObject requestData = new JSONObject();
         requestData.put("email", "hoanghuyhung@live.com");
@@ -74,6 +79,11 @@ public class TaskApi {
     public LoginOutput loginByEmail(LoginInput input) throws ApiException, JSONException, IOException {
         JSONObject data = mHttpApi.doHttpPost(getFullUrlQiCoil("/login"), new Gson().toJson(input));
         return mGson.fromJson(data.toString(), LoginOutput.class);
+    }
+
+    public String checkAlbums(CheckAlbumInput input) throws ApiException, JSONException, IOException {
+        JSONObject data = mHttpApi.doHttpPost(getUrlQiCoil("/checkfreealbum"), new Gson().toJson(input));
+        return data.toString();
     }
 
     public RegisterOutput registerByEmail(RegisterInput input) throws ApiException, JSONException, IOException {

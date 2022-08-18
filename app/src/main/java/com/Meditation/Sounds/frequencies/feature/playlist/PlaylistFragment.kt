@@ -21,7 +21,7 @@ import com.Meditation.Sounds.frequencies.feature.playlist.detail.PlaylistDetailV
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.models.*
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.AddEditPlaylistDialog
 import com.Meditation.Sounds.frequencies.views.AddPlaylistDialog
@@ -195,7 +195,7 @@ class PlaylistFragment : BaseFragment() {
             max = max(max, song.duration)
             totalTime += max
         }
-        tvTotalTimeFavorite.text = StringUtils.toString(totalTime)
+        tvTotalTimeFavorite.text = StringsUtils.toString(totalTime)
     }
 
     fun loadPlaylist() {

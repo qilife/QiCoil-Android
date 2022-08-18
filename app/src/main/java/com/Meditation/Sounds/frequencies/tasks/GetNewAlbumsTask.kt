@@ -15,10 +15,10 @@ import java.net.URLDecoder
  */
 class GetNewAlbumsTask(context: Context, listener: ApiListener<Any>) : BaseTask<Any>(context, listener) {
     private val database = QFDatabase.getDatabase(context.applicationContext)
-    val CACHE_FOLDER = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-    val CACHE_FOLDER_ADVANCED = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-    val CACHE_FOLDER_ABUNDANCE = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-    val CACHE_FOLDER_HIGHER_QUANTUM = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+    val CACHE_FOLDER = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+    val CACHE_FOLDER_ADVANCED = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+    val CACHE_FOLDER_ABUNDANCE = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+    val CACHE_FOLDER_HIGHER_QUANTUM = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
 
     @Throws(Exception::class)
     override fun callApiMethod(): Any {
@@ -127,7 +127,7 @@ class GetNewAlbumsTask(context: Context, listener: ApiListener<Any>) : BaseTask<
         val songs = database.songDAO().getByAlbumId(album.id)
         val serverSongsName = getSongsName(serverSongs)
         for (song in songs) {
-            if (!serverSongsName.contains(StringUtils.getFileNameWithoutExtension(StringUtils.getFileName(song.path)))) {
+            if (!serverSongsName.contains(StringsUtils.getFileNameWithoutExtension(StringsUtils.getFileName(song.path)))) {
                 //Remove relating playlist
                 val mPlaylistItemSongs = database.playlistItemSongDAO().getPlaylistItemSongsBySongIds(song.id)
                 for (item in mPlaylistItemSongs) {
@@ -139,7 +139,7 @@ class GetNewAlbumsTask(context: Context, listener: ApiListener<Any>) : BaseTask<
                 //Delete file
                 if (File(song.path).exists()) {
                     song.path?.let { FileEncyptUtil.deleteFile(it) }
-                    if (StringUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                    if (StringsUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                         song.path?.let { FileEncyptUtil.deleteFile(it.replace("." + Constants.EXTENSION_MP3_FILE, "." + Constants.EXTENSION_ENCRYPT_FILE)) }
                     } else {
                         song.path?.let { FileEncyptUtil.deleteFile(it.replace("." + Constants.EXTENSION_ENCRYPT_FILE, "." + Constants.EXTENSION_MP3_FILE)) }
@@ -155,7 +155,7 @@ class GetNewAlbumsTask(context: Context, listener: ApiListener<Any>) : BaseTask<
     private fun getSongsName(serverSongs: List<String>): ArrayList<String> {
         val songsName = ArrayList<String>()
         for (song in serverSongs) {
-            songsName.add(StringUtils.getFileNameWithoutExtension(URLDecoder.decode(StringUtils.getFileName(song), Constants.CHARSET)))
+            songsName.add(StringsUtils.getFileNameWithoutExtension(URLDecoder.decode(StringsUtils.getFileName(song), Constants.CHARSET)))
         }
         return songsName
     }
@@ -184,9 +184,9 @@ class GetNewAlbumsTask(context: Context, listener: ApiListener<Any>) : BaseTask<
             }
 
             for (song in album.songUrls) {
-                val fileName = URLDecoder.decode(StringUtils.getFileName(song), Constants.CHARSET)
+                val fileName = URLDecoder.decode(StringsUtils.getFileName(song), Constants.CHARSET)
                 //File is encoded
-                val fileNameWithoutExtension = StringUtils.getFileNameWithoutExtension(fileName)
+                val fileNameWithoutExtension = StringsUtils.getFileNameWithoutExtension(fileName)
                 val fileEncrypt = fileNameWithoutExtension + "." + Constants.EXTENSION_ENCRYPT_FILE
                 if (!File(albumFolder, fileName).exists() && !File(albumFolder, fileEncrypt).exists() && !File(albumFolder, fileNameWithoutExtension).exists()) {
                     return false

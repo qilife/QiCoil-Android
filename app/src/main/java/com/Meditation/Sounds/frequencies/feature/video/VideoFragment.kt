@@ -10,7 +10,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Playlist
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.PlaylistAdapter
 import com.Meditation.Sounds.frequencies.models.Video
-import com.Meditation.Sounds.frequencies.utils.Constants
+import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
@@ -20,6 +20,8 @@ import com.google.android.youtube.player.YouTubePlayer
 import android.net.Uri
 import android.net.Uri.*
 import android.util.Log
+import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
+import com.Meditation.Sounds.frequencies.utils.Constants
 import kotlinx.android.synthetic.main.fragment_video.*
 import org.json.JSONException
 
@@ -38,7 +40,7 @@ class VideoFragment : BaseFragment(), YouTubePlayer.OnInitializedListener {
         mPlaylistAdapter!!.setOnClickListener(object: PlaylistAdapter.Listener {
             override fun onClickItem(playlist: Playlist, i: Int) {
                 mPlaylistAdapter!!.setSelected(i)
-                getJsonPlaylist(getString(R.string.video_url, playlist.youtube_id, Constants.API_KEY))
+                getJsonPlaylist(getString(R.string.video_url, playlist.youtube_id, API_KEY + Constants.API_KEY))
             }
         })
         rv_playlist.adapter = mPlaylistAdapter
@@ -47,7 +49,7 @@ class VideoFragment : BaseFragment(), YouTubePlayer.OnInitializedListener {
 
         dao.getHome().observe(viewLifecycleOwner, {
             mPlaylistAdapter?.setData(it.playlists)
-            getJsonPlaylist(getString(R.string.video_url, it.playlists[0].youtube_id, Constants.API_KEY))
+            getJsonPlaylist(getString(R.string.video_url, it.playlists[0].youtube_id, API_KEY +Constants.API_KEY))
         })
 
         val mediaController = MediaController(mContext)
@@ -164,6 +166,6 @@ class VideoFragment : BaseFragment(), YouTubePlayer.OnInitializedListener {
 
     companion object {
         const val RECOVERY_DIALOG_REQUEST = 1
-        const val API_KEY = "AIzaSyB7gg_gAT4mg7d3I8ZiXe7SWlfzjvf8on0"
+        const val API_KEY = "AIzaSyB7gg_gAT4mg7d"
     }
 }

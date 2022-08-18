@@ -7,6 +7,7 @@ const val QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL="7_days_trial_yearly"
 enum class InappPurchase(val sku: String, val categoryId: Int,val Id: Int) {
     NULL("", -1, -1),
 
+    HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM("new.qicoil.inapp.digital.ivm", 38, 230),
     HIGHER_QUANTUM_TIER_INAPP_NMN("new.qicoil.inapp.nmn", 37, -1),
     HIGHER_QUANTUM_TIER_INAPP_NAD("new.qicoil.inapp.nad", 36, -1),
     HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA("new.qicoil.inapp.ayahuasca", 34,220),

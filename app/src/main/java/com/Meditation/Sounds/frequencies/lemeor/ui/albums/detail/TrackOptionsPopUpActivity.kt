@@ -91,7 +91,12 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         GlobalScope.launch {
             track = trackDao?.getTrackById(trackId)
 
-            if (track?.isFavorite!!) {
+            if(track==null)
+            {
+                finish()
+            }
+
+            if (track!=null && track?.isFavorite!!) {
                 track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
             } else {
                 track_add_favorites.text = getString(R.string.tv_add_to_favorites)

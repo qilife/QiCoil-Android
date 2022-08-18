@@ -38,8 +38,7 @@ class GetFlashSaleTask(context: Context, listener: ApiListener<Any>) : BaseTask<
             return buffer.toString()
         } catch (e: MalformedURLException) {
             e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+        } catch (e: IOException) {  e.printStackTrace()
         } finally {
             if (connection != null) {
                 connection!!.disconnect()

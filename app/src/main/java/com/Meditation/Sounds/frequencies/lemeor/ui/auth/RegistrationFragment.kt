@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -66,7 +66,7 @@ class RegistrationFragment : Fragment() {
                         mEdEmailRegister.text.toString(),
                         mEdPasswordRegister.text.toString(),
                         mEdConfirmPasswordRegister.text.toString(),
-                        StringUtils.getDeviceId(requireContext())
+                        StringsUtils.getDeviceId(requireContext())
                 )
             }
         }

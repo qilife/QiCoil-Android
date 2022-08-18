@@ -24,10 +24,10 @@ import kotlin.collections.ArrayList
 
 class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpdateProgressListener: IOnUpdateProgressListener) : BaseTask<Any>(context, listener) {
     private val database = QFDatabase.getDatabase(context.applicationContext)
-    val CACHE_FOLDER = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-    val CACHE_FOLDER_ADVANCED = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-    val CACHE_FOLDER_ABUNDANCE = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-    val CACHE_FOLDER_HIGHER_QUANTUM = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+    val CACHE_FOLDER = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+    val CACHE_FOLDER_ADVANCED = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+    val CACHE_FOLDER_ABUNDANCE = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+    val CACHE_FOLDER_HIGHER_QUANTUM = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
     var mCountEncypted: Int = 0
 
     init {
@@ -139,7 +139,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                     }
                                     if (!isExisted) {
                                         //Delete album if it's removed from server
-                                        FileUtils.deleteRecursive(albumFolder)
+                                        FilesUtils.deleteRecursive(albumFolder)
 //                                        continue
                                     }
                                 }
@@ -164,7 +164,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                     }
                                     if (!isExisted) {
                                         //Delete album if it's removed from server
-                                        FileUtils.deleteRecursive(albumFolder)
+                                        FilesUtils.deleteRecursive(albumFolder)
 //                                        continue
                                     }
                                 }
@@ -189,7 +189,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                     }
                                     if (!isExisted) {
                                         //Delete album if it's removed from server
-                                        FileUtils.deleteRecursive(albumFolder)
+                                        FilesUtils.deleteRecursive(albumFolder)
 //                                        continue
                                     }
                                 }
@@ -214,7 +214,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                     }
                                     if (!isExisted) {
                                         //Delete album if it's removed from server
-                                        FileUtils.deleteRecursive(albumFolder)
+                                        FilesUtils.deleteRecursive(albumFolder)
 //                                        continue
                                     }
                                 }
@@ -276,7 +276,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                             try {
                                 if (songFile.name != Constants.ALBUM_INFOR_FILE_NAME && !songFile.name.contains(Constants.ALBUM_ART_FILE_NAME, ignoreCase = true) && !songFile.name.startsWith("_tmp")) {
                                     numberOfMp3Files++
-                                    var song = getSong(StringUtils.getFileNameWithoutExtension(songFile.name), songs)
+                                    var song = getSong(StringsUtils.getFileNameWithoutExtension(songFile.name), songs)
                                     if (song == null) {
                                         song = Song()
                                         song.albumId = album.id
@@ -285,7 +285,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                         song.mediaType = album.mediaType
 
                                         var encyptPath = songFile?.path
-                                        if (StringUtils.getFileExtension(songFile?.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                                        if (StringsUtils.getFileExtension(songFile?.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                                             //get songs info
                                             val metaRetriever = MediaMetadataRetriever()
                                             metaRetriever.setDataSource(song.path)
@@ -295,7 +295,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                             }
                                             song.title = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE).toString()
                                             song.duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
-                                            song.fileName = StringUtils.getFileNameWithoutExtension(songFile.name)
+                                            song.fileName = StringsUtils.getFileNameWithoutExtension(songFile.name)
 
                                             //No need edit title from new songs
                                             song.editTitleVersion = 1
@@ -303,7 +303,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                             song.updateFilePath = 1
 
                                             if (song.title == "null") {
-                                                song.title = StringUtils.getFileNameWithoutExtension(songFile.name)
+                                                song.title = StringsUtils.getFileNameWithoutExtension(songFile.name)
                                             }
 
                                             //Replace album name in song title
@@ -336,7 +336,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                             if (albumInforSongs.size > 0) {
                                                 for (i in 0..albumInforSongs.size - 1) {
                                                     if (albumInforSongs[i].albumName.replace("\u0027", "'").equals(album.name, ignoreCase = true) &&
-                                                            albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringUtils.getFileNameWithoutExtension(songFile.name), ignoreCase = true)) {
+                                                            albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringsUtils.getFileNameWithoutExtension(songFile.name), ignoreCase = true)) {
                                                         song.artist = albumInforSongs[i].artist
                                                         song.title = albumInforSongs[i].title
                                                         song.duration = albumInforSongs[i].duration
@@ -369,18 +369,18 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                         }
 
                                         //update path for encrypt file
-                                        if (StringUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                                        if (StringsUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                                             var added = false
                                             for (i in 0..albumInforSongs.size - 1) {
                                                 if (albumInforSongs[i].albumName.replace("\u0027", "'").equals(album.name, ignoreCase = true) &&
-                                                        albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringUtils.getFileNameWithoutExtension(songFile.name), ignoreCase = true)) {
+                                                        albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringsUtils.getFileNameWithoutExtension(songFile.name), ignoreCase = true)) {
                                                     added = true
                                                     break
                                                 }
                                             }
                                             val oldSongPath = song.path
                                             if (!added) {
-                                                song.fileName = StringUtils.getFileNameWithoutExtension(songFile.name)
+                                                song.fileName = StringsUtils.getFileNameWithoutExtension(songFile.name)
                                                 val encyptPath = song.path?.let { FileEncyptUtil.encryptFile(File(it), SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID]) }
                                                 encyptPath?.let { database.songDAO().updateEncryptPathFromId(song.id, it) }
                                                 mCountEncypted++
@@ -399,7 +399,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                                 FileEncyptUtil.deleteFile(oldSongPath)
                                             }
                                         } else {
-                                            if (StringUtils.getFileExtension(songFile.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                                            if (StringsUtils.getFileExtension(songFile.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                                                 if (song.path != null && File(song.path).exists()) {
                                                     //If encrypted file is exist, then delete mp3 file
                                                     FileEncyptUtil.deleteFile(songFile.path)
@@ -450,7 +450,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                                 for (song in songs) {
                                     var isExisted = false
                                     for (songFile in albumFolder.listFiles()) {
-                                        if (File(song.path).exists() && StringUtils.getFileNameWithoutExtension(File(song.path).name) == StringUtils.getFileNameWithoutExtension(songFile.name)) {
+                                        if (File(song.path).exists() && StringsUtils.getFileNameWithoutExtension(File(song.path).name) == StringsUtils.getFileNameWithoutExtension(songFile.name)) {
                                             isExisted = true
                                             break
                                         }
@@ -510,9 +510,9 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                 }
             }
 
-            val localFile = FileUtils.getFileJsonDefaultLocal()
+            val localFile = FilesUtils.getFileJsonDefaultLocal()
             if (localFile != null) {
-                val playlistJsons = FileUtils.getPlaylistDefaultQuantum(localFile)
+                val playlistJsons = FilesUtils.getPlaylistDefaultQuantum(localFile)
                 if (playlistJsons != null && playlistJsons.length > 0) {
                     val playlistArrays = Gson().fromJson<java.util.ArrayList<PlaylistArraysItem>>(playlistJsons, object : TypeToken<List<PlaylistArraysItem>>() {
 
@@ -650,7 +650,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
                 database.playlistDAO().updateTotalDuartion(playlistID, totalDuration, mediaType)
             }
         }
-        FileUtils.deletePlaylistDefaultQuantumFile()
+        FilesUtils.deletePlaylistDefaultQuantumFile()
     }
 
     private fun getAlbum(name: String, albums: List<Album>, albumType: Int): Album? {
@@ -664,7 +664,7 @@ class SyncMusicTask(var context: Context, listener: ApiListener<Any>, var onUpda
 
     private fun getSong(name: String, songs: List<Song>): Song? {
         for (song in songs) {
-            if (StringUtils.getFileNameWithoutExtension(File(song.path).name) == name) {
+            if (StringsUtils.getFileNameWithoutExtension(File(song.path).name) == name) {
                 return song
             }
         }

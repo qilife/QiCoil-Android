@@ -42,13 +42,13 @@
             android:layout_marginBottom="@dimen/image_size_14"
             app:tint="#F8F3F3" />
         <TextView
+            android:id="@+id/lblunlock_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_large_14"
             android:gravity="center"
-            android:text="Share on Facebook \n
-to unlock this frequency"/>
+            android:text="Share on Facebook \n to unlock this frequency"/>
 
     </LinearLayout>
 </com.Meditation.Sounds.frequencies.views.CustomRecFrameLayout>

@@ -22,7 +22,7 @@ import com.Meditation.Sounds.frequencies.tasks.BaseTask;
 import com.Meditation.Sounds.frequencies.tasks.UpdateDurationOfAllPlaylistTask;
 import com.Meditation.Sounds.frequencies.tasks.UpdatePlaylistInforVer10Task;
 import com.Meditation.Sounds.frequencies.utils.Constants;
-import com.Meditation.Sounds.frequencies.utils.FileUtils;
+import com.Meditation.Sounds.frequencies.utils.FilesUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -109,7 +109,7 @@ public class QApplication extends MultiDexApplication implements ApiListener {
     public void onUpgradeVersion(int oldVersion, int newVersion) {
         if (oldVersion < 9) {
             try {
-                FileUtils.deleteRecursive(new File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER));
+                FilesUtils.deleteRecursive(new File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER));
             } catch (Throwable e) {
             }
             QFDatabase database = QFDatabase.getDatabase(this);

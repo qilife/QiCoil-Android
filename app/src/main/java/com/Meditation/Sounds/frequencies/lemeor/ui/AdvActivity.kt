@@ -60,18 +60,22 @@ class AdvActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             album = albumDao.getRandomAlbum(false)
-            Log.e("TEST", album.toString())
-            mDescriptionAdapter =
-                album?.descriptions?.let { DescriptionAdapter(this@AdvActivity, it) }
-            album_description_recycler?.adapter = mDescriptionAdapter
-            adv_tital?.text = album?.name
+            if(album?.isUnlocked==true)
+                finish()
+            else {
+                Log.e("TEST", album.toString())
+                mDescriptionAdapter =
+                        album?.descriptions?.let { DescriptionAdapter(this@AdvActivity, it) }
+                album_description_recycler?.adapter = mDescriptionAdapter
+                adv_tital?.text = album?.name
 
-            CoroutineScope(Dispatchers.Main).launch {
-                loadImage(
-                    this@AdvActivity,
-                    album_image!!,
-                    album!!
-                )
+                CoroutineScope(Dispatchers.Main).launch {
+                    loadImage(
+                            this@AdvActivity,
+                            album_image!!,
+                            album!!
+                    )
+                }
             }
         }
 

@@ -27,7 +27,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.android.billingclient.api.*
 import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import kotlinx.android.synthetic.main.activity_new_purchase.*
 import kotlinx.coroutines.CoroutineScope
@@ -82,7 +81,14 @@ class NewPurchaseActivity : AppCompatActivity() {
             if (tierId == QUANTUM_TIER_ID) {
                 albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
                 tierDao.getTierNameById(tierId)?.let { screenName = it }
-            } else {
+            }
+            else if(tierId == INNER_CIRCLE_TIER_ID)
+            {
+                purchase_continue.setText("APPLY NOW")
+                albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
+                tierDao.getTierNameById(tierId)?.let { screenName = it }
+            }
+            else {
                 albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
                /* if (Id == 219 || Id == 220) {
                     albumDao.getAlbumById(Id)?.let { albumList.add(it) }
@@ -111,7 +117,16 @@ class NewPurchaseActivity : AppCompatActivity() {
 
         orientationChangesUI(resources.configuration.orientation)
 
-        purchase_continue.setOnClickListener { pay() }
+        purchase_continue.setOnClickListener {
+            if(tierId == INNER_CIRCLE_TIER_ID)
+            {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://qilifestore.com/products/david-wong-inner-circle-transformation"))
+                startActivity(browserIntent)
+            }
+            else {
+                pay()
+            }
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -193,8 +208,8 @@ class NewPurchaseActivity : AppCompatActivity() {
                     val eventValues = HashMap<String, Any>()
                     eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                     AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
-                        "purchase",
-                        eventValues)
+                            "purchase",
+                            eventValues)
 
                     for (purchase in purchases) {
                         handleConsumedPurchases(purchase)
@@ -203,8 +218,8 @@ class NewPurchaseActivity : AppCompatActivity() {
                     val eventValues = HashMap<String, Any>()
                     eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                     AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
-                        "cancel_purchase",
-                        eventValues)
+                            "cancel_purchase",
+                            eventValues)
                 // Handle an error caused by a user cancelling the purchase flow.
                 }
             }
@@ -276,6 +291,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_NAD.sku)
         inappList.add(HIGHER_QUANTUM_TIER_INAPP_NMN.sku)
+        inappList.add(HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.sku)
 
         val inappParams = SkuDetailsParams.newBuilder()
         inappParams.setSkusList(inappList).setType(BillingClient.SkuType.INAPP)
@@ -290,9 +306,11 @@ class NewPurchaseActivity : AppCompatActivity() {
                     }
                 }
 
-                if (tierId != QUANTUM_TIER_ID) {
+                if (tierId != QUANTUM_TIER_ID && tierId != INNER_CIRCLE_TIER_ID) {
                     purchase_price.text = getString(R.string.inapp_purchase_info, mInapp?.price)
                 }
+                else
+                    purchase_price.text = ""
             }
         }
     }
@@ -401,6 +419,10 @@ class NewPurchaseActivity : AppCompatActivity() {
                             HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> {
                                 albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId)
                             }
+
+                            HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.sku -> {
+                                albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.categoryId)
+                            }
                         }
                     }
 
@@ -444,6 +466,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         private const val QUANTUM_SUBS_YEAR = "P1Y"
         const val QUANTUM_TIER_ID = 1
         const val HIGHER_QUANTUM_TIER_ID = 2
+        const val INNER_CIRCLE_TIER_ID = 3
         private const val EXTRA_DEFAULT_INT = -1
         private const val EXTRA_TIER_ID = "tier_id"
         private const val EXTRA_CATEGORY_ID = "category_id"

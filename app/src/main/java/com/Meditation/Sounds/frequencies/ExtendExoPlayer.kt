@@ -8,12 +8,13 @@ import android.os.CountDownTimer
 import android.util.Log
 import com.Meditation.Sounds.frequencies.models.PlaylistItemSongAndSong
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.google.zxing.common.StringUtils
 import java.io.File
 
 class ExtendExoPlayer(var context: Context) {
@@ -161,7 +162,7 @@ class ExtendExoPlayer(var context: Context) {
         player.release()
         isPreparing = false
         stopTimer()
-        var pathWithoutExtension = StringUtils.getFileNameWithoutExtension(song?.song?.path)
+        var pathWithoutExtension = StringsUtils.getFileNameWithoutExtension(song?.song?.path)
         FileEncyptUtil.renameToEncryptFile(pathWithoutExtension + "." + Constants.EXTENSION_MP3_FILE)
     }
 

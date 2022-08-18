@@ -266,7 +266,7 @@ class Constants {
         val ACTION_RE_DOWNLOAD_MP3 = "com.Meditation.Sounds.frequencies.ACTION_RE_DOWNLOAD_MP3"
 
         @JvmField
-        val API_KEY = "AIzaSyB7gg_gAT4mg7d3I8ZiXe7SWlfzjvf8on0"
+        val API_KEY = "3I8ZiXe7SWlfzjvf8on0"
 
         @JvmField
         internal var PREF_PROFILE = "PREF_PROFILE"

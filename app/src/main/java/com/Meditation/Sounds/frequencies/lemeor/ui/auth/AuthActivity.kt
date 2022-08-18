@@ -12,6 +12,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiConfig.getPassResetUrl
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.AuthResponse
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
@@ -26,6 +27,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.auth.LoginFragment.OnLoginLis
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.RegistrationFragment.OnRegistrationListener
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListener {
 
@@ -72,10 +75,36 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         val intent = Intent()
         setResult(RESULT_OK, intent)
         if (!BuildConfig.IS_FREE) {
-            val intent1 = Intent(this, TrialActivity::class.java)
-            startActivity(intent1)
+            var isAllPurchase = true
+            GlobalScope.launch {
+                val albumList = ArrayList<Album>()
+                val albumDao = DataBase.getInstance(applicationContext).albumDao()
+                albumDao.getAllAlbums()?.let { albumList.addAll(it) }
+                for (album in albumList) {
+                    if (!album.isUnlocked) {
+                        isAllPurchase = false
+                        break
+                    }
+                }
+
+                runOnUiThread(Runnable { callHadler(isAllPurchase) })
+
+
+            }
+
         }
         finish()
+    }
+
+    private fun callHadler(isAllPurchase: Boolean) {
+        if(!isAllPurchase) {
+            openAd()
+        }
+    }
+
+    private fun openAd() {
+        val intent1 = Intent(this, TrialActivity::class.java)
+        startActivity(intent1)
     }
 
     override fun onLoginInteraction(email: String, password: String) {

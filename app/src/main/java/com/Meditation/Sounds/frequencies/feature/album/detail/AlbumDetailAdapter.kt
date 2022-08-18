@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.models.Song
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.Meditation.Sounds.frequencies.views.CustomPopupDetailAlbum
 import kotlinx.android.synthetic.main.item_album_detail.view.*
 
@@ -41,9 +41,9 @@ class AlbumDetailAdapter(var mContext: Context, var data: List<Song>, private va
         holder.itemView.cbAdded.isSelected = song.added!!
 
         if (isChange) {
-            holder.itemView.tvTime.text = StringUtils.toString(duration)
+            holder.itemView.tvTime.text = StringsUtils.toString(duration)
         } else {
-            holder.itemView.tvTime.text = StringUtils.toString(song.duration)
+            holder.itemView.tvTime.text = StringsUtils.toString(song.duration)
         }
 
         holder.itemView.tvName.isSelected = song.id == idSong

@@ -64,7 +64,7 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
             @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             override fun onClickItem(playlist: Playlist, i: Int) {
                 mPlaylistAdapter!!.setSelected(i)
-                getJsonPlaylist(getString(R.string.video_url, playlist.youtube_id, Constants.API_KEY))
+                getJsonPlaylist(getString(R.string.video_url, playlist.youtube_id, API_KEY+Constants.API_KEY))
             }
         })
         playlist_recycler_view.adapter = mPlaylistAdapter
@@ -73,7 +73,7 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
             mPlaylistAdapter?.setData(it)
 
             if (it.isNotEmpty()) {
-                getJsonPlaylist(getString(R.string.video_url, it[0].youtube_id, Constants.API_KEY))
+                getJsonPlaylist(getString(R.string.video_url, it[0].youtube_id, API_KEY+Constants.API_KEY))
             }
         })
 
@@ -199,6 +199,6 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
 
     companion object {
         const val RECOVERY_DIALOG_REQUEST = 1
-        const val API_KEY = "AIzaSyB7gg_gAT4mg7d3I8ZiXe7SWlfzjvf8on0"
+        const val API_KEY = "AIzaSyB7gg_gAT4mg7d"
     }
 }

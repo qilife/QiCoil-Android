@@ -80,7 +80,7 @@ class AlbumsFragment : BaseFragment() {
     }
 
     override fun initComponents() {
-//        FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
+//        FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
 
         updateView()
         val itemDecoration = ItemOffsetDecoration(requireContext(), if (Utils.isTablet(context)) R.dimen.item_offset else R.dimen.margin_buttons)

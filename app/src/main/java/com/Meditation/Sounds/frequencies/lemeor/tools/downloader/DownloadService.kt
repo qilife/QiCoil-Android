@@ -22,6 +22,7 @@ import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2.Fetch.Impl.setDefaultInstanceConfiguration
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2core.Downloader.FileDownloaderType
+import com.tonyodev.fetch2core.isNetworkAvailable
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -166,14 +167,16 @@ class DownloadService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun enqueueFiles() {
-        val requestList: List<Request> = getRequests()
+        if(isNetworkAvailable()) {
+            val requestList: List<Request> = getRequests()
 
-        requestList.forEach { it.groupId = tracks[0].name.hashCode() }
+            requestList.forEach { it.groupId = tracks[0].name.hashCode() }
 
-        rxFetch?.enqueue(requestList) { updatedRequests: List<Pair<Request, Error?>> ->
-            for ((first) in updatedRequests) {
-                fileProgressMap[first.id] = 0
-                updateUIWithProgress()
+            rxFetch?.enqueue(requestList) { updatedRequests: List<Pair<Request, Error?>> ->
+                for ((first) in updatedRequests) {
+                    fileProgressMap[first.id] = 0
+                    updateUIWithProgress()
+                }
             }
         }
     }

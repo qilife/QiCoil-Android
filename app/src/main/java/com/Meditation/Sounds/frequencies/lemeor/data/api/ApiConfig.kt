@@ -16,6 +16,8 @@ object ApiConfig {
     
     const val API_HOME = "home"
     const val API_USER_LOGIN = "user/login"
+    const val API_USER_ALBUM = "checkfreealbum"
+    const val API_SAVE_ALBUM = "savefreealbum"
     const val API_USER_REGISTER = "user/register"
     const val API_USER_PROFILE = "user/profile"
     const val API_USER_PROFILE_UPDATE = "user/profile/update"

@@ -233,7 +233,7 @@
     <string name="tv_get_this_huge_deal_before_it_s_gone">Get this huge deal before it’s gone!</string>
 
     <string name="tv_change_password">Change Password</string>
-
+    <string name="tv_help_support">Help &amp; Support</string>
 
     <string name="tv_my_custom_playlists">My Custom Programs</string>
     <string name="tv_redeem">Redeem</string>
@@ -337,5 +337,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="share_message">I found this new meditation app Qi Coil \n https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies</string>
     <!-- <string name="facebook_app_id">554730859218975</string> -->
 </resources>

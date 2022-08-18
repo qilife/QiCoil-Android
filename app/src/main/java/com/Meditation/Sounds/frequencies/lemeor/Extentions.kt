@@ -1,13 +1,14 @@
 package com.Meditation.Sounds.frequencies.lemeor
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.Meditation.Sounds.frequencies.BuildConfig
@@ -27,6 +28,8 @@ import java.io.File
 import java.io.IOException
 import java.net.URI
 import java.net.URL
+import java.util.*
+
 
 const val FAVORITES = "Favorites"
 
@@ -100,8 +103,7 @@ fun getTrackUrl(album: Album?, track: Track): String {
 fun getPreloadedSaveDir(context: Context, track: Track, album: Album): String {
 
     if(BuildConfig.IS_FREE) {
-        return context.getExternalFilesDir(
-                Environment.DIRECTORY_DOCUMENTS).toString() +
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 "tracks" +
                 File.separator +
@@ -129,8 +131,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
 //        Environment.DIRECTORY_DOCUMENTS).toString(), ".tracks")
 //    val success = oldFolder.renameTo(newFolder)
     if(BuildConfig.IS_FREE) {
-        return context.getExternalFilesDir(
-            Environment.DIRECTORY_DOCUMENTS).toString() +
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 ".tracks" +
                 File.separator +
@@ -139,7 +140,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
                 track.filename.replace("%", "")
     }
     else{
-        return context.filesDir.toString() +
+        return context.getExternalFilesDir(null).toString() +
                 File.separator +
                 ".tracks" +
                 File.separator +

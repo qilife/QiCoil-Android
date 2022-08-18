@@ -881,7 +881,7 @@ abstract class BaseActivity : AppCompatActivity(), IabBroadcastReceiver.IabBroad
 //        }
 
 
-//        FileUtils.showComingSoon(this)
+//        FilesUtils.showComingSoon(this)
 
         // Reset the dialog options
     }

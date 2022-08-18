@@ -23,7 +23,7 @@ import com.Meditation.Sounds.frequencies.feature.base.BaseFragment
 import com.Meditation.Sounds.frequencies.models.Album
 import com.Meditation.Sounds.frequencies.models.Song
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.FileUtils
+import com.Meditation.Sounds.frequencies.utils.FilesUtils
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
 import com.Meditation.Sounds.frequencies.utils.Utils
 import kotlinx.android.synthetic.main.fragment_playlist.*
@@ -262,7 +262,7 @@ class PlaylistAlbumFragment : BaseFragment() {
                             baseActivity!!.showDialogSubscriptionFS(0)
                         }
                     } else {
-                        FileUtils.showComingSoon(context)
+                        FilesUtils.showComingSoon(context)
                     }
                 }
             }
@@ -284,7 +284,7 @@ class PlaylistAlbumFragment : BaseFragment() {
                             baseActivity!!.showDialogSubscriptionFS(1)
                         }
                     } else {
-                        FileUtils.showComingSoon(context)
+                        FilesUtils.showComingSoon(context)
                     }
                 }
             }

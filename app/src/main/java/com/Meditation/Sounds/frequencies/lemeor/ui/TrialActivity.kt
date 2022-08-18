@@ -63,16 +63,25 @@ class TrialActivity : AppCompatActivity() {
 
             var screenName = ""
             val albumList = ArrayList<Album>()
-
-
             albumDao.getAllAlbums()?.let { albumList.addAll(it) }
+            var isAllPurchase = true
+            for (album in albumList) {
+                if(!album.isUnlocked) {
+                    isAllPurchase = false
+                    break
+                }
+            }
 
-            CoroutineScope(Dispatchers.Main).launch {
-                // purchase_screen_name.text = screenName
+            if(isAllPurchase)
+                finish()
+            else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    // purchase_screen_name.text = screenName
 
-                val albumsPagerAdapter = AlbumsPagerAdapter(supportFragmentManager, albumList)
-                purchase_container.adapter = albumsPagerAdapter
+                    val albumsPagerAdapter = AlbumsPagerAdapter(supportFragmentManager, albumList)
+                    purchase_container.adapter = albumsPagerAdapter
 
+                }
             }
         }
         purchase_container.clipToPadding = false

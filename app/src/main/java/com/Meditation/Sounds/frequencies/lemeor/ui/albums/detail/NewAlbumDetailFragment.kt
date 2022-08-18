@@ -36,10 +36,10 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragmen
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.utils.Utils
+import com.google.android.youtube.player.internal.f
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
-import com.google.firebase.analytics.FirebaseAnalytics.Param
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.album_item.view.*
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
+
 
 class NewAlbumDetailFragment : Fragment() {
 
@@ -121,14 +122,16 @@ class NewAlbumDetailFragment : Fragment() {
         initUI()
 
         mViewModel.album(albumId)?.observe(viewLifecycleOwner, {
-            album = it
-            setUI(it)
+            if (it != null) {
+                album = it
+                setUI(it)
+            }
         })
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
         view?.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event!=null && event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 onBackPressed()
                 true
             } else false
@@ -189,6 +192,7 @@ class NewAlbumDetailFragment : Fragment() {
                     Handler(Looper.getMainLooper()).postDelayed({ EventBus.getDefault().post(PlayerSelected(i)) }, 200)
                 }
             }
+
             override fun onTrackOptions(track: Track, i: Int) {
                 startActivityForResult(TrackOptionsPopUpActivity.newIntent(requireContext(), track.id), 1001)
             }
@@ -205,6 +209,12 @@ class NewAlbumDetailFragment : Fragment() {
 
                 if (!file.exists() && !preloaded.exists()) {
                     isDownloaded = false
+                }
+                else {
+                    if (file.length() == 0L)
+                    {
+                        isDownloaded = false
+                    }
                 }
             }
 
@@ -248,6 +258,12 @@ class NewAlbumDetailFragment : Fragment() {
                     if (!file.exists() && !preloaded.exists()) {
                         track?.let { tracks.add(it) }
                     }
+                    else {
+                        if (file.length() == 0L)
+                        {
+                            track?.let { tracks.add(it) }
+                        }
+                    }
 
                 }
 
@@ -280,27 +296,37 @@ class NewAlbumDetailFragment : Fragment() {
 
         GlobalScope.launch {
             local.forEach {
-                 
-                val file = File(getSaveDir(requireContext(), it, album))
-                val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
+                 try {
+                     val file = File(getSaveDir(requireContext(), it, album))
+                     val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
 
-                var uri: Uri? = null
+                     var uri: Uri? = null
 
-                if (file.exists()) { uri = Uri.fromFile(file) }
+                     if (file.exists()) {
+                         uri = Uri.fromFile(file)
+                     }
 
-                if (preloaded.exists()) { uri = Uri.fromFile(preloaded) }
+                     if (preloaded.exists()) {
+                         uri = Uri.fromFile(preloaded)
+                     }
 
-              //  val track = db.trackDao().getTrackById(it.id)
-              //  if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-              //  val multiplay = track?.duration!! / 300000
+                     //  val track = db.trackDao().getTrackById(it.id)
+                     //  if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
+                     //  val multiplay = track?.duration!! / 300000
 
-                val track = db.trackDao().getTrackById(it.id)
-               // if (track?.duration == 0.toLong()) { track.duration = 300000 }
-               // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-                Log.e("DURATION",getDuration(file).toString())
-                val multiplay = track?.duration!! / 300000
-                data.add(MusicRepository.Track(it.name, album.name, album, R.drawable.launcher, uri!!, getDuration(file), 0, multiplay.toInt()))
-
+                     val track = db.trackDao().getTrackById(it.id)
+                     // if (track?.duration == 0.toLong()) { track.duration = 300000 }
+                     // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
+                     //Log.e("DURATION",getDuration(file).toString())
+                     if (track != null) {
+                         val multiplay = track?.duration!! / 300000
+                         data.add(MusicRepository.Track(it.name, album.name, album, R.drawable.launcher, uri!!, getDuration(file), 0, multiplay.toInt()))
+                     }
+                 }
+                 catch (ex: Exception)
+                 {
+                     ex.printStackTrace()
+                 }
             }
 
             trackList = data
@@ -310,10 +336,16 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun getDuration(file: File): Long {
-        val mediaMetadataRetriever = MediaMetadataRetriever()
-        mediaMetadataRetriever.setDataSource(file.absolutePath)
-        val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        return durationStr!!.toLong()
+        if(file!=null && !file.absolutePath.isEmpty()) {
+            val mediaMetadataRetriever = MediaMetadataRetriever()
+            mediaMetadataRetriever.setDataSource(file.absolutePath)
+            val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            return durationStr!!.toLong()
+        }
+        else
+        {
+            return 0
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

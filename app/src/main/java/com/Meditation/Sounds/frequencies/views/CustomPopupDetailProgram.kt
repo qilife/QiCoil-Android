@@ -13,7 +13,7 @@ import android.widget.PopupWindow
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.models.PlaylistItem
 import com.Meditation.Sounds.frequencies.models.PlaylistItemSongAndSong
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 
 class CustomPopupDetailProgram(var mContext: Context, var isFromUser: Boolean,
                                var playlistItem: PlaylistItem, var song: PlaylistItemSongAndSong)
@@ -100,7 +100,7 @@ class CustomPopupDetailProgram(var mContext: Context, var isFromUser: Boolean,
             }
         }
 
-        tvDuration.text = StringUtils.toString(song.item.endOffset)
+        tvDuration.text = StringsUtils.toString(song.item.endOffset)
         btnPlus.setOnClickListener {
             mListener?.let {
                 it.onChangeDuration(playlistItem, song, true)

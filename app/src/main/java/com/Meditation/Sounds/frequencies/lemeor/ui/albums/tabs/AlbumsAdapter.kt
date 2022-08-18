@@ -12,7 +12,9 @@ import kotlinx.android.synthetic.main.album_item.view.*
 
 class AlbumsAdapter(
         private val mContext: Context,
-        private var mData: ArrayList<Album>
+        private var mData: ArrayList<Album>,
+        private val isRegenerate: Boolean,
+        private val isSoothe: Boolean
 ) : RecyclerView.Adapter<AlbumsAdapter.ViewHolder>() {
 
     interface Listener {
@@ -38,24 +40,29 @@ class AlbumsAdapter(
 
         holder.itemView.image.radius = mContext.resources!!.getDimensionPixelOffset(R.dimen.corner_radius_album)
 
-       if (album.isUnlocked) { holder.itemView.image_lock.visibility = View.GONE }
-       else {
-           if (album.id == 221 || album.id == 1) {
-               holder.itemView.image_lock.visibility = View.GONE
-               holder.itemView.lock.visibility = View.VISIBLE
-           } else {
-               holder.itemView.image_lock.visibility = View.VISIBLE
-               holder.itemView.lock.visibility = View.GONE
-           }
-
-       }
-           //holder.itemView.image_lock.visibility = View.VISIBLE }
+        if (album.isUnlocked) {
+            holder.itemView.image_lock.visibility = View.GONE
+        } else {
+            holder.itemView.image_lock.visibility = View.VISIBLE
+            holder.itemView.lock.visibility = View.GONE
+        }
+        //holder.itemView.image_lock.visibility = View.VISIBLE }
 //        if (album.isUnlocked) { holder.itemView.lock.visibility = View.GONE }
-  //      else { holder.itemView.lock.visibility = View.VISIBLE }
+        //      else { holder.itemView.lock.visibility = View.VISIBLE }
         loadImage(mContext, holder.itemView.image, album)
 
         holder.itemView.setOnClickListener { mListener?.onClickItem(album) }
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 

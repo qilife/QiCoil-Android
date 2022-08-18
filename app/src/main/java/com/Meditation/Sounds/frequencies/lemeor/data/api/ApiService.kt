@@ -14,6 +14,17 @@ interface ApiService {
             @Query("password") password: String
     ): AuthResponse
 
+    @GET(ApiConfig.API_USER_ALBUM)
+    suspend fun checkAlbums(
+            @Query("user_id") user_id: String
+    ): Response<albumResponse>
+
+    @GET(ApiConfig.API_SAVE_ALBUM)
+    suspend fun SaveAlbums(
+            @Query("user_id") user_id: String,
+            @Query("album_id") album_id: String
+    ): Response<albumResponse>
+
     @GET(ApiConfig.API_USER_REGISTER)
     suspend fun register(
             @Query("email") email: String,

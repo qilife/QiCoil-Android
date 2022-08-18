@@ -45,7 +45,6 @@ import com.Meditation.Sounds.frequencies.models.PlaylistItem
 import com.Meditation.Sounds.frequencies.models.PlaylistItemSongAndSong
 import com.Meditation.Sounds.frequencies.tasks.*
 import com.Meditation.Sounds.frequencies.utils.*
-import com.Meditation.Sounds.frequencies.utils.FileUtils
 import com.Meditation.Sounds.frequencies.views.CustomSeekBar
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.Meditation.Sounds.frequencies.views.EncryptingProgressDialog
@@ -72,7 +71,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
         var ourMainRunning = false
     }
 
-    val CACHE_APK_FOLDER = File(FileUtils.getSdcardStore(), Constants.DEFAULT_APKS_FOLDER)
+    val CACHE_APK_FOLDER = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_APKS_FOLDER)
     var mLocalApkPath: String? = null
     var musicService: MusicService? = null
         private set
@@ -387,17 +386,17 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
 
     private fun checkPermissionAndSyncData() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
-//                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
+//            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
+//                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
 //            }
-//            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER).exists()) {
-//                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER))
+//            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER).exists()) {
+//                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER))
 //            }
-//            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER).exists()) {
-//                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER))
+//            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER).exists()) {
+//                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER))
 //            }
-//            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER).exists()) {
-//                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER))
+//            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER).exists()) {
+//                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER))
 //            }
 //
 //            val database = QFDatabase.getDatabase(this)
@@ -405,8 +404,8 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
 //            val songs = database.songDAO().getByAlbumId(albums.get(6).id)
 //            if(songs.size>0){
 //                val song = songs.get(0)
-//                val ext = StringUtils.getFileExtension(song.path)
-//                var pathWithoutExtension = StringUtils.getFileNameWithoutExtension(song.path)
+//                val ext = StringsUtils.getFileExtension(song.path)
+//                var pathWithoutExtension = StringsUtils.getFileNameWithoutExtension(song.path)
 //                var fromFile = File(song.path)
 //                var toFile = File(pathWithoutExtension + "123." + ext)
 //                fromFile.renameTo(toFile)
@@ -420,10 +419,10 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
     }
 
     fun checkingNewData() {
-        val dataFolder = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-        /*val dataFolderAdvanced = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-        val dataFolderHigherAbundance = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-        val dataFolderHigherQuantum = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+        val dataFolder = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+        /*val dataFolderAdvanced = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+        val dataFolderHigherAbundance = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+        val dataFolderHigherQuantum = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
 
 
                 ||dataFolderAdvanced.exists() && dataFolderAdvanced.listFiles().isNotEmpty()
@@ -453,23 +452,23 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
         override fun doInBackground(vararg p0: Void?): Void? {
             //Delete old folder
             for (item in Constants.DEFAULT_DATA_FOLDER_OLDS) {
-                if (File(FileUtils.getSdcardStore(), item).exists()) {
-                    FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), item))
+                if (File(FilesUtils.getSdcardStore(), item).exists()) {
+                    FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), item))
                 }
             }
 
             //Delete folder current
-            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
-                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
+            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
+                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER))
             }
-            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER).exists()) {
-                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER))
+            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER).exists()) {
+                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER))
             }
-            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER).exists()) {
-                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER))
+            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER).exists()) {
+                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER))
             }
-            if (File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER).exists()) {
-                FileUtils.deleteRecursive(File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER))
+            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER).exists()) {
+                FilesUtils.deleteRecursive(File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER))
             }
             return null
         }
@@ -499,10 +498,10 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
             if (!isCheckLogin) {
                 if (Utils.isConnectedToNetwork(this@MainActivity)) {
                     isCheckLogin = true
-                    val file = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-                    val fileAdvanced = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-                    val fileHigherAbundance = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-                    val fileHigherQuantum = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+                    val file = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+                    val fileAdvanced = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+                    val fileHigherAbundance = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+                    val fileHigherQuantum = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
                     needToDownloadData = !file.exists() || file.listFiles().isEmpty()
                             || !fileAdvanced.exists() || fileAdvanced.listFiles().isEmpty()
                             || !fileHigherAbundance.exists() || fileHigherAbundance.listFiles().isEmpty()
@@ -777,7 +776,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
         }
         if (Utils.isTablet(this)) {
             btnProfile.setOnClickListener {
-                FileUtils.showComingSoon(this@MainActivity)
+                FilesUtils.showComingSoon(this@MainActivity)
             }
         }
     }
@@ -852,8 +851,8 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
             }
 
         })
-        tvCurrentDurationMain.text = StringUtils.toString(if (currentDuration > duration) duration.toLong() else currentDuration.toLong())
-        tvDurationMain.text = StringUtils.toString(duration.toLong() - currentDuration.toLong())
+        tvCurrentDurationMain.text = StringsUtils.toString(if (currentDuration > duration) duration.toLong() else currentDuration.toLong())
+        tvDurationMain.text = StringsUtils.toString(duration.toLong() - currentDuration.toLong())
 
 //        val title = song.song.title
 //        val albumId = song.song.albumId
@@ -1180,7 +1179,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
 
     fun deleteAPKFolder() {
         val apkFolder = File(CACHE_APK_FOLDER, Constants.APKS_FOLDER)
-        FileUtils.deleteFileInDir(apkFolder)
+        FilesUtils.deleteFileInDir(apkFolder)
     }
 
     fun dialogConfirmUpdateApk(apkUrl: String, fileName: String) {
@@ -1207,7 +1206,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
         } else {
             Toast.makeText(this@MainActivity, getString(R.string.txt_downloading_dot), Toast.LENGTH_LONG).show()
 
-            FileUtils.deleteFileInDir(apkFolder)
+            FilesUtils.deleteFileInDir(apkFolder)
             downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             Download_Uri = Uri.parse(apkUrl)
             val request = DownloadManager.Request(Download_Uri)

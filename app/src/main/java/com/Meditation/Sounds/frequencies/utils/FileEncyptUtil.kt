@@ -5,9 +5,9 @@ import android.net.Uri
 import android.util.Log
 import com.Meditation.Sounds.frequencies.models.Album
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.FileUtils
+import com.Meditation.Sounds.frequencies.utils.FilesUtils
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.google.android.exoplayer2.upstream.DataSink
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.crypto.AesCipherDataSink
@@ -56,7 +56,7 @@ object FileEncyptUtil {
 
     fun encryptFile(sourceFile: File, secretKey: String): String {
         try {
-            var pathWithoutExtension = StringUtils.getFileNameWithoutExtension(sourceFile.path)
+            var pathWithoutExtension = StringsUtils.getFileNameWithoutExtension(sourceFile.path)
             var desFile = File(pathWithoutExtension + "." + Constants.EXTENSION_ENCRYPT_FILE)
 
             val inputStream = FileInputStream(sourceFile)
@@ -95,7 +95,7 @@ object FileEncyptUtil {
 
     fun renameToMp3File(sourceFile: String): String {
         var deviceId = SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID]
-        var pathWithoutExtension = StringUtils.getFileNameWithoutExtension(sourceFile)
+        var pathWithoutExtension = StringsUtils.getFileNameWithoutExtension(sourceFile)
         var fromFile = File(sourceFile)
         var toFile = File(pathWithoutExtension + "." + Constants.EXTENSION_MP3_FILE)
         if (toFile.exists()) {
@@ -121,7 +121,7 @@ object FileEncyptUtil {
     fun renameToEncryptFile(sourceFile: String): String {
         var deviceId = SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID]
 
-        var pathWithoutExtension = StringUtils.getFileNameWithoutExtension(sourceFile)
+        var pathWithoutExtension = StringsUtils.getFileNameWithoutExtension(sourceFile)
         var fromFile = File(sourceFile)
         var toFile = File(pathWithoutExtension + "." + Constants.EXTENSION_ENCRYPT_FILE)
         if (toFile.exists()) {
@@ -186,10 +186,10 @@ object FileEncyptUtil {
     }
 
     fun countMp3Files(): Int {
-        val CACHE_FOLDER = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-        val CACHE_FOLDER_ADVANCED = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-        val CACHE_FOLDER_ABUNDANCE = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-        val CACHE_FOLDER_HIGHER_QUANTUM = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+        val CACHE_FOLDER = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+        val CACHE_FOLDER_ADVANCED = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+        val CACHE_FOLDER_ABUNDANCE = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+        val CACHE_FOLDER_HIGHER_QUANTUM = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
 
         if (!CACHE_FOLDER.exists()) {
             CACHE_FOLDER.mkdir()

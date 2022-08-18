@@ -31,10 +31,10 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
     private val executor = Executors.newFixedThreadPool(3)
     private var downloadedFile = 0
     private var totalDownloadFile = 0
-    val CACHE_FOLDER = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-    val CACHE_FOLDER_ADVANCED = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
-    val CACHE_FOLDER_ABUNDANCE = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
-    val CACHE_FOLDER_HIGHER_QUANTUM = File(FileUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
+    val CACHE_FOLDER = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
+    val CACHE_FOLDER_ADVANCED = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+    val CACHE_FOLDER_ABUNDANCE = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
+    val CACHE_FOLDER_HIGHER_QUANTUM = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
     var albumPrioritysOutput = ArrayList<String>()
     var albumAdvancedPrioritysOutput = ArrayList<String>()
     var albumHigherAbundancePriority = ArrayList<String>()
@@ -143,16 +143,16 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
         if (!TextUtils.isEmpty(album.albumArt)) {
             val file = File(albumFolder, Constants.ALBUM_ART_FILE_NAME)
             //File is encoded
-            val fileWithoutExtension = File(albumFolder, StringUtils.getFileNameWithoutExtension(file.name))
+            val fileWithoutExtension = File(albumFolder, StringsUtils.getFileNameWithoutExtension(file.name))
             if (!file.exists() && !fileWithoutExtension.exists() && isDownloadArts) {
                 DownloadFileTask(album, album.albumArt!!, 0, false, this@DownloadMusicManager).executeOnExecutor(executor)
                 totalDownloadFile++
             }
         }
         for (song in album.songUrls) {
-            val fileName = URLDecoder.decode(StringUtils.getFileName(song), Constants.CHARSET)
+            val fileName = URLDecoder.decode(StringsUtils.getFileName(song), Constants.CHARSET)
             //File is encoded
-            val fileNameWithoutExtension = StringUtils.getFileNameWithoutExtension(fileName)
+            val fileNameWithoutExtension = StringsUtils.getFileNameWithoutExtension(fileName)
             val fileEncrypt = fileNameWithoutExtension + "." + Constants.EXTENSION_ENCRYPT_FILE
             if (!File(albumFolder, fileName).exists() && !File(albumFolder, fileEncrypt).exists() && !File(albumFolder, fileNameWithoutExtension).exists()) {
                 DownloadFileTask(album, song, album.songUrls.indexOf(song) + 1, true, this@DownloadMusicManager).executeOnExecutor(executor)
@@ -261,18 +261,18 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
             album.id = database.albumDAO().insert(album)
             oldAlbums.add(album)
         }
-        val albumMp3File = File(albumFolder, downloadItem.albumName + "/" + URLDecoder.decode(StringUtils.getFileName(downloadItem.url), Constants.CHARSET))
+        val albumMp3File = File(albumFolder, downloadItem.albumName + "/" + URLDecoder.decode(StringsUtils.getFileName(downloadItem.url), Constants.CHARSET))
         if (albumMp3File.exists()) {
             syncSongs(album, albumMp3File.path, albumInforSongs)
         }
     }
 
     private fun syncSongs(album: Album, songUrl: String, albumInforSongs: ArrayList<Song>) {
-        var songFileName = StringUtils.getFileName(songUrl)
+        var songFileName = StringsUtils.getFileName(songUrl)
         val songs = database.songDAO().getByAlbumId(album.id)
         try {
             if (songFileName != Constants.ALBUM_INFOR_FILE_NAME && !songFileName.contains(Constants.ALBUM_ART_FILE_NAME, ignoreCase = true) && !songFileName.startsWith("_tmp")) {
-                var song = getSong(StringUtils.getFileNameWithoutExtension(songFileName), songs)
+                var song = getSong(StringsUtils.getFileNameWithoutExtension(songFileName), songs)
                 if (song == null) {
                     song = Song()
                     song.albumId = album.id
@@ -281,14 +281,14 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
                     song.mediaType = album.mediaType
 
                     var encyptPath = songUrl
-                    if (StringUtils.getFileExtension(songUrl).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                    if (StringsUtils.getFileExtension(songUrl).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                         //get songs info
                         val metaRetriever = MediaMetadataRetriever()
                         metaRetriever.setDataSource(song.path)
                         song.artist = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)!!
                         song.title = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE).toString()
                         song.duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
-                        song.fileName = StringUtils.getFileNameWithoutExtension(songFileName)
+                        song.fileName = StringsUtils.getFileNameWithoutExtension(songFileName)
 
                         //No need edit title from new songs
                         song.editTitleVersion = 1
@@ -296,7 +296,7 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
                         song.updateFilePath = 1
 
                         if (song.title == "null") {
-                            song.title = StringUtils.getFileNameWithoutExtension(songFileName)
+                            song.title = StringsUtils.getFileNameWithoutExtension(songFileName)
                         }
 
                         encyptPath = FileEncyptUtil.encryptFile(File(songUrl), SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID])
@@ -311,7 +311,7 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
                         if (albumInforSongs.size > 0) {
                             for (i in 0..albumInforSongs.size - 1) {
                                 if (albumInforSongs[i].albumName.replace("\u0027", "'").equals(album.name, ignoreCase = true) &&
-                                        albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringUtils.getFileNameWithoutExtension(songFileName), ignoreCase = true)) {
+                                        albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringsUtils.getFileNameWithoutExtension(songFileName), ignoreCase = true)) {
                                     song.artist = albumInforSongs[i].artist
                                     song.title = albumInforSongs[i].title
                                     song.duration = albumInforSongs[i].duration
@@ -332,18 +332,18 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
                     }
 
                     //update path for encrypt file
-                    if (StringUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                    if (StringsUtils.getFileExtension(song.path).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                         var added = false
                         for (i in 0..albumInforSongs.size - 1) {
                             if (albumInforSongs[i].albumName.replace("\u0027", "'").equals(album.name, ignoreCase = true) &&
-                                    albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringUtils.getFileNameWithoutExtension(songFileName), ignoreCase = true)) {
+                                    albumInforSongs[i].fileName.replace("\u0027", "'").equals(StringsUtils.getFileNameWithoutExtension(songFileName), ignoreCase = true)) {
                                 added = true
                                 break
                             }
                         }
                         val oldSongPath = song.path
                         if (!added) {
-                            song.fileName = StringUtils.getFileNameWithoutExtension(songFileName)
+                            song.fileName = StringsUtils.getFileNameWithoutExtension(songFileName)
                             val encyptPath = song.path?.let { FileEncyptUtil.encryptFile(File(it), SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID]) }
                             encyptPath?.let { database.songDAO().updateEncryptPathFromId(song.id, it) }
                             song.path = encyptPath
@@ -354,7 +354,7 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
                             FileEncyptUtil.deleteFile(oldSongPath)
                         }
                     } else {
-                        if (StringUtils.getFileExtension(songUrl).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
+                        if (StringsUtils.getFileExtension(songUrl).equals(Constants.EXTENSION_MP3_FILE, ignoreCase = true)) {
                             if (song.path != null && File(song.path).exists()) {
                                 //If encrypted file is exist, then delete mp3 file
                                 FileEncyptUtil.deleteFile(songUrl)
@@ -417,7 +417,7 @@ class DownloadMusicManager(private var activity: BaseActivity, private var album
 
     private fun getSong(name: String, songs: List<Song>): Song? {
         for (song in songs) {
-            if (StringUtils.getFileNameWithoutExtension(File(song.path).name) == name) {
+            if (StringsUtils.getFileNameWithoutExtension(File(song.path).name) == name) {
                 return song
             }
         }

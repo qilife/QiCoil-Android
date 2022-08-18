@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.ceil
 
 class PlayerService : Service() {
@@ -132,8 +133,14 @@ class PlayerService : Service() {
         super.onCreate()
 
         EventBus.getDefault().register(this)
-
-        musicRepository = trackList?.let { MusicRepository(it) }!!
+        //trackList = ArrayList()
+        if(trackList!=null && trackList!!.size!=0) {
+            musicRepository = trackList?.let { MusicRepository(it) }!!
+        }
+        else
+        {
+            return
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(NOTIFICATION_DEFAULT_CHANNEL_ID, getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT)
@@ -209,6 +216,8 @@ class PlayerService : Service() {
         progressTimer.purge()
         mediaSession?.release()
         exoPlayer?.release()
+
+
     }
 
     private val mediaSessionCallback: MediaSessionCompat.Callback = object : MediaSessionCompat.Callback() {
@@ -218,7 +227,14 @@ class PlayerService : Service() {
         override fun onPlay() {
             if (!exoPlayer?.playWhenReady!!) {
 
-                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, PlayerService::class.java))
+                try {
+                    ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, PlayerService::class.java))
+                }
+                catch (ex: Exception)
+                {
+                    ex.printStackTrace()
+                    //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
+                }
 
                 val track = musicRepository.getCurrent()
                 mDuration = track.duration

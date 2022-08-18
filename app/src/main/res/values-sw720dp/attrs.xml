@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="isTablet">true</bool>
-
     <declare-styleable name="TextFont">
         <attr name="fontText" format="string" />
     </declare-styleable>

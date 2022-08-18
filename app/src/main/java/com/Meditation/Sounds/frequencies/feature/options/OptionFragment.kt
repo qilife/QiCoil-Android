@@ -8,7 +8,7 @@ import com.Meditation.Sounds.frequencies.feature.base.BaseFragment
 import com.Meditation.Sounds.frequencies.feature.main.MainActivity
 import com.Meditation.Sounds.frequencies.models.Profile
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.FileUtils
+import com.Meditation.Sounds.frequencies.utils.FilesUtils
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.CustomFontTextView
@@ -53,7 +53,7 @@ class OptionFragment : BaseFragment() {
 
 
         tvFavorite?.setOnClickListener {
-            FileUtils.showComingSoon(mContext!!)
+            FilesUtils.showComingSoon(mContext!!)
         }
 
         tvChangePassword?.setOnClickListener {

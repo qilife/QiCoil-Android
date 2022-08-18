@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 
 import com.Meditation.Sounds.frequencies.api.exception.ApiException;
-import com.Meditation.Sounds.frequencies.utils.StringUtils;
+import com.Meditation.Sounds.frequencies.utils.StringsUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,7 +70,7 @@ public abstract class AbstractHttpApi implements HttpApi {
     protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers,
                                      Map<String, String> params)
             throws JSONException, ApiException, IOException {
-        String urlParams = StringUtils.getParamsRequest(params);
+        String urlParams = StringsUtils.getParamsRequest(params);
         byte[] postDataBytes = urlParams.getBytes();
 
         HttpURLConnection connection = prepareConnection(requestUrl);
@@ -96,7 +96,7 @@ public abstract class AbstractHttpApi implements HttpApi {
                                     @Nullable Map<String, String> params)
             throws JSONException, ApiException, IOException {
         String urlParams = null;
-        if (params != null) urlParams = StringUtils.getParamsRequest(params);
+        if (params != null) urlParams = StringsUtils.getParamsRequest(params);
         String queryUrl = TextUtils.isEmpty(urlParams) ? requestUrl : (requestUrl + "?" + urlParams);
         HttpURLConnection connection = prepareConnection(queryUrl);
         connection.setRequestMethod("GET");

@@ -4,8 +4,8 @@ import android.os.AsyncTask
 import android.util.Log
 import com.Meditation.Sounds.frequencies.models.Album
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.FileUtils
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.FilesUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -16,7 +16,7 @@ class DownloadFileTask(var album: Album, var url: String, var index: Int, var is
     private var fileSize = 0L
     private var downloadItem: DownloadItem? = null
     private var exeption: Throwable? = null
-    val CACHE_FOLDER = File(FileUtils.getSdcardStore(), when {
+    val CACHE_FOLDER = File(FilesUtils.getSdcardStore(), when {
         album.album_type == 1 -> Constants.DEFAULT_DATA_ADVANCED_FOLDER
         album.album_type == 2 -> Constants.DEFAULT_DATA_ABUNDANCE_FOLDER
         album.album_type == 3 -> Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
@@ -89,14 +89,14 @@ class DownloadFileTask(var album: Album, var url: String, var index: Int, var is
                         val percent = Math.round(total * 100f / fileSize)
                         if (percent != downloadItem?.progress) {
                             publishProgress(percent)
-                            Log.d("Data % of " + StringUtils.getFileName(url) + ": ", "$percent")
+                            //Log.d("Data % of " + StringsUtils.getFileName(url) + ": ", "$percent")
                         }
                     }
                 }
             } while (count != -1)
 
             if (isSong) {
-                val file = File(albumFolder, URLDecoder.decode(StringUtils.getFileName(this.url), Constants.CHARSET))
+                val file = File(albumFolder, URLDecoder.decode(StringsUtils.getFileName(this.url), Constants.CHARSET))
                 tempFile.renameTo(file)
 //                    val song = Song()
 //                    song.path = file.path

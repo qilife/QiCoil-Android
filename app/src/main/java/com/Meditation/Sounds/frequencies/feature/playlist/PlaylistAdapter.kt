@@ -8,7 +8,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.models.Playlist
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import kotlinx.android.synthetic.main.item_playlist.view.*
 
 /**
@@ -47,7 +47,7 @@ class PlaylistAdapter(var data: List<Playlist>, var onItemClickListener: IOnItem
         val playlist = data[position]
 
         holder.itemView.tvNamePlaylist.text = playlist.title
-        holder.itemView.tvTotalTime.text = StringUtils.toString(playlist.totalTime)
+        holder.itemView.tvTotalTime.text = StringsUtils.toString(playlist.totalTime)
 //        if (position == data.size - 1) {
 //            holder.itemView.line.visibility = View.GONE
 //        } else {

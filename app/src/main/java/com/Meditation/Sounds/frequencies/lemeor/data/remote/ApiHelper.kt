@@ -5,6 +5,10 @@ import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiService
 class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
     suspend fun getHome() = getResult{ apiService.getHome() }
 
+    suspend fun getCHeckHome(user_id : String) = getResult{ apiService.checkAlbums(user_id) }
+
+    suspend fun SaveAlbum(user_id : String,album_id : String) = getResult{ apiService.SaveAlbums(user_id,album_id) }
+
     suspend fun login(
             email: String,
             password: String

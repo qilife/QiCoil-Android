@@ -13,9 +13,6 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.album_item.view.*
 import java.io.File
 
-/**
- * Created by Admin on 11/14/16.
- */
 
 class AlbumsAdapter(private val mContext: Context?, var data: List<Album>, private var isAdvanced: Boolean, private var mOnItemClickListener: IOnItemClickListener?) : RecyclerView.Adapter<AlbumsAdapter.ViewHolder>() {
 

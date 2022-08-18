@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 /**
  * Created by dcmen on 08/31/16.
  */
-public class StringUtils {
+public class StringsUtils {
     private static final DecimalFormat NUMBER_TIME_FORMATTER = (DecimalFormat) NumberFormat.getInstance();
 
     static {

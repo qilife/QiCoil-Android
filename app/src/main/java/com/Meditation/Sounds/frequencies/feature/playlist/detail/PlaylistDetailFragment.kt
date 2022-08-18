@@ -31,7 +31,7 @@ import com.Meditation.Sounds.frequencies.feature.playlist.PlaylistAlbumFragment
 import com.Meditation.Sounds.frequencies.feature.playlist.PlaylistGroupFragment
 import com.Meditation.Sounds.frequencies.models.*
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.Meditation.Sounds.frequencies.utils.SwipeHelpers.SimpleItemTouchHelperCallback
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.AddEditPlaylistDialog
@@ -448,7 +448,7 @@ class PlaylistDetailFragment : BaseFragment(), Observer<Playlist?> , MusicServic
                     }
                     it.mediaType = mediaType
                     mPlaylistObject = it
-                    tvTotalTime.text = StringUtils.toString(it.totalTime)
+                    tvTotalTime.text = StringsUtils.toString(it.totalTime)
                     mAdapter?.setDataAlbum(listAlbums)
                     mAdapter?.notifyDataSetChanged()
 
@@ -482,7 +482,7 @@ class PlaylistDetailFragment : BaseFragment(), Observer<Playlist?> , MusicServic
                 }
             }
             mViewModel.updateDurationOfAllPlaylist(mPlaylist!!.value!!, totalTime, mediaType, mPlaylist!!.value!!.fromUsers)
-            tvTotalTime.text = StringUtils.toString(totalTime)
+            tvTotalTime.text = StringsUtils.toString(totalTime)
             val intent = Intent("BROADCAST_CHANGE_DURATION_PROGRAM")
             mContext?.sendBroadcast(intent)
         }
@@ -610,7 +610,7 @@ class PlaylistDetailFragment : BaseFragment(), Observer<Playlist?> , MusicServic
             }
             listItem.add(playlistItem)
         }
-        tvTotalTime.text = StringUtils.toString(totalTime)
+        tvTotalTime.text = StringsUtils.toString(totalTime)
         mAdapter?.updateData(listItem)
         mAdapter!!.data = listItem
         mAdapter?.setDataAlbum(listAlbums)
@@ -758,7 +758,7 @@ class PlaylistDetailFragment : BaseFragment(), Observer<Playlist?> , MusicServic
             mPlaylist!!.value!!.totalTime += max
         }
         mViewModel.updatePlaylist(mPlaylist!!.value!!)
-        tvTotalTime.text = StringUtils.toString(mPlaylist!!.value!!.totalTime)
+        tvTotalTime.text = StringsUtils.toString(mPlaylist!!.value!!.totalTime)
 
         btnSave.text = getString(R.string.txt_add)
         if (!autoSave) {

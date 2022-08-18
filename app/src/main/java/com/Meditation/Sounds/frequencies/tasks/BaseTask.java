@@ -14,10 +14,7 @@ import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import org.json.JSONException;
 import java.io.IOException;
 
-/**
- * Created by dcmen on 08/31/16.
- * This class is parent of any subclass which call api
- */
+
 public abstract class BaseTask<Output> extends AsyncTask<Void,Exception, Output> {
     protected TaskApi mApi;
     private ApiListener<Output> mListener;

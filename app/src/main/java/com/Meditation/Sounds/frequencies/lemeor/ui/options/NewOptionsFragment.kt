@@ -2,6 +2,7 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.options
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -97,7 +98,9 @@ class NewOptionsFragment : Fragment() {
                         val inappList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList!!
 
                         if (subsList.isEmpty() && inappList.isEmpty()) {
-                            if (context != null) { Toast.makeText(context, "No purchases available", Toast.LENGTH_SHORT).show() }
+                            if (context != null) {
+                                Toast.makeText(context, "No purchases available", Toast.LENGTH_SHORT).show()
+                            }
                         } else {
                             val albumDao = DataBase.getInstance(requireContext()).albumDao()
 
@@ -111,52 +114,98 @@ class NewOptionsFragment : Fragment() {
                                         SKU_RIFE_HIGHER_MONTHLY,
                                         SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE,
                                         QUANTUM_TIER_SUBS_MONTH,
-                                        QUANTUM_TIER_SUBS_ANNUAL -> { albumDao.setNewUnlockedByTierId(true, NewPurchaseActivity.QUANTUM_TIER_ID) }
+                                        QUANTUM_TIER_SUBS_ANNUAL -> {
+                                            albumDao.setNewUnlockedByTierId(true, NewPurchaseActivity.QUANTUM_TIER_ID)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_BRAIN.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BRAIN.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_BRAIN.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BRAIN.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_WISDOM.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WISDOM.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_WISDOM.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WISDOM.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_PROTECTION.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_PROTECTION.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_PROTECTION.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_PROTECTION.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId)
+                                        }
 
                                         HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
                                             //albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.Id)
                                             albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
                                         }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_NAD.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_NAD.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId)
+                                        }
 
-                                        HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> { albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId) }
+                                        HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId)
+                                        }
+
+                                        HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.sku -> {
+                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.categoryId)
+                                        }
                                     }
                                 }
                             }
@@ -177,7 +226,9 @@ class NewOptionsFragment : Fragment() {
 
         options_disclaimer.setOnClickListener {
             val dialog = DisclaimerDialog(requireContext(), false,
-                    object : DisclaimerDialog.IOnSubmitListener { override fun submit(isCheck: Boolean) { } })
+                    object : DisclaimerDialog.IOnSubmitListener {
+                        override fun submit(isCheck: Boolean) {}
+                    })
             dialog.show()
             dialog.setButtonText(getString(R.string.txt_ok))
         }
@@ -211,6 +262,14 @@ class NewOptionsFragment : Fragment() {
             startActivity(Intent(requireContext(), AuthActivity::class.java))
         }
 
+        options_help.setOnClickListener {
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:support@qilifestore.com")
+            }
+            startActivity(Intent.createChooser(emailIntent, "Send feedback"))
+        }
+
         if (BuildConfig.IS_FREE) {
             options_flash_sale.visibility = View.GONE
             options_subscription.visibility = View.GONE
@@ -231,7 +290,7 @@ class NewOptionsFragment : Fragment() {
                 .setCancelable(false)
                 .setNegativeButton(getString(R.string.txt_no), null)
                 .setPositiveButton(getString(R.string.txt_yes)) { dialog, _ ->
-                    val dialog = DeleteUserDialog(activity,object : DeleteUserDialog.IOnSubmitListener {
+                    val dialog = DeleteUserDialog(activity, object : DeleteUserDialog.IOnSubmitListener {
                         override fun submit(password: String) {
                             mViewModel.deleteUser(password).observe(viewLifecycleOwner, {
                                 it?.let { resource ->
@@ -245,7 +304,9 @@ class NewOptionsFragment : Fragment() {
                                             activity?.let { HudHelper.hide() }
                                             Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                                         }
-                                        Resource.Status.LOADING -> { activity?.let { activity -> HudHelper.show(activity) } }
+                                        Resource.Status.LOADING -> {
+                                            activity?.let { activity -> HudHelper.show(activity) }
+                                        }
                                     }
 
                                 }

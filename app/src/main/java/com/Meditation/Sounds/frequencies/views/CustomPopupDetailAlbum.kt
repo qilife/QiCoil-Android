@@ -11,7 +11,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.models.Song
-import com.Meditation.Sounds.frequencies.utils.StringUtils
+import com.Meditation.Sounds.frequencies.utils.StringsUtils
 
 class CustomPopupDetailAlbum(var mContext: Context, var song: Song,
                              var duration: Long,
@@ -63,7 +63,7 @@ class CustomPopupDetailAlbum(var mContext: Context, var song: Song,
             btnAddToFavorite.text = mContext.getString(R.string.tv_add_to_favorites)
         }
 
-        tvDuration.text = StringUtils.toString(song.duration)
+        tvDuration.text = StringsUtils.toString(song.duration)
         btnAddToProgram.setOnClickListener {
             mListener.let {
                 it.onAddSongToPlaylist(song)

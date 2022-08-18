@@ -28,14 +28,13 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.videos.VideoRepository
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: DataBase) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(HomeRepository(apiHelper, localData)) as T
         }
 
         if (modelClass.isAssignableFrom(AlbumsViewModel::class.java)) {
-            return AlbumsViewModel(AlbumsRepository(localData)) as T
+            return AlbumsViewModel(AlbumsRepository(apiHelper,localData)) as T
         }
 
         if (modelClass.isAssignableFrom(NewAlbumDetailViewModel::class.java)) {
@@ -69,7 +68,6 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
         if (modelClass.isAssignableFrom(ChangePassViewModel::class.java)) {
             return ChangePassViewModel(ChangePassRepository(apiHelper)) as T
         }
-
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
