@@ -1,0 +1,1224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mViewSubscription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#283266"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_item_5"
+            android:layout_marginTop="@dimen/margin_item_5"
+            android:layout_marginRight="@dimen/margin_item_5"
+            android:layout_marginBottom="@dimen/margin_item_5"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_item_5"
+                    android:gravity="center"
+                    android:text="@string/tv_unlock_powerful_frequencies"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_18"
+                    app:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="@dimen/margin_item_5"
+                    android:layout_marginBottom="@dimen/margin_item_5"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="0.1" />
+
+                    <FrameLayout
+                        android:id="@+id/mViewSubscriptionFree"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:src="@drawable/img_free" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="0.1" />
+
+                    <FrameLayout
+                        android:id="@+id/mViewSubscriptionBasic"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/img_master" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_current_plan"
+                                android:textAllCaps="true"
+                                android:textColor="#2C3070"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_current_plan"
+                                android:textAllCaps="true"
+                                android:textColor="#2C3070"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <LinearLayout
+                                android:id="@+id/viewPriceMaster"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/margin_item_5"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:id="@+id/mPriceBasic"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textColor="#000"
+                                    android:textSize="@dimen/text_size_small"
+                                    app:fontText="fonts/MyriadPro_Bold.otf"
+                                    tools:text="$9.99" />
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/margin_item_5"
+                                    android:text="@string/tv_per_month"
+                                    android:textAllCaps="true"
+                                    android:textColor="#000"
+                                    android:textSize="@dimen/text_size_small_6"
+                                    app:fontText="fonts/MyriadPro_Bold.otf" />
+                            </LinearLayout>
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:id="@+id/viewBuyNowBasic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#2C3070"
+                                android:textSize="@dimen/text_size_small"
+                                app:fontText="fonts/oswald_medium.ttf" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="0.1" />
+
+                    <FrameLayout
+                        android:id="@+id/mViewSubscriptionAdvanced"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/img_advanced" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#2C3070"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#2C3070"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <LinearLayout
+                                android:id="@+id/viewPriceAdvanced"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_item_5"
+                                android:orientation="vertical">
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:id="@+id/mPriceAdvanced"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textColor="#000"
+                                    android:textSize="@dimen/text_size_small"
+                                    app:fontText="fonts/MyriadPro_Bold.otf"
+                                    tools:text="$19.99" />
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/margin_item_5"
+                                    android:text="@string/tv_per_month"
+                                    android:textAllCaps="true"
+                                    android:textColor="#000"
+                                    android:textSize="@dimen/text_size_small_6"
+                                    app:fontText="fonts/MyriadPro_Bold.otf" />
+                            </LinearLayout>
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:id="@+id/viewBuyNowAdvanced"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#801111"
+                                android:textSize="@dimen/text_size_small"
+                                app:fontText="fonts/oswald_medium.ttf" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="0.1" />
+
+                    <FrameLayout
+                        android:id="@+id/mViewSubscriptionHigher"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/img_abundance" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#801111"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#801111"
+                                android:textSize="@dimen/text_size_small"
+                                android:visibility="invisible"
+                                app:fontText="fonts/oswald_medium.ttf" />
+
+                            <LinearLayout
+                                android:id="@+id/viewPriceAbundance"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/margin_item_5"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:id="@+id/mPriceHigher"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textColor="#FFF"
+                                    android:textSize="@dimen/text_size_small"
+                                    app:fontText="fonts/MyriadPro_Bold.otf"
+                                    tools:text="$19.99" />
+
+                                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/margin_item_5"
+                                    android:text="@string/tv_per_month"
+                                    android:textAllCaps="true"
+                                    android:textColor="#FFF"
+                                    android:textSize="@dimen/text_size_small_6"
+                                    app:fontText="fonts/MyriadPro_Bold.otf" />
+                            </LinearLayout>
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:id="@+id/viewBuyNowHigher"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/tv_subscription_now"
+                                android:textAllCaps="true"
+                                android:textColor="#fff000"
+                                android:textSize="@dimen/text_size_small"
+                                app:fontText="fonts/oswald_medium.ttf" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="0.1" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/height_button_half"
+                    android:layout_marginRight="@dimen/height_button_half">
+
+                    <LinearLayout
+                        android:id="@+id/mViewTitleFree"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_free" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_free_1"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_free" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_free_2"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_free" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_free_3"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_free" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_free_4"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mViewTitleBasic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_1"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_2"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_3"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_4"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_7"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_8"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_basic" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_basic_9"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mViewTitleAdvanced"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_1"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_2"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_3"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_4"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_5"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_7"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_9"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_top_item_title">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/padding_icon_actionbar"
+                                android:layout_marginRight="@dimen/padding_icon_actionbar"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_check_advanced" />
+
+                            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/tv_title_advanced_10"
+                                android:textColor="#FFF"
+                                android:textSize="@dimen/text_size_small_11"
+                                app:fontText="fonts/MyriadPro_Semibold.otf" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/starter_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_buttons"
+                android:layout_marginTop="@dimen/margin_item_5"
+                android:layout_marginRight="@dimen/margin_buttons"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_buttons"
+                android:paddingTop="10dp"
+                android:paddingRight="@dimen/margin_buttons"
+                android:paddingBottom="10dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <FrameLayout
+                        android:id="@+id/mViewImageAlbumNoFlashSale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="1dp" />
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="1dp" />
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mViewImageFree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="@dimen/image_size_54"
+                                android:layout_margin="@dimen/margin_item_5"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_subscription_basic_2" />
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="@dimen/image_size_54"
+                                android:layout_margin="@dimen/margin_item_5"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_subscription_basic_1" />
+
+                            <ImageView
+                                android:layout_width="@dimen/image_size_54"
+                                android:layout_height="@dimen/image_size_54"
+                                android:layout_margin="@dimen/margin_item_5"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_subscription_basic_4" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mViewImageBasic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_2" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_5" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_3" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_1" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_7" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_4" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_basic_6" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mViewImageAdvanced"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_1" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_4" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_7" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_2" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_5" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_8" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_10" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_3" />
+
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_6" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/image_size_54"
+                                    android:layout_height="@dimen/image_size_54"
+                                    android:layout_margin="@dimen/margin_item_5"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_subscription_advance_9" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcImageHigher"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </FrameLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/subs_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/margin_item_5"
+                        android:text="Yearly Payment of $49"
+                        android:textColor="#FFF"
+                        android:textSize="@dimen/text_small_10"
+                        app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/subs_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/margin_buttons"
+                        android:paddingTop="@dimen/margin_item_5"
+                        android:text="@string/tv_title_subscription_lifetime"
+                        android:textColor="#FFF"
+                        android:textSize="@dimen/text_size_small_6"
+                        app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                        android:id="@+id/mTvLinkSubscription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/margin_item_5"
+                        android:paddingRight="@dimen/margin_item_5"
+                        android:paddingBottom="@dimen/margin_item_5"
+                        android:text="@string/tv_link"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_size_small_6"
+                        android:visibility="gone"
+                        app:fontText="fonts/MyriadPro_Regular.otf" />
+                </LinearLayout>
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/subs_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="@dimen/dp_70"
+                    android:layout_marginTop="@dimen/margin_item_5"
+                    android:layout_marginRight="@dimen/dp_70"
+                    android:layout_marginBottom="@dimen/margin_item_5"
+                    android:background="@drawable/bg_continue_subscription"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/margin_item_5"
+                    android:paddingBottom="@dimen/margin_item_5"
+                    android:singleLine="true"
+                    android:text="@string/tv_continue"
+                    android:textColor="#1C1E31"
+                    android:textSize="@dimen/text_size_large"
+                    app:fontText="fonts/MyriadPro_Bold.otf" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <ImageView
+        android:id="@+id/mImvDismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:contentDescription="@null"
+        android:padding="@dimen/item_offset"
+        android:src="@drawable/ic_dismiss" />
+</FrameLayout>

@@ -1,0 +1,342 @@
+<resources>
+    <string name="facebook_app_id">239929504671619</string>
+    <string name="fb_login_protocol_scheme">fb239929504671619</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--region Navigation-->
+    <string name="navigation_lbl_albums">Albums</string>
+    <string name="navigation_lbl_programs">Programs</string>
+    <string name="navigation_lbl_videos">Videos</string>
+    <string name="navigation_lbl_discover">Shop</string>
+    <string name="navigation_lbl_options">Options</string>
+    <!--endregion-->
+
+    <!--region Options-->
+    <string name="options_qi_coil">GET QI COIL</string>
+    <string name="options_sign_in">Sign in</string>
+    <string name="options_log_out">Logout</string>
+    <string name="options_delete_user">Delete User</string>
+    <string name="profile_lbl_subscription">Subscription</string>
+    <string name="tv_restore_purchase">Restore Purchase</string>
+    <string name="profile_lbl_instructions">Instructions</string>
+    <string name="profile_lbl_disclaimer">Disclaimer</string>
+    <string name="profile_lbl_about">About</string>
+    <!--endregion-->
+
+    <string name="btn_play">Play</string>
+
+    <!--region Fetch-->
+    <string name="start_fetching">Start fetching files.</string>
+    <string name="start">Start</string>
+    <string name="complete_over">%1$d/%2$d</string>
+    <string name="fetch_done">Fetching done.</string>
+    <string name="reset">RESET</string>
+    <string name="game_download_error">An error occurred, could not get files.</string>
+    <!--endregion-->
+
+    <!--region Player-->
+    <string name="notification_channel_name">Player controls</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <!--endregion-->
+
+    <!--region Downloader-->
+    <string name="downloader_utils_eta_sec">%1$ds left</string>
+    <string name="downloader_utils_eta_min">%1$dm %2$ds left</string>
+    <string name="downloader_utils_eta_hrs">%1$dh %2$dm %3$ds left</string>
+    <string name="download_speed_bytes">%1$d B/s</string>
+    <string name="download_speed_kb">%1$s KB/s</string>
+    <string name="download_speed_mb">%1$s MB/s</string>
+    <!--endregion-->
+
+    <string name="total_time">total time %1$s</string>
+
+    <string name="options_version">&#160;v %1$s</string>
+
+    <string name="toast_download_complete">Download Complete!</string>
+    <string name="txt_total_time">TOTAL TIME</string>
+    <string name="txt_my_playlists">MY PROGRAMS</string>
+    <string name="txt_share">SHARE</string>
+    <string name="txt_delete">DELETE</string>
+    <string name="txt_save">SAVE</string>
+    <string name="txt_add">ADD</string>
+    <string name="txt_create_playlist">Create Playlist</string>
+    <string name="txt_edit_playlist">Edit Playlist</string>
+    <string name="txt_playlist_name">Playlist name</string>
+    <string name="txt_ok">Ok</string>
+    <string name="txt_no">NO</string>
+    <string name="txt_enter_password">Enter Password</string>
+    <string name="txt_plz_enter_playlist_name">Please enter playlist name</string>
+    <string name="txt_create_playlist_success">Created playlist successfully</string>
+    <string name="txt_edit_playlist_name_success">Edited playlist\'s name successfully</string>
+    <string name="txt_delete_playlist_name_success">Deleted playlist successfully</string>
+    <string name="txt_no_songs">No Frequencies</string>
+    <string name="txt_no_result">No Results Found</string>
+    <string name="txt_search_songs">Search Frequencies</string>
+    <string name="txt_no_playlist">No Programs</string>
+    <string name="txt_no_albums">No albums</string>
+    <string name="msg_download_data">Downloading data&#8230;\nPlease wait</string>
+    <string name="msg_error_when_download">Cannot download data! Please try again</string>
+    <string name="txt_try_again">Try again</string>
+    <string name="txt_cancel">Cancel</string>
+    <string name="msg_coming_soon">Coming soon&#8230;</string>
+    <string name="msg_add_first_playlist">Please add first playlist</string>
+    <string name="txt_downloading">Downloading</string>
+    <string name="txt_downloaded">Downloading</string>
+    <string name="msg_loading">Loading&#8230;</string>
+    <string name="txt_disclaimer_title">Disclaimer and Waiver</string>
+    <string name="txt_disclaimer_content">By using this app, to the extent permitted by applicable law, you release this app’s creator, website and its Affiliates, and it’s and their employees, agents and representatives from any and all liability, damage or loss.  This app and tablet are not medical devices are not intended to be used to diagnose, treat, cure or prevent any disease. This app has not been evaluated by the FDA and no medical claims are made or implied for this app.  If you feel discomfort or dizziness, stop using this app.  Always consult with your doctor before using any or our products.</string>
+    <string name="txt_agree">Agree</string>
+    <string name="txt_disagree">Disagree</string>
+    <string name="txt_later">Show again</string>
+    <string name="txt_about">About</string>
+    <string name="txt_yes">YES</string>
+    <string name="txt_warning_clear_playlist">Are you sure you want to clear the current playlist?</string>
+    <string name="txt_warning_update_newversion_title">Update Available</string>
+    <string name="txt_warning_update_newversion">An update is available. Would you like to update the application now?\nIn case, you cannot install the new version. Please clear Google Play Store app cache and try again.</string>
+    <string name="txt_downloading_dot">Downloading…</string>
+    <string name="txt_donot_show_message">Do not show this message again</string>
+    <string name="txt_now_playing">Now Playing: %1$s</string>
+    <string name="txt_warning_delete_playlist">Are you sure you want to delete this playlist?</string>
+
+    <string name="tv_7_days_free">7 Days\nFree</string>
+    <string name="tv_7_days_free_limited_time_offer">7 DAYS FREE \n Limited Time Offer</string>
+    <string name="tv_free_trial">Free Trial</string>
+    <string name="tv_1_month">1\nmonth</string>
+    <string name="tv_1_year">1\nyear</string>
+    <string name="tv_message_billing_1">• Unlock All Qi Coil Albums Collection</string>
+    <string name="tv_message_billing_2">• Customizable Programs</string>
+    <string name="tv_message_billing_3">• Pre-Loaded Programs</string>
+    <string name="tv_subscription_info">SUBSCRIPTION INFO</string>
+    <string name="txt_about_subscribe_1">• Privacy Policy: http://www.tattoobookapp.com/quantumwavebiotechnology/privacy/</string>
+    <string name="txt_about_subscribe_2">• Terms of use: http://www.tattoobookapp.com/quantumwavebiotechnology/terms/</string>
+    <string name="txt_about_subscribe_3">• Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication.</string>
+    <string name="tv_back">back</string>
+    <string name="tv_sub_info_1">• No cancellation of the current subscription is allowed during active subscription period</string>
+    <string name="tv_sub_info_2">• Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user’s Account Settings after purchase</string>
+    <string name="tv_sub_info_3">• Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period</string>
+    <string name="tv_sub_info_4">• Payment will be charged to Google Account at confirmation of purchase</string>
+    <string name="tv_sub_info_5">• Free trial - 7 days free, then $24.99 per month. The price corresponds to the same prece segment, which are set in the Android Google Play for other currencies</string>
+    <string name="tv_price_of_subscription">price of subscription:</string>
+    <string name="tv_sub_info_6">• 1 Month, 7 days free trial</string>
+    <string name="tv_length_of_subscription">Length of subscription:</string>
+    <string name="tv_start_free_trial">start free trial</string>
+    <string name="tv_subscription_now">BUY NOW</string><!--Subscribe-->
+    <string name="tv_activate">Activate your\nFree trial</string>
+    <string name="tv_auto_renewable_subscription_info">Auto-Renewable Subscription info:</string>
+    <string name="tv_flash_sale">FLASH SALE</string>
+    <string name="tv_available_until">&#160;Available Until&#160;</string>
+    <string name="txt_then_trial_price">Then %1$s/month</string>
+    <!---->
+
+    <string name="tv_advanced_frequencies">ABUNDANCE I</string><!--ABUNDANCE-->
+    <string name="tv_basic_frequencies">BASIC</string>
+    <string name="tv_master_frequencies">MASTER</string>
+    <string name="tv_advanced_meditation_frequencies">ADVANCED \n MEDITATION FREQUENCIES</string>
+    <string name="tv_advanced_meditation_frequencies_2">ADVANCED MEDITATION FREQUENCIES</string>
+    <string name="tv_transform_yourself_faster_with_advanced_mind_enhancement_frequencies">Transform Yourself Faster with Advanced Mind Enhancement Frequencies</string>
+    <string name="tv_title_sub_item_1"><![CDATA[• Brainwave & mind power enhancement]]></string>
+    <string name="tv_title_sub_item_2">​• Amplify your power to create, manifest and attract abundance</string>
+    <string name="tv_title_sub_item_3">• Accelerated health</string>
+    <string name="tv_title_sub_item_4">​• Raise your spiritual resonance</string>
+    <string name="tv_title_sub_item_5">​​• Explore uncharted realms of lucid dreaming and astral projection</string>
+
+    <string name="tv_recurring_billing">Recurring Billing. Cancel Anytime.</string>
+    <string name="tv_one_time_payment">One Time Payment</string>
+    <string name="tv_title_subscription_monthly">This subscription automatically renews for $19,99 per month unless it is cancelled in your account settings on the Google Play at least 24-hours before the end of the trial period. Payments are charged to the your Google account at confirmation of purchase. The account is charged for the renewal within 24 hours before the end of the current period.  Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication.</string>
+    <string name="tv_title_subscription_lifetime">Payments are charged to the your Google account at confirmation of purchase. The account is charged for the renewal within 24 hours before the end of the current period.  Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication. By continuing, you agree to our</string>
+    <string name="tv_link">Terms and Privacy Policy</string>
+    <string name="tv_monthly">monthly</string>
+    <string name="tv_per_month">per month</string>
+    <string name="tv_annual">Annual</string>
+    <string name="tv_per_year">per year</string>
+    <string name="tv_lifetime">lifetime</string>
+    <string name="tv_pay_once">pay once</string>
+    <string name="tv_continue">Continue</string>
+    <string name="tv_basic_subscription">Essential Subscription</string>
+    <string name="tv_unlock_meditation_prequencies">UNLOCK \n MEDITATION FREQUENCIES</string>
+    <string name="tv_unlock_meditation_prequencies_2">UNLOCK MEDITATION FREQUENCIES</string>
+    <string name="tv_try_7_days_free">Try 7 Days Free</string>
+    <!--new-->
+
+    <string name="tv_minutes">MINUTES</string>
+    <string name="tv_seconds">SECONDS</string>
+    <string name="tv_hours">HOURS</string>
+    <string name="tv_offer_expires_in">Offer Expires In:</string>
+    <string name="tv__50_off">SAVE 50%</string><!--50% Off-->
+    <string name="tv_unlock_all_34_basic_frequencies_one_time">Unlock ALL 43 &lt;br/&gt;Essential Frequencies &lt;u&gt;FOREVER&lt;/u&gt;</string>
+    <string name="tv_unlock_all_34_basic_frequencies_one_time_yearly">Unlock ALL 43 \nEssential Frequencies</string>
+    <string name="tv_unlock_all_34_basic_frequencies">Unlock ALL 34 Essential Frequencies </string>
+    <string name="tv_unlock_all_150_advanced_frequencies_one_time">Unlock ALL 189 &lt;br/&gt;Abundance Frequencies &lt;u&gt;FOREVER&lt;/u&gt;</string>
+    <string name="tv_unlock_all_150_advanced_frequencies_one_time_yearly">Unlock ALL 189 \nAbundance Frequencies</string>
+    <string name="tv_unlock_all_150_advanced_frequencies">Unlock ALL 189 \nAbundance Frequencies </string>
+    <string name="tv_brainwave_mind_power_enhancement"><![CDATA[Brainwave & Mind Power Enhancement]]></string>
+    <string name="tvcreate_manifest_attract_abundancet"><![CDATA[Create, Manifest & Attract Abundancet]]></string>
+    <string name="tv_improve_overall_health">Improve Overall Health</string>
+    <string name="tv_raise_your_spiritual_resonance">Raise Your Spiritual Resonance</string>
+    <string name="tv_unlock_34_advanced_frequencies">Unlock 43 Essential Frequencies</string>
+    <string name="tv_buy_now">Buy now</string>
+    <string name="tv_current_plan">ACTIVATED</string><!--CURRENT PLAN-->
+    <string name="tv_choose_your_subscription_plan">Choose Your Subscription Plan</string>
+
+    <string name="tv_title_free_1">9 Starter Frequencies</string>
+    <string name="tv_title_free_2"><![CDATA[Focus & Meditation]]></string>
+    <string name="tv_title_free_3">Stress and Anxiety Relief</string>
+    <string name="tv_title_free_4"><![CDATA[Better Sleep & Relaxation]]></string>
+
+    <string name="tv_title_basic_1">Unlock 43 Essential Frequencies</string>
+    <string name="tv_title_basic_2">Clear Negative Energy</string>
+    <string name="tv_title_basic_3">Enhance Meditation</string>
+    <string name="tv_title_basic_4">Relieve Stress &amp; Anxiety</string>
+    <string name="tv_title_basic_7">Boost Physical and Mental Energy</string>
+    <string name="tv_title_basic_8">Improve Focus and Productivity</string>
+    <string name="tv_title_basic_9">Learn Faster</string>
+
+    <string name="tv_title_advanced_1">Unlock 43 Essential Frequencies</string>
+    <string name="tv_title_advanced_2">Unlock 189 Abundance Frequencies</string>
+    <string name="tv_title_advanced_3">Increase Luck and Coincidences</string>
+    <string name="tv_title_advanced_4">Amplify Your Manifestation Power</string>
+    <string name="tv_title_advanced_5">Design Your Reality</string>
+    <string name="tv_title_advanced_7">Enhance Your Intuition</string>
+    <string name="tv_title_advanced_8">Unlock 189 Abundance Frequencies</string>
+    <string name="tv_title_advanced_9">Awaken Your Third Eye</string>
+    <string name="tv_title_advanced_10">Attract Success and Abundance</string>
+
+    <string name="tv_title_advanced2_1">Unlock 43 Essential Frequencies</string>
+    <string name="tv_title_advanced2_2">Unlock 189 Abundance Frequencies</string>
+    <string name="tv_title_advanced2_3">Unlock 261 Higher Abundance Frequencies</string>
+    <string name="tv_title_advanced2_4">Increase Luck and Coincidences</string>
+    <string name="tv_title_advanced2_5">Amplify Your Manifestation Power</string>
+    <string name="tv_title_advanced2_6">Design Your Reality</string>
+    <string name="tv_title_advanced2_7">Enhance Your Intuition</string>
+    <string name="tv_title_advanced2_8">Awaken Your Third Eye</string>
+    <string name="tv_title_advanced2_9">Attract Success and Abundance</string>
+    <string name="tv_title_advanced2_10"><![CDATA[Profound Conscious & Subconscious Stimulation]]></string>
+    <string name="tv_title_advanced2_11"><![CDATA[Stimulate Healing & Promote Vitality]]></string>
+    <string name="tv_title_advanced2_12">Balance Your Chakras</string>
+    <string name="tv_title_advanced2_13">EMF Protection</string>
+
+
+    <string name="tv_reviews">Reviews</string>
+    <string name="tv_faq">FAQs</string>
+    <string name="tv_education">Education</string>
+    <string name="tv_qi_coils">Qi Coils</string>
+    <string name="player_error">Error initializing YouTube player: %1$s</string>
+    <string name="tv_purchase_limit">Purchase Limit: 0/1</string>
+    <string name="tv_yearly_payment_of">Yearly Payment of</string>
+    <string name="tv_title_advanced_6"><![CDATA[Strengthen & Balance Your Energy Field]]></string>
+    <string name="tv_get_this_huge_deal_before_it_s_gone">Get this huge deal before it’s gone!</string>
+
+    <string name="tv_change_password">Change Password</string>
+    <string name="tv_help_support">Help &amp; Support</string>
+
+    <string name="tv_my_custom_playlists">My Custom Programs</string>
+    <string name="tv_redeem">Redeem</string>
+
+    <string name="tv_title_subscription">Subscription automatically renews unless auto-renew is turned off at least 24 hours before current period ends. payment is charged to your GooglePlay account. Manage subscriptions and turn off auto-renewal in GooglePlay settings.</string>
+    <string name="tv_title_subscription_new">This subscription automatically renews unless auto-renew is turned off at least 24-hours before current period ends. Payment is charged to your GooglePlay account. Manage subscriptions and turn off auto renewal in GooglePlay account settings.</string>
+    <string name="flash_sale_50_off">Flash Sale - 50% OFF</string>
+    <string name="tv_forgotten_password">&lt;u&gt;Forgotten password?&lt;/u&gt;</string>
+    <string name="tv_link_sign_in">&lt;u&gt; Sign in.&lt;/u&gt;</string>
+    <string name="tv_link_sign_up">&lt;u&gt; Sign up.&lt;/u&gt;</string>
+    <string name="tv_signUp">Don\'t have an account?</string>
+    <string name="tv_signIn">Already has an account?</string>
+    <string name="tv_not_worry">Not to worry! \nJust enter your registered email address below and we’ll send you an email with instructions on how to reset your password.</string>
+    <string name="tv_sign_up">Sign Up</string>
+    <string name="tv_email">Email</string>
+    <string name="tv_password">Password</string>
+    <string name="tv_confirm_password">Confirm Password</string>
+    <string name="tv_get_started">Get Started</string>
+    <string name="tv_sign_in">Sign In</string>
+    <string name="tv_google">Continue with Google</string>
+    <string name="tv_facebook">Continue with Facebook</string>
+    <string name="tv_guest">Continue as Guest</string>
+    <string name="tv_login">Login</string>
+    <string name="txt_forgotten_password">Forgotten Password</string>
+    <string name="tv_forgot_password">Forgot Password?</string>
+    <string name="tv_email_address">Email Address</string>
+    <string name="tv_send_email">Send Email</string>
+    <string name="tv_old_password">Old Password</string>
+    <string name="tv_new_password">New Password</string>
+    <string name="tv_confirm_new_password">Confirm New Password</string>
+    <string name="txt_processing">Processing</string>
+    <string name="txt_msg_logout">Are you sure you want to logout?</string>
+    <string name="txt_msg_deleteuser">Are you sure you want to delete user?</string>
+    <string name="tv_name">Name</string>
+    <string name="err_network_available" translatable="false">Please check the network connection!</string>
+    <string name="err_unexpected_exception" translatable="false">Please try again!</string>
+    <string name="err_unexpected_exception_api" translatable="false">Connection fail. Please try again!</string>
+    <string name="txt_warning_login_fail" translatable="false">Wrong email or password. Try again or select Forgotten password to reset it.</string>
+    <string name="txt_waiting">Please waiting...</string>
+    <string name="txt_clear_data">Clear data...</string>
+    <string name="txt_email_exist">This email is already registered.</string>
+    <string name="tv_err_email_register">Your email address was not found.</string>
+    <string name="tv_forgot_password_success">Password changed successfully!</string>
+    <string name="tv_send_email_success">Email sent.  Check your email and open the link to reset your password.</string>
+    <string name="tv_unlock_powerful_frequencies">Choose Your Subscription Plan</string><!--Unlock Powerful Frequencies-->
+    <string name="txt_encrypting_message">We are syncing new data, this process can take less than 10 minutes. Please do not exit the application or shutdown.\nSynchronizing will not consume network capacity.</string>
+    <string name="txt_warning_frequencies_frequencies">Please wait while we update the frequencies. The frequencies were amplified and remastered for better user experience.</string>
+    <string name="tv_frequencies">Frequencies</string>
+    <string name="tv_albums">Albums</string>
+    <string name="tv_programs">Programs</string>
+    <string name="tv_higher_abundance">ABUNDANCE II</string><!--HIGHER\nABUNDANCE-->
+    <string name="tv_description">Description</string>
+
+    <string name="tv_note_5">• Get peak brain performance, creativity and ideas</string>
+    <string name="tv_note_4">• Get ultra relaxation and healing</string>
+    <string name="tv_note_3">• Feel rested, recharged, recovered</string>
+    <string name="tv_note_2">• Feel focused, relaxed, grounded, centered</string>
+    <string name="tv_note_1">• Tunes your brainwaves</string>
+    <string name="tv_create_new">CREATE NEW</string>
+    <string name="tv_higher_quantum">HIGHER QUANTUM</string>
+    <string name="tv_search">Search</string>
+    <string name="tv_starter">Starter</string>
+    <string name="tv_duration">Duration</string>
+    <string name="tv_move_up_queue">Move Up Queue</string>
+    <string name="tv_move_down_queue">Move Down Queue</string>
+    <string name="tv_remove">Remove</string>
+    <string name="tv_added_to_my_custom_playlist">Added to My Custom Playlist</string>
+    <string name="tv_add_to_program">Add to Program</string>
+    <string name="tv_add_to_favorites">Add to Favorites</string>
+    <string name="tv_redownload">Redownload</string>
+    <string name="tv_favorites">Favorites</string>
+    <string name="tv_remove_from_favorite">Remove from Favorite</string>
+
+    <!--region Delete-->
+    <string name="title_activity_navigation">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_qwe">MainActivity</string>
+    <!--endregion-->
+
+    <!--Lemeor-->
+    <string name="video_url" translatable="false">https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&amp;playlistId=%1$s&amp;key=%2$s&amp;maxResults=50</string>
+    <string name="flash_sale_colon">:</string>
+    <string name="flash_sale_00">00</string>
+    <string name="some_dot">•</string>
+    <string name="btn_download">Download</string>
+    <string name="program_favorites">Favorites</string>
+    <string name="txt_flash_sale">Flash Sale</string>
+    <string name="search_hint">Search</string>
+    <string name="lbl_categories">Categories</string>
+    <string name="downloader_quantity">Downloading (%1$d/%2$d)</string>
+    <string name="downloader_quantity_collapse">%1$d/%2$d</string>
+
+    <string name="tst_download_successful">Download successful</string>
+
+    <string name="inapp_purchase_info">One Time Payment of: %1$s</string>
+    <string name="subs_purchase_info">Subscribe for %1$s/month or %2$s/year</string>
+    <string name="purchase_dialog_btn_month">Month</string>
+    <string name="purchase_dialog_btn_annual">Annual</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="share_message">I found this new meditation app Qi Coil \n https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies</string>
+    <!-- <string name="facebook_app_id">554730859218975</string> -->
+</resources>

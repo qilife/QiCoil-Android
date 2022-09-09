@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/indent_8"
+    android:paddingStart="@dimen/indent_8"
+    android:paddingEnd="@dimen/indent_8"
+    tools:background="@android:color/darker_gray"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/item_program_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_17"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/item_program_delete"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Program name"
+        font:fontText="fonts/BebasNeue_Book.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/item_program_duration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_total_time"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_small_11"
+        font:fontText="fonts/BebasNeue_Book.otf"
+        app:layout_constraintEnd_toStartOf="@+id/item_program_delete"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_program_name"
+        tools:text="Total time 10:45"/>
+
+    <ImageView
+        android:id="@+id/item_program_delete"
+        android:layout_width="@dimen/margin_left_right_container"
+        android:layout_height="@dimen/margin_left_right_container"
+        app:srcCompat="@drawable/ic_delete"
+        app:tint="@color/color_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.297"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/item_program_lock"
+        android:layout_width="@dimen/margin_left_right_container"
+        android:layout_height="@dimen/margin_left_right_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.297"
+        app:srcCompat="@drawable/ic_lock"
+        app:tint="@color/color_gray"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:id="@+id/program_divider_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/indent_8"
+        app:layout_constraintTop_toBottomOf="@+id/item_program_duration"
+        android:background="@android:color/white" />
+</androidx.constraintlayout.widget.ConstraintLayout>

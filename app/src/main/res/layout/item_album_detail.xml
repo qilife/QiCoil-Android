@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:background="@android:color/black"
+    android:paddingLeft="@dimen/padding_left_right_item"
+    android:paddingRight="@dimen/padding_left_right_item">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_item_5"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/btnItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/cbAdded"
+                android:layout_width="@dimen/height_small_icon"
+                android:layout_height="@dimen/height_small_icon"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                android:padding="7dp"
+                android:src="@drawable/ic_add_to_playlist_new" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/text_title_song_playing"
+                    android:textSize="@dimen/text_size_small"
+                    font:fontText="fonts/HelveticaNeue_Regular.otf"
+                    tools:text="The cube" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvAlbumName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/text_title_song_playing"
+                    android:textSize="@dimen/text_small_10"
+                    font:fontText="fonts/HelveticaNeue_Regular.otf"
+                    tools:text="The cube" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btnMinus"
+                android:layout_width="@dimen/height_small_icon"
+                android:layout_height="@dimen/height_small_icon"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:padding="7dp"
+                android:src="@drawable/ic_remove_new" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="#fff"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/HelveticaNeue_Light.otf"
+                tools:text="05:49" />
+
+            <ImageView
+                android:id="@+id/btnPlus"
+                android:layout_width="@dimen/height_small_icon"
+                android:layout_height="@dimen/height_small_icon"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:padding="7dp"
+                android:src="@drawable/ic_plus_new" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_size_40"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@drawable/ic_menu_detail" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.01dp"
+        android:layout_marginStart="@dimen/margin_item_5"
+        android:layout_marginLeft="@dimen/margin_item_5"
+        android:layout_marginTop="@dimen/margin_item_5"
+        android:background="#969393" />
+</LinearLayout>

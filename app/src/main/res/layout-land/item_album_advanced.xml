@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.Meditation.Sounds.frequencies.views.CustomRecFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+
+    <com.github.siyamed.shapeimageview.RoundedImageView
+        android:id="@+id/mImvAlbumAdvanced"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_album_1"
+        app:siRadius="@dimen/corner_radius_album"
+        app:siSquare="true" />
+
+    <com.github.siyamed.shapeimageview.RoundedImageView
+        android:id="@+id/mImvLockAlbumAdvanced"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_album_lock_2"
+        app:siRadius="@dimen/corner_radius_album"
+        app:siSquare="true" />
+</com.Meditation.Sounds.frequencies.views.CustomRecFrameLayout>

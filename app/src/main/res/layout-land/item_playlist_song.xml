@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:clickable="false"
+    android:focusable="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/btnTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/padding_left_right_item_title"
+        android:paddingTop="@dimen/margin_item_5"
+        android:paddingRight="@dimen/padding_left_right_item_title">
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/imgAlbumDetail"
+            android:layout_width="@dimen/image_size_40"
+            android:layout_height="@dimen/image_size_40"
+            android:src="@drawable/ic_album_1"
+            app:siBorderColor="@color/transparent"
+            app:siBorderWidth="0dp"
+            app:siRadius="@dimen/corner_radius_album"
+            app:siSquare="true" />
+
+        <ImageView
+            android:id="@+id/imvPlaying"
+            android:layout_width="@dimen/height_small_icon"
+            android:layout_height="@dimen/width_icon_delete"
+            android:layout_gravity="center"
+            android:contentDescription="@string/txt_now_playing"
+            android:padding="2dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/item_track_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:singleLine="true"
+                android:textColor="@color/text_title_song_playing"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/HelveticaNeue_Regular.ttf"
+                tools:text="Mercury - 9 Planets Frequencies" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/tvAlbumTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:singleLine="true"
+                android:textColor="@color/text_title_song_playing"
+                android:textSize="@dimen/text_small_10"
+                font:fontText="fonts/HelveticaNeue_Regular.ttf"
+                tools:text="Mercury - 9 Planets Frequencies" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnDrag"
+            android:layout_width="@dimen/height_small_icon"
+            android:layout_height="@dimen/height_small_icon"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:padding="7dp"
+            android:src="@drawable/ic_switch"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imgMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_size_25"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@drawable/ic_menu_detail" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_item_5"
+        android:layout_marginBottom="@dimen/margin_item_5"
+        android:background="#FFF" />
+</LinearLayout>

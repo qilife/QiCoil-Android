@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutDetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="7dp"
+    android:background="@drawable/bg_track_list"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/tvBack"
+        android:layout_width="@dimen/height_button_cancel_dialog"
+        android:layout_height="@dimen/height_button_cancel_dialog"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/margin_item_5"
+        android:contentDescription="@null"
+        android:padding="5dp"
+        android:src="@drawable/ic_close"
+        android:tint="#fff" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_top_item_title"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_left_right_item_title"
+            android:layout_marginRight="@dimen/padding_left_right_item_title"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvPlayListName"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="start|center"
+                    android:text="@string/txt_my_playlists"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_25"
+                    font:fontText="fonts/BebasNeue_Bold.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btnPlayPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/image_size_40"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_btn_play"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/image_size_40"
+                    android:layout_marginLeft="@dimen/margin_buttons"
+                    android:layout_marginRight="@dimen/margin_buttons"
+                    android:paddingRight="@dimen/image_size_40"
+                    android:text="@string/btn_play"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/text_size_large_14"
+                    font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+                <View android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+<!--
+                <FrameLayout
+                    android:id="@+id/btnPlayPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/height_button_play_top"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_play_playlist" />
+                </FrameLayout>-->
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="5dp"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:text="CLEAR"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    font:fontText="fonts/BebasNeue_Book.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:padding="5dp"
+                    android:text="@string/txt_add"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    font:fontText="fonts/BebasNeue_Book.otf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutTotalTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TOTAL TIME"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_nomarl"
+                    android:textStyle="bold"
+                    font:fontText="fonts/BebasNeue_Book.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvTotalTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    tools:text="00:25:00"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/text_size_nomarl"
+                    android:textStyle="bold"
+                    font:fontText="fonts/BebasNeue_Book.otf" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcTrack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height_button_play_top"
+            android:layout_marginBottom="5dp" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:id="@+id/tvNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/txt_no_songs"
+            android:textColor="#fff"
+            android:textSize="@dimen/text_size_nomarl"
+            android:visibility="gone"
+            font:fontText="fonts/BebasNeue_Book.otf" />
+    </FrameLayout>
+</LinearLayout>

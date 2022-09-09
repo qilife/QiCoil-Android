@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_app" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#16ffffff"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/imvBack"
+                android:layout_width="@dimen/height_button"
+                android:layout_height="@dimen/height_button"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/padding_icon_actionbar"
+                android:src="@drawable/ic_back"
+                android:tint="#ffffff" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/profile_lbl_instructions"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_size_20"
+                app:fontText="fonts/BebasNeue Book.ttf" />
+        </FrameLayout>
+
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/mPdfView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff" />
+    </LinearLayout>
+</FrameLayout>

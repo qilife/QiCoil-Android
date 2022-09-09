@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/indent_8"
+    android:background="@drawable/rounded_dark_blue_background"
+    tools:context=".lemeor.ui.programs.detail.ProgramDetailFragment">
+
+    <ImageView
+        android:id="@+id/program_back"
+        android:layout_width="@dimen/height_button_cancel_dialog"
+        android:layout_height="@dimen/height_button_cancel_dialog"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/margin_item_5"
+        android:contentDescription="@null"
+        android:padding="5dp"
+        android:src="@drawable/ic_close" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/program_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/indent_8"
+        android:paddingEnd="@dimen/indent_8"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_25"
+        android:textAllCaps="true"
+        tools:text="Program name"
+        font:fontText="fonts/BebasNeue_Bold.otf" />
+
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/program_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/indent_8"
+        android:paddingEnd="@dimen/indent_8"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_nomarl"
+        android:textStyle="bold"
+        tools:text="total time"
+        font:fontText="fonts/BebasNeue_Book.otf" />
+
+    <Button
+        android:id="@+id/program_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/indent_16"
+        android:paddingLeft="@dimen/image_size_40"
+        android:paddingRight="@dimen/image_size_40"
+        android:minHeight="35dp"
+        android:background="@drawable/rounded_btn_play"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:text="@string/btn_play"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/program_tracks_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_album_track">
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

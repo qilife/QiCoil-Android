@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/margin_item_dialog_20"
+        android:layout_marginRight="@dimen/margin_item_dialog_20">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.8" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_menu_detail_song"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/image_size_20"
+                android:layout_height="@dimen/image_size_20"
+                android:layout_gravity="top|end"
+                android:contentDescription="@null"
+                android:padding="7dp"
+                android:src="@drawable/ic_arrow_back_white" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/btnPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:clickable="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:singleLine="true"
+                android:text="@string/btn_play"
+                android:textColor="@color/text_title_song_playing"
+                android:textSize="@dimen/text_size_small"
+                app:fontText="fonts/HelveticaNeue_Bold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/btnAddToProgram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="5dp"
+                android:clickable="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:singleLine="true"
+                android:text="@string/tv_add_to_program"
+                android:textColor="@color/text_title_song_playing"
+                android:textSize="@dimen/text_size_small"
+                app:fontText="fonts/HelveticaNeue_Bold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/btnAddToFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="5dp"
+                android:clickable="false"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:singleLine="true"
+                android:text="@string/tv_add_to_favorites"
+                android:textColor="@color/text_title_song_playing"
+                android:textSize="@dimen/text_size_small"
+                app:fontText="fonts/HelveticaNeue_Bold.otf" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/btnMinus"
+                    android:layout_width="@dimen/image_size_20"
+                    android:layout_height="@dimen/image_size_20"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_number_duration"
+                    android:contentDescription="@null"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_remove_new" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/image_size_20"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_number_duration"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/margin_buttons"
+                    android:paddingRight="@dimen/margin_buttons"
+                    android:text="5:00"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_size_small"
+                    app:fontText="fonts/HelveticaNeue_Bold.otf" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/btnPlus"
+                    android:layout_width="@dimen/image_size_20"
+                    android:layout_height="@dimen/image_size_20"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_number_duration"
+                    android:contentDescription="@null"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_plus_new" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

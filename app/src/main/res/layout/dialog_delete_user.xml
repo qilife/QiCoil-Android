@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_track_list"
+        android:gravity="center_horizontal"
+        android:minWidth="@dimen/minwidth_dialog"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_item_dialog"
+        android:paddingBottom="@dimen/margin_item_dialog">
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_enter_password"
+            android:textColor="#fff"
+            android:textSize="@dimen/text_size_large_17"
+            app:fontText="fonts/BebasNeue_Book.otf" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_edittext_dialog"
+            android:layout_marginTop="@dimen/margin_item_dialog_20"
+            android:layout_marginRight="@dimen/padding_edittext_dialog"
+            android:background="@drawable/edittext_bottom_line"
+            android:hint="@string/txt_enter_password"
+            android:inputType="textMultiLine|textPassword"
+            android:paddingBottom="5dp"
+            android:textColor="#fff"
+            android:textColorHint="#a4a4a4"
+            android:textSize="@dimen/text_size_large_14" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                android:id="@+id/btnCancel"
+                android:layout_width="@dimen/width_button_medium"
+                android:layout_height="@dimen/height_button_medium"
+                android:layout_marginTop="@dimen/margin_item_dialog"
+                android:background="@drawable/bg_button_options"
+                android:gravity="center"
+                android:text="@string/txt_cancel"
+                android:textColor="@drawable/bg_text"
+                android:textSize="@dimen/text_size_large_17"
+                app:fontText="fonts/BebasNeue_Book.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                android:id="@+id/btnSubmit"
+                android:layout_width="@dimen/width_button_medium"
+                android:layout_height="@dimen/height_button_medium"
+                android:layout_marginTop="@dimen/margin_item_dialog"
+                android:background="@drawable/bg_button_options"
+                android:gravity="center"
+                android:text="@string/txt_ok"
+                android:textColor="@drawable/bg_text"
+                android:textSize="@dimen/text_size_large_17"
+                app:fontText="fonts/BebasNeue_Book.otf" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

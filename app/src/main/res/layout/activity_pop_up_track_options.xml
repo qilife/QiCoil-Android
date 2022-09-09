@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/indent_16"
+    android:background="@drawable/bg_menu_detail_song"
+    tools:context=".lemeor.ui.albums.detail.TrackOptionsPopUpActivity">
+
+    <TextView
+        android:id="@+id/track_add_program"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/indent_8"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:text="@string/tv_add_to_program">
+    </TextView>
+
+    <TextView
+        android:id="@+id/track_add_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/indent_8"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:text="@string/tv_add_to_favorites">
+    </TextView>
+
+    <TextView
+        android:id="@+id/track_redownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/indent_8"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:text="@string/tv_redownload"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/indent_8"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/btn_minus"
+            android:layout_width="@dimen/image_size_20"
+            android:layout_height="@dimen/image_size_20"
+            android:layout_marginRight="@dimen/indent_8"
+            android:layout_marginEnd="@dimen/indent_8"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_number_duration"
+            android:contentDescription="@null"
+            android:padding="7dp"
+            android:src="@drawable/ic_remove_new" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_size_20"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_number_duration"
+            android:gravity="center"
+            android:paddingLeft="@dimen/margin_buttons"
+            android:paddingRight="@dimen/margin_buttons"
+            tools:text="5:00"
+            android:textColor="#000"
+            android:textSize="@dimen/text_size_small"
+            app:fontText="fonts/HelveticaNeue_Bold.otf" />
+        <ImageView
+            android:id="@+id/btn_plus"
+            android:layout_width="@dimen/image_size_20"
+            android:layout_height="@dimen/image_size_20"
+            android:layout_marginLeft="@dimen/indent_8"
+            android:layout_marginStart="@dimen/indent_8"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_number_duration"
+            android:contentDescription="@null"
+            android:padding="7dp"
+            android:src="@drawable/ic_plus_new" />
+    </LinearLayout>
+</LinearLayout>

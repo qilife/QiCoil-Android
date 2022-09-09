@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/indent_8"
+    android:padding="@dimen/indent_8"
+    android:background="@drawable/rounded_dark_blue_background"
+    android:orientation="vertical"
+    tools:context=".lemeor.ui.programs.NewProgramFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:id="@+id/program_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/padding_left_right_item_title"
+            android:layout_marginRight="@dimen/padding_left_right_item_title"
+            android:gravity="center"
+            android:text="@string/navigation_lbl_programs"
+            android:textColor="#FFF"
+            android:textSize="@dimen/text_size_25"
+            app:fontText="fonts/BebasNeue_Bold.otf" />
+
+        <FrameLayout
+            android:id="@+id/program_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="@dimen/height_button_cancel_dialog"
+                android:layout_height="@dimen/height_button_cancel_dialog"
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/margin_item_5"
+                android:contentDescription="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_close"
+                android:visibility="visible" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/program_create_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/indent_8"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/indent_8"
+            android:layout_marginEnd="@dimen/indent_8"
+            android:text="@string/tv_create_new"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_21"
+            app:fontText="fonts/BebasNeue_Bold.otf" />
+
+        <ImageView
+            android:layout_width="@dimen/width_add_icon"
+            android:layout_height="@dimen/width_add_icon"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add_new"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/program_divider_create"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="@dimen/indent_8"
+        android:layout_marginRight="@dimen/indent_8"
+        android:background="@android:color/white" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/programs_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_program"/>
+
+</LinearLayout>

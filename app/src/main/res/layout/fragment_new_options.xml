@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/indent_8"
+    android:background="@drawable/rounded_dark_blue_background"
+    tools:context=".lemeor.ui.options.NewOptionsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+            android:id="@+id/options_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/indent_8"
+            android:layout_marginTop="@dimen/indent_16"
+            android:layout_marginRight="@dimen/indent_8"
+            android:layout_marginBottom="@dimen/indent_32"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_large_17"
+            font:fontText="fonts/MyriadPro_Semibold.otf"
+            tools:text="Marvin Dela Cruz" />
+
+        <LinearLayout
+            android:id="@+id/options_flash_sale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/indent_8"
+            android:layout_marginTop="@dimen/indent_48"
+            android:layout_marginRight="@dimen/indent_8"
+            android:background="@drawable/bg_time_flash_sale"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_left_right_item"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/padding_left_right_item"
+                android:layout_marginLeft="@dimen/padding_left_right_item"
+                android:src="@drawable/ic_flash"
+                tools:ignore="ContentDescription" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:text="@string/flash_sale_50_off"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:ellipsize="marquee"
+                android:text="@string/tv_offer_expires_in"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/options_flash_sale_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:text="@string/flash_sale_00"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:text="@string/flash_sale_colon"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/options_flash_sale_minutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:text="@string/flash_sale_00"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:text="@string/flash_sale_colon"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/options_flash_sale_seconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_item_5"
+                android:layout_marginLeft="@dimen/margin_item_5"
+                android:layout_marginEnd="@dimen/padding_left_right_item"
+                android:layout_marginRight="@dimen/padding_left_right_item"
+                android:text="@string/flash_sale_00"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_small"
+                font:fontText="fonts/MyriadPro_Semibold.otf" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/indent_24">
+
+                <TextView
+                    android:id="@+id/options_subscription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/profile_lbl_subscription"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/options_restore_purchase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/tv_restore_purchase"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_instruction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/profile_lbl_instructions"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_disclaimer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/profile_lbl_disclaimer"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/profile_lbl_about"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_change_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/tv_change_password"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/tv_help_support"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_log_out"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/options_log_out"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/options_sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/indent_16"
+                    android:text="@string/options_sign_in"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/options_delete_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="@dimen/indent_48"
+                android:gravity="right"
+                android:text="@string/options_delete_user"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

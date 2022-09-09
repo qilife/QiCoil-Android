@@ -1,0 +1,108 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--View size-->
+    <dimen name="nav_height">48dp</dimen>
+    <dimen name="footer_height">61dp</dimen>
+
+    <!-- Thumb default-->
+    <dimen name="thumb_size">10dp</dimen>
+    <dimen name="progress_height">10dp</dimen>
+    <dimen name="progress_margin">3dp</dimen>
+
+    <!--Text size-->
+    <dimen name="text_size_small_6">8sp</dimen>
+    <dimen name="text_small_10">10sp</dimen>
+    <dimen name="text_size_small_9">11sp</dimen>
+    <dimen name="text_size_small_11">12sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_nomarl">14sp</dimen>
+    <dimen name="text_size_large_14">15sp</dimen>
+    <dimen name="text_size_large_17">18sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_18">20sp</dimen>
+    <dimen name="text_size_20">22sp</dimen>
+    <dimen name="text_size_21">23sp</dimen>
+    <dimen name="text_size_23">25sp</dimen>
+    <dimen name="text_size_25">27sp</dimen>
+    <dimen name="sp_30">30sp</dimen>
+    <dimen name="text_size_30">36sp</dimen>
+    <dimen name="text_size_40">42sp</dimen>
+
+    <dimen name="height_top_icon">42dp</dimen>
+    <dimen name="padding_top_icon">6dp</dimen>
+    <dimen name="margin_left_top_icon">20dp</dimen>
+    <dimen name="height_medium_icon">34dp</dimen>
+    <dimen name="height_small_icon">32dp</dimen>
+    <dimen name="item_offset">10dp</dimen>
+    <dimen name="image_size_20">24dp</dimen>
+    <dimen name="image_size_25">25dp</dimen>
+    <dimen name="image_size_54">54dp</dimen>
+    <dimen name="image_size_40">40dp</dimen>
+    <dimen name="image_size_110">110dp</dimen>
+
+    <dimen name="image_size_14">14dp</dimen>
+    <dimen name="image_size_12">12dp</dimen>
+    <dimen name="image_size_10">10dp</dimen>
+    <dimen name="width_seekbar">130dp</dimen>
+    <dimen name="height_seekbar">4dp</dimen>
+    <dimen name="height_seekbar_2">2dp</dimen>
+    <dimen name="margin_button_control">8dp</dimen>
+    <dimen name="margin_item_5">5dp</dimen>
+    <dimen name="margin_item_10">10dp</dimen>
+    <dimen name="padding_fragment">3dp</dimen>
+    <dimen name="width_icon_delete">26dp</dimen>
+    <dimen name="minwidth_dialog">300dp</dimen>
+    <dimen name="min_width_dialog">650dp</dimen>
+    <dimen name="margin_item_dialog">25dp</dimen>
+    <dimen name="margin_item_dialog_20">20dp</dimen>
+    <dimen name="padding_edittext_dialog">30dp</dimen>
+    <dimen name="width_button">230dp</dimen>
+    <dimen name="width_button_medium">120dp</dimen>
+    <dimen name="height_button">46dp</dimen>
+    <dimen name="height_button_medium">30dp</dimen>
+    <dimen name="height_button_half">17dp</dimen>
+    <dimen name="margin_buttons">15dp</dimen>
+    <dimen name="padding_left_right_item">10dp</dimen>
+    <dimen name="padding_left_right_item_title">7dp</dimen>
+    <dimen name="padding_top_item_title">3dp</dimen>
+    <dimen name="margin_right_ic_delete">0dp</dimen>
+    <dimen name="border_radius_album">4dp</dimen>
+    <dimen name="corner_radius_album">5dp</dimen>
+    <dimen name="width_add_icon">24dp</dimen>
+    <dimen name="margin_right_add_icon">10dp</dimen>
+    <dimen name="margin_left_right_container">20dp</dimen>
+    <dimen name="padding_ic_delete">7dp</dimen>
+    <dimen name="height_button_play_top">25dp</dimen>
+    <dimen name="padding_icon_actionbar">10dp</dimen>
+    <dimen name="dp_70">60dp</dimen>
+    <dimen name="dp_70_2">30dp</dimen>
+    <dimen name="height_button_cancel_dialog">30dp</dimen>
+    <dimen name="margin_button_cancel_dialog">15dp</dimen>
+    <dimen name="height_calander_icon">30dp</dimen>
+    <dimen name="dp_90">90dp</dimen>
+    <dimen name="no_radius_album">0dp</dimen>
+
+    <dimen name="indent_2">2dp</dimen>
+    <dimen name="indent_4">4dp</dimen>
+    <dimen name="indent_8">8dp</dimen>
+    <dimen name="indent_16">16dp</dimen>
+    <dimen name="indent_24">24dp</dimen>
+    <dimen name="indent_32">32dp</dimen>
+    <dimen name="indent_48">48dp</dimen>
+
+
+    <dimen name="text_size_12">12sp</dimen>
+
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="text_size_17">17sp</dimen>
+    <dimen name="indent_6">6dp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+</resources>
