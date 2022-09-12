@@ -27,12 +27,14 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
         TierConverter::class,
         CategoryConverter::class,
         TagConverter::class,
-        AlbumConverter::class,
+        AlbumsConverter::class,
         PlaylistConverter::class,
+        PlaylistItemConverter::class,
         ProgramConverter::class,
         TrackConverter::class,
         IntConverter::class,
-        StringConverter::class
+        StringConverter::class,
+        Converters::class
 )
 abstract class DataBase : RoomDatabase() {
 

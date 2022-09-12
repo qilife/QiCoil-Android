@@ -161,7 +161,7 @@ fun syncAlbums(db: DataBase, response: HomeResponse?) {
 
 fun syncTracks(db: DataBase, response: HomeResponse?) {
     val localData = db.trackDao().getData() as ArrayList
-    val responseData: ArrayList<Track> = ArrayList()
+    val responseData: ArrayList<Track> = arrayListOf()
 
     response?.albums?.forEach { album ->
         album.tracks.forEach { track ->
@@ -247,8 +247,8 @@ fun syncPrograms(db: DataBase, response: HomeResponse?) {
         db.programDao().deletePrograms(delete)
     } else {
         db.programDao().insertAll(response.programs)
-        db.programDao().insert(Program(0, FAVORITES, 0, 0, ArrayList(), isMy = true))
-        db.programDao().insert(Program(0, "Playlist 1", 0, 0, ArrayList(), isMy = true))
+        db.programDao().insert(Program(0, FAVORITES, 0, 0, arrayListOf(), isMy = true))
+        db.programDao().insert(Program(0, "Playlist 1", 0, 0, arrayListOf(), isMy = true))
     }
 }
 

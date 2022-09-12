@@ -13,7 +13,8 @@ data class HomeResponse(
         @TypeConverters(TierConverter::class) var tiers: List<Tier>,
         @TypeConverters(CategoryConverter::class) var categories: List<Category>,
         @TypeConverters(TagConverter::class) var tags: List<Tag>,
-        @TypeConverters(AlbumConverter::class) var albums: List<Album>,
+        @TypeConverters(AlbumsConverter::class) var albums: List<Album>,
+        @TypeConverters(Converters::class) var album: Album,
         @TypeConverters(ProgramConverter::class) var programs: List<Program>,
         @TypeConverters(PlaylistConverter::class) var playlists: List<Playlist>
 )
@@ -32,8 +33,8 @@ data class Tier(
         var name: String,
         var order: Int,
         var updated_at: Long,
-        @Ignore var isShow: Boolean,
-        @Ignore var isPurchased: Boolean
+        var isShow: Boolean,
+        var isPurchased: Boolean
 )
 
 @Entity(tableName = "category")
@@ -43,8 +44,8 @@ data class Category(
         var name: String,
         var order: Int,
         var updated_at: Long,
-        @Ignore var isShow: Boolean,
-        @Ignore var isPurchased: Boolean
+        var isShow: Boolean,
+        var isPurchased: Boolean
 )
 
 @Entity(tableName = "album")
@@ -62,8 +63,8 @@ data class Album(
         @TypeConverters(StringConverter::class) var descriptions: List<String>?,
         @TypeConverters(TrackConverter::class) var tracks: List<Track>,
         @TypeConverters(IntConverter::class) var tag: ArrayList<Int>?,
-        @Ignore var isDownloaded: Boolean,
-        @Ignore var isUnlocked: Boolean
+        var isDownloaded: Boolean,
+        var isUnlocked: Boolean
 ) : Parcelable
 
 @Entity(tableName = "track")
@@ -74,14 +75,14 @@ data class Track(
         var filename: String,
         var tier_id: Int,
         var updated_at: Long,
-        @Ignore var isSelected: Boolean,
-        @Ignore var isFavorite: Boolean,
-        @Ignore var isDownloaded: Boolean,
+        var isSelected: Boolean,
+        var isFavorite: Boolean,
+        var isDownloaded: Boolean,
         var albumId: Int,
-        @Ignore var isUnlocked: Boolean,
+        var isUnlocked: Boolean,
         var duration: Long,
-        @Ignore var album: @RawValue Album?,
-        @Ignore var progress: Int
+        @TypeConverters(Converters::class) var album: @RawValue Album?,
+        var progress: Int
 ) : Parcelable {
     constructor(
             id: Int,
@@ -104,8 +105,8 @@ data class Program(
         var order: Int,
         var updated_at: Long,
         @TypeConverters(IntConverter::class) var records: ArrayList<Int>,
-        @Ignore var isMy: Boolean,
-        @Ignore var isUnlocked: Boolean
+        var isMy: Boolean,
+        var isUnlocked: Boolean
 ) {
     constructor(id: Int, name: String, order: Int, updated_at: Long, records: ArrayList<Int>, isMy: Boolean)
             : this(id, name, order, updated_at, records, isMy, false)
@@ -118,7 +119,7 @@ data class Playlist(
         var youtube_id: String,
         var order: Int,
         var updated_at: Long,
-        @Ignore var isSelected: Boolean
+        var isSelected: Boolean
 ) {
     constructor(id: Int, name: String, youtube_id: String, order: Int, updated_at: Long)
             : this(id, name, youtube_id, order, updated_at, false)

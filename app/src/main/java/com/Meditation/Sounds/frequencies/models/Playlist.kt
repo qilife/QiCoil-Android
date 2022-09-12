@@ -29,8 +29,8 @@ class Playlist {
     @ColumnInfo(name = "from_users")
     var fromUsers: Int = 0
 
-    @Embedded
-    var songs:ArrayList<PlaylistItemSong> = ArrayList()
+    @ColumnInfo(name = "songs")
+    var songs:ArrayList<PlaylistItemSong> = arrayListOf()
 
     constructor()
 

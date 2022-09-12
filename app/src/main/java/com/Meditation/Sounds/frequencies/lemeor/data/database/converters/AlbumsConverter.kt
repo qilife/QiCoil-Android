@@ -5,7 +5,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class AlbumConverter {
+class AlbumsConverter {
     companion object {
         @TypeConverter
         @JvmStatic

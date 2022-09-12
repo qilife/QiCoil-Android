@@ -4,12 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.Meditation.Sounds.frequencies.db.dao.*
+import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.Converters
+import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.PlaylistItemConverter
 import com.Meditation.Sounds.frequencies.models.*
 
 @Database(entities = [Song::class, Album::class, Playlist::class, PlaylistItem::class, PlaylistItemSong::class], version = 8)
+@TypeConverters(
+    Converters::class,
+    PlaylistItemConverter::class
+)
 abstract class QFDatabase : RoomDatabase() {
 
     abstract fun songDAO(): SongDAO

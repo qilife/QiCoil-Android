@@ -25,7 +25,7 @@ class PlaylistItem {
     var playlistId:Long  = 0
 
     @Ignore
-    var songs: ArrayList<PlaylistItemSongAndSong> = ArrayList()
+    var songs: ArrayList<PlaylistItemSongAndSong> = arrayListOf()
 
     @Ignore
     var isPlaying: Boolean = false
