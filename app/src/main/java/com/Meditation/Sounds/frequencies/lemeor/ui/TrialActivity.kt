@@ -5,20 +5,16 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.InappPurchase
-import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL
-import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_MONTH
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.AlbumsPagerAdapter
 import com.android.billingclient.api.*
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
-import kotlinx.android.synthetic.main.activity_new_purchase.*
+import kotlinx.android.synthetic.main.activity_trial.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -53,15 +49,9 @@ class TrialActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-
-
-        // purchase_back.setOnClickListener { onBackPressed() }
-
         val albumDao = DataBase.getInstance(applicationContext).albumDao()
 
         GlobalScope.launch {
-
-            var screenName = ""
             val albumList = ArrayList<Album>()
             albumDao.getAllAlbums()?.let { albumList.addAll(it) }
             var isAllPurchase = true
@@ -76,8 +66,6 @@ class TrialActivity : AppCompatActivity() {
                 finish()
             else {
                 CoroutineScope(Dispatchers.Main).launch {
-                    // purchase_screen_name.text = screenName
-
                     val albumsPagerAdapter = AlbumsPagerAdapter(supportFragmentManager, albumList)
                     purchase_container.adapter = albumsPagerAdapter
 

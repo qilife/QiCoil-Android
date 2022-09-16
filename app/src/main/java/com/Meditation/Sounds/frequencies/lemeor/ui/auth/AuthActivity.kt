@@ -3,6 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.auth
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -71,35 +72,24 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         resource.data?.user?.let { user -> updateUnlocked(applicationContext, user, true) }
     }
 
+    private fun sendDataWithDelay() {
+        Handler().postDelayed({sendData()}, 3000)
+    }
+
     private fun sendData() {
+        HudHelper.hide()
         val intent = Intent()
         setResult(RESULT_OK, intent)
         if (!BuildConfig.IS_FREE) {
-            var isAllPurchase = true
             GlobalScope.launch {
-                val albumList = ArrayList<Album>()
                 val albumDao = DataBase.getInstance(applicationContext).albumDao()
-                albumDao.getAllAlbums()?.let { albumList.addAll(it) }
-                for (album in albumList) {
-                    if (!album.isUnlocked) {
-                        isAllPurchase = false
-                        break
-                    }
+
+                albumDao.getAllAlbums()?.find { !it.isUnlocked }?.let {
+                    runOnUiThread { openAd() }
                 }
-
-                runOnUiThread(Runnable { callHadler(isAllPurchase) })
-
-
             }
-
         }
         finish()
-    }
-
-    private fun callHadler(isAllPurchase: Boolean) {
-        if(!isAllPurchase) {
-            openAd()
-        }
     }
 
     private fun openAd() {
@@ -108,8 +98,8 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
     }
 
     override fun onLoginInteraction(email: String, password: String) {
-        if (email.toString().equals("guest")) {
-            sendData()
+        if (email == "guest") {
+            sendDataWithDelay()
             val eventValues = HashMap<String, Any>()
             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
             AppsFlyerLib.getInstance().logEvent(
@@ -122,11 +112,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 it?.let { resource ->
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
-                            HudHelper.hide()
-
                             saveAuthData(resource)
 
-                            sendData()
+                            sendDataWithDelay()
                             val eventValues = HashMap<String, Any>()
                             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                             AppsFlyerLib.getInstance().logEvent(
@@ -163,11 +151,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        HudHelper.hide()
-
                         saveAuthData(resource)
 
-                        sendData()
+                        sendDataWithDelay()
                         val eventValues = HashMap<String, Any>()
                         eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                         AppsFlyerLib.getInstance().logEvent(
@@ -201,11 +187,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        HudHelper.hide()
-
                         saveAuthData(resource)
 
-                        sendData()
+                        sendDataWithDelay()
                     }
                     Resource.Status.ERROR -> {
                         HudHelper.hide()
@@ -225,11 +209,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
-                        HudHelper.hide()
-
                         saveAuthData(resource)
 
-                        sendData()
+                        sendDataWithDelay()
                     }
                     Resource.Status.ERROR -> {
                         HudHelper.hide()

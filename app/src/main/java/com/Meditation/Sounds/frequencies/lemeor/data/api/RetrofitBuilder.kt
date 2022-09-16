@@ -2,6 +2,7 @@ package com.Meditation.Sounds.frequencies.lemeor.data.api
 
 import android.content.Context
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiConfig.TIME_OUT
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -23,6 +24,7 @@ class RetrofitBuilder(context: Context) {
         .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
         .addInterceptor(authInterceptor)
+        .addInterceptor(ChuckerInterceptor.Builder(context).build())
         .build()
 
     private fun getRetrofit(): Retrofit {
