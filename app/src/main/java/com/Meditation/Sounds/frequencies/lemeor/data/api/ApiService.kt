@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET(ApiConfig.API_HOME)
-    suspend fun getHome(): Response<HomeResponse>
+    suspend fun getHome(@Query("userid") userid: String): Response<HomeResponse>
 
     @GET(ApiConfig.API_USER_LOGIN)
     suspend fun login(

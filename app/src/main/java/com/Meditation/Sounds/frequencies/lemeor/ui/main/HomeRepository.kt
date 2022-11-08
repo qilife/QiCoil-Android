@@ -16,9 +16,9 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         return apiHelper.getApkList()
     }
 
-    fun getHome() = performGetOperation(
+    fun getHome(user_id: String) = performGetOperation(
             databaseQuery = { localData.homeDao().getHome() },
-            networkCall = { apiHelper.getHome() },
+            networkCall = { apiHelper.getHome(user_id) },
             saveCallResult = { localSave(it) }
     )
 

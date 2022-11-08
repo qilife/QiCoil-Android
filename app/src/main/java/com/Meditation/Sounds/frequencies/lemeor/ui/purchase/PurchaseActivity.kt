@@ -184,7 +184,7 @@ class PurchaseActivity : AppCompatActivity() {
                         list.forEach {
                             var categoryId: Int? = null
 
-                            when (it.sku) {
+                            when (it.skus.get(0)) {
                                 SKU_RIFE_MONTHLY,
                                 Constants.SKU_RIFE_YEARLY_FLASHSALE -> {
                                     categoryId = 1
@@ -220,7 +220,11 @@ class PurchaseActivity : AppCompatActivity() {
     }
 
     private fun getPurchases() : List<Purchase> {
-        return billingClient?.queryPurchases(BillingClient.SkuType.SUBS)?.purchasesList!!
+        //return billingClient?.queryPurchases(BillingClient.SkuType.SUBS)?.purchasesList!!
+        val subsList: List<Purchase> = ArrayList()
+        billingClient?.queryPurchasesAsync(BillingClient.SkuType.SUBS, PurchasesResponseListener { billingResult, mutableList -> subsList })
+
+        return subsList
     }
 
     private fun queryAvailableProducts() {

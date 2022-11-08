@@ -32,6 +32,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.utilbilling.Purchase
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_YEAR_FLASHSALE
@@ -45,10 +46,11 @@ import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesResponseListener
 import kotlinx.android.synthetic.main.fragment_new_options.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 const val REQUEST_CODE_AUTH = 2222
 
@@ -84,8 +86,7 @@ class NewOptionsFragment : Fragment() {
         }
 
         options_restore_purchase.setOnClickListener {
-            val billingClient: BillingClient
-                    = BillingClient.newBuilder(requireContext())
+            val billingClient: BillingClient = BillingClient.newBuilder(requireContext())
                     .setListener { _, _ -> }
                     .enablePendingPurchases()
                     .build()
@@ -94,8 +95,16 @@ class NewOptionsFragment : Fragment() {
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
 
                         //get purchases
-                        val subsList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.SUBS).purchasesList!!
-                        val inappList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList!!
+                        //val subsList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.SUBS).purchasesList!!
+                        //val inappList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList!!
+
+
+                        val subsList: MutableList<com.android.billingclient.api.Purchase> = ArrayList()
+                        val inappList: MutableList<com.android.billingclient.api.Purchase> = ArrayList()
+
+                        billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS, PurchasesResponseListener { billingResult, mutableList -> subsList })
+
+                        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, PurchasesResponseListener { billingResult, mutableList -> inappList })
 
                         if (subsList.isEmpty() && inappList.isEmpty()) {
                             if (context != null) {
@@ -106,7 +115,7 @@ class NewOptionsFragment : Fragment() {
 
                             GlobalScope.launch {
                                 subsList.forEach { purchase ->
-                                    when (purchase.sku) {
+                                    when (purchase.skus.get(0)) {
                                         SKU_RIFE_MONTHLY,
                                         SKU_RIFE_YEARLY_FLASHSALE,
                                         SKU_RIFE_ADVANCED_MONTHLY,
@@ -276,7 +285,7 @@ class NewOptionsFragment : Fragment() {
             options_restore_purchase.visibility = View.GONE
         }
 
-        if(Constants.isGuestLogin){
+        if (Constants.isGuestLogin) {
             options_delete_user.visibility = View.GONE
             options_log_out.visibility = View.GONE
             options_change_pass.visibility = View.GONE
@@ -346,12 +355,10 @@ class NewOptionsFragment : Fragment() {
                 .setNegativeButton(getString(R.string.txt_cancel), null)
                 .setPositiveButton(getString(R.string.txt_ok)) { dialog, _ ->
 
-                    if(options_user_name.text.equals("Guest"))
-                    {
+                    if (options_user_name.text.equals("Guest")) {
                         onLogoutSuccess()
                         dialog.dismiss()
-                    }
-                    else {
+                    } else {
                         mViewModel.logout().observe(viewLifecycleOwner, {
                             it?.let { resource ->
                                 when (resource.status) {

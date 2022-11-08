@@ -1,6 +1,7 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
@@ -13,7 +14,12 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
-    val home = repository.getHome()
+    //val home = repository.getHome(user_id)
+
+    fun getHome(id: String): LiveData<Resource<HomeResponse>> {
+        return repository.getHome(id)
+    }
+
 
     fun getProfile( ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))

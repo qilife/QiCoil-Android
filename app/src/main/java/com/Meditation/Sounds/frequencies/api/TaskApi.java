@@ -65,7 +65,7 @@ public class TaskApi {
     }
 
     public String getUrlQiCoil(String subUrl) {
-        return "https://www.combined.ingeniusstudios.com/public/api" + subUrl;
+        return "http://www.combined.ingeniusstudios.com/public/api" + subUrl;
     }
 
     public GetTokenOutput getToken() throws ApiException, JSONException, IOException {

@@ -39,6 +39,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isFirstSync
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isHighQuantum
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isInnerCircle
@@ -436,8 +437,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
 
     private fun syncData() {
+        val user = PreferenceHelper.getUser(this)
 
-        mViewModel.home.observe(this, {
+        mViewModel.getHome(""+user?.id).observe(this, {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     if (preference(applicationContext).isFirstSync) {
@@ -668,9 +670,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             val tracks = mViewModel.searchTrack("%$s%")
             val programs = mViewModel.searchProgram("%$s%")
             CoroutineScope(Dispatchers.Main).launch {
-                albumsSearch.value = albums
-                tracksSearch.value = tracks
-                programsSearch.value = programs
+                albumsSearch.value = albums!!
+                tracksSearch.value = tracks!!
+                programsSearch.value = programs!!
             }
         }
     }

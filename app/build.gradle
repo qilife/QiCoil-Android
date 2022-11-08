@@ -43,8 +43,8 @@ android {
     productFlavors {
         qicoil {
             applicationId 'com.Meditation.Sounds.frequencies'
-            versionCode 2233
-            versionName "2.2.33"
+            versionCode 2235
+            versionName "2.2.35"
 
             buildConfigField "String", "PREF_TITLE", '"pref_cache"'
             buildConfigField "String", "DB_NAME", '"new_qicoil"'
@@ -55,8 +55,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2203
-            versionName "2.2.3"
+            versionCode 2211
+            versionName "2.2.11"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -107,7 +107,7 @@ dependencies {
     def okhttp_version = "4.8.1"
     def coroutines_version = "1.3.8"
     def lifecycle_version = "2.2.0"
-    def billing_version = "3.0.3"
+    def billing_version = "5.0.0"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -145,8 +145,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
-
-    implementation "com.android.billingclient:billing-ktx:$billing_version"
+    implementation("com.android.billingclient:billing:$billing_version")
+    implementation("com.android.billingclient:billing-ktx:$billing_version")
     implementation 'org.greenrobot:eventbus:3.2.0'
     // Exo Player
     implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'

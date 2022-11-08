@@ -3,7 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.data.remote
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiService
 
 class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
-    suspend fun getHome() = getResult{ apiService.getHome() }
+    suspend fun getHome(user_id : String) = getResult{ apiService.getHome(user_id) }
 
     suspend fun getCHeckHome(user_id : String) = getResult{ apiService.checkAlbums(user_id) }
 
