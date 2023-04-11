@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_login.*
+import java.util.regex.Pattern
 
 
 class LoginFragment : Fragment() {
@@ -154,7 +156,7 @@ class LoginFragment : Fragment() {
             mEdEmailSignIn.error = "Please enter Email!"
             return false
         }
-        if (!mEdEmailSignIn.text.toString().matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+".toRegex())) {
+        if (!isValidEmail(mEdEmailSignIn.text.toString())) {
             mEdEmailSignIn.error = "Invalid email!"
             return false
         }
@@ -163,6 +165,11 @@ class LoginFragment : Fragment() {
             return false
         }
         return true
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val pattern = Patterns.EMAIL_ADDRESS
+        return pattern.matcher(email).matches()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
