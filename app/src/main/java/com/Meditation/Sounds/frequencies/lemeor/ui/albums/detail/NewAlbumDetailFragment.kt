@@ -36,12 +36,10 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragmen
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.utils.Utils
-import com.google.android.youtube.player.internal.f
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.album_item.view.*
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +54,8 @@ import java.io.File
 class NewAlbumDetailFragment : Fragment() {
 
     private val albumId: Int by lazy {
-        arguments?.getInt(ARG_ALBUM_ID) ?: throw IllegalArgumentException("Must call through newInstance()")
+        arguments?.getInt(ARG_ALBUM_ID)
+            ?: throw IllegalArgumentException("Must call through newInstance()")
     }
 
     private lateinit var mViewModel: NewAlbumDetailViewModel
@@ -111,8 +110,9 @@ class NewAlbumDetailFragment : Fragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_new_album_detail, container, false)
     }
 
@@ -131,7 +131,7 @@ class NewAlbumDetailFragment : Fragment() {
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
         view?.setOnKeyListener { _, keyCode, event ->
-            if (event!=null && event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event != null && event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 onBackPressed()
                 true
             } else false
@@ -140,20 +140,24 @@ class NewAlbumDetailFragment : Fragment() {
 
     private fun onBackPressed() {
         var fragment = selectedNaviFragment
-        if (fragment == null) { fragment = TiersPagerFragment() }
+        if (fragment == null) {
+            fragment = TiersPagerFragment()
+        }
 
-        parentFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out, R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out)
-                .replace(R.id.nav_host_fragment, fragment, fragment.javaClass.simpleName)
-                .commit()
+        parentFragmentManager.beginTransaction().setCustomAnimations(
+            R.anim.trans_left_to_right_in,
+            R.anim.trans_left_to_right_out,
+            R.anim.trans_right_to_left_in,
+            R.anim.trans_right_to_left_out
+        ).replace(R.id.nav_host_fragment, fragment, fragment.javaClass.simpleName).commit()
     }
 
     private fun initUI() {
-        mViewModel = ViewModelProvider(this,
-                ViewModelFactory(
-                        ApiHelper(RetrofitBuilder(requireContext()).apiService),
-                        DataBase.getInstance(requireContext()))
+        mViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
         ).get(NewAlbumDetailViewModel::class.java)
 
         trackDao = DataBase.getInstance(requireContext()).trackDao()
@@ -189,12 +193,18 @@ class NewAlbumDetailFragment : Fragment() {
                     isMultiPlay = false
                     mTrackAdapter?.setSelected(i)
                     play(album)
-                    Handler(Looper.getMainLooper()).postDelayed({ EventBus.getDefault().post(PlayerSelected(i)) }, 200)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        EventBus.getDefault().post(PlayerSelected(i))
+                    }, 200)
                 }
             }
 
             override fun onTrackOptions(track: Track, i: Int) {
-                startActivityForResult(TrackOptionsPopUpActivity.newIntent(requireContext(), track.id), 1001)
+                startActivityForResult(
+                    TrackOptionsPopUpActivity.newIntent(
+                        requireContext(), track.id
+                    ), 1001
+                )
             }
         })
         album_tracks_recycler.adapter = mTrackAdapter
@@ -209,10 +219,8 @@ class NewAlbumDetailFragment : Fragment() {
 
                 if (!file.exists() && !preloaded.exists()) {
                     isDownloaded = false
-                }
-                else {
-                    if (file.length() == 0L)
-                    {
+                } else {
+                    if (file.length() == 0L) {
                         isDownloaded = false
                     }
                 }
@@ -236,10 +244,12 @@ class NewAlbumDetailFragment : Fragment() {
             firebaseAnalytics.logEvent("Downloads") {
                 param("Album Id", album.id.toString())
                 param("Album Name", album.name)
-               // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
             }
             if (!Utils.isConnectedToNetwork(requireContext())) {
-                Toast.makeText(requireContext(), getString(R.string.err_network_available), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(), getString(R.string.err_network_available), Toast.LENGTH_SHORT
+                ).show()
                 return
             }
 
@@ -247,7 +257,7 @@ class NewAlbumDetailFragment : Fragment() {
             val trackDao = DataBase.getInstance(requireContext()).trackDao()
 
             GlobalScope.launch {
-                album.tracks.forEach { t->
+                album.tracks.forEach { t ->
                     val track = trackDao.getTrackById(t.id)
                     // /data/user/0/com.Meditation.Sounds.frequencies/files/.tracks/06. Spiritual Awakening Bundle/Remove Negative Energy.mp3
                     //for preloaded tracks
@@ -257,10 +267,8 @@ class NewAlbumDetailFragment : Fragment() {
 
                     if (!file.exists() && !preloaded.exists()) {
                         track?.let { tracks.add(it) }
-                    }
-                    else {
-                        if (file.length() == 0L)
-                        {
+                    } else {
+                        if (file.length() == 0L) {
                             track?.let { tracks.add(it) }
                         }
                     }
@@ -283,7 +291,9 @@ class NewAlbumDetailFragment : Fragment() {
     fun play(album: Album) {
         val activity = activity as NavigationActivity
 
-        if (isPlayProgram || playAlbumId != album.id) { activity.hidePlayerUI() }
+        if (isPlayProgram || playAlbumId != album.id) {
+            activity.hidePlayerUI()
+        }
 
         isPlayAlbum = true
         playAlbumId = album.id
@@ -296,37 +306,46 @@ class NewAlbumDetailFragment : Fragment() {
 
         GlobalScope.launch {
             local.forEach {
-                 try {
-                     val file = File(getSaveDir(requireContext(), it, album))
-                     val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
+                try {
+                    val file = File(getSaveDir(requireContext(), it, album))
+                    val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
 
-                     var uri: Uri? = null
+                    var uri: Uri? = null
 
-                     if (file.exists()) {
-                         uri = Uri.fromFile(file)
-                     }
+                    if (file.exists()) {
+                        uri = Uri.fromFile(file)
+                    }
 
-                     if (preloaded.exists()) {
-                         uri = Uri.fromFile(preloaded)
-                     }
+                    if (preloaded.exists()) {
+                        uri = Uri.fromFile(preloaded)
+                    }
 
-                     //  val track = db.trackDao().getTrackById(it.id)
-                     //  if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-                     //  val multiplay = track?.duration!! / 300000
+                    //  val track = db.trackDao().getTrackById(it.id)
+                    //  if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
+                    //  val multiplay = track?.duration!! / 300000
 
-                     val track = db.trackDao().getTrackById(it.id)
-                     // if (track?.duration == 0.toLong()) { track.duration = 300000 }
-                     // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-                     //Log.e("DURATION",getDuration(file).toString())
-                     if (track != null) {
-                         val multiplay = track?.duration!! / 300000
-                         data.add(MusicRepository.Track(it.name, album.name, album, R.drawable.launcher, uri!!, getDuration(file), 0, multiplay.toInt()))
-                     }
-                 }
-                 catch (ex: Exception)
-                 {
-                     ex.printStackTrace()
-                 }
+                    val track = db.trackDao().getTrackById(it.id)
+                    // if (track?.duration == 0.toLong()) { track.duration = 300000 }
+                    // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
+                    //Log.e("DURATION",getDuration(file).toString())
+                    if (track != null) {
+                        val multiplay = track?.duration!! / 300000
+                        data.add(
+                            MusicRepository.Track(
+                                it.name,
+                                album.name,
+                                album,
+                                R.drawable.launcher,
+                                uri!!,
+                                getDuration(file),
+                                0,
+                                multiplay.toInt()
+                            )
+                        )
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
             }
 
             trackList = data
@@ -336,14 +355,17 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun getDuration(file: File): Long {
-        if(file!=null && !file.absolutePath.isEmpty()) {
-            val mediaMetadataRetriever = MediaMetadataRetriever()
-            mediaMetadataRetriever.setDataSource(file.absolutePath)
-            val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            return durationStr!!.toLong()
-        }
-        else
-        {
+        try {
+            if (file != null && !file.absolutePath.isEmpty()) {
+                val mediaMetadataRetriever = MediaMetadataRetriever()
+                mediaMetadataRetriever.setDataSource(file.absolutePath)
+                val durationStr =
+                    mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                return durationStr!!.toLong()
+            } else {
+                return 0
+            }
+        } catch (e: java.lang.RuntimeException) {
             return 0
         }
     }
@@ -355,17 +377,23 @@ class NewAlbumDetailFragment : Fragment() {
             albumIdBackProgram = albumId
             isTrackAdd = true
 
-            parentFragmentManager
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out, R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
-                    .replace(R.id.nav_host_fragment, NewProgramFragment(), NewProgramFragment().javaClass.simpleName)
-                    .commit()
+            parentFragmentManager.beginTransaction().setCustomAnimations(
+                R.anim.trans_right_to_left_in,
+                R.anim.trans_right_to_left_out,
+                R.anim.trans_left_to_right_in,
+                R.anim.trans_left_to_right_out
+            ).replace(
+                R.id.nav_host_fragment,
+                NewProgramFragment(),
+                NewProgramFragment().javaClass.simpleName
+            ).commit()
         }
     }
 
     companion object {
         const val ARG_ALBUM_ID = "arg_album"
         var album: Album? = null
+
         @JvmStatic
         fun newInstance(id: Int) = NewAlbumDetailFragment().apply {
             arguments = Bundle().apply {

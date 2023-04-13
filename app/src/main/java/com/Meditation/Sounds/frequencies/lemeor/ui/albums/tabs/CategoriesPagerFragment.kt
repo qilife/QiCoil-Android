@@ -52,13 +52,14 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
         ).get(AlbumsViewModel::class.java)
 
         tierId?.let {
-            mViewModel.categoriesByTierId(it)?.observe(viewLifecycleOwner, { list ->
-                val categoriesPagerAdapter = CategoriesPagerAdapter(this, childFragmentManager, list as ArrayList<Category>)
+            mViewModel.categoriesByTierId(it)?.observe(viewLifecycleOwner) { list ->
+                val categoriesPagerAdapter =
+                    CategoriesPagerAdapter(this, childFragmentManager, list as ArrayList<Category>)
                 categories_view_pager.adapter = categoriesPagerAdapter
 
                 categories_view_pager.setCurrentItem(hashMapTiers[tierId] ?: 0, true)
                 categories_tabs.setupWithViewPager(categories_view_pager)
-            })
+            }
         }
 
         categories_tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

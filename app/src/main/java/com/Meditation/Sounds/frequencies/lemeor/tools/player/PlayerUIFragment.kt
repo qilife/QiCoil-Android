@@ -167,14 +167,11 @@ class PlayerUIFragment : NewBaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         if (mediaController != null)
-            mediaController!!.transportControls.stop()
-
+            mediaController?.transportControls?.stop()
         playerServiceBinder = null
-
-        mediaController!!.unregisterCallback(callback!!)
+        callback?.let { mediaController?.unregisterCallback(it) }
         mediaController = null
-        requireContext().unbindService(serviceConnection!!)
+        serviceConnection?.let { requireContext().unbindService(it) }
     }
 }

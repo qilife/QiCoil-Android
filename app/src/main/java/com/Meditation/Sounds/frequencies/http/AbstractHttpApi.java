@@ -1,9 +1,9 @@
 package com.Meditation.Sounds.frequencies.http;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.Meditation.Sounds.frequencies.api.exception.ApiException;
 import com.Meditation.Sounds.frequencies.utils.StringsUtils;
@@ -23,10 +23,18 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 
 /**
@@ -41,15 +49,14 @@ public abstract class AbstractHttpApi implements HttpApi {
     private final String BOUNDARY = "*****";
     private final String TWO_HYPHENS = "--";
 
-    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                     String jsonObject)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers, String jsonObject) throws JSONException, ApiException, IOException {
         HttpURLConnection connection = prepareConnection(requestUrl);
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.setDoInput(true);
         connection.setRequestProperty("Content-Type", "application/json; charset=" + CHARSET);
         connection.setRequestProperty("Content-Length", "" + Integer.toString(jsonObject.getBytes().length));
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         if (jsonObject != null) {
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), CHARSET), true);
@@ -61,15 +68,11 @@ public abstract class AbstractHttpApi implements HttpApi {
         return response;
     }
 
-    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                     JSONObject jsonObject)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers, JSONObject jsonObject) throws JSONException, ApiException, IOException {
         return executeHttpPost(requestUrl, headers, jsonObject.toString());
     }
 
-    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                     Map<String, String> params)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpPost(@NonNull String requestUrl, @Nullable Map<String, String> headers, Map<String, String> params) throws JSONException, ApiException, IOException {
         String urlParams = StringsUtils.getParamsRequest(params);
         byte[] postDataBytes = urlParams.getBytes();
 
@@ -80,6 +83,7 @@ public abstract class AbstractHttpApi implements HttpApi {
         connection.setRequestProperty("Accept", "*/*");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + CHARSET);
         connection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         if (!TextUtils.isEmpty(urlParams)) {
             connection.getOutputStream().write(postDataBytes);
@@ -92,31 +96,28 @@ public abstract class AbstractHttpApi implements HttpApi {
         return response;
     }
 
-    protected String executeHttpGet(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                    @Nullable Map<String, String> params)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpGet(@NonNull String requestUrl, @Nullable Map<String, String> headers, @Nullable Map<String, String> params) throws JSONException, ApiException, IOException {
         String urlParams = null;
         if (params != null) urlParams = StringsUtils.getParamsRequest(params);
         String queryUrl = TextUtils.isEmpty(urlParams) ? requestUrl : (requestUrl + "?" + urlParams);
         HttpURLConnection connection = prepareConnection(queryUrl);
         connection.setRequestMethod("GET");
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         String response = executeHttpRequest(connection);
         return response;
     }
 
-    protected String executeHttpGet(@NonNull String requestUrl, @Nullable Map<String, String> headers)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpGet(@NonNull String requestUrl, @Nullable Map<String, String> headers) throws JSONException, ApiException, IOException {
         HttpURLConnection connection = prepareConnection(requestUrl);
         connection.setRequestMethod("GET");
         if (headers != null) addHeaderFields(connection, headers);
+        trustEveryone();
         String response = executeHttpRequest(connection);
         return response;
     }
 
-    protected String executeHttpMultipart2(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                           @Nullable Map<String, String> params, Map<String, File> files)
-            throws JSONException, ApiException, IOException {
+    protected String executeHttpMultipart2(@NonNull String requestUrl, @Nullable Map<String, String> headers, @Nullable Map<String, String> params, Map<String, File> files) throws JSONException, ApiException, IOException {
 
         HttpURLConnection connection = prepareConnection(requestUrl);
         connection.setRequestMethod("POST");
@@ -125,6 +126,7 @@ public abstract class AbstractHttpApi implements HttpApi {
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("Cache-Control", "no-cache");
         connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + BOUNDARY);
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         OutputStream outputStream = connection.getOutputStream();
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET), true);
@@ -137,9 +139,7 @@ public abstract class AbstractHttpApi implements HttpApi {
         return response;
     }
 
-    protected String executeHttpMultipart(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                          Map<String, String> params, Map<String, File> files)
-            throws JSONException, ApiException, JSONException, IOException {
+    protected String executeHttpMultipart(@NonNull String requestUrl, @Nullable Map<String, String> headers, Map<String, String> params, Map<String, File> files) throws JSONException, ApiException, JSONException, IOException {
 
         HttpURLConnection connection = prepareConnection(requestUrl);
         connection.setRequestMethod("POST");
@@ -149,22 +149,20 @@ public abstract class AbstractHttpApi implements HttpApi {
         connection.setRequestProperty("Cache-Control", "no-cache");
         connection.setRequestProperty("Accept", "*/*");
         connection.setRequestProperty("Content-Type", "multipart/form-data; charset=" + CHARSET + "; boundary=" + BOUNDARY);
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         OutputStream outputStream = connection.getOutputStream();
         DataOutputStream dataStream = new DataOutputStream(outputStream);
         if (params != null) addFormFields(dataStream, params);
         if (files != null && files.size() > 0) addFileParts(dataStream, outputStream, files);
-        dataStream.writeBytes(TWO_HYPHENS + BOUNDARY +
-                TWO_HYPHENS + LINE_FEED);
+        dataStream.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + LINE_FEED);
         dataStream.flush();
         dataStream.close();
         String response = executeHttpRequest(connection);
         return response;
     }
 
-    protected String executeHttpMultipartImages(@NonNull String requestUrl, @Nullable Map<String, String> headers,
-                                                Map<String, String> params, ArrayList<File> files)
-            throws JSONException, ApiException, JSONException, IOException {
+    protected String executeHttpMultipartImages(@NonNull String requestUrl, @Nullable Map<String, String> headers, Map<String, String> params, ArrayList<File> files) throws JSONException, ApiException, JSONException, IOException {
 
         HttpURLConnection connection = prepareConnection(requestUrl);
         connection.setRequestMethod("POST");
@@ -174,18 +172,19 @@ public abstract class AbstractHttpApi implements HttpApi {
         connection.setRequestProperty("Cache-Control", "no-cache");
         connection.setRequestProperty("Accept", "*/*");
         connection.setRequestProperty("Content-Type", "multipart/form-data; charset=" + CHARSET + "; boundary=" + BOUNDARY);
+        trustEveryone();
         if (headers != null) addHeaderFields(connection, headers);
         OutputStream outputStream = connection.getOutputStream();
         DataOutputStream dataStream = new DataOutputStream(outputStream);
         if (params != null) addFormFields(dataStream, params);
         if (files != null && files.size() > 0) addFileImagesParts(dataStream, outputStream, files);
-        dataStream.writeBytes(TWO_HYPHENS + BOUNDARY +
-                TWO_HYPHENS + LINE_FEED);
+        dataStream.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + LINE_FEED);
         dataStream.flush();
         dataStream.close();
         String response = executeHttpRequest(connection);
         return response;
     }
+
     /**
      * Prepare the connection with basic requirement from our application
      *
@@ -210,15 +209,13 @@ public abstract class AbstractHttpApi implements HttpApi {
      * OK, otherwise an exception is thrown.
      * @throws IOException
      */
-    private String executeHttpRequest(HttpURLConnection connection)
-            throws JSONException, ApiException, IOException {
+    private String executeHttpRequest(HttpURLConnection connection) throws JSONException, ApiException, IOException {
         StringBuilder response = new StringBuilder();
         // checks server's status code first
         int status = connection.getResponseCode();
 //        if (status == HttpURLConnection.HTTP_OK) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    status == HttpURLConnection.HTTP_OK ? connection.getInputStream() : connection.getErrorStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(status == HttpURLConnection.HTTP_OK ? connection.getInputStream() : connection.getErrorStream()));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 response.append(line);
@@ -276,7 +273,7 @@ public abstract class AbstractHttpApi implements HttpApi {
 
     private void addFileImagesParts(DataOutputStream stream, OutputStream outputStream, ArrayList<File> images) throws IOException {
         for (File item : images) {
-                addFilePart(stream, outputStream, "ImageFiles", item);
+            addFilePart(stream, outputStream, "ImageFiles", item);
         }
     }
 
@@ -288,10 +285,8 @@ public abstract class AbstractHttpApi implements HttpApi {
      */
     public void addFormField(PrintWriter writer, String name, String value) {
         writer.append(TWO_HYPHENS + BOUNDARY).append(LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"" + name + "\"")
-                .append(LINE_FEED);
-        writer.append("Content-Type: text/plain; charset=" + CHARSET).append(
-                LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + name + "\"").append(LINE_FEED);
+        writer.append("Content-Type: text/plain; charset=" + CHARSET).append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.append(value).append(LINE_FEED);
         writer.flush();
@@ -322,16 +317,11 @@ public abstract class AbstractHttpApi implements HttpApi {
      * @param uploadFile a File to be uploaded
      * @throws IOException
      */
-    public void addFilePart(DataOutputStream stream, OutputStream outputStream, String fieldName, File uploadFile)
-            throws IOException {
+    public void addFilePart(DataOutputStream stream, OutputStream outputStream, String fieldName, File uploadFile) throws IOException {
         String fileName = uploadFile.getName();
         stream.writeBytes(TWO_HYPHENS + BOUNDARY + LINE_FEED);
-        stream.writeBytes(
-                "Content-Disposition: form-data; name=\"" + fieldName
-                        + "\"; filename=\"" + fileName + "\"" + LINE_FEED);
-        stream.writeBytes(
-                "Content-Type: "
-                        + URLConnection.guessContentTypeFromName(fileName));
+        stream.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"" + LINE_FEED);
+        stream.writeBytes("Content-Type: " + URLConnection.guessContentTypeFromName(fileName));
         stream.writeBytes(LINE_FEED);
         stream.writeBytes("Content-Transfer-Encoding: binary" + LINE_FEED);
         stream.writeBytes(LINE_FEED);
@@ -357,18 +347,11 @@ public abstract class AbstractHttpApi implements HttpApi {
      * @param uploadFile a File to be uploaded
      * @throws IOException
      */
-    public void addFilePart(PrintWriter writer, OutputStream outputStream, String fieldName, File uploadFile)
-            throws IOException {
+    public void addFilePart(PrintWriter writer, OutputStream outputStream, String fieldName, File uploadFile) throws IOException {
         String fileName = uploadFile.getName();
         writer.append("--" + BOUNDARY).append(LINE_FEED);
-        writer.append(
-                "Content-Disposition: form-data; name=\"" + fieldName
-                        + "\"; filename=\"" + fileName + "\"")
-                .append(LINE_FEED);
-        writer.append(
-                "Content-Type: "
-                        + URLConnection.guessContentTypeFromName(fileName))
-                .append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
+        writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(fileName)).append(LINE_FEED);
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.flush();
@@ -386,14 +369,10 @@ public abstract class AbstractHttpApi implements HttpApi {
         writer.flush();
     }
 
-    public void addFilePart(PrintWriter writer, OutputStream outputStream, String fieldName, File uploadFile,
-                            String contentType) throws IOException {
+    public void addFilePart(PrintWriter writer, OutputStream outputStream, String fieldName, File uploadFile, String contentType) throws IOException {
         String fileName = uploadFile.getName();
         writer.append("--" + BOUNDARY).append(LINE_FEED);
-        writer.append(
-                "Content-Disposition: form-data; name=\"" + fieldName
-                        + "\"; filename=\"" + fileName + "\"")
-                .append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
         writer.append("Content-Type: " + contentType).append(LINE_FEED);
 //		writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
@@ -412,5 +391,29 @@ public abstract class AbstractHttpApi implements HttpApi {
         writer.flush();
     }
 
+    public void trustEveryone() {
+        try {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[]{new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }}, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (Exception e) { // should never happen
+            e.printStackTrace();
+        }
+    }
 
 }

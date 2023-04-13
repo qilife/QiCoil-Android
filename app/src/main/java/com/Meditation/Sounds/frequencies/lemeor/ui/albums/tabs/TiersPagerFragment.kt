@@ -66,13 +66,17 @@ class TiersPagerFragment : Fragment() {
                         DataBase.getInstance(requireContext()))
         ).get(AlbumsViewModel::class.java)
 
-        mViewModel.tiers?.observe(viewLifecycleOwner, {
-            val tiersPagerAdapter = TiersPagerAdapter(activity as NavigationActivity, childFragmentManager, it as ArrayList<Tier>)
+        mViewModel.tiers?.observe(viewLifecycleOwner) {
+            val tiersPagerAdapter = TiersPagerAdapter(
+                activity as NavigationActivity,
+                childFragmentManager,
+                it as ArrayList<Tier>
+            )
             tiers_view_pager.adapter = tiersPagerAdapter
 
             tiers_view_pager.setCurrentItem(tierPosition, true)
             tiers_tabs.setupWithViewPager(tiers_view_pager)
-        })
+        }
 
         tiers_tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) { tierPosition = tab.position }

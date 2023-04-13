@@ -40,7 +40,7 @@ class ChangePassActivity : AppCompatActivity() {
         val userEmail = PreferenceHelper.getUser(applicationContext)?.email
 
         userEmail?.let { user_email ->
-            mViewModel.updateProfile(user_email, oldPass, newPass, null, confirmPass).observe(this, { user ->
+            mViewModel.updateProfile(user_email, oldPass, newPass, null, confirmPass).observe(this) { user ->
                 user?.let { resource ->
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
@@ -52,14 +52,15 @@ class ChangePassActivity : AppCompatActivity() {
                         }
                         Resource.Status.ERROR -> {
                             HudHelper.hide()
-                            Toast.makeText(applicationContext, user.message, Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext, user.message, Toast.LENGTH_LONG)
+                                .show()
                         }
                         Resource.Status.LOADING -> {
                             HudHelper.show(this)
                         }
                     }
                 }
-            })
+            }
         }
     }
 

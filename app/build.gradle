@@ -15,12 +15,12 @@ android {
             keyPassword var
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.Meditation.Sounds.frequencies"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 2010
         versionName "0.0.1"
         multiDexEnabled = true

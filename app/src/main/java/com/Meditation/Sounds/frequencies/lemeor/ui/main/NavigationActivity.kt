@@ -65,6 +65,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
+import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.Meditation.Sounds.frequencies.tasks.BaseTask
 import com.Meditation.Sounds.frequencies.tasks.GetFlashSaleTask
 import com.Meditation.Sounds.frequencies.utils.Constants
@@ -140,6 +141,10 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         if (event == DownloadService.DOWNLOAD_FINISH) {
             viewGroupDownload.visibility = View.GONE
             downloadedTracks = null
+        }
+
+        if (event == SyncDataEvent) {
+           syncData()
         }
     }
 
@@ -439,7 +444,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     private fun syncData() {
         val user = PreferenceHelper.getUser(this)
 
-        mViewModel.getHome(""+user?.id).observe(this, {
+        mViewModel.getHome(""+user?.id).observe(this) {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     if (preference(applicationContext).isFirstSync) {
@@ -454,7 +459,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 Resource.Status.LOADING -> {
                 }
             }
-        })
+        }
     }
 
     private fun showDisclaimerDialog() {
@@ -590,7 +595,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         search_programs_recycler.setHasFixedSize(true)
         search_programs_recycler.itemAnimator = null
 
-        albumsSearch.observe(this, {
+        albumsSearch.observe(this) {
             val converted = ArrayList<Album>()
 
             it.forEach { album ->
@@ -598,12 +603,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(album)
                 } else {
                     if (album.tier_id == 3
-                            && preference(applicationContext).isHighQuantum
+                        && preference(applicationContext).isHighQuantum
                     ) {
                         converted.add(album)
                     }
                     if (album.tier_id == 4
-                            && preference(applicationContext).isInnerCircle
+                        && preference(applicationContext).isInnerCircle
                     ) {
                         converted.add(album)
                     }
@@ -619,9 +624,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     lblnoresult.visibility = View.VISIBLE
             }
 
-        })
+        }
 
-        tracksSearch.observe(this, {
+        tracksSearch.observe(this) {
             val converted = ArrayList<Track>()
 
             it.forEach { track ->
@@ -629,12 +634,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(track)
                 } else {
                     if (track.tier_id == 3
-                            && preference(applicationContext).isHighQuantum
+                        && preference(applicationContext).isHighQuantum
                     ) {
                         converted.add(track)
                     }
                     if (track.tier_id == 4
-                            && preference(applicationContext).isInnerCircle
+                        && preference(applicationContext).isInnerCircle
                     ) {
                         converted.add(track)
                     }
@@ -649,9 +654,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     lblnoresult.visibility = View.VISIBLE
             }
             mTracksSearchAdapter?.setData(converted)
-        })
+        }
 
-        programsSearch.observe(this, {
+        programsSearch.observe(this) {
             if (it.size != 0) {
                 lblheaderprograms.visibility = View.VISIBLE
                 lblnoresult.visibility = View.GONE
@@ -661,7 +666,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     lblnoresult.visibility = View.VISIBLE
             }
             mProgramsSearchAdapter?.setData(it)
-        })
+        }
     }
 
     private fun search(s: CharSequence) {
@@ -838,7 +843,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     override fun onRefreshTiers() {
         if (BuildConfig.IS_FREE) {
             if(isNetworkAvailable()) {
-                mViewModel.getProfile().observe(this, { user ->
+                mViewModel.getProfile().observe(this) { user ->
                     user?.let { resource ->
                         when (resource.status) {
                             Resource.Status.SUCCESS -> {
@@ -850,7 +855,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                             }
                         }
                     }
-                })
+                }
             }
         }
     }

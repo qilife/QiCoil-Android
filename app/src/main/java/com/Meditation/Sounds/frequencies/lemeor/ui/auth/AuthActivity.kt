@@ -23,13 +23,16 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isLogged
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.preference
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.saveUser
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.token
+import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerShuffle
 import com.Meditation.Sounds.frequencies.lemeor.ui.TrialActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.LoginFragment.OnLoginListener
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.RegistrationFragment.OnRegistrationListener
+import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListener {
 
@@ -70,6 +73,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         saveUser(applicationContext, resource.data?.user)
 
         resource.data?.user?.let { user -> updateUnlocked(applicationContext, user, true) }
+        EventBus.getDefault().post(SyncDataEvent)
     }
 
     private fun sendDataWithDelay() {
@@ -108,7 +112,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 eventValues
             )
         } else {
-            mViewModel.login(email, password).observe(this, {
+            mViewModel.login(email, password).observe(this) {
                 it?.let { resource ->
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
@@ -132,7 +136,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                         }
                     }
                 }
-            })
+            }
         }
     }
 
