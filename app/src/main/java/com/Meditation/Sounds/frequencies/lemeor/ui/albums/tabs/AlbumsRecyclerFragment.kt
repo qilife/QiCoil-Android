@@ -111,10 +111,10 @@ class AlbumsRecyclerFragment : Fragment() {
                         DataBase.getInstance(requireContext()))
         ).get(AlbumsViewModel::class.java)
 
-        mViewModel.albums(categoryId!!)?.observe(viewLifecycleOwner, {
+        mViewModel.albums(categoryId!!)?.observe(viewLifecycleOwner) {
             mListAlbum = it as ArrayList<Album>
-            mAlbumAdapter!!.setData(it)
-        })
+            mAlbumAdapter?.setData(it)
+        }
 
         getAlbumData()
 
@@ -262,7 +262,7 @@ class AlbumsRecyclerFragment : Fragment() {
     }
 
     private fun SaveFreeAlbums(user_id: Int?, album_id: Int) {
-        mViewModel.SaveFreeAlbum("" + user_id, "" + album_id).observe(viewLifecycleOwner, {
+        mViewModel.SaveFreeAlbum("" + user_id, "" + album_id).observe(viewLifecycleOwner) {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
@@ -276,6 +276,6 @@ class AlbumsRecyclerFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
     }
 }

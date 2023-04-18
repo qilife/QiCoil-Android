@@ -201,9 +201,9 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
                         && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
                         && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
                         && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)) {
-                    viewCountdown.visibility = View.GONE
+//                    viewCountdown.visibility = View.GONE
                 } else {
-                    viewCountdown.visibility = View.VISIBLE
+//                    viewCountdown.visibility = View.VISIBLE
                 }
 //                mTvDurationCountDown.text = "$hour:$min:$second"
                 mTvTimeCountDownHour.text = "$hour"
@@ -212,7 +212,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
             }
 
             override fun onFinish() {
-                viewCountdown.visibility = View.GONE
+//                viewCountdown.visibility = View.GONE
 //                initComponents()
             }
         }
@@ -357,9 +357,9 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
                 && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
                 && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
                 && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)) {
-            viewCountdown.visibility = View.GONE
+//            viewCountdown.visibility = View.GONE
         } else {
-            viewCountdown.visibility = View.VISIBLE
+//            viewCountdown.visibility = View.VISIBLE
         }
     }
 
@@ -560,7 +560,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
         if (flashSaleRemainTimeGloble > 0) {
             setCountdownTimer(flashSaleRemainTimeGloble)
         } else {
-            viewCountdown.visibility = View.GONE
+//            viewCountdown.visibility = View.GONE
         }
     }
 

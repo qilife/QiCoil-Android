@@ -121,12 +121,12 @@ class NewAlbumDetailFragment : Fragment() {
         firebaseAnalytics = Firebase.analytics
         initUI()
 
-        mViewModel.album(albumId)?.observe(viewLifecycleOwner, {
+        mViewModel.album(albumId)?.observe(viewLifecycleOwner) {
             if (it != null) {
                 album = it
                 setUI(it)
             }
-        })
+        }
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
@@ -166,13 +166,13 @@ class NewAlbumDetailFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setUI(album: Album) {
-        currentTrackIndex.observe(viewLifecycleOwner, {
+        currentTrackIndex.observe(viewLifecycleOwner) {
             album.tracks.forEachIndexed { index, _ ->
                 if (index == it) {
                     mTrackAdapter?.setSelected(index)
                 }
             }
-        })
+        }
 
         album_back.setOnClickListener { onBackPressed() }
 
@@ -183,11 +183,15 @@ class NewAlbumDetailFragment : Fragment() {
         mDescriptionAdapter = album.descriptions?.let { DescriptionAdapter(requireContext(), it) }
         album_description_recycler.adapter = mDescriptionAdapter
 
-        album_play.setOnClickListener { playOrDownload(album) }
+        album_play.setOnClickListener {
+            if (album.tracks.isNotEmpty()) {
+                playOrDownload(album)
+            }
+        }
 
         mTrackAdapter = AlbumTrackAdapter(requireContext(), album.tracks, album)
 
-        mTrackAdapter!!.setOnClickListener(object : AlbumTrackAdapter.Listener {
+        mTrackAdapter?.setOnClickListener(object : AlbumTrackAdapter.Listener {
             override fun onTrackClick(track: Track, i: Int, isDownloaded: Boolean) {
                 if (this@NewAlbumDetailFragment.isDownloaded) {
                     isMultiPlay = false

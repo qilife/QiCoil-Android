@@ -152,7 +152,7 @@
             android:name=".MusicService"
             android:exported="false" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{239929504671619}"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider{239929504671610}"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
     </application>

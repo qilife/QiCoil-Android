@@ -384,7 +384,7 @@
         android:layout_height="90dp"
         android:layout_gravity="right|center"
         android:layout_marginBottom="@dimen/height_small_icon"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="70dp"

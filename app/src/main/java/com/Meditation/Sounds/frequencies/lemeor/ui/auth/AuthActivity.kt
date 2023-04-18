@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -67,15 +68,16 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun saveAuthData(resource: Resource<AuthResponse>) {
         preference(applicationContext).isLogged = true
         preference(applicationContext).token = resource.data?.token
         saveUser(applicationContext, resource.data?.user)
-
         resource.data?.user?.let { user -> updateUnlocked(applicationContext, user, true) }
-        EventBus.getDefault().post(SyncDataEvent)
+        Handler().postDelayed({ EventBus.getDefault().post(SyncDataEvent)}, 2000)
     }
 
+    @Suppress("DEPRECATION")
     private fun sendDataWithDelay() {
         Handler().postDelayed({sendData()}, 3000)
     }
@@ -151,7 +153,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         confirm: String,
         uuid: String
     ) {
-        mViewModel.register(email, pass, confirm, name, uuid).observe(this, {
+        mViewModel.register(email, pass, confirm, name, uuid).observe(this) {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
@@ -175,7 +177,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                     }
                 }
             }
-        })
+        }
     }
 
     override fun onOpenLogin() {
@@ -187,7 +189,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
     }
 
     override fun onGoogleLogin(email: String, name: String, google_id: String) {
-        mViewModel.googleLogin(email, name, google_id).observe(this, {
+        mViewModel.googleLogin(email, name, google_id).observe(this) {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
@@ -204,12 +206,12 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                     }
                 }
             }
-        })
+        }
     }
 
 
     override fun onFbLogin(email: String, name: String, fb_id: String) {
-        mViewModel.fbLogin(email, name, fb_id).observe(this, {
+        mViewModel.fbLogin(email, name, fb_id).observe(this) {
             it?.let { resource ->
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
@@ -226,6 +228,6 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                     }
                 }
             }
-        })
+        }
     }
 }

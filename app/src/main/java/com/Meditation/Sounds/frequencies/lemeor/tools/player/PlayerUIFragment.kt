@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -21,6 +23,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.base.NewBaseFragment
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.player_ui_fragment.*
 import org.greenrobot.eventbus.EventBus
+
 
 class PlayerUIFragment : NewBaseFragment() {
     private var playerServiceBinder: PlayerService.PlayerServiceBinder? = null
@@ -46,22 +49,22 @@ class PlayerUIFragment : NewBaseFragment() {
     }
 
     private fun setListeners() {
-        currentTrack.observe(viewLifecycleOwner, {
+        currentTrack.observe(viewLifecycleOwner) {
             track_name.text = it.title
 
             loadImage(requireContext(), track_image, it.album)
-            Log.i("currenttracl","t-->"+it.duration)
+            Log.i("currenttracl", "t-->" + it.duration)
             seekBar.max = it.duration.toInt()
-        })
+        }
 
-        currentPosition.observe(viewLifecycleOwner, {
+        currentPosition.observe(viewLifecycleOwner) {
             track_position.text = getConvertedTime(it)
             seekBar.progress = it.toInt()
-        })
+        }
 
-        duration.observe(viewLifecycleOwner, {
+        duration.observe(viewLifecycleOwner) {
             track_duration.text = getConvertedTime(it)
-        })
+        }
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -114,25 +117,31 @@ class PlayerUIFragment : NewBaseFragment() {
         requireContext().bindService(Intent(requireContext(), PlayerService::class.java), serviceConnection as ServiceConnection, AppCompatActivity.BIND_AUTO_CREATE)
 
         player_play.setOnClickListener {
+            val rotation: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.clockwise_rotation)
+            rotation.repeatCount = Animation.INFINITE
+            player_repeat.clearAnimation()
             if (mediaController != null)
                 if (playing) {
                     isUserPaused = true
-                    mediaController!!.transportControls.pause()
+                    mediaController?.transportControls?.pause()
                 } else {
                     isUserPaused = false
-                    mediaController!!.transportControls.play()
+                    mediaController?.transportControls?.play()
+                    if (repeat ==  Player.REPEAT_MODE_ALL) {
+                        player_repeat.startAnimation(rotation)
+                    }
                 }
         }
 
         player_next.setOnClickListener {
             if (mediaController != null)
-                mediaController!!.transportControls.skipToNext()
+                mediaController?.transportControls?.skipToNext()
             isMultiPlay = false
         }
 
         player_previous.setOnClickListener {
             if (mediaController != null)
-                mediaController!!.transportControls.skipToPrevious()
+                mediaController?.transportControls?.skipToPrevious()
         }
 
         player_shuffle.setOnClickListener {
@@ -147,18 +156,24 @@ class PlayerUIFragment : NewBaseFragment() {
         }
 
         player_repeat.setOnClickListener {
+            val rotation: Animation = AnimationUtils.loadAnimation(requireContext(), R.anim.clockwise_rotation)
+            rotation.repeatCount = Animation.INFINITE
+            player_repeat.clearAnimation()
             when (repeat) {
                 Player.REPEAT_MODE_OFF -> {
                     repeat = Player.REPEAT_MODE_ONE
-                    player_repeat.setImageResource(R.drawable.ic_replay_1)
+                    player_repeat.setImageResource(R.drawable.ic_loop_one)
                 }
                 Player.REPEAT_MODE_ONE -> {
                     repeat = Player.REPEAT_MODE_ALL
-                    player_repeat.setImageResource(R.drawable.ic_replay_selected)
+                    player_repeat.setImageResource(R.drawable.ic_loop_all)
+                    if (playing) {
+                        player_repeat.startAnimation(rotation)
+                    }
                 }
                 Player.REPEAT_MODE_ALL -> {
                     repeat = Player.REPEAT_MODE_OFF
-                    player_repeat.setImageResource(R.drawable.ic_replay)
+                    player_repeat.setImageResource(R.drawable.ic_loop_off)
                 }
             }
             EventBus.getDefault().post(PlayerRepeat(repeat))
