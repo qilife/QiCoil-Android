@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
@@ -193,13 +194,18 @@ public abstract class AbstractHttpApi implements HttpApi {
      * @throws IOException
      */
     private HttpURLConnection prepareConnection(String requestUrl) throws IOException {
-        URL url = new URL(requestUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("connection", "close");
-        connection.setConnectTimeout(CONNECT_TIME_OUT);
-        connection.setReadTimeout(READ_TIME_OUT);
-        connection.setUseCaches(false);
-        return connection;
+        try {
+            URL url = new URL(requestUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("connection", "close");
+            connection.setConnectTimeout(CONNECT_TIME_OUT);
+            connection.setReadTimeout(READ_TIME_OUT);
+            connection.setUseCaches(false);
+            return connection;
+        } catch (SocketTimeoutException e){
+
+        }
+       return null;
     }
 
     /**

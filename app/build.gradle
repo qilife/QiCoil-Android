@@ -43,8 +43,8 @@ android {
     productFlavors {
         qicoil {
             applicationId 'com.Meditation.Sounds.frequencies'
-            versionCode 2235
-            versionName "2.2.35"
+            versionCode 2236
+            versionName "2.2.36"
 
             buildConfigField "String", "PREF_TITLE", '"pref_cache"'
             buildConfigField "String", "DB_NAME", '"new_qicoil"'
@@ -55,8 +55,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2211
-            versionName "2.2.11"
+            versionCode 2212
+            versionName "2.2.12"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -225,4 +225,8 @@ dependencies {
     // chucker
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
 }

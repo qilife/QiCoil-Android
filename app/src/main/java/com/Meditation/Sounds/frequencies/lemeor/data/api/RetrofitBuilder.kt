@@ -38,7 +38,7 @@ class RetrofitBuilder(val context: Context) {
         return Retrofit.Builder()
             .baseUrl(ApiConfig.getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create())
-            .client(provideUnsafeOkhttpClient(context))
+            .client(client)
             .build()
     }
 

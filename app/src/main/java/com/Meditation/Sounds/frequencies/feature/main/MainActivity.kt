@@ -434,9 +434,9 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>, Sy
             val upgrateMp3FileDialog = AlertDialog.Builder(this)
                     .setMessage(R.string.txt_warning_frequencies_frequencies)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.txt_ok, { _, _ ->
+                    .setPositiveButton(R.string.txt_ok) { _, _ ->
                         DeleteAllTrackSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    })
+                    }
             mUpgrateMp3FileDialog = upgrateMp3FileDialog.show()
         }
     }

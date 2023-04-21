@@ -211,8 +211,9 @@ object FileEncyptUtil {
         }
         val dataFoldersHigherQuantum = CACHE_FOLDER_HIGHER_QUANTUM.listFiles()
         var count: Int = 0
-        if (dataFolders.isNotEmpty() || dataFoldersAdvanced.isNotEmpty()
-                || dataFoldersHigherAbundance!!.isNotEmpty() || dataFoldersHigherQuantum!!.isNotEmpty()) {
+        if ((dataFolders != null && dataFolders.isNotEmpty()) || (dataFoldersAdvanced != null && dataFoldersAdvanced.isNotEmpty())
+                || dataFoldersHigherAbundance?.isNotEmpty() == true || dataFoldersHigherQuantum?.isNotEmpty() == true
+        ) {
             val listFolders = ArrayList<File>()
             listFolders.add(CACHE_FOLDER)
             listFolders.add(CACHE_FOLDER_ADVANCED)

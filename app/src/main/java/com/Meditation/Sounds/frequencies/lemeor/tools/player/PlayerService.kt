@@ -133,7 +133,7 @@ class PlayerService : Service() {
 
         EventBus.getDefault().register(this)
         //trackList = ArrayList()
-        if (trackList != null && trackList!!.size != 0) {
+        if (trackList?.size != 0) {
             musicRepository = trackList?.let { MusicRepository(it) }!!
         } else {
             return

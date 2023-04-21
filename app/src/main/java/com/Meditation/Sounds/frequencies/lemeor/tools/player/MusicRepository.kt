@@ -27,9 +27,12 @@ class MusicRepository(private val data: List<Track>) {
     }
 
     fun getCurrent(): Track {
-        currentTrack.value = data[currentItemIndex]
-        currentTrackIndex.value = currentItemIndex
-        return data[currentItemIndex]
+        if (currentItemIndex <= data.size - 1) {
+            currentTrack.value = data[currentItemIndex]
+            currentTrackIndex.value = currentItemIndex
+            return data[currentItemIndex]
+        }
+       return data[data.size - 1]
     }
 
     fun isLastTrack(): Boolean {

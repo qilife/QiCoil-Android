@@ -1,10 +1,15 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 
+import android.Manifest
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -30,7 +35,6 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.ApiListener
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput
 import com.Meditation.Sounds.frequencies.feature.discover.DiscoverFragment
-import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -39,6 +43,10 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.downloadedTracks
+import com.Meditation.Sounds.frequencies.lemeor.hideKeyboard
+import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
+import com.Meditation.Sounds.frequencies.lemeor.selectedNaviFragment
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isFirstSync
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isHighQuantum
@@ -84,14 +92,9 @@ import com.google.gson.Gson
 import com.suddenh4x.ratingdialog.AppRating
 import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
 import com.suddenh4x.ratingdialog.preferences.RatingThreshold
+import com.tbruyelle.rxpermissions3.RxPermissions
 import com.tonyodev.fetch2core.isNetworkAvailable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_navigation.*
-import kotlinx.android.synthetic.main.activity_navigation.mTvDownloadPercent
-import kotlinx.android.synthetic.main.activity_navigation.viewGroupDownload
-import kotlinx.android.synthetic.main.fragment_albums_category.*
-import kotlinx.android.synthetic.main.fragment_new_options.*
-import kotlinx.android.synthetic.main.item_program.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -100,7 +103,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
 
 
 const val REQUEST_CODE_PERMISSION = 1111
@@ -185,23 +187,31 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
             )
         }
-        checkPermissions()
     }
 
+    @SuppressLint("CheckResult")
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                        this,
-                        WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(WRITE_EXTERNAL_STORAGE),
-                    REQUEST_CODE_PERMISSION
-            )
-        } else {
-            deleteOldFiles()
+        val rxPermissions = RxPermissions(this@NavigationActivity)
+        rxPermissions.request(WRITE_EXTERNAL_STORAGE).subscribe { granted ->
+            if (granted) {
+                deleteOldFiles()
+            } else {
+                Toast.makeText(applicationContext, "denied", Toast.LENGTH_SHORT).show()
+            }
         }
+//        if (ContextCompat.checkSelfPermission(
+//                        this,
+//                        WRITE_EXTERNAL_STORAGE
+//                ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    arrayOf(WRITE_EXTERNAL_STORAGE),
+//                    REQUEST_CODE_PERMISSION
+//            )
+//        } else {
+//            deleteOldFiles()
+//        }
     }
 
     private fun deleteOldFiles() {
@@ -305,6 +315,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         EventBus.getDefault().register(this)
 
+        checkPermissions()
 
         init()
 
