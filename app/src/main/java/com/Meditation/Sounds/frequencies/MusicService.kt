@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.*
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.Meditation.Sounds.frequencies.feature.main.MainActivity
 import com.Meditation.Sounds.frequencies.models.PlaylistItem
 import com.Meditation.Sounds.frequencies.models.PlaylistItemSong
@@ -508,6 +509,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun startPlayback() {
         var isPauseImmediatelyStarted = false
         if (players != null && players.size > 0) {
@@ -528,7 +530,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         val notIntent = Intent(this, MainActivity::class.java)
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendInt = PendingIntent.getActivity(this, 0,
-                notIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                notIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         var builder = Notification.Builder(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

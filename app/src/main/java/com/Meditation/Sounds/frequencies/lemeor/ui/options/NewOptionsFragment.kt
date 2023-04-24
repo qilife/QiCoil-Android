@@ -268,7 +268,7 @@ class NewOptionsFragment : Fragment() {
         }
 
         options_sign_in.setOnClickListener {
-            startActivity(Intent(requireContext(), AuthActivity::class.java))
+            startActivityForResult(Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH)
         }
 
         options_help.setOnClickListener {
@@ -290,6 +290,11 @@ class NewOptionsFragment : Fragment() {
             options_log_out.visibility = View.GONE
             options_change_pass.visibility = View.GONE
             options_sign_in.visibility = View.VISIBLE
+        } else {
+            options_delete_user.visibility = View.VISIBLE
+            options_log_out.visibility = View.VISIBLE
+            options_change_pass.visibility = View.VISIBLE
+            options_sign_in.visibility = View.GONE
         }
     }
 
@@ -301,17 +306,22 @@ class NewOptionsFragment : Fragment() {
                 .setPositiveButton(getString(R.string.txt_yes)) { dialog, _ ->
                     val dialog = DeleteUserDialog(activity, object : DeleteUserDialog.IOnSubmitListener {
                         override fun submit(password: String) {
-                            mViewModel.deleteUser(password).observe(viewLifecycleOwner, {
+                            mViewModel.deleteUser(password).observe(viewLifecycleOwner) {
                                 it?.let { resource ->
                                     when (resource.status) {
                                         Resource.Status.SUCCESS -> {
-                                            Toast.makeText(context, "Your account deleted successfully!", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Your account deleted successfully!",
+                                                Toast.LENGTH_LONG
+                                            ).show()
                                             onLogoutSuccess()
                                             dialog.dismiss()
                                         }
                                         Resource.Status.ERROR -> {
                                             activity?.let { HudHelper.hide() }
-                                            Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, it.message, Toast.LENGTH_LONG)
+                                                .show()
                                         }
                                         Resource.Status.LOADING -> {
                                             activity?.let { activity -> HudHelper.show(activity) }
@@ -319,7 +329,7 @@ class NewOptionsFragment : Fragment() {
                                     }
 
                                 }
-                            })
+                            }
                         }
                     })
                     dialog.show()
@@ -359,7 +369,7 @@ class NewOptionsFragment : Fragment() {
                         onLogoutSuccess()
                         dialog.dismiss()
                     } else {
-                        mViewModel.logout().observe(viewLifecycleOwner, {
+                        mViewModel.logout().observe(viewLifecycleOwner) {
                             it?.let { resource ->
                                 when (resource.status) {
                                     Resource.Status.SUCCESS -> {
@@ -368,14 +378,15 @@ class NewOptionsFragment : Fragment() {
                                     }
                                     Resource.Status.ERROR -> {
                                         activity?.let { HudHelper.hide() }
-                                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, it.message, Toast.LENGTH_LONG)
+                                            .show()
                                     }
                                     Resource.Status.LOADING -> {
                                         activity?.let { activity -> HudHelper.show(activity) }
                                     }
                                 }
                             }
-                        })
+                        }
                     }
                 }.show()
     }

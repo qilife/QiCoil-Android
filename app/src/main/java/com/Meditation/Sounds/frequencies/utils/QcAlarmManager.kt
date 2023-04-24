@@ -1,11 +1,13 @@
 package com.Meditation.Sounds.frequencies.utils
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput
 import com.Meditation.Sounds.frequencies.services.AlarmReceiver
 import com.google.gson.Gson
@@ -73,6 +75,7 @@ class QcAlarmManager{
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.M)
         @JvmStatic
         fun createNewAlarms(context: Context, currentCal: Calendar, alarmCal: Calendar, interval: Float, flashSaleType: Int) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -91,7 +94,7 @@ class QcAlarmManager{
 
             var dateFormat = SimpleDateFormat("hh::mm:ss")
             Log.d("MENDATE", ""  + flashSaleType + "-" + dateFormat.format(alarmCal.time))
-            val pendingIntent = PendingIntent.getBroadcast(context, countAlarm, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, countAlarm, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, pendingIntent)
             } else {
@@ -100,11 +103,12 @@ class QcAlarmManager{
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.M)
         @JvmStatic
         fun clearAlarms(context: Context) {
             for (i in 0..21) {
                 val intent = Intent(context, AlarmReceiver::class.java)
-                val pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 alarmManager.cancel(pendingIntent)
             }
@@ -115,12 +119,14 @@ class QcAlarmManager{
 
         }
 
+        @RequiresApi(Build.VERSION_CODES.M)
+        @SuppressLint("UnspecifiedImmutableFlag")
         @JvmStatic
         fun createReminderAlarm(context: Context){
             //Remove
             val intent = Intent(context, AlarmReceiver::class.java)
             intent.putExtra(Constants.ETRAX_FLASH_SALE_TYPE, Constants.ETRAX_REMINDER_NOTIFICATION)
-            val pendingIntent = PendingIntent.getBroadcast(context, Constants.REMINDER_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, Constants.REMINDER_NOTIFICATION_ID, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
             //Re-create reminder

@@ -86,8 +86,10 @@ class LoginFragment : Fragment() {
         firebaseAnalytics = Firebase.analytics
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
-        mEdEmailSignIn.setText("kevintest@gmail.com")
-        mEdPasswordSignIn.setText("12345678")
+//        mEdEmailSignIn.setText("kevintest@gmail.com")
+//        mEdPasswordSignIn.setText("12345678")
+        mEdEmailSignIn.setText("manufacturing@qilifestore.com")
+        mEdPasswordSignIn.setText("1234test")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()

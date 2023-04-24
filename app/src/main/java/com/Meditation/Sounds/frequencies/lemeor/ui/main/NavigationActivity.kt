@@ -92,7 +92,6 @@ import com.google.gson.Gson
 import com.suddenh4x.ratingdialog.AppRating
 import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
 import com.suddenh4x.ratingdialog.preferences.RatingThreshold
-import com.tbruyelle.rxpermissions3.RxPermissions
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.coroutines.CoroutineScope
@@ -191,27 +190,19 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     @SuppressLint("CheckResult")
     private fun checkPermissions() {
-        val rxPermissions = RxPermissions(this@NavigationActivity)
-        rxPermissions.request(WRITE_EXTERNAL_STORAGE).subscribe { granted ->
-            if (granted) {
-                deleteOldFiles()
-            } else {
-                Toast.makeText(applicationContext, "denied", Toast.LENGTH_SHORT).show()
-            }
+        if (ContextCompat.checkSelfPermission(
+                        this,
+                        WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(WRITE_EXTERNAL_STORAGE),
+                    REQUEST_CODE_PERMISSION
+            )
+        } else {
+            deleteOldFiles()
         }
-//        if (ContextCompat.checkSelfPermission(
-//                        this,
-//                        WRITE_EXTERNAL_STORAGE
-//                ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                    this,
-//                    arrayOf(WRITE_EXTERNAL_STORAGE),
-//                    REQUEST_CODE_PERMISSION
-//            )
-//        } else {
-//            deleteOldFiles()
-//        }
     }
 
     private fun deleteOldFiles() {
@@ -339,22 +330,25 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().trim().isNotEmpty()) {
                     album_search_clear.visibility = View.VISIBLE
+                    view_data.visibility = View.VISIBLE
                     search(s)
                 } else {
                     clearSearch()
                     album_search_clear.visibility = View.GONE
+                    view_data.visibility = View.GONE
+                    hideKeyboard(applicationContext, album_search)
                 }
             }
         })
 
-        album_search.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
-            if (b) {
-                view_data.visibility = View.VISIBLE
-            } else {
-                view_data.visibility = View.GONE
-                hideKeyboard(applicationContext, album_search)
-            }
-        }
+//        album_search.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
+//            if (b) {
+//                view_data.visibility = View.VISIBLE
+//            } else {
+//                view_data.visibility = View.GONE
+//                hideKeyboard(applicationContext, album_search)
+//            }
+//        }
 
         album_search_clear.setOnClickListener { closeSearch() }
 
@@ -395,7 +389,6 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     override fun onDestroy() {
         super.onDestroy()
-
         EventBus.getDefault().unregister(this)
         DownloadService.stopService(this)
     }
@@ -502,6 +495,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         askRating()
+        hideKeyboard(applicationContext, album_search)
         when (item.itemId) {
             R.id.navigation_albums -> {
                 search_layout.visibility = View.VISIBLE

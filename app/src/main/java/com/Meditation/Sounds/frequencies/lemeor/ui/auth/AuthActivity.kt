@@ -29,6 +29,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.TrialActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.LoginFragment.OnLoginListener
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.RegistrationFragment.OnRegistrationListener
 import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
 import kotlinx.coroutines.GlobalScope
@@ -119,7 +120,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
                             saveAuthData(resource)
-
+                            Constants.isGuestLogin = false
                             sendDataWithDelay()
                             val eventValues = HashMap<String, Any>()
                             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
@@ -158,7 +159,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         saveAuthData(resource)
-
+                        Constants.isGuestLogin = false
                         sendDataWithDelay()
                         val eventValues = HashMap<String, Any>()
                         eventValues.put(AFInAppEventParameterName.REVENUE, 0)
@@ -194,7 +195,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         saveAuthData(resource)
-
+                        Constants.isGuestLogin = false
                         sendDataWithDelay()
                     }
                     Resource.Status.ERROR -> {
@@ -216,7 +217,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 when (resource.status) {
                     Resource.Status.SUCCESS -> {
                         saveAuthData(resource)
-
+                        Constants.isGuestLogin = false
                         sendDataWithDelay()
                     }
                     Resource.Status.ERROR -> {
