@@ -168,7 +168,7 @@ class NewAlbumDetailFragment : Fragment() {
     private fun setUI(album: Album) {
         currentTrackIndex.observe(viewLifecycleOwner) {
             album.tracks.forEachIndexed { index, _ ->
-                if (index == it) {
+                if (index == it && playAlbumId == albumId) {
                     mTrackAdapter?.setSelected(index)
                 }
             }
@@ -226,6 +226,9 @@ class NewAlbumDetailFragment : Fragment() {
                 } else {
                     if (file.length() == 0L) {
                         isDownloaded = false
+                        if (file.exists()) {
+                            file.delete()
+                        }
                     }
                 }
             }
@@ -274,6 +277,9 @@ class NewAlbumDetailFragment : Fragment() {
                     } else {
                         if (file.length() == 0L) {
                             track?.let { tracks.add(it) }
+                            if (file.exists()) {
+                                file.delete()
+                            }
                         }
                     }
 

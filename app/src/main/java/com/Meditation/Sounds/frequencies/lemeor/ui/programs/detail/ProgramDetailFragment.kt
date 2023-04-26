@@ -85,6 +85,11 @@ class ProgramDetailFragment : Fragment() {
 
                     if (!file.exists() && !preloaded.exists()) {
                         isDownloaded = false
+                    } else if (file.length() == 0L) {
+                        isDownloaded = false
+                        if (file.exists()) {
+                            file.delete()
+                        }
                     }
                 }
 
@@ -127,11 +132,10 @@ class ProgramDetailFragment : Fragment() {
 
         initUI()
 
-        mViewModel.program(programId)?.observe(viewLifecycleOwner, {
+        mViewModel.program(programId)?.observe(viewLifecycleOwner) {
             program = it
-
             setUI(it)
-        })
+        }
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
@@ -185,7 +189,7 @@ class ProgramDetailFragment : Fragment() {
         }
 
         mTrackAdapter = ProgramTrackAdapter(requireContext(), tracks, program.isMy)
-        mTrackAdapter!!.setOnClickListener(object : ProgramTrackAdapter.Listener {
+        mTrackAdapter?.setOnClickListener(object : ProgramTrackAdapter.Listener {
             override fun onTrackClick(track: Track, i: Int) {
                 if (isDownloaded) {
                     isMultiPlay = false
@@ -219,8 +223,13 @@ class ProgramDetailFragment : Fragment() {
                 val file = File(getSaveDir(requireContext(), it, album!!))
                 val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
 
-                if (!file.exists() && !preloaded.exists()) {
+                if ((!file.exists() && !preloaded.exists())) {
                     isDownloaded = false
+                } else if (file.length() == 0L) {
+                    isDownloaded = false
+                    if (file.exists()) {
+                        file.delete()
+                    }
                 }
             }
 
@@ -238,13 +247,13 @@ class ProgramDetailFragment : Fragment() {
             }
         }
 
-        currentTrackIndex.observe(viewLifecycleOwner, {
+        currentTrackIndex.observe(viewLifecycleOwner) {
             tracks.forEachIndexed { index, _ ->
-                if (index == it) {
+                if (index == it && playProgramId == programId) {
                     mTrackAdapter?.setSelected(index)
                 }
             }
-        })
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -331,7 +340,7 @@ class ProgramDetailFragment : Fragment() {
         val mediaMetadataRetriever = MediaMetadataRetriever()
         mediaMetadataRetriever.setDataSource(file.absolutePath)
         val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        return durationStr!!.toLong()
+        return durationStr?.toLong() ?: 0L
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

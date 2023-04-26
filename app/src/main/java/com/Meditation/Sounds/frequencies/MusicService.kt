@@ -530,7 +530,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         val notIntent = Intent(this, MainActivity::class.java)
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendInt = PendingIntent.getActivity(this, 0,
-                notIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                notIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         var builder = Notification.Builder(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

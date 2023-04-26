@@ -55,8 +55,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2212
-            versionName "2.2.12"
+            versionCode 2213
+            versionName "2.2.13"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -226,7 +226,8 @@ dependencies {
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 
-    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation("androidx.media:media:1.6.0")
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 }

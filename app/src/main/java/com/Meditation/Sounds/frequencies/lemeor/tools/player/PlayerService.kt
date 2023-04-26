@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.math.ceil
 
+
 class PlayerService : Service() {
 
     companion object {
@@ -170,24 +171,24 @@ class PlayerService : Service() {
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        mediaSession = MediaSessionCompat(this, "PlayerService")
-        mediaSession?.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
-        mediaSession?.setCallback(mediaSessionCallback)
-
         val mediaButtonIntent = Intent(
             Intent.ACTION_MEDIA_BUTTON,
             null,
             applicationContext,
             MediaButtonReceiver::class.java
         )
-        mediaSession?.setMediaButtonReceiver(
-            PendingIntent.getBroadcast(
-                applicationContext,
-                0,
-                mediaButtonIntent,
-                0
-            )
+
+        val pendingIntent =  PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            mediaButtonIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+
+        mediaSession = MediaSessionCompat(this, "PlayerService", null, pendingIntent)
+        mediaSession?.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+        mediaSession?.setCallback(mediaSessionCallback)
+
 
         exoPlayer = ExoPlayerFactory.newSimpleInstance(
             this,

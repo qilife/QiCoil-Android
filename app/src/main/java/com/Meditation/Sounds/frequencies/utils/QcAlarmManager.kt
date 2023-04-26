@@ -94,7 +94,7 @@ class QcAlarmManager{
 
             var dateFormat = SimpleDateFormat("hh::mm:ss")
             Log.d("MENDATE", ""  + flashSaleType + "-" + dateFormat.format(alarmCal.time))
-            val pendingIntent = PendingIntent.getBroadcast(context, countAlarm, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, countAlarm, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, pendingIntent)
             } else {
@@ -108,7 +108,7 @@ class QcAlarmManager{
         fun clearAlarms(context: Context) {
             for (i in 0..21) {
                 val intent = Intent(context, AlarmReceiver::class.java)
-                val pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                val pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
                 val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 alarmManager.cancel(pendingIntent)
             }
@@ -126,7 +126,7 @@ class QcAlarmManager{
             //Remove
             val intent = Intent(context, AlarmReceiver::class.java)
             intent.putExtra(Constants.ETRAX_FLASH_SALE_TYPE, Constants.ETRAX_REMINDER_NOTIFICATION)
-            val pendingIntent = PendingIntent.getBroadcast(context, Constants.REMINDER_NOTIFICATION_ID, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, Constants.REMINDER_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
             //Re-create reminder

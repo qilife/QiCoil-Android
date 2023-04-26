@@ -122,7 +122,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intentMain = new Intent(context, INotificationBroascast.class);
         intentMain.setAction(Long.toString(System.currentTimeMillis()));
         intentMain.putExtra(Constants.ETRAX_FLASH_SALE_TYPE, type);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intentMain, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intentMain, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         mBuilder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
