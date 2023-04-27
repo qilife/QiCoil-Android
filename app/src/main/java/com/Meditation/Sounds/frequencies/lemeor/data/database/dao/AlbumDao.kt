@@ -72,4 +72,7 @@ interface AlbumDao {
 
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE tier_id=:tierId AND is_free=:isFree")
     fun setNewUnlockedByTierId(isUnlocked: Boolean, tierId: Int, isFree: Boolean = false)
+
+    @Query("DELETE FROM album")
+    fun clear()
 }

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
+import com.Meditation.Sounds.frequencies.db.QFDatabase.Companion.getDatabase
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
@@ -32,7 +33,6 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
-import com.Meditation.Sounds.frequencies.utilbilling.Purchase
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_YEAR_FLASHSALE
@@ -337,6 +337,7 @@ class NewOptionsFragment : Fragment() {
     }
 
     private fun onLogoutSuccess() {
+        clearData()
         activity?.let { HudHelper.hide() }
 
         hashMapTiers = HashMap()
@@ -352,10 +353,21 @@ class NewOptionsFragment : Fragment() {
 
         user?.let { updateUnlocked(requireContext(), it, false) }
         saveUser(requireContext(), null)
-
         initUI()
 
         startActivityForResult(Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH)
+    }
+
+    private fun clearData() {
+        val database = DataBase.getInstance(requireContext())
+        database.homeDao().clear()
+        database.tierDao().clear()
+        database.categoryDao().clear()
+        database.tagDao().clear()
+        database.albumDao().clear()
+        database.trackDao().clear()
+        database.programDao().clear()
+        database.playlistDao().clear()
     }
 
     private fun onLogoutClick() {

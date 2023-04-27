@@ -19,6 +19,9 @@ interface TrackDao {
     @Delete
     fun delete(track: Track?)
 
+    @Query("DELETE FROM track")
+    fun clear()
+
     @Query("SELECT * FROM track")
     fun getTracks() : LiveData<List<Track>>?
 

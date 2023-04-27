@@ -18,6 +18,9 @@ interface CategoryDao {
     @Query("UPDATE category SET isPurchased=:isPurchased WHERE id=:id")
     fun updatePurchaseStatus(isPurchased: Boolean, id: Int)
 
+    @Query("DELETE FROM category")
+    fun clear()
+
     @Delete
     fun delete(category: Category)
 

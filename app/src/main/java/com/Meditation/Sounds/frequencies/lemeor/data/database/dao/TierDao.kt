@@ -23,6 +23,9 @@ interface TierDao {
     @Query("UPDATE tier SET isPurchased=:isPurchased WHERE id=:id")
     fun updatePurchaseStatus(isPurchased: Boolean, id: Int)
 
+    @Query("DELETE FROM tier")
+    fun clear()
+
     @Delete
     fun delete(tier: Tier)
 

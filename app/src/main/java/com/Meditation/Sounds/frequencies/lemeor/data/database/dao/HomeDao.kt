@@ -11,4 +11,7 @@ interface HomeDao {
 
     @Query("SELECT * FROM home")
     fun getHome() : LiveData<HomeResponse>
+
+    @Query("DELETE FROM home")
+    fun clear()
 }

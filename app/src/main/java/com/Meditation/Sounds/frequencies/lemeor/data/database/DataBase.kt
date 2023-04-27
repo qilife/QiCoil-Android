@@ -11,6 +11,8 @@ import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.*
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Database(entities = [
     HomeResponse::class,
@@ -66,6 +68,7 @@ abstract class DataBase : RoomDatabase() {
 
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext, DataBase::class.java, BuildConfig.DB_NAME)
+                        .allowMainThreadQueries()
                         .addMigrations(MIGRATION_1_2)
                         .build()
     }

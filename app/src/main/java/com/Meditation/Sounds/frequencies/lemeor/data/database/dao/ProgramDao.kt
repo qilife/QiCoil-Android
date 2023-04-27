@@ -19,6 +19,9 @@ interface ProgramDao {
     @Delete
     fun deletePrograms(list: List<Program>?)
 
+    @Query("DELETE FROM program")
+    fun clear()
+
     @Query("SELECT * FROM program ORDER BY `order` ASC")
     fun getPrograms() : LiveData<List<Program>>?
 

@@ -21,4 +21,7 @@ interface PlaylistDao {
 
     @Query("SELECT * FROM playlist ORDER BY `order` ASC")
     fun getData() : List<Playlist>?
+
+    @Query("DELETE FROM playlist")
+    fun clear()
 }

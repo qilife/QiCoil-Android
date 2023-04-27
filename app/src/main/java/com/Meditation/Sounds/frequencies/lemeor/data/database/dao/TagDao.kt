@@ -20,4 +20,7 @@ interface TagDao {
 
     @Query("SELECT * FROM tag ORDER BY `order` ASC")
     fun getData() : List<Tag>?
+
+    @Query("DELETE FROM tag")
+    fun clear()
 }
