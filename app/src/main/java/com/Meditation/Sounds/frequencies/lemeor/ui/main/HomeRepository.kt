@@ -1,10 +1,13 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
+import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.performGetOperation
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
+import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 
 class HomeRepository(private val apiHelper: ApiHelper, private val localData: DataBase) {
 
@@ -19,7 +22,9 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
     fun getHome(user_id: String) = performGetOperation(
             databaseQuery = { localData.homeDao().getHome() },
             networkCall = { apiHelper.getHome(user_id) },
-            saveCallResult = { localSave(it) }
+            saveCallResult = {
+                localSave(it)
+            }
     )
 
     fun getAlbumById(id: Int): Album? {
@@ -39,6 +44,12 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
     }
 
     fun localSave(it: HomeResponse?) {
+        val user = PreferenceHelper.getUser(QApplication.getInstance().applicationContext)
+        user?.unlocked_tiers = it?.unlocked_tiers.orEmpty()
+        user?.unlocked_categories = it?.unlocked_categories.orEmpty()
+        user?.unlocked_albums = it?.unlocked_albums.orEmpty()
+        PreferenceHelper.saveUser(QApplication.getInstance().applicationContext, user)
+
         syncTiers(localData, it)
         syncCategories(localData, it)
         syncTags(localData, it)
@@ -46,5 +57,7 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         syncPlaylists(localData, it)
         syncAlbums(localData, it)
         syncTracks(localData, it)
+
+        user?.let { user -> updateUnlocked(QApplication.getInstance().applicationContext, user, true) }
     }
 }

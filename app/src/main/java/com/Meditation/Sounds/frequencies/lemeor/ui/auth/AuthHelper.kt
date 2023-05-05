@@ -1,6 +1,7 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.auth
 
 import android.content.Context
+import android.util.Log
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.User
 import kotlinx.coroutines.GlobalScope
