@@ -21,9 +21,13 @@ fun updateUnlocked(context: Context, user: User, isUnlocked: Boolean) {
             db.albumDao().setNewUnlockedByTierId(isUnlocked, tier)
         }
 
-        categories.forEach { category-> db.albumDao().setNewUnlockedByCategoryId(isUnlocked, category) }
+        categories.forEach {
+                category-> db.albumDao().setNewUnlockedByCategoryId(isUnlocked, category)
+        }
 
-        albums.forEach { album-> db.albumDao().setNewUnlockedById(isUnlocked, album) }
+        albums.forEach { album->
+            db.albumDao().syncAlbums(isUnlocked = isUnlocked, id = album)
+        }
     }
 }
 

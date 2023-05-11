@@ -58,6 +58,9 @@ interface AlbumDao {
     @Query("UPDATE album SET isDownloaded=:isDownloaded,  isUnlocked=:isUnlocked WHERE id=:id")
     fun syncAlbums(isDownloaded: Boolean, isUnlocked: Boolean, id: Int)
 
+    @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE id=:id")
+    fun syncAlbums(isUnlocked: Boolean, id: Int)
+
     @Query("UPDATE album SET isDownloaded=:isDownloaded WHERE id=:id")
     fun syncDownloaded(isDownloaded: Boolean, id: Int)
 

@@ -86,16 +86,18 @@ class LoginFragment : Fragment() {
         firebaseAnalytics = Firebase.analytics
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
-//        mEdEmailSignIn.setText("kevintest@gmail.com")
+        if (com.Meditation.Sounds.frequencies.BuildConfig.DEBUG) {
+            //        mEdEmailSignIn.setText("kevintest@gmail.com")
 //        mEdPasswordSignIn.setText("12345678")
 //        mEdEmailSignIn.setText("manufacturing@qilifestore.com")
 //        mEdPasswordSignIn.setText("1234test")
 //        mEdEmailSignIn.setText("pongpopong@gmail.com")
 //        mEdPasswordSignIn.setText("goldfish")
-        mEdEmailSignIn.setText("janetshelton1913@gmail.com")
-        mEdPasswordSignIn.setText("12345678")
+            mEdEmailSignIn.setText("janetshelton1913@gmail.com")
+            mEdPasswordSignIn.setText("12345678")
 //        mEdEmailSignIn.setText("lailani.raphaell@gmail.com")
 //        mEdPasswordSignIn.setText("lailani1234")
+        }
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()

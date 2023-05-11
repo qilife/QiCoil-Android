@@ -145,9 +145,14 @@ fun syncAlbums(db: DataBase, response: HomeResponse?) {
         db.albumDao().insertAll(responseData)
 
         if (BuildConfig.IS_FREE) {
-            responseData.forEach {
-                db.albumDao().syncAlbums(isDownloaded = false, isUnlocked = true, id = it.id)
-            }
+            // unlock all albums
+//            responseData.forEach {
+//                db.albumDao().syncAlbums(isDownloaded = false, isUnlocked = true, id = it.id)
+//            }
+//            val albums = response.unlocked_albums
+//            albums?.forEach { albumId ->
+//                db.albumDao().syncAlbums(isDownloaded = false, isUnlocked = true, id = albumId)
+//            }
         } else {
             responseData.forEach {
                 db.albumDao().syncAlbums(it.isDownloaded, checkUnlocked(it.is_free), it.id)
