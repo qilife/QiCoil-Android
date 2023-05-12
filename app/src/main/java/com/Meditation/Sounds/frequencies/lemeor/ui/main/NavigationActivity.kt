@@ -514,7 +514,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 return true
             }
             R.id.navigation_discover -> {
-                search_layout.visibility = View.GONE
+                search_layout.visibility = View.VISIBLE
                 setFragment(DiscoverFragment())
                 return true
             }

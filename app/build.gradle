@@ -55,8 +55,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2218
-            versionName "2.2.18"
+            versionCode 2219
+            versionName "2.2.19"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -67,7 +67,7 @@ android {
 
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "Quantum_v${variant.versionName}.apk"
+                    outputFileName = "Resonant_Console_${variant.versionName}.apk"
                 }
             }
         }
