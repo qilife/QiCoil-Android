@@ -608,12 +608,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(album)
                 } else {
                     if (album.tier_id == 3
-                        && preference(applicationContext).isHighQuantum
+                        && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)
                     ) {
                         converted.add(album)
                     }
                     if (album.tier_id == 4
-                        && preference(applicationContext).isInnerCircle
+                        && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)
                     ) {
                         converted.add(album)
                     }
