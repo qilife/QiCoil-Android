@@ -74,8 +74,6 @@ class PlayerService : Service() {
     private var isShuffle: Boolean = false
 
     private var mDuration: Long = 0
-    private var mMultiPlay: Int = 1
-    private var mPart: Int = 1
     private var playPosition: Long = 0
     private var isRepeatAll = false
 
@@ -102,17 +100,17 @@ class PlayerService : Service() {
 
         if (event?.javaClass == PlayerSeek::class.java) {
             val seek = event as PlayerSeek
-            var seekPosition = seek.position
+            val seekPosition = seek.position
 
-            if (seekPosition != null) {
-                mPart = ceil(seekPosition / 300000.0).toInt()
-            }
-
-            if (seekPosition != null) {
-                if (seekPosition > 300000) {
-                    seekPosition -= ((mPart - 1) * 300000)
-                }
-            }
+//            if (seekPosition != null) {
+//                mPart = ceil(seekPosition / 300000.0).toInt()
+//            }
+//
+//            if (seekPosition != null) {
+//                if (seekPosition > 300000) {
+//                    seekPosition -= ((mPart - 1) * 300000)
+//                }
+//            }
 
             //todo remake this ugly fading
             exoPlayer?.volume = 0F
@@ -209,9 +207,6 @@ class PlayerService : Service() {
 
                     var position = exoPlayer?.currentPosition!!
                     if (position < 0) position = 0
-                    if (mPart > 1) {
-                        position += (300000 * (mPart - 1))
-                    }
 
                     currentPosition.postValue(position)
 
@@ -261,7 +256,7 @@ class PlayerService : Service() {
 
                     val track = musicRepository.getCurrent()
                     mDuration = track.duration
-                    mMultiPlay = track.multiplay
+//                    mMultiPlay = track.multiplay
 
                     updateMetadataFromTrack(track)
 
@@ -352,7 +347,7 @@ class PlayerService : Service() {
                 val track = if (isMultiPlay) {
                     musicRepository.getCurrent()
                 } else {
-                    mPart = 1
+//                    mPart = 1
                     if (isShuffle) {
                         musicRepository.getRandom()
                     } else {
@@ -361,7 +356,7 @@ class PlayerService : Service() {
                 }
 
                 mDuration = track.duration
-                mMultiPlay = track.multiplay
+//                mMultiPlay = track.multiplay
 
                 updateMetadataFromTrack(track)
                 refreshNotificationAndForegroundStatus(currentState)
@@ -370,7 +365,7 @@ class PlayerService : Service() {
 
             override fun onSkipToPrevious() {
                 playPosition = 0
-                mPart = 1
+//                mPart = 1
 
                 val track: MusicRepository.Track = if (isShuffle) {
                     musicRepository.getRandom()
@@ -379,7 +374,7 @@ class PlayerService : Service() {
                 }
 
                 mDuration = track.duration
-                mMultiPlay = track.multiplay
+//                mMultiPlay = track.multiplay
 
                 updateMetadataFromTrack(track)
                 refreshNotificationAndForegroundStatus(currentState)
@@ -448,15 +443,15 @@ class PlayerService : Service() {
         override fun onLoadingChanged(isLoading: Boolean) {}
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
-                val current = musicRepository.getCurrent()
-                val multiplay = current.multiplay
-                if (multiplay > mPart) {
-                    mPart++
-                    isMultiPlay = true
-                } else {
-                    mPart = 1
-                    isMultiPlay = false
-                }
+//                val current = musicRepository.getCurrent()
+//                val multiplay = current.multiplay
+//                if (multiplay > mPart) {
+//                    mPart++
+//                    isMultiPlay = true
+//                } else {
+//                    mPart = 1
+//                    isMultiPlay = false
+//                }
 
                 if (musicRepository.isLastTrack() && !isRepeatAll) {
                     mediaSessionCallback.onStop()

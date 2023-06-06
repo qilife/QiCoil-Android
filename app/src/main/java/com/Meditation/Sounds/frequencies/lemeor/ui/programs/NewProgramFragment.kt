@@ -26,6 +26,7 @@ import com.Meditation.Sounds.frequencies.lemeor.trackIdForProgram
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.HIGHER_QUANTUM_TIER_ID
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.QUANTUM_TIER_ID
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
 import kotlinx.android.synthetic.main.fragment_new_program.*
@@ -159,7 +160,18 @@ class NewProgramFragment : Fragment() {
                             .replace(R.id.nav_host_fragment, ProgramDetailFragment.newInstance(program.id), ProgramDetailFragment().javaClass.simpleName)
                             .commit()
                 } else {
-                    startActivity(NewPurchaseActivity.newIntent(requireContext(), QUANTUM_TIER_ID, QUANTUM_TIER_ID,1))
+                    var trackAl: Track? = null
+                    program.records.forEach { r->
+                        mViewModel.getTrackById(r)?.let { track ->
+                            if (trackAl == null) {
+                                trackAl = track
+                                startActivity(NewPurchaseActivity.newIntent(requireContext(),
+                                    trackAl?.tier_id!!, trackAl?.tier_id!!, trackAl?.albumId!!))
+                            }
+                        }
+                    }
+
+//                    startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
                 }
             }
 

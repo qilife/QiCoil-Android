@@ -35,6 +35,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.ApiListener
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput
 import com.Meditation.Sounds.frequencies.feature.discover.DiscoverFragment
+import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -43,10 +44,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.downloadedTracks
-import com.Meditation.Sounds.frequencies.lemeor.hideKeyboard
-import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
-import com.Meditation.Sounds.frequencies.lemeor.selectedNaviFragment
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isFirstSync
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isHighQuantum
@@ -580,20 +577,43 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         //program search
         mProgramsSearchAdapter = ProgramsSearchAdapter(applicationContext, ArrayList())
-        mProgramsSearchAdapter!!.setOnClickListener(object : ProgramsSearchAdapter.Listener {
+        mProgramsSearchAdapter?.setOnClickListener(object : ProgramsSearchAdapter.Listener {
             override fun onProgramSearchClick(program: Program, i: Int) {
-                supportFragmentManager
+//                supportFragmentManager
+//                        .beginTransaction()
+//                        .setCustomAnimations(
+//                                R.anim.trans_right_to_left_in,
+//                                R.anim.trans_right_to_left_out
+//                        )
+//                        .replace(
+//                                R.id.nav_host_fragment,
+//                                ProgramDetailFragment.newInstance(program.id),
+//                                ProgramDetailFragment().javaClass.simpleName
+//                        )
+//                        .commit()
+
+                if (program.isUnlocked) {
+                    if (isTrackAdd && trackIdForProgram != -1) {
+                        val db = DataBase.getInstance(this@NavigationActivity)
+                        val programDao = db.programDao()
+
+                        GlobalScope.launch {
+                            val p = programDao.getProgramById(program.id)
+                            p?.records?.add(trackIdForProgram!!)
+                            p?.let { it1 -> programDao.updateProgram(it1) }
+                        }
+                    }
+
+                    supportFragmentManager
                         .beginTransaction()
-                        .setCustomAnimations(
-                                R.anim.trans_right_to_left_in,
-                                R.anim.trans_right_to_left_out
-                        )
-                        .replace(
-                                R.id.nav_host_fragment,
-                                ProgramDetailFragment.newInstance(program.id),
-                                ProgramDetailFragment().javaClass.simpleName
-                        )
+                        .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out, R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
+                        .replace(R.id.nav_host_fragment, ProgramDetailFragment.newInstance(program.id), ProgramDetailFragment().javaClass.simpleName)
                         .commit()
+                } else {
+                    startActivity(NewPurchaseActivity.newIntent(this@NavigationActivity,
+                        NewPurchaseActivity.QUANTUM_TIER_ID,
+                        NewPurchaseActivity.QUANTUM_TIER_ID,1))
+                }
             }
         })
         search_programs_recycler.adapter = mProgramsSearchAdapter

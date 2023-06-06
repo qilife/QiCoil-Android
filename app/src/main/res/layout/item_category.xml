@@ -8,7 +8,7 @@
 
     <com.Meditation.Sounds.frequencies.views.CustomFontTextView
         android:id="@+id/item_name"
-        android:layout_width="160dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/bg_tab_albums_basic"

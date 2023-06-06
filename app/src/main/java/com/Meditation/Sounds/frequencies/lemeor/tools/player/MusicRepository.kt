@@ -40,6 +40,7 @@ class MusicRepository(private val data: List<Track>) {
     }
 
     class Track(
+            val trackId: Int,
             val title: String,
             val artist: String,
             val album: Album,

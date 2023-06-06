@@ -239,6 +239,14 @@ class ProgramDetailFragment : Fragment() {
                 mTracks = tracks
                 mTrackAdapter?.setData(tracks)
 
+                if (currentTrack.value != null) {
+                    val track = currentTrack.value
+                    val indexSelected = tracks.indexOfFirst { it.id == track?.trackId }
+                    if (indexSelected >= 0){
+                        mTrackAdapter?.setSelected(indexSelected)
+                    }
+                }
+
                 if (!isDownloaded) {
                     program_play.text = getString(R.string.btn_download)
                 } else {
@@ -325,7 +333,7 @@ class ProgramDetailFragment : Fragment() {
                 Log.i("fileduration","d-->"+getDuration(file))
                 val multiplay = track?.duration!! / 300000
 
-                data.add(MusicRepository.Track(track.name, t.album?.name!!, t.album!!, R.drawable.launcher, uri!!, track.duration, 0, multiplay.toInt()))
+                data.add(MusicRepository.Track(track.id, track.name, t.album?.name!!, t.album!!, R.drawable.launcher, uri!!, track.duration, 0, multiplay.toInt()))
             }
 
             trackList = data

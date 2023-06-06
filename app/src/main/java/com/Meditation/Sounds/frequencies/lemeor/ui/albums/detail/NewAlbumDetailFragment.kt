@@ -32,6 +32,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
+import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
@@ -72,7 +73,6 @@ class NewAlbumDetailFragment : Fragment() {
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
             downloadedTracks = null
-
             GlobalScope.launch {
                 var isDownloaded = true
 
@@ -213,6 +213,14 @@ class NewAlbumDetailFragment : Fragment() {
         })
         album_tracks_recycler.adapter = mTrackAdapter
 
+        if (currentTrack.value != null) {
+            val track = currentTrack.value
+            val indexSelected = album.tracks.indexOfFirst { it.id == track?.trackId }
+            if (indexSelected >= 0){
+                mTrackAdapter?.setSelected(indexSelected)
+            }
+        }
+
         GlobalScope.launch {
             var isDownloaded = true
 
@@ -342,6 +350,7 @@ class NewAlbumDetailFragment : Fragment() {
                         val multiplay = track?.duration!! / 300000
                         data.add(
                             MusicRepository.Track(
+                                it.id,
                                 it.name,
                                 album.name,
                                 album,
