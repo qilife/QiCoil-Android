@@ -178,7 +178,6 @@ class ProgramDetailFragment : Fragment() {
         program_back.setOnClickListener { onBackPressed() }
 
         program_name.text = program.name
-        program_time.text = getString(R.string.total_time, getConvertedTime((program.records.size * 300000).toLong()))
 
         program_play.setOnClickListener {
             if (tracks.size == 0) {
@@ -214,7 +213,7 @@ class ProgramDetailFragment : Fragment() {
                     tracks.add(track)
                 }
             }
-
+            program_time.text = getString(R.string.total_time, getConvertedTime((tracks.size * 300000).toLong()))
             var isDownloaded = true
             tracks.forEach {
                 val album = dao.getAlbumById(it.albumId)

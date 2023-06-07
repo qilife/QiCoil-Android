@@ -17,6 +17,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
@@ -160,18 +161,19 @@ class NewProgramFragment : Fragment() {
                             .replace(R.id.nav_host_fragment, ProgramDetailFragment.newInstance(program.id), ProgramDetailFragment().javaClass.simpleName)
                             .commit()
                 } else {
-                    var trackAl: Track? = null
+                    var album: Album? = null
+                    val tracks: ArrayList<Track> = ArrayList()
+
                     program.records.forEach { r->
-                        mViewModel.getTrackById(r)?.let { track ->
-                            if (trackAl == null) {
-                                trackAl = track
-                                startActivity(NewPurchaseActivity.newIntent(requireContext(),
-                                    trackAl?.tier_id!!, trackAl?.tier_id!!, trackAl?.albumId!!))
-                            }
+                        mViewModel.getTrackById(r)?.let { track -> tracks.add(track) }
+                    }
+                    tracks.forEach { t->
+                        val temp_album = mViewModel.getAlbumById(t.albumId);
+                        if (temp_album?.isUnlocked==false && album == null) {
+                            album = temp_album
+                            startActivity(NewPurchaseActivity.newIntent(requireContext(), temp_album.category_id, temp_album.tier_id, temp_album.id))
                         }
                     }
-
-//                    startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
                 }
             }
 
