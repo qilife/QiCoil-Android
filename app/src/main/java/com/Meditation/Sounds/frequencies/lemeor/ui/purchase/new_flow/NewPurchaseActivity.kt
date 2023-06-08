@@ -89,7 +89,14 @@ class NewPurchaseActivity : AppCompatActivity() {
                     }
                 }
 
-                albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
+                albumDao.getAlbumsByTierId(tierId)?.let {
+                    if (tierId == 8) {
+                        albumList.addAll(it.filter { it.category_id == categoryId })
+                    } else {
+                        albumList.addAll(it)
+                    }
+
+                }
                 tierDao.getTierNameById(tierId)?.let { screenName = it }
             } else {
                 if (tierId == QUANTUM_TIER_ID) {
@@ -131,19 +138,39 @@ class NewPurchaseActivity : AppCompatActivity() {
         purchase_continue.setOnClickListener {
             if (BuildConfig.IS_FREE) {
                 val bottomSheetWebView = BottomSheetWebView(this@NewPurchaseActivity)
-                // 1 quantum, 2 rife, higher 3, inner 4
+                // 1 quantum, 2 rife, higher 3, inner 4, special 8
                 when (tierId) {
                     4 -> {
-                        bottomSheetWebView.showWithUrl("https://www.qilifeinnercircle.com/")
+                        bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/inner-circle-members-area")
                     }
                     1 -> {
-                        bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/best-meditation-frequencies/products/ultimate-quantum-frequency-bundle")
+                        bottomSheetWebView.showWithUrl("https://qilifestore.com/products/ultimate-quantum-frequency-bundle")
                     }
                     3 -> {
-                        bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/best-meditation-frequencies/products/ultimate-higher-quantum-frequencies-collection")
+                        bottomSheetWebView.showWithUrl("https://qilifestore.com/products/ultimate-higher-quantum-frequencies-collection")
+                    }
+                    8 -> {
+                        when(categoryId){
+                            //Genesis
+                            48 -> {
+                                bottomSheetWebView.showWithUrl("https://qilifestore.com/products/genesis-frequency-pack")
+                            }
+                            //Parasite
+                            53 -> {
+                                bottomSheetWebView.showWithUrl("https://qilifestore.com/products/parasite-detox-frequency-pack")
+                            }
+                            //Brain Biohacking
+                            54 -> {
+                                bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/braintap-brain-training-for-sleep-focus-peak-performance/products/braintap-frequency-collection")
+                            }
+                            //Lyme Remission
+                            56 -> {
+                                bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/lyme-remission-with-qi-coil-rife-machine/products/lyme-remission-frequency-pack")
+                            }
+                        }
                     }
                     else -> {
-                        bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/best-meditation-frequencies/products/professional-rife-frequency-collection-mp3-466-audio-files")
+                        bottomSheetWebView.showWithUrl("https://qilifestore.com/products/professional-rife-frequency-collection-mp3-466-audio-files")
                     }
                 }
             } else {

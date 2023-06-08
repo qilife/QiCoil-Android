@@ -214,7 +214,7 @@
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
                         android:layout_gravity="center"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">
                         <RelativeLayout
@@ -283,7 +283,7 @@
                         android:id="@+id/btn_guest"
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_gravity="center"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">

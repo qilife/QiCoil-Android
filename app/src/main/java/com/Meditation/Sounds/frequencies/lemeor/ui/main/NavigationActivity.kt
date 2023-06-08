@@ -491,7 +491,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        askRating()
+//        askRating()
         hideKeyboard(applicationContext, album_search)
         when (item.itemId) {
             R.id.navigation_albums -> {
@@ -659,12 +659,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     converted.add(track)
                 } else {
                     if (track.tier_id == 3
-                        && preference(applicationContext).isHighQuantum
+                        && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)
                     ) {
                         converted.add(track)
                     }
                     if (track.tier_id == 4
-                        && preference(applicationContext).isInnerCircle
+                        && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)
                     ) {
                         converted.add(track)
                     }
@@ -682,7 +682,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         }
 
         programsSearch.observe(this) {
-            if (it.size != 0) {
+            if (it.isNotEmpty()) {
                 lblheaderprograms.visibility = View.VISIBLE
                 lblnoresult.visibility = View.GONE
             } else {
