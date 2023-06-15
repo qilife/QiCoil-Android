@@ -222,7 +222,7 @@ fun syncTracks(db: DataBase, response: HomeResponse?) {
         if (BuildConfig.IS_FREE) {
             responseData.forEach {
                 db.trackDao().setTrackUnlocked(true, it.id)
-                db.trackDao().setTrackDownloaded(true, it.id)
+//                db.trackDao().setTrackDownloaded(true, it.id)
             }
         }
     }

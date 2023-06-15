@@ -1,14 +1,12 @@
 package com.Meditation.Sounds.frequencies.lemeor
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Environment
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.Meditation.Sounds.frequencies.BuildConfig
@@ -66,16 +64,16 @@ fun loadImage(context: Context, imageView: ImageView, album: Album) {
     val assetsPath = "file:///android_asset/albums/" + album.image
 
     val requestOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .signature(ObjectKey(album.updated_at))
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .signature(ObjectKey(album.updated_at))
     Glide.with(context)
-            .load(getImageUrl(album))
-            .thumbnail(Glide.with(context).load(assetsPath).apply(RequestOptions().override(300, 300)))
-            .apply(requestOptions)
-            .dontTransform()
-            .dontAnimate()
-            .placeholder(R.drawable.ic_album_placeholder)
-            .into(imageView)
+        .load(getImageUrl(album))
+        .thumbnail(Glide.with(context).load(assetsPath).apply(RequestOptions().override(300, 300)))
+        .apply(requestOptions)
+        .dontTransform()
+        .dontAnimate()
+        .placeholder(R.drawable.ic_album_placeholder)
+        .into(imageView)
 }
 
 fun getImageUrl(album: Album): String {
@@ -102,7 +100,7 @@ fun getTrackUrl(album: Album?, track: Track): String {
 @RequiresApi(Build.VERSION_CODES.KITKAT)
 fun getPreloadedSaveDir(context: Context, track: Track, album: Album): String {
 
-    if(BuildConfig.IS_FREE) {
+    if (BuildConfig.IS_FREE) {
         return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 "tracks" +
@@ -110,9 +108,7 @@ fun getPreloadedSaveDir(context: Context, track: Track, album: Album): String {
                 album.audio_folder +
                 File.separator +
                 track.filename.replace("%", "")
-    }
-    else
-    {
+    } else {
         return context.getExternalFilesDir(null).toString() +
                 File.separator +
                 ".tracks" +
@@ -130,7 +126,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
 //    val newFolder = File(context.getExternalFilesDir(
 //        Environment.DIRECTORY_DOCUMENTS).toString(), ".tracks")
 //    val success = oldFolder.renameTo(newFolder)
-    if(BuildConfig.IS_FREE) {
+    if (BuildConfig.IS_FREE) {
         return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
                 File.separator +
                 ".tracks" +
@@ -138,8 +134,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
                 album.audio_folder +
                 File.separator +
                 track.filename.replace("%", "")
-    }
-    else{
+    } else {
         return context.getExternalFilesDir(null).toString() +
                 File.separator +
                 ".tracks" +
@@ -150,7 +145,7 @@ fun getSaveDir(context: Context, track: Track, album: Album): String {
     }
 }
 
-fun getConvertedTime(millis: Long) : String {
+fun getConvertedTime(millis: Long): String {
     //Log.i("milisecond","s-->"+millis);
     val second: Long = millis / 1000 % 60
     val minute: Long = millis / (1000 * 60) % 60
@@ -165,26 +160,29 @@ fun getConvertedTime(millis: Long) : String {
 
 fun showAlert(context: Context, content: String) {
     AlertDialog.Builder(context)
-            .setMessage(content)
-            .setPositiveButton(R.string.txt_ok, null)
-            .show()
+        .setMessage(content)
+        .setPositiveButton(R.string.txt_ok, null)
+        .show()
 }
 
 fun showAlertInfo(context: Context, e: Exception) {
     when (e) {
-        is ApiException -> showAlert(context, context.getString(R.string.err_unexpected_exception_api))
+        is ApiException -> showAlert(
+            context,
+            context.getString(R.string.err_unexpected_exception_api)
+        )
         is IOException -> showAlert(context, context.getString(R.string.err_network_available))
         else -> showAlert(context, context.getString(R.string.err_unexpected_exception))
     }
 }
 
-fun convertedTrackName(album: Album, track: Track) : String {
+fun convertedTrackName(album: Album, track: Track): String {
     return track.name.replace(album.name, "")
-            .replace(" - ", "")
-            .replace("Life Force the Source of Qi ", "")
+        .replace(" - ", "")
+        .replace("Life Force the Source of Qi ", "")
 }
 
-fun isFlashSale(context: Context) : Boolean {
+fun isFlashSale(context: Context): Boolean {
     return PreferenceHelper.getFlashSaleTime(context) > 0
 }
 
@@ -192,6 +190,4 @@ fun hideKeyboard(context: Context, view: CustomFontEditText) {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
-
-
 

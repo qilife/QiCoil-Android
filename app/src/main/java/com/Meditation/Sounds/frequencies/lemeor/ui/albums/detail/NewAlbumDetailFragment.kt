@@ -281,6 +281,10 @@ class NewAlbumDetailFragment : Fragment() {
                     val preloaded = File(getPreloadedSaveDir(requireContext(), t, album))
 
                     if (!file.exists() && !preloaded.exists()) {
+                        GlobalScope.launch {
+                            trackDao.isTrackDownloaded(true, track?.id ?: 0)
+                        }
+                        track?.isDownloaded = false
                         track?.let { tracks.add(it) }
                     } else {
                         if (file.length() == 0L) {
@@ -347,7 +351,7 @@ class NewAlbumDetailFragment : Fragment() {
                     // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
                     //Log.e("DURATION",getDuration(file).toString())
                     if (track != null) {
-                        val multiplay = track?.duration!! / 300000
+                        val multiplay = track.duration / 300000
                         data.add(
                             MusicRepository.Track(
                                 it.id,

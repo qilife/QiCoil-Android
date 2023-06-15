@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -54,6 +55,7 @@ class DownloaderActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloader)
@@ -65,16 +67,28 @@ class DownloaderActivity : AppCompatActivity() {
         if (intent != null) {
 
             tracks = intent.getParcelableArrayListExtra(EXTRA_TRACKS_LIST)!!
-            if(Constants.tracks.size == 0)
-            {
+            if(Constants.tracks.size == 0) {
                 Constants.tracks.addAll(tracks)
-            }
-            else {
+            } else {
                 val difference = tracks.toSet().minus(Constants.tracks.toSet())
                 Constants.tracks.addAll(difference)
             }
+
+            val tmpTracks = ArrayList<Track>()
+            Constants.tracks.forEach {
+                if (!it.isDownloaded) {
+                    tmpTracks.add(it)
+                }
+            }
+            Constants.tracks.clear()
+            Constants.tracks.addAll(tmpTracks)
+
             mDownloaderAdapter?.setData(Constants.tracks)
+
             downloader_tv_quantity.text = getString(R.string.downloader_quantity, 1, Constants.tracks.size)
+
+            EventBus.getDefault().post(DownloadCountInfo(Constants.tracks.size))
+
         }
 
         checkStoragePermission()

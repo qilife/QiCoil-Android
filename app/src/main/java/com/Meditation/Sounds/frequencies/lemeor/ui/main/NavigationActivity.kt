@@ -51,6 +51,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isInnerCi
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isLogged
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isShowDisclaimer
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.preference
+import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadCountInfo
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadInfo
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
@@ -73,10 +74,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
 import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.Meditation.Sounds.frequencies.tasks.BaseTask
 import com.Meditation.Sounds.frequencies.tasks.GetFlashSaleTask
-import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.QcAlarmManager
-import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
-import com.Meditation.Sounds.frequencies.utils.Utils
+import com.Meditation.Sounds.frequencies.utils.*
+import com.Meditation.Sounds.frequencies.utils.CopyAssets.copyAssetFolder
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -134,6 +133,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     download.total
             )
             viewGroupDownload.visibility = View.VISIBLE
+        }
+
+        if (event?.javaClass == DownloadCountInfo::class.java) {
+            mTvDownloadPercent.text = getString(
+                R.string.downloader_quantity_collapse,
+                1,
+                (event as DownloadCountInfo).total
+            )
         }
 
         if (event == DownloadService.DOWNLOAD_FINISH) {
@@ -310,6 +317,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         syncData()
 
         initSearch()
+
+        if (BuildConfig.IS_FREE) {
+            assets.copyAssetFolder(
+                "tracks", getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
+                        File.separator +
+                        ".tracks"
+            )
+        }
 
         if (!preference(applicationContext).isLogged) {
             startActivity(Intent(applicationContext, AuthActivity::class.java))
