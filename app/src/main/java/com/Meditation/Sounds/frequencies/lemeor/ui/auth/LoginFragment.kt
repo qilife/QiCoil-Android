@@ -98,7 +98,7 @@ class LoginFragment : Fragment() {
 //        mEdEmailSignIn.setText("lailani.raphaell@gmail.com")
 //        mEdPasswordSignIn.setText("lailani1234")
             mEdEmailSignIn.setText("tester02@yopmail.com")
-             mEdPasswordSignIn.setText("123456789")
+             mEdPasswordSignIn.setText("12345678")
         }
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()

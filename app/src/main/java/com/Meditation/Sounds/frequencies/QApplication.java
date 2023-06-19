@@ -39,6 +39,8 @@ public class QApplication extends MultiDexApplication implements ApiListener {
     private int APP_VERSION = 12;
     private ArrayList<BaseActivity> mStacksActivity;
 
+    public static boolean isActivityDownloadStarted = false;
+
     @Override
     public void onCreate() {
         super.onCreate();

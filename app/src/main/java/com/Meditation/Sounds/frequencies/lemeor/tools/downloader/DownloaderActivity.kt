@@ -1,24 +1,31 @@
 package com.Meditation.Sounds.frequencies.lemeor.tools.downloader
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.downloadErrorTracks
+import com.Meditation.Sounds.frequencies.lemeor.downloadedTracks
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService.Companion.DOWNLOAD_FINISH
 import com.Meditation.Sounds.frequencies.utils.Constants
 import kotlinx.android.synthetic.main.activity_downloader.*
+import kotlinx.android.synthetic.main.activity_navigation.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -41,6 +48,7 @@ class DownloaderActivity : AppCompatActivity() {
     private var mDownloaderAdapter: DownloaderAdapter? = null
     private var tracks = ArrayList<Track>()
 
+    @SuppressLint("NotifyDataSetChanged")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event?.javaClass == DownloadInfo::class.java) {
@@ -49,9 +57,24 @@ class DownloaderActivity : AppCompatActivity() {
             updateUI(download)
         }
 
+        if (event?.javaClass == DownloadErrorEvent::class.java && QApplication.isActivityDownloadStarted) {
+            downloadedTracks = null
+            downloadErrorTracks = null
+            Constants.tracks.clear()
+            androidx.appcompat.app.AlertDialog.Builder(this@DownloaderActivity)
+                .setTitle(R.string.download_error)
+                .setMessage(getString(R.string.download_error_message))
+                .setPositiveButton(R.string.txt_ok,
+                    DialogInterface.OnClickListener { p0, p1 -> this@DownloaderActivity.finish() }).show()
+        }
+
         if (event == DOWNLOAD_FINISH) {
             Constants.tracks.clear()
             finish()
+        }
+
+        if (event?.javaClass == DownloadTrackErrorEvent::class.java) {
+            mDownloaderAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -59,7 +82,7 @@ class DownloaderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloader)
-
+        QApplication.isActivityDownloadStarted = true
         EventBus.getDefault().register(this)
 
         initUI()
@@ -110,7 +133,7 @@ class DownloaderActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        QApplication.isActivityDownloadStarted = false
         EventBus.getDefault().unregister(this)
     }
 

@@ -33,6 +33,7 @@ const val FAVORITES = "Favorites"
 
 var trackList: ArrayList<MusicRepository.Track>? = null
 var downloadedTracks: ArrayList<Track>? = null
+var downloadErrorTracks: ArrayList<String>? = null
 
 val currentTrack = MutableLiveData<MusicRepository.Track>()
 val currentTrackIndex = MutableLiveData<Int>()

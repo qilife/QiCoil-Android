@@ -19,6 +19,9 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         return apiHelper.getApkList()
     }
 
+    suspend fun reportTrack(trackId: Int, trackUrl: String): Status {
+        return apiHelper.reportTrack(trackId, trackUrl)
+    }
     fun getHome(user_id: String) = performGetOperation(
             databaseQuery = { localData.homeDao().getHome() },
             networkCall = { apiHelper.getHome(user_id) },

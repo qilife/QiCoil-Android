@@ -339,4 +339,6 @@
 
     <string name="share_message">I found this new meditation app Qi Coil \n https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies</string>
     <!-- <string name="facebook_app_id">554730859218975</string> -->
+    <string name="download_error">Download Error</string>
+    <string name="download_error_message">Some files that cannot be downloaded. Try again later!</string>
 </resources>

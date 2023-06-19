@@ -6,15 +6,19 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.downloadErrorTracks
 import com.Meditation.Sounds.frequencies.lemeor.downloadedTracks
 import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
 import com.Meditation.Sounds.frequencies.lemeor.getTrackUrl
@@ -31,6 +35,7 @@ import okhttp3.OkHttpClient
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.collections.set
 
 
@@ -56,6 +61,7 @@ class DownloadService : Service() {
     private var rxFetch: Fetch? = null
 
     private var tracks = ArrayList<Track>()
+    private var errorTracks = ArrayList<String>()
 
     private val fileProgressMap: HashMap<Int, Int> = HashMap()
     private var trackDao: TrackDao? = null
@@ -120,12 +126,13 @@ class DownloadService : Service() {
         rxFetch!!.removeAll()
         rxFetch!!.cancelAll()
         fileProgressMap.clear()
+        errorTracks = ArrayList()
     }
 
     private fun getOkHttpDownloader(): Downloader<*, *> {
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(20000L, TimeUnit.MILLISECONDS) //increase read timeout as needed
-            .connectTimeout(20000L, TimeUnit.MILLISECONDS) //increase connection timeout as needed
+            .connectTimeout(15000L, TimeUnit.MILLISECONDS) //increase connection timeout as needed
             .build()
         return OkHttpDownloader(
             okHttpClient,
@@ -137,6 +144,7 @@ class DownloadService : Service() {
         super.onDestroy()
 
         downloadedTracks = null
+        downloadErrorTracks = null
 
         rxFetch?.deleteAllInGroupWithStatus(
             tracks[0].name.hashCode(), listOf(
@@ -165,6 +173,14 @@ class DownloadService : Service() {
         }
     }
 
+    private fun checkDoneDownloaded(){
+        val totalFiles: Int = fileProgressMap.size
+        val completedFiles: Int = getCompletedFileCount()
+        if ((completedFiles + errorTracks.size) == totalFiles && errorTracks.size > 0) {
+            EventBus.getDefault().post(DownloadErrorEvent(errorTracks.size))
+        }
+    }
+
     private fun getCompletedFileCount(): Int {
         var count = 0
         val ids: Set<Int> = fileProgressMap.keys
@@ -181,7 +197,7 @@ class DownloadService : Service() {
     private fun enqueueFiles() {
         if (isNetworkAvailable()) {
             val requestList: List<Request> = getRequests()
-
+            downloadErrorTracks = ArrayList()
             requestList.forEach { it.groupId = tracks[0].name.hashCode() }
 
             rxFetch?.enqueue(requestList) { updatedRequests: List<Pair<Request, Error?>> ->
@@ -201,12 +217,12 @@ class DownloadService : Service() {
 
         override fun onError(download: Download, error: Error, throwable: Throwable?) {
             super.onError(download, error, throwable)
-
-            Toast.makeText(
-                applicationContext,
-                "Download error: " + error.throwable?.message,
-                Toast.LENGTH_LONG
-            ).show()
+            if (!errorTracks.contains(download.tag.toString())) {
+                errorTracks.add(download.tag.toString())
+                downloadErrorTracks?.add(download.tag.toString())
+                EventBus.getDefault().post(DownloadTrackErrorEvent(id = download.tag?.toInt() ?: 0, download.url))
+            }
+            checkDoneDownloaded()
         }
 
         override fun onProgress(
@@ -244,6 +260,12 @@ class DownloadService : Service() {
                         }
                     }
                 }
+
+                if (downloadErrorTracks?.contains(download.tag.toString()) == true) {
+                    downloadErrorTracks?.remove(download.tag.toString())
+                }
+
+                checkDoneDownloaded()
             }
 
             fileProgressMap[download.id] = download.progress

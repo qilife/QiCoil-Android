@@ -22,6 +22,7 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
 
     interface CategoriesPagerListener {
         fun onAlbumDetails(album: Album)
+        fun onLongAlbumDetails(album: Album)
     }
 
     private var mListener: CategoriesPagerListener? = null
@@ -88,5 +89,9 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
 
     override fun onStartAlbumDetail(album: Album) {
         mListener?.onAlbumDetails(album)
+    }
+
+    override fun onStartLongAlbumDetail(album: Album) {
+        mListener?.onLongAlbumDetails(album)
     }
 }

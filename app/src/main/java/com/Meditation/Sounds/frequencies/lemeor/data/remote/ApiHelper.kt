@@ -49,4 +49,6 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
             name: String?,
             password_confirmation: String
     ) = apiService.updateProfile(email, password_old, password, name, password_confirmation)
+
+    suspend fun reportTrack(trackId: Int, trackUrl: String) = apiService.reportTrack(trackId, trackUrl)
 }

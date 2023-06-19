@@ -76,5 +76,8 @@ interface ApiService {
 
     @GET(ApiConfig.API_USER_DELETE)
     suspend fun deleteuser(@Query("password") password: String): Status
+
+    @GET(ApiConfig.API_SUBMIT_TRACK_ERROR)
+    suspend fun reportTrack(@Query("track_id") track_id: Int, @Query("track_url") track_url: String ): Status
 }
 

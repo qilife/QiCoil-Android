@@ -58,6 +58,7 @@ class AlbumsRecyclerFragment : Fragment() {
 
     interface AlbumsRecyclerListener {
         fun onStartAlbumDetail(album: Album)
+        fun onStartLongAlbumDetail(album: Album)
     }
 
     private var mListener: AlbumsRecyclerListener? = null
@@ -136,6 +137,10 @@ class AlbumsRecyclerFragment : Fragment() {
             override fun onClickItem(album: Album) {
                 startAlbumDetails(album)
             }
+
+            override fun onLongClickItem(album: Album) {
+               startLongAlbumDetails(album)
+            }
         })
 
       /*  if (Utils.isConnectedToNetwork(activity)) {
@@ -168,9 +173,13 @@ class AlbumsRecyclerFragment : Fragment() {
                         mAlbumAdapter = AlbumsAdapter(requireContext(), mListAlbum, isRegenerate, true)
                         albums_recycler_view.adapter = mAlbumAdapter
 
-                        mAlbumAdapter!!.setOnClickListener(object : AlbumsAdapter.Listener {
+                        mAlbumAdapter?.setOnClickListener(object : AlbumsAdapter.Listener {
                             override fun onClickItem(album: Album) {
                                 startAlbumDetails(album)
+                            }
+
+                            override fun onLongClickItem(album: Album) {
+                                startLongAlbumDetails(album)
                             }
                         })
                     }
@@ -189,8 +198,12 @@ class AlbumsRecyclerFragment : Fragment() {
         if (album.isUnlocked) {
             mListener?.onStartAlbumDetail(album)
         } else {
-                startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
+            startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
         }
+    }
+
+    fun startLongAlbumDetails(album: Album) {
+        mListener?.onStartLongAlbumDetail(album)
     }
 
     private fun ShareOnTwitter() {

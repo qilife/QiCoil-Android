@@ -36,6 +36,10 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         return repository.getApkList()
     }
 
+    suspend fun reportTrack(trackId: Int, trackUrl: String): Status {
+        return repository.reportTrack(trackId, trackUrl)
+    }
+
     fun getAlbumById(id: Int): Album? {
         return repository.getAlbumById(id)
     }
