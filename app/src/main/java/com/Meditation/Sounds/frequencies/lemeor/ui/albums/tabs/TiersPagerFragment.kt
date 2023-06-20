@@ -2,9 +2,11 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -20,6 +22,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_albums_pager.*
 
 class TiersPagerFragment : Fragment() {
+    var tiersPagerAdapter: TiersPagerAdapter? = null
 
     interface OnTiersFragmentListener {
         fun onRefreshTiers()
@@ -66,16 +69,16 @@ class TiersPagerFragment : Fragment() {
                         DataBase.getInstance(requireContext()))
         ).get(AlbumsViewModel::class.java)
 
-        mViewModel.tiers?.observe(viewLifecycleOwner) {
-            val tiersPagerAdapter = TiersPagerAdapter(
-                activity as NavigationActivity,
-                childFragmentManager,
-                it as ArrayList<Tier>
-            )
-            tiers_view_pager.adapter = tiersPagerAdapter
+        tiersPagerAdapter = TiersPagerAdapter(
+            activity as NavigationActivity,
+            childFragmentManager
+        )
+        tiers_view_pager.adapter = tiersPagerAdapter
+        tiers_tabs.setupWithViewPager(tiers_view_pager)
 
-            tiers_view_pager.setCurrentItem(tierPosition, true)
-            tiers_tabs.setupWithViewPager(tiers_view_pager)
+        mViewModel.tiers?.observe(viewLifecycleOwner) {
+            tiersPagerAdapter?.setData(it as ArrayList<Tier>)
+//            tiers_view_pager.setCurrentItem(tierPosition, false)
         }
 
         tiers_tabs.addOnTabSelectedListener(object : OnTabSelectedListener {

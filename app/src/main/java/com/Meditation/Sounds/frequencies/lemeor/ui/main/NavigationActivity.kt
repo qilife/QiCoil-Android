@@ -452,7 +452,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         viewGroupDownload.setOnClickListener {
             if (downloadedTracks != null) {
-                startActivity(DownloaderActivity.newIntent(applicationContext, downloadedTracks!!))
+                startActivity(DownloaderActivity.newIntent(applicationContext, downloadedTracks!!, isViewDownload = true))
             }
         }
 

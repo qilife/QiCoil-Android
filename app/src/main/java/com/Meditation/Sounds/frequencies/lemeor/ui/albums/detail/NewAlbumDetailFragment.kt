@@ -89,10 +89,12 @@ class NewAlbumDetailFragment : Fragment() {
                 this@NewAlbumDetailFragment.isDownloaded = isDownloaded
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    if (!isDownloaded) {
-                        album_play.text = getString(R.string.btn_download)
-                    } else {
-                        album_play.text = getString(R.string.btn_play)
+                    if (album_play != null) {
+                        if (!isDownloaded) {
+                            album_play.text = getString(R.string.btn_download)
+                        } else {
+                            album_play.text = getString(R.string.btn_play)
+                        }
                     }
                 }
             }
@@ -244,10 +246,12 @@ class NewAlbumDetailFragment : Fragment() {
             this@NewAlbumDetailFragment.isDownloaded = isDownloaded
 
             CoroutineScope(Dispatchers.Main).launch {
-                if (!isDownloaded) {
-                    album_play.text = getString(R.string.btn_download)
-                } else {
-                    album_play.text = getString(R.string.btn_play)
+                if (album_play != null) {
+                    if (!isDownloaded) {
+                        album_play.text = getString(R.string.btn_download)
+                    } else {
+                        album_play.text = getString(R.string.btn_play)
+                    }
                 }
             }
         }

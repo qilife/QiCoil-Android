@@ -8,9 +8,10 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 
 class TiersPagerAdapter(
         private val activity: NavigationActivity,
-        fm: FragmentManager,
-        private val tiersList: ArrayList<Tier>
+        fm: FragmentManager
 ) : FragmentPagerAdapter(fm) {
+
+    private val tiersList: ArrayList<Tier> = arrayListOf()
 
     override fun getItem(position: Int): Fragment {
         return CategoriesPagerFragment.newInstance(tiersList[position].id, activity)
@@ -21,4 +22,10 @@ class TiersPagerAdapter(
     }
 
     override fun getCount(): Int { return tiersList.size }
+
+    fun setData(data: ArrayList<Tier>){
+        tiersList.clear()
+        tiersList.addAll(data)
+        notifyDataSetChanged()
+    }
 }

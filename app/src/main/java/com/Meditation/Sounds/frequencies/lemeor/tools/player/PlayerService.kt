@@ -139,21 +139,26 @@ class PlayerService : Service() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                NOTIFICATION_DEFAULT_CHANNEL_ID,
-                getString(R.string.notification_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(notificationChannel)
+            try {
+                val notificationChannel = NotificationChannel(
+                    NOTIFICATION_DEFAULT_CHANNEL_ID,
+                    getString(R.string.notification_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                val notificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(notificationChannel)
 
-            @Suppress("DEPRECATION") val notification = Builder(this, NOTIFICATION_DEFAULT_CHANNEL_ID)
-                .setContentTitle("")
-                .setNotificationSilent()
-                .setContentText("").build()
+                @Suppress("DEPRECATION") val notification =
+                    Builder(this, NOTIFICATION_DEFAULT_CHANNEL_ID)
+                        .setContentTitle("")
+                        .setNotificationSilent()
+                        .setContentText("").build()
 
-            startForeground((1..1000).random(), notification)
+                startForeground((1..1000).random(), notification)
+            } catch (_: Exception) {
+
+            }
 
             val audioAttributes: AudioAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -176,7 +181,7 @@ class PlayerService : Service() {
             MediaButtonReceiver::class.java
         )
 
-        val pendingIntent =  PendingIntent.getBroadcast(
+        val pendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             0,
             mediaButtonIntent,
@@ -253,7 +258,6 @@ class PlayerService : Service() {
                         ex.printStackTrace()
                         //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
                     }
-
                     val track = musicRepository.getCurrent()
                     mDuration = track.duration
 //                    mMultiPlay = track.multiplay
@@ -472,18 +476,22 @@ class PlayerService : Service() {
     }
 
     private fun refreshNotificationAndForegroundStatus(playbackState: Int) {
-        when (playbackState) {
-            PlaybackStateCompat.STATE_PLAYING -> {
-                startForeground(NOTIFICATION_ID, getNotification(playbackState))
+        try {
+            when (playbackState) {
+                PlaybackStateCompat.STATE_PLAYING -> {
+                    startForeground(NOTIFICATION_ID, getNotification(playbackState))
+                }
+                PlaybackStateCompat.STATE_PAUSED -> {
+                    NotificationManagerCompat.from(this@PlayerService)
+                        .notify(NOTIFICATION_ID, getNotification(playbackState))
+                    stopForeground(false)
+                }
+                else -> {
+                    stopForeground(true)
+                }
             }
-            PlaybackStateCompat.STATE_PAUSED -> {
-                NotificationManagerCompat.from(this@PlayerService)
-                    .notify(NOTIFICATION_ID, getNotification(playbackState))
-                stopForeground(false)
-            }
-            else -> {
-                stopForeground(true)
-            }
+        } catch (_: Exception) {
+
         }
     }
 

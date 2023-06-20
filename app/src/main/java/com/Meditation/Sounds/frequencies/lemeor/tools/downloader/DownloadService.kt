@@ -146,14 +146,16 @@ class DownloadService : Service() {
         downloadedTracks = null
         downloadErrorTracks = null
 
-        rxFetch?.deleteAllInGroupWithStatus(
-            tracks[0].name.hashCode(), listOf(
-                Status.NONE, Status.QUEUED, Status.DOWNLOADING, Status.PAUSED, Status.CANCELLED,
-                Status.FAILED, Status.REMOVED, Status.DELETED, Status.ADDED
+        if (tracks.isNotEmpty()) {
+            rxFetch?.deleteAllInGroupWithStatus(
+                tracks[0].name.hashCode(), listOf(
+                    Status.NONE, Status.QUEUED, Status.DOWNLOADING, Status.PAUSED, Status.CANCELLED,
+                    Status.FAILED, Status.REMOVED, Status.DELETED, Status.ADDED
+                )
             )
-        )
-        rxFetch?.removeListener(fetchListener)
-        rxFetch?.close()
+            rxFetch?.removeListener(fetchListener)
+            rxFetch?.close()
+        }
     }
 
     private fun updateUIWithProgress() {

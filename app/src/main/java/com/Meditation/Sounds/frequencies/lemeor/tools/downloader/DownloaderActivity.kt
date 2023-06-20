@@ -34,11 +34,13 @@ class DownloaderActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TRACKS_LIST = "extra_tracks_list"
+        const val EXTRA_VIEW_DOWNLOAD = "extra_view_download"
         private const val STORAGE_PERMISSION_CODE = 1001
 
-        fun newIntent(context: Context?, tracks: ArrayList<Track>): Intent {
+        fun newIntent(context: Context?, tracks: ArrayList<Track>, isViewDownload: Boolean = false): Intent {
             val intent = Intent(context, DownloaderActivity::class.java)
             intent.putParcelableArrayListExtra(EXTRA_TRACKS_LIST, tracks)
+            intent.putExtra(EXTRA_VIEW_DOWNLOAD, isViewDownload)
             return intent
         }
     }
@@ -47,6 +49,7 @@ class DownloaderActivity : AppCompatActivity() {
 
     private var mDownloaderAdapter: DownloaderAdapter? = null
     private var tracks = ArrayList<Track>()
+    private var isViewDownload = false
 
     @SuppressLint("NotifyDataSetChanged")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -88,15 +91,16 @@ class DownloaderActivity : AppCompatActivity() {
         initUI()
 
         if (intent != null) {
-
+            isViewDownload = intent.getBooleanExtra(EXTRA_VIEW_DOWNLOAD, false)
             tracks = intent.getParcelableArrayListExtra(EXTRA_TRACKS_LIST)!!
-            if(Constants.tracks.size == 0) {
-                Constants.tracks.addAll(tracks)
-            } else {
-                val difference = tracks.toSet().minus(Constants.tracks.toSet())
-                Constants.tracks.addAll(difference)
+            if (!isViewDownload) {
+                if(Constants.tracks.size == 0) {
+                    Constants.tracks.addAll(tracks)
+                } else {
+                    val difference = tracks.toSet().minus(Constants.tracks.toSet())
+                    Constants.tracks.addAll(difference)
+                }
             }
-
             val tmpTracks = ArrayList<Track>()
             Constants.tracks.forEach {
                 if (!it.isDownloaded) {
