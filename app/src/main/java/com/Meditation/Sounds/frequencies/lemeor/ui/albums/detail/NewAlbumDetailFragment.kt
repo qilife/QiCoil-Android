@@ -141,6 +141,7 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun onBackPressed() {
+        tierPositionSelected = tierPosition
         var fragment = selectedNaviFragment
         if (fragment == null) {
             fragment = TiersPagerFragment()

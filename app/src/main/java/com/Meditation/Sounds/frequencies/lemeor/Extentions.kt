@@ -55,6 +55,7 @@ var playProgramId: Int = -1
 var isMultiPlay: Boolean = false
 
 var tierPosition: Int = 0
+var tierPositionSelected: Int = 0
 
 var hashMapTiers: HashMap<Int, Int> = HashMap()
 var selectedNaviFragment: Fragment? = null

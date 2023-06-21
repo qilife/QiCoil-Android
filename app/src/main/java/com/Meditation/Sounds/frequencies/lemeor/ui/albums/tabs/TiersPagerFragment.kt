@@ -16,6 +16,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Tier
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.tierPosition
+import com.Meditation.Sounds.frequencies.lemeor.tierPositionSelected
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -78,11 +79,15 @@ class TiersPagerFragment : Fragment() {
 
         mViewModel.tiers?.observe(viewLifecycleOwner) {
             tiersPagerAdapter?.setData(it as ArrayList<Tier>)
-//            tiers_view_pager.setCurrentItem(tierPosition, false)
+            if (tierPositionSelected != 0) {
+                tiers_view_pager.setCurrentItem(tierPositionSelected, false)
+            }
         }
 
         tiers_tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) { tierPosition = tab.position }
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                tierPosition = tab.position
+            }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
