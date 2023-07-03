@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +36,11 @@ class DownloaderActivity : AppCompatActivity() {
         const val EXTRA_VIEW_DOWNLOAD = "extra_view_download"
         private const val STORAGE_PERMISSION_CODE = 1001
 
-        fun newIntent(context: Context?, tracks: ArrayList<Track>, isViewDownload: Boolean = false): Intent {
+        fun newIntent(
+            context: Context?,
+            tracks: ArrayList<Track>,
+            isViewDownload: Boolean = false
+        ): Intent {
             val intent = Intent(context, DownloaderActivity::class.java)
             intent.putParcelableArrayListExtra(EXTRA_TRACKS_LIST, tracks)
             intent.putExtra(EXTRA_VIEW_DOWNLOAD, isViewDownload)
@@ -68,7 +71,8 @@ class DownloaderActivity : AppCompatActivity() {
                 .setTitle(R.string.download_error)
                 .setMessage(getString(R.string.download_error_message))
                 .setPositiveButton(R.string.txt_ok,
-                    DialogInterface.OnClickListener { p0, p1 -> this@DownloaderActivity.finish() }).show()
+                    DialogInterface.OnClickListener { p0, p1 -> this@DownloaderActivity.finish() })
+                .show()
         }
 
         if (event == DOWNLOAD_FINISH) {
@@ -88,13 +92,15 @@ class DownloaderActivity : AppCompatActivity() {
         QApplication.isActivityDownloadStarted = true
         EventBus.getDefault().register(this)
 
+        downloader_tv_quantity.text = ""
+
         initUI()
 
         if (intent != null) {
             isViewDownload = intent.getBooleanExtra(EXTRA_VIEW_DOWNLOAD, false)
             tracks = intent.getParcelableArrayListExtra(EXTRA_TRACKS_LIST)!!
             if (!isViewDownload) {
-                if(Constants.tracks.size == 0) {
+                if (Constants.tracks.size == 0) {
                     Constants.tracks.addAll(tracks)
                 } else {
                     val difference = tracks.toSet().minus(Constants.tracks.toSet())
@@ -112,7 +118,8 @@ class DownloaderActivity : AppCompatActivity() {
 
             mDownloaderAdapter?.setData(Constants.tracks)
 
-            downloader_tv_quantity.text = getString(R.string.downloader_quantity, 1, Constants.tracks.size)
+            downloader_tv_quantity.text =
+                getString(R.string.downloader_quantity, 1, Constants.tracks.size)
 
             EventBus.getDefault().post(DownloadCountInfo(Constants.tracks.size))
 
@@ -122,10 +129,12 @@ class DownloaderActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        mViewModel = ViewModelProvider(this,
-                ViewModelFactory(
-                        ApiHelper(RetrofitBuilder(applicationContext).apiService),
-                        DataBase.getInstance(applicationContext))
+        mViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(applicationContext).apiService),
+                DataBase.getInstance(applicationContext)
+            )
         ).get(DownloaderViewModel::class.java)
 
         downloader_btn_back.setOnClickListener { onBackPressed() }
@@ -142,29 +151,43 @@ class DownloaderActivity : AppCompatActivity() {
     }
 
     private fun updateUI(download: DownloadInfo) {
-        downloader_tv_quantity.text = getString(R.string.downloader_quantity, download.completed + 1, download.total)
+        downloader_tv_quantity.text =
+            getString(R.string.downloader_quantity, download.completed + 1, download.total)
 
         var position = 0
         Constants.tracks.forEachIndexed { i, t ->
-            if (download.tag == t.id.toString()) { position = i }
+            if (download.tag == t.id.toString()) {
+                position = i
+            }
         }
         mDownloaderAdapter?.updateProgress(position, download.progress)
     }
 
     private fun checkStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE)
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+            )
         } else {
             DownloadService.startService(this, Constants.tracks)
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == STORAGE_PERMISSION_CODE || grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             DownloadService.startService(this, Constants.tracks)
         } else {
-            Toast.makeText(applicationContext, "Need permission to download tracks.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                "Need permission to download tracks.",
+                Toast.LENGTH_SHORT
+            ).show()
             checkStoragePermission()
         }
     }

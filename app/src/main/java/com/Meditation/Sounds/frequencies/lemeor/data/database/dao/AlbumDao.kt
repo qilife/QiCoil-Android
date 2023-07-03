@@ -31,7 +31,7 @@ interface AlbumDao {
     @Query("SELECT * FROM album ORDER BY `order` ASC")
     fun getAllAlbums() : List<Album>?
 
-    @Query("SELECT * FROM album WHERE name LIKE :searchString")
+    @Query("SELECT * FROM album WHERE descriptions LIKE :searchString OR descriptions LIKE :searchString")
     fun searchAlbum(searchString: String): List<Album>?
 
     @Query("SELECT * FROM album WHERE id=:id ORDER BY `order` ASC")

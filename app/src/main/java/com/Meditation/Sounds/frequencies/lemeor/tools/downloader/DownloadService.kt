@@ -119,12 +119,12 @@ class DownloadService : Service() {
             .setHttpDownloader(getOkHttpDownloader())
             .build()
         setDefaultInstanceConfiguration(fetchConfiguration)
-
         rxFetch = Fetch.getDefaultInstance()
         rxFetch?.addListener(fetchListener)
 
-        rxFetch!!.removeAll()
-        rxFetch!!.cancelAll()
+        rxFetch?.deleteAll()
+        rxFetch?.removeAll()
+        rxFetch?.cancelAll()
         fileProgressMap.clear()
         errorTracks = ArrayList()
     }
@@ -203,6 +203,7 @@ class DownloadService : Service() {
             requestList.forEach { it.groupId = tracks[0].name.hashCode() }
 
             rxFetch?.enqueue(requestList) { updatedRequests: List<Pair<Request, Error?>> ->
+//                Toast.makeText(applicationContext, "", Toast.LENGTH_SHORT).show()
                 for ((first) in updatedRequests) {
                     fileProgressMap[first.id] = 0
                     updateUIWithProgress()

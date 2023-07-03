@@ -6,7 +6,7 @@ object ApiConfig {
     private const val https = "https://"
     private const val qi_coil_api = "www.combined.ingeniusstudios.com"
     private const val qi_coil_storage = "www.qicoilapi.ingeniusstudios.com"
-    private const val quantum_api = "www.combined-quantum.ingeniusstudios.com"
+    private const val quantum_api = "combined-quantum.ingeniusstudios.com"
     private const val quantum_storage = "quantumapi.ingeniusstudios.com"
     private const val api = "api/"
     private const val public = "/public/"
