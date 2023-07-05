@@ -495,10 +495,17 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                         }
                     }
                     Resource.Status.ERROR -> {
+                        if (BuildConfig.IS_FREE) {
+                            mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
+                        }
                     }
                     Resource.Status.LOADING -> {
                     }
                 }
+            }
+        } else {
+            if (BuildConfig.IS_FREE) {
+                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
             }
         }
     }
@@ -675,23 +682,27 @@ private fun initSearch() {
 
     albumsSearch.observe(this) {
         val converted = ArrayList<Album>()
-
-        it.forEach { album ->
-            if (album.tier_id == 1 || album.tier_id == 2) {
-                converted.add(album)
-            } else {
-                if (album.tier_id == 3
-                    && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)
-                ) {
+        if (BuildConfig.IS_FREE) {
+            converted.addAll(it)
+        } else {
+            it.forEach { album ->
+                if (album.tier_id == 1 || album.tier_id == 2) {
                     converted.add(album)
-                }
-                if (album.tier_id == 4
-                    && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)
-                ) {
-                    converted.add(album)
+                } else {
+                    if (album.tier_id == 3
+                        && (preference(applicationContext).isHighQuantum)
+                    ) {
+                        converted.add(album)
+                    }
+                    if (album.tier_id == 4
+                        && (preference(applicationContext).isInnerCircle)
+                    ) {
+                        converted.add(album)
+                    }
                 }
             }
         }
+
         mAlbumsSearchAdapter?.setData(converted)
         if (converted.size != 0) {
             lblheaderalbums.visibility = View.VISIBLE

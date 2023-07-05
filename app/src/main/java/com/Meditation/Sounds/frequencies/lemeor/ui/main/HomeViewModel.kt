@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.getErrorMsg
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -65,5 +66,12 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         )
 
         GlobalScope.launch { repository.localSave(cache) }
+    }
+
+    fun loadDataLastHomeResponse(context: Context){
+        val homeResponse = PreferenceHelper.getLastHomeResponse(context)
+        if (homeResponse?.tiers != null && homeResponse.tiers.isNotEmpty()) {
+            GlobalScope.launch { repository.localSave(homeResponse) }
+        }
     }
 }

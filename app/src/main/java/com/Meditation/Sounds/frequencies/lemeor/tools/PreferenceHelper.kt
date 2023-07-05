@@ -3,6 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.tools
 import android.content.Context
 import android.content.SharedPreferences
 import com.Meditation.Sounds.frequencies.BuildConfig
+import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
 import com.Meditation.Sounds.frequencies.lemeor.data.model.User
 import com.google.gson.Gson
 
@@ -16,6 +17,7 @@ object PreferenceHelper {
     private const val IS_LOGGED = "is_logged"
     private const val TOKEN = "token"
     private const val USER = "user"
+    private const val HOME_RESPONSE = "home_response"
 
     private const val IS_HIGH_QUANTUM = "is_high_quantum"
     private const val IS_INNER_CIRCLE = "is_inner_circle"
@@ -134,4 +136,21 @@ object PreferenceHelper {
         }
         return preference(context).flashSaleRemain - (System.currentTimeMillis() - preference(context).flashSaleTimeStamp)
     }
+
+
+    fun getLastHomeResponse(context: Context): HomeResponse? {
+        return Gson().fromJson(preference(context).homeResponse, HomeResponse::class.java)
+    }
+
+    fun saveLastHomeResponse(context: Context, homeResponse: HomeResponse?) {
+        preference(context).homeResponse = Gson().toJson(homeResponse)
+    }
+
+    private var SharedPreferences.homeResponse
+        get() = getString(HOME_RESPONSE, "")
+        set(value) {
+            editMe {
+                it.putString(HOME_RESPONSE, value)
+            }
+        }
 }

@@ -47,6 +47,9 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
     }
 
     fun localSave(it: HomeResponse?) {
+        if (it?.tiers != null && it.tiers.isNotEmpty()) {
+            PreferenceHelper.saveLastHomeResponse(QApplication.getInstance().applicationContext, it)
+        }
         val user = PreferenceHelper.getUser(QApplication.getInstance().applicationContext)
         user?.unlocked_tiers = it?.unlocked_tiers.orEmpty()
         user?.unlocked_categories = it?.unlocked_categories.orEmpty()
