@@ -1,6 +1,7 @@
 package com.Meditation.Sounds.frequencies.lemeor
 
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.view.inputmethod.InputMethodManager
@@ -17,6 +18,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
+import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.CustomFontEditText
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -64,18 +66,31 @@ var isUserPaused = false
 
 fun loadImage(context: Context, imageView: ImageView, album: Album) {
     val assetsPath = "file:///android_asset/albums/" + album.image
-
-    val requestOptions = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .signature(ObjectKey(album.updated_at))
-    Glide.with(context)
-        .load(getImageUrl(album))
-        .thumbnail(Glide.with(context).load(assetsPath).apply(RequestOptions().override(300, 300)))
-        .apply(requestOptions)
-        .dontTransform()
-        .dontAnimate()
-        .placeholder(R.drawable.ic_album_placeholder)
-        .into(imageView)
+    if (album.category_id == 44 && !Utils.isConnectedToNetwork(context)) {
+        val requestOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .signature(ObjectKey(album.updated_at))
+        Glide.with(context)
+            .load(Uri.parse(assetsPath))
+            .thumbnail(Glide.with(context).load(Uri.parse(assetsPath)).apply(RequestOptions().override(300, 300)))
+            .apply(requestOptions)
+            .dontTransform()
+            .dontAnimate()
+            .placeholder(R.drawable.ic_album_placeholder)
+            .into(imageView)
+    } else {
+        val requestOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .signature(ObjectKey(album.updated_at))
+        Glide.with(context)
+            .load(getImageUrl(album))
+            .thumbnail(Glide.with(context).load(assetsPath).apply(RequestOptions().override(300, 300)))
+            .apply(requestOptions)
+            .dontTransform()
+            .dontAnimate()
+            .placeholder(R.drawable.ic_album_placeholder)
+            .into(imageView)
+    }
 }
 
 fun getImageUrl(album: Album): String {

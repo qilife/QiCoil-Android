@@ -146,7 +146,7 @@ class PlayerService : Service() {
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
                 val notificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(notificationChannel)
 
                 @Suppress("DEPRECATION") val notification =
@@ -172,7 +172,7 @@ class PlayerService : Service() {
                 .build()
         }
 
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
 
         val mediaButtonIntent = Intent(
             Intent.ACTION_MEDIA_BUTTON,
@@ -200,6 +200,7 @@ class PlayerService : Service() {
             DefaultLoadControl()
         )
         exoPlayer?.addListener(exoPlayerListener)
+        exoPlayer?.repeatMode = Player.REPEAT_MODE_ONE
 
         //send state
         sendData()

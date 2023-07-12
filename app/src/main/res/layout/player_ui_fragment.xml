@@ -85,7 +85,7 @@
             android:id="@+id/player_repeat"
             android:layout_width="@dimen/height_medium_icon"
             android:layout_height="@dimen/height_medium_icon"
-            android:src="@drawable/ic_loop_off"
+            android:src="@drawable/ic_loop_one"
             android:layout_marginRight="@dimen/height_medium_icon"
             android:layout_marginEnd="@dimen/height_medium_icon"
             app:layout_constraintRight_toLeftOf="@+id/player_previous"

@@ -53,7 +53,6 @@ class AlbumDetailFragment : BaseFragment(), MusicService.IGetSongPlaying {
                         .load(mAlbum.albumArt)
                         .into(imvAlbumArt2!!)
             } else {
-
                 Glide.with(activity!!)
                         .applyDefaultRequestOptions(RequestOptions().placeholder(R.drawable.ic_album_placeholder))
                         .load(mAlbum.albumArt)

@@ -31,7 +31,7 @@ class PlayerUIFragment : NewBaseFragment() {
     private var callback: MediaControllerCompat.Callback? = null
     private var serviceConnection: ServiceConnection? = null
     private var playing: Boolean = false
-    private var repeat: Int = Player.REPEAT_MODE_OFF
+    private var repeat: Int = Player.REPEAT_MODE_ONE
     private var shuffle: Boolean = false
 
     override fun onCreateView(
