@@ -1,10 +1,10 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -32,7 +31,6 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
-import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
@@ -68,14 +66,12 @@ class NewAlbumDetailFragment : Fragment() {
     private var albumDao: AlbumDao? = null
     private var isDownloaded: Boolean = true
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
             downloadedTracks = null
             GlobalScope.launch {
                 var isDownloaded = true
-
                 album?.tracks?.forEach {
                     Log.e("DIRRRRRRRR", getSaveDir(requireContext(), it, album!!))
                     val file = File(getSaveDir(requireContext(), it, album!!))
@@ -90,11 +86,11 @@ class NewAlbumDetailFragment : Fragment() {
 
                 CoroutineScope(Dispatchers.Main).launch {
                     if (album_play != null) {
-                        if (!isDownloaded) {
-                            album_play.text = getString(R.string.btn_download)
-                        } else {
-                            album_play.text = getString(R.string.btn_play)
-                        }
+//                        if (!isDownloaded) {
+//                            album_play.text = getString(R.string.btn_download)
+//                        } else {
+//                            album_play.text = getString(R.string.btn_play)
+//                        }
                     }
                 }
             }
@@ -118,6 +114,7 @@ class NewAlbumDetailFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_new_album_detail, container, false)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         firebaseAnalytics = Firebase.analytics
@@ -167,7 +164,6 @@ class NewAlbumDetailFragment : Fragment() {
         albumDao = DataBase.getInstance(requireContext()).albumDao()
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setUI(album: Album) {
         currentTrackIndex.observe(viewLifecycleOwner) {
             album.tracks.forEachIndexed { index, _ ->
@@ -188,7 +184,7 @@ class NewAlbumDetailFragment : Fragment() {
 
         album_play.setOnClickListener {
             if (album.tracks.isNotEmpty()) {
-                playOrDownload(album)
+                playAndDownload(album)
             }
         }
 
@@ -248,18 +244,17 @@ class NewAlbumDetailFragment : Fragment() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 if (album_play != null) {
-                    if (!isDownloaded) {
-                        album_play.text = getString(R.string.btn_download)
-                    } else {
-                        album_play.text = getString(R.string.btn_play)
-                    }
+//                    if (!isDownloaded) {
+//                        album_play.text = getString(R.string.btn_download)
+//                    } else {
+//                        album_play.text = getString(R.string.btn_play)
+//                    }
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun playOrDownload(album: Album) {
+    private fun playAndDownload(album: Album) {
         if (!isDownloaded) {
             firebaseAnalytics.logEvent("Downloads") {
                 param("Album Id", album.id.toString())
@@ -305,16 +300,18 @@ class NewAlbumDetailFragment : Fragment() {
                 downloadedTracks = tracks
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    startActivity(DownloaderActivity.newIntent(requireContext(), tracks))
+                    activity?.let {
+                        DownloaderActivity.startDownload(it, tracks)
+                    }
+//                    startActivity(DownloaderActivity.newIntent(requireContext(), tracks))
                 }
+
             }
-        } else {
-            play(album)
-            EventBus.getDefault().post(PlayerSelected(0))
         }
+        play(album)
+        EventBus.getDefault().post(PlayerSelected(0))
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun play(album: Album) {
         val activity = activity as NavigationActivity
 
@@ -338,13 +335,25 @@ class NewAlbumDetailFragment : Fragment() {
                     val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
 
                     var uri: Uri? = null
-
                     if (file.exists()) {
                         uri = Uri.fromFile(file)
                     }
 
                     if (preloaded.exists()) {
                         uri = Uri.fromFile(preloaded)
+                    }
+                    if(uri == null){
+                        uri = Uri.parse(
+                            getTrackUrl(album, it)
+                        )
+                        if(!Utils.isConnectedToNetwork(activity)){
+                            CoroutineScope(Dispatchers.Main).launch {
+                                AlertDialog.Builder(activity)
+                                    .setMessage("This track is not available")
+                                    .setPositiveButton("OK", null)
+                                    .show()
+                            }
+                        }
                     }
 
                     //  val track = db.trackDao().getTrackById(it.id)
@@ -383,21 +392,23 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun getDuration(file: File): Long {
-        try {
-            if (file != null && !file.absolutePath.isEmpty()) {
+        return try {
+            if (file.absolutePath.isNotEmpty()) {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
                 mediaMetadataRetriever.setDataSource(file.absolutePath)
                 val durationStr =
                     mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                return durationStr!!.toLong()
+                durationStr!!.toLong()
             } else {
-                return 0
+                0
             }
         } catch (e: java.lang.RuntimeException) {
-            return 0
+            0
         }
     }
 
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

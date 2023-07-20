@@ -80,7 +80,6 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setUI() {
         val trackId = intent.getIntExtra(EXTRA_TRACK_ID, -1)
         if (trackId == -1) {
@@ -173,7 +172,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                     downloadedTracks = tracks
 
                     CoroutineScope(Dispatchers.Main).launch {
-                        startActivity(DownloaderActivity.newIntent(applicationContext, tracks))
+                        startActivity(DownloaderActivity.newIntent(applicationContext))
                     }
                 }
                 catch (ex:Exception)

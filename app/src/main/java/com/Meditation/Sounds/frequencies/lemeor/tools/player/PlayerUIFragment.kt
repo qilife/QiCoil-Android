@@ -53,12 +53,14 @@ class PlayerUIFragment : NewBaseFragment() {
 
             loadImage(requireContext(), track_image, it.album)
             Log.i("currenttracl", "t-->" + it.duration)
-            seekBar.max = it.duration.toInt()
         }
 
         currentPosition.observe(viewLifecycleOwner) {
             track_position.text = getConvertedTime(it)
             seekBar.progress = it.toInt()
+        }
+        max.observe(viewLifecycleOwner){
+            seekBar.max = it.toInt()
         }
 
         duration.observe(viewLifecycleOwner) {

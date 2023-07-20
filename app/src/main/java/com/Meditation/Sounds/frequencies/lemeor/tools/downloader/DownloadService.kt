@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.Meditation.Sounds.frequencies.BuildConfig
+import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
@@ -32,7 +34,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Logger
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -60,15 +64,21 @@ class DownloadService : Service() {
 
     private var rxFetch: Fetch? = null
 
-    private var tracks = ArrayList<Track>()
+    var tracks = ArrayList<Track>()
+        private set
+
     private var errorTracks = ArrayList<String>()
 
-    private val fileProgressMap: HashMap<Int, Int> = HashMap()
+    val fileProgressMap: HashMap<Int, Int> = HashMap()
     private var trackDao: TrackDao? = null
+
+    // Binder given to clients.
+    private val binder = DownloadServiceBinder()
 
     override fun onCreate() {
         super.onCreate()
         trackDao = DataBase.getInstance(applicationContext).trackDao()
+        init()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -80,25 +90,37 @@ class DownloadService : Service() {
             .build()
         startForeground(1, notification)
 
-        tracks = intent?.getParcelableArrayListExtra(EXTRA_TRACKS)!!
-
-        init()
-
-        val dao = DataBase.getInstance(applicationContext).albumDao()
-        GlobalScope.launch {
-            tracks.forEach { t ->
-                val album = dao.getAlbumById(t.albumId)
-                t.album = album
+        var tracks: List<Track> = intent?.getParcelableArrayListExtra(EXTRA_TRACKS)!!
+        tracks = tracks.filter {
+            !this.tracks.any { track ->
+                track.id == it.id && it.albumId == track.albumId
             }
-
-            CoroutineScope(Dispatchers.Main).launch { enqueueFiles() }
         }
+        if (tracks.isNotEmpty()) {
+            if (getCompletedFileCount() == this.tracks.size) {
+                this.tracks.clear()
+                fileProgressMap.clear()
+            }
+            this.tracks.addAll(tracks)
+            val dao = DataBase.getInstance(applicationContext).albumDao()
+            GlobalScope.launch {
+                tracks.forEach { t ->
+                    val album = dao.getAlbumById(t.albumId)
+                    t.album = album
+                }
 
+                CoroutineScope(Dispatchers.Main).launch { enqueueFiles(tracks) }
+            }
+            EventBus.getDefault().post(
+                DownloadInfo(
+                    "",
+                    0,
+                    getCompletedFileCount(),
+                    tracks.size
+                )
+            )
+        }
         return START_NOT_STICKY
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
     }
 
     private fun createNotificationChannel() {
@@ -132,7 +154,14 @@ class DownloadService : Service() {
     private fun getOkHttpDownloader(): Downloader<*, *> {
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(20000L, TimeUnit.MILLISECONDS) //increase read timeout as needed
-            .connectTimeout(15000L, TimeUnit.MILLISECONDS) //increase connection timeout as needed
+            .connectTimeout(15000L, TimeUnit.MILLISECONDS) //i
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BASIC
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
+            })// ncrease connection timeout as needed
             .build()
         return OkHttpDownloader(
             okHttpClient,
@@ -175,7 +204,7 @@ class DownloadService : Service() {
         }
     }
 
-    private fun checkDoneDownloaded(){
+    private fun checkDoneDownloaded() {
         val totalFiles: Int = fileProgressMap.size
         val completedFiles: Int = getCompletedFileCount()
         if ((completedFiles + errorTracks.size) == totalFiles && errorTracks.size > 0) {
@@ -183,22 +212,15 @@ class DownloadService : Service() {
         }
     }
 
-    private fun getCompletedFileCount(): Int {
-        var count = 0
-        val ids: Set<Int> = fileProgressMap.keys
-        for (id in ids) {
-            val progress = fileProgressMap[id]!!
-            if (progress == 100) {
-                count++
-            }
-        }
-        return count
+    fun getCompletedFileCount(): Int {
+        return tracks.filter {
+            fileProgressMap[it.id] == 100
+        }.size
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun enqueueFiles() {
+    private fun enqueueFiles(tracks: List<Track>) {
         if (isNetworkAvailable()) {
-            val requestList: List<Request> = getRequests()
+            val requestList: List<Request> = getRequests(tracks)
             downloadErrorTracks = ArrayList()
             requestList.forEach { it.groupId = tracks[0].name.hashCode() }
 
@@ -223,7 +245,8 @@ class DownloadService : Service() {
             if (!errorTracks.contains(download.tag.toString())) {
                 errorTracks.add(download.tag.toString())
                 downloadErrorTracks?.add(download.tag.toString())
-                EventBus.getDefault().post(DownloadTrackErrorEvent(id = download.tag?.toInt() ?: 0, download.url))
+                EventBus.getDefault()
+                    .post(DownloadTrackErrorEvent(id = download.tag?.toInt() ?: 0, download.url))
             }
             checkDoneDownloaded()
         }
@@ -235,12 +258,14 @@ class DownloadService : Service() {
         ) {
             super.onProgress(download, etaInMilliSeconds, downloadedBytesPerSecond)
 
+
+            fileProgressMap[download.tag!!.toInt()] = download.progress
             EventBus.getDefault().post(
                 DownloadInfo(
                     download.tag!!,
                     download.progress,
                     getCompletedFileCount(),
-                    fileProgressMap.size
+                    tracks.size
                 )
             )
 
@@ -257,7 +282,7 @@ class DownloadService : Service() {
 
                 GlobalScope.launch {
                     trackDao?.isTrackDownloaded(true, Integer.valueOf(download.tag!!))
-                    com.Meditation.Sounds.frequencies.utils.Constants.tracks.forEach {
+                    tracks.forEach {
                         if (it.id == Integer.valueOf(download.tag!!)) {
                             it.isDownloaded = true
                         }
@@ -270,14 +295,11 @@ class DownloadService : Service() {
 
                 checkDoneDownloaded()
             }
-
-            fileProgressMap[download.id] = download.progress
             updateUIWithProgress()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun getRequests(): List<Request> {
+    private fun getRequests(tracks: List<Track>): List<Request> {
         val requests: MutableList<Request> = ArrayList()
         tracks.forEach { track ->
             val url: String = getTrackUrl(track.album, track)
@@ -290,5 +312,13 @@ class DownloadService : Service() {
             requests.add(request)
         }
         return requests
+    }
+    inner class DownloadServiceBinder : Binder() {
+        // Return this instance of LocalService so clients can call public methods.
+        fun getService(): DownloadService = this@DownloadService
+    }
+
+    override fun onBind(intent: Intent): IBinder {
+        return binder
     }
 }

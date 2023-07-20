@@ -193,12 +193,12 @@ class PlayerService : Service() {
         mediaSession?.setCallback(mediaSessionCallback)
 
 
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(
+        exoPlayer = SimpleExoPlayer.Builder(
             this,
             DefaultRenderersFactory(this),
-            DefaultTrackSelector(),
-            DefaultLoadControl()
-        )
+        ).setLoadControl(DefaultLoadControl())
+            .setTrackSelector(DefaultTrackSelector(this))
+            .build()
         exoPlayer?.addListener(exoPlayerListener)
         exoPlayer?.repeatMode = Player.REPEAT_MODE_ONE
 
@@ -216,10 +216,12 @@ class PlayerService : Service() {
 
                     currentPosition.postValue(position)
 
-                    var dur = mDuration
+                    var dur = exoPlayer?.duration ?: mDuration
 
                     if (dur < 0) dur = 0
-                    max.postValue(dur)
+                    if (max.value != dur) {
+                        max.postValue(dur)
+                    }
                     duration.postValue(dur - position)
                 }
             }
@@ -428,8 +430,10 @@ class PlayerService : Service() {
                 }
                 exoPlayer?.volume = 1F
             }
+
             AUDIOFOCUS_LOSS,
             AUDIOFOCUS_LOSS_TRANSIENT -> mediaSessionCallback.onPause()
+
             AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> exoPlayer?.volume = 0.5F
             else -> mediaSessionCallback.onPause()
         }
@@ -482,11 +486,13 @@ class PlayerService : Service() {
                 PlaybackStateCompat.STATE_PLAYING -> {
                     startForeground(NOTIFICATION_ID, getNotification(playbackState))
                 }
+
                 PlaybackStateCompat.STATE_PAUSED -> {
                     NotificationManagerCompat.from(this@PlayerService)
                         .notify(NOTIFICATION_ID, getNotification(playbackState))
                     stopForeground(false)
                 }
+
                 else -> {
                     stopForeground(true)
                 }

@@ -60,7 +60,6 @@ class ProgramDetailFragment : Fragment() {
     private var mTrackAdapter: ProgramTrackAdapter? = null
     private var isDownloaded: Boolean = true
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
@@ -263,7 +262,6 @@ class ProgramDetailFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun playOrDownload(tracks: ArrayList<Track>) {
         if (!isDownloaded) {
             if (!Utils.isConnectedToNetwork(requireContext())) {
@@ -294,7 +292,9 @@ class ProgramDetailFragment : Fragment() {
                 downloadedTracks = list
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    startActivity(DownloaderActivity.newIntent(requireContext(), list))
+                    activity?.let {
+                        DownloaderActivity.startDownload(it, list)
+                    }
                 }
             }
         } else {

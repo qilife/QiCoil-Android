@@ -40,7 +40,7 @@ var downloadErrorTracks: ArrayList<String>? = null
 val currentTrack = MutableLiveData<MusicRepository.Track>()
 val currentTrackIndex = MutableLiveData<Int>()
 val currentPosition = MutableLiveData<Long>()
-val max = MutableLiveData<Long>()
+val max = MutableLiveData<Long>(0)
 val duration = MutableLiveData<Long>()
 
 //for track add to program
