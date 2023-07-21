@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
-import com.Meditation.Sounds.frequencies.lemeor.downloadErrorTracks
 import kotlinx.android.synthetic.main.item_download.view.*
 
 class DownloaderAdapter : RecyclerView.Adapter<DownloaderAdapter.ViewHolder>() {
@@ -20,6 +19,11 @@ class DownloaderAdapter : RecyclerView.Adapter<DownloaderAdapter.ViewHolder>() {
             notifyDataSetChanged()
         }
     var fileProgressMap: HashMap<Int, Int> = HashMap()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+    var downloadErrorTracks:List<Int> = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -40,7 +44,7 @@ class DownloaderAdapter : RecyclerView.Adapter<DownloaderAdapter.ViewHolder>() {
         val track = data[position]
         holder.itemView.item_track_name.text = track.name
         holder.itemView.item_track_progress.progress = fileProgressMap[track.id] ?: 0
-        if (downloadErrorTracks?.contains(track.id.toString()) == true) {
+        if (downloadErrorTracks.contains(track.id)) {
             holder.itemView.item_track_progress.progressDrawable =
                 ContextCompat.getDrawable(holder.itemView.context, R.drawable.bg_progress_bar_error)
         } else {

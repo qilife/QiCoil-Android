@@ -12,7 +12,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,10 +25,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.downloadErrorTracks
-import com.Meditation.Sounds.frequencies.lemeor.downloadedTracks
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService.Companion.DOWNLOAD_FINISH
-import com.Meditation.Sounds.frequencies.utils.Constants
 import kotlinx.android.synthetic.main.activity_downloader.*
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.greenrobot.eventbus.EventBus
@@ -88,8 +84,7 @@ class DownloaderActivity : AppCompatActivity() {
         }
 
         if (event is DownloadErrorEvent && QApplication.isActivityDownloadStarted) {
-            downloadedTracks = null
-            downloadErrorTracks = null
+            mDownloaderAdapter.notifyDataSetChanged()
             AlertDialog.Builder(this@DownloaderActivity)
                 .setTitle(R.string.download_error)
                 .setMessage(getString(R.string.download_error_message))
@@ -115,9 +110,10 @@ class DownloaderActivity : AppCompatActivity() {
             bound = true
             mDownloaderAdapter.data = downloadService!!.tracks
             mDownloaderAdapter.fileProgressMap = downloadService!!.fileProgressMap
+            mDownloaderAdapter.downloadErrorTracks = downloadService!!.downloadErrorTracks
 
             downloader_tv_quantity.text =
-                getString(R.string.downloader_quantity, 1, mDownloaderAdapter.itemCount)
+                getString(R.string.downloader_quantity, 0, mDownloaderAdapter.itemCount)
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -159,7 +155,7 @@ class DownloaderActivity : AppCompatActivity() {
         super.onDestroy()
         QApplication.isActivityDownloadStarted = false
         EventBus.getDefault().unregister(this)
-        if(bound){
+        if (bound) {
             unbindService(connection)
         }
     }
@@ -168,7 +164,7 @@ class DownloaderActivity : AppCompatActivity() {
         downloader_tv_quantity.text =
             getString(
                 R.string.downloader_quantity,
-                (download.completed + 1).coerceAtMost(download.total),
+                (download.completed).coerceAtMost(download.total),
                 download.total
             )
 

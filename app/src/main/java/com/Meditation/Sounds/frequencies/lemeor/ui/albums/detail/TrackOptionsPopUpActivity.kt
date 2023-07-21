@@ -149,30 +149,26 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
             finish()
             val tracks = ArrayList<Track>()
 
+            val dao = DataBase.getInstance(applicationContext).albumDao()
+
             GlobalScope.launch {
 
                 // val track = trackDao.getTrackById(track.id)
 
                 //for preloaded tracks
                 try {
-
-                    val file = File(getSaveDir(applicationContext, track!!, NewAlbumDetailFragment.album!!))
-                    val preloaded = File(getPreloadedSaveDir(applicationContext, track!!, NewAlbumDetailFragment.album!!))
-
-                    if (!file.exists() && !preloaded.exists()) {
-                        track?.let { tracks.add(it) }
-                    }
-                    else
-                    {
-                        file.delete()
-                        preloaded.delete()
-                        track?.let { tracks.add(it) }
-                    }
-
-                    downloadedTracks = tracks
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        startActivity(DownloaderActivity.newIntent(applicationContext))
+                    track?.let {
+                        val album = it.album?: dao.getAlbumById(it.albumId)
+                        it.album = album
+                        val file = File(getSaveDir(applicationContext, it.filename, album?.audio_folder?:""))
+                        val preloaded = File(getPreloadedSaveDir(applicationContext, it.filename, album?.audio_folder?:""))
+                        if(!file.exists() && !preloaded.exists()){
+                            tracks.add(it)
+                        }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            DownloaderActivity.startDownload(this@TrackOptionsPopUpActivity, tracks)
+                            startActivity(DownloaderActivity.newIntent(applicationContext))
+                        }
                     }
                 }
                 catch (ex:Exception)

@@ -64,44 +64,6 @@ class NewAlbumDetailFragment : Fragment() {
 
     private var trackDao: TrackDao? = null
     private var albumDao: AlbumDao? = null
-    private var isDownloaded: Boolean = true
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEvent(event: Any?) {
-        if (event == DownloadService.DOWNLOAD_FINISH) {
-            downloadedTracks = null
-            GlobalScope.launch {
-                var isDownloaded = true
-                album?.tracks?.forEach {
-                    Log.e("DIRRRRRRRR", getSaveDir(requireContext(), it, album!!))
-                    val file = File(getSaveDir(requireContext(), it, album!!))
-                    val preloaded = File(getPreloadedSaveDir(requireContext(), it, album!!))
-
-                    if (!file.exists() && !preloaded.exists()) {
-                        isDownloaded = false
-                    }
-                }
-
-                this@NewAlbumDetailFragment.isDownloaded = isDownloaded
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    if (album_play != null) {
-//                        if (!isDownloaded) {
-//                            album_play.text = getString(R.string.btn_download)
-//                        } else {
-//                            album_play.text = getString(R.string.btn_play)
-//                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        EventBus.getDefault().register(this)
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -192,14 +154,12 @@ class NewAlbumDetailFragment : Fragment() {
 
         mTrackAdapter?.setOnClickListener(object : AlbumTrackAdapter.Listener {
             override fun onTrackClick(track: Track, i: Int, isDownloaded: Boolean) {
-                if (this@NewAlbumDetailFragment.isDownloaded) {
-                    isMultiPlay = false
-                    mTrackAdapter?.setSelected(i)
-                    play(album)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        EventBus.getDefault().post(PlayerSelected(i))
-                    }, 200)
-                }
+                isMultiPlay = false
+                mTrackAdapter?.setSelected(i)
+                play(album)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    EventBus.getDefault().post(PlayerSelected(i))
+                }, 200)
             }
 
             override fun onTrackOptions(track: Track, i: Int) {
@@ -215,99 +175,49 @@ class NewAlbumDetailFragment : Fragment() {
         if (currentTrack.value != null) {
             val track = currentTrack.value
             val indexSelected = album.tracks.indexOfFirst { it.id == track?.trackId }
-            if (indexSelected >= 0){
+            if (indexSelected >= 0) {
                 mTrackAdapter?.setSelected(indexSelected)
             }
         }
 
-        GlobalScope.launch {
-            var isDownloaded = true
-
-            album.tracks.forEach {
-                //for preloaded tracks
-                val file = File(getSaveDir(requireContext(), it, album))
-                val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
-
-                if (!file.exists() && !preloaded.exists()) {
-                    isDownloaded = false
-                } else {
-                    if (file.length() == 0L) {
-                        isDownloaded = false
-                        if (file.exists()) {
-                            file.delete()
-                        }
-                    }
-                }
-            }
-
-            this@NewAlbumDetailFragment.isDownloaded = isDownloaded
-
-            CoroutineScope(Dispatchers.Main).launch {
-                if (album_play != null) {
-//                    if (!isDownloaded) {
-//                        album_play.text = getString(R.string.btn_download)
-//                    } else {
-//                        album_play.text = getString(R.string.btn_play)
-//                    }
-                }
-            }
-        }
     }
 
     private fun playAndDownload(album: Album) {
-        if (!isDownloaded) {
             firebaseAnalytics.logEvent("Downloads") {
                 param("Album Id", album.id.toString())
                 param("Album Name", album.name)
                 // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
             }
-            if (!Utils.isConnectedToNetwork(requireContext())) {
-                Toast.makeText(
-                    requireContext(), getString(R.string.err_network_available), Toast.LENGTH_SHORT
-                ).show()
-                return
-            }
+            if (Utils.isConnectedToNetwork(requireContext())) {
 
-            val tracks = ArrayList<Track>()
-            val trackDao = DataBase.getInstance(requireContext()).trackDao()
+                val tracks = ArrayList<Track>()
+                val trackDao = DataBase.getInstance(requireContext()).trackDao()
 
-            GlobalScope.launch {
-                album.tracks.forEach { t ->
-                    val track = trackDao.getTrackById(t.id)
-                    // /data/user/0/com.Meditation.Sounds.frequencies/files/.tracks/06. Spiritual Awakening Bundle/Remove Negative Energy.mp3
-                    //for preloaded tracks
-                    Log.e("DIRRRRRRRR", getSaveDir(requireContext(), t, Companion.album!!))
-                    val file = File(getSaveDir(requireContext(), t, album))
-                    val preloaded = File(getPreloadedSaveDir(requireContext(), t, album))
+                GlobalScope.launch {
+                    album.tracks.forEach { t ->
+                        val track = trackDao.getTrackById(t.id)
+                        val file = File(getSaveDir(requireContext(), t.filename, album.audio_folder))
+                        val preloaded = File(getPreloadedSaveDir(requireContext(), t.filename, album.audio_folder))
 
-                    if (!file.exists() && !preloaded.exists()) {
-                        GlobalScope.launch {
-                            trackDao.isTrackDownloaded(true, track?.id ?: 0)
-                        }
-                        track?.isDownloaded = false
-                        track?.let { tracks.add(it) }
-                    } else {
-                        if (file.length() == 0L) {
-                            track?.let { tracks.add(it) }
-                            if (file.exists()) {
-                                file.delete()
+                        if (!file.exists() && !preloaded.exists()) {
+                            GlobalScope.launch {
+                                trackDao.isTrackDownloaded(true, track?.id ?: 0)
                             }
+                            track?.isDownloaded = false
+                            track?.let { tracks.add(it) }
                         }
+
                     }
 
-                }
-
-                downloadedTracks = tracks
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    activity?.let {
-                        DownloaderActivity.startDownload(it, tracks)
-                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        activity?.let {
+                            DownloaderActivity.startDownload(it, tracks)
+                        }
 //                    startActivity(DownloaderActivity.newIntent(requireContext(), tracks))
-                }
+                    }
 
+                }
             }
-        }
         play(album)
         EventBus.getDefault().post(PlayerSelected(0))
     }
@@ -331,52 +241,19 @@ class NewAlbumDetailFragment : Fragment() {
         GlobalScope.launch {
             local.forEach {
                 try {
-                    val file = File(getSaveDir(requireContext(), it, album))
-                    val preloaded = File(getPreloadedSaveDir(requireContext(), it, album))
-
-                    var uri: Uri? = null
-                    if (file.exists()) {
-                        uri = Uri.fromFile(file)
-                    }
-
-                    if (preloaded.exists()) {
-                        uri = Uri.fromFile(preloaded)
-                    }
-                    if(uri == null){
-                        uri = Uri.parse(
-                            getTrackUrl(album, it)
-                        )
-                        if(!Utils.isConnectedToNetwork(activity)){
-                            CoroutineScope(Dispatchers.Main).launch {
-                                AlertDialog.Builder(activity)
-                                    .setMessage("This track is not available")
-                                    .setPositiveButton("OK", null)
-                                    .show()
-                            }
-                        }
-                    }
-
-                    //  val track = db.trackDao().getTrackById(it.id)
-                    //  if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-                    //  val multiplay = track?.duration!! / 300000
-
                     val track = db.trackDao().getTrackById(it.id)
-                    // if (track?.duration == 0.toLong()) { track.duration = 300000 }
-                    // if (track?.duration == 0.toLong()) { track.duration = getDuration(file) }
-                    //Log.e("DURATION",getDuration(file).toString())
                     if (track != null) {
-                        val multiplay = track.duration / 300000
                         data.add(
                             MusicRepository.Track(
                                 it.id,
                                 it.name,
                                 album.name,
+                                album.id,
                                 album,
                                 R.drawable.launcher,
-                                uri!!,
-                                getDuration(file),
+                                track.duration,
                                 0,
-                                multiplay.toInt()
+                                it.filename
                             )
                         )
                     }
@@ -388,22 +265,6 @@ class NewAlbumDetailFragment : Fragment() {
             trackList = data
 
             CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
-        }
-    }
-
-    private fun getDuration(file: File): Long {
-        return try {
-            if (file.absolutePath.isNotEmpty()) {
-                val mediaMetadataRetriever = MediaMetadataRetriever()
-                mediaMetadataRetriever.setDataSource(file.absolutePath)
-                val durationStr =
-                    mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                durationStr!!.toLong()
-            } else {
-                0
-            }
-        } catch (e: java.lang.RuntimeException) {
-            0
         }
     }
 

@@ -160,9 +160,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         }
 
         if (event?.javaClass == DownloadErrorEvent::class.java && !QApplication.isActivityDownloadStarted) {
-            downloadedTracks = null
-            downloadErrorTracks = null
-            androidx.appcompat.app.AlertDialog.Builder(this@NavigationActivity)
+            AlertDialog.Builder(this@NavigationActivity)
                 .setTitle(R.string.download_error)
                 .setMessage(getString(R.string.download_error_message))
                 .setPositiveButton(R.string.txt_ok, null).show()
@@ -170,7 +168,6 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         if (event == DownloadService.DOWNLOAD_FINISH) {
             viewGroupDownload.visibility = View.GONE
-            downloadedTracks = null
         }
 
         if (event?.javaClass == DownloadTrackErrorEvent::class.java) {
@@ -179,8 +176,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 GlobalScope.launch {
                     try {
                         mViewModel.reportTrack(trackInfo.id, trackInfo.url)
-                    } catch (e: HttpException) {
-
+                    } catch (_: HttpException) {
                     }
 
                 }
@@ -306,12 +302,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     override fun onResume() {
         super.onResume()
-        if ((downloadService?.getCompletedFileCount() ?: 0) == (downloadService?.tracks?.size ?: 0)){
+        if ((downloadService?.getCompletedFileCount() ?: 0) == (downloadService?.tracks?.size
+                ?: 0)
+        ) {
             viewGroupDownload.visibility = View.GONE
         }
-            if (BuildConfig.IS_FREE) {
-                quantumOnCreate()
-            }
+        if (BuildConfig.IS_FREE) {
+            quantumOnCreate()
+        }
         /* else {
              var isAllPurchase = true
              GlobalScope.launch {
@@ -477,13 +475,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         //  }
 
         viewGroupDownload.setOnClickListener {
-            if (downloadedTracks != null) {
-                startActivity(
-                    DownloaderActivity.newIntent(
-                        applicationContext,
-                    )
+            startActivity(
+                DownloaderActivity.newIntent(
+                    applicationContext,
                 )
-            }
+            )
         }
 
 
@@ -860,7 +856,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             val track = album.tracks.first()
             androidx.appcompat.app.AlertDialog.Builder(this@NavigationActivity)
                 .setTitle(R.string.app_name)
-                .setMessage(getSaveDir(this@NavigationActivity, track, album))
+                .setMessage(
+                    getSaveDir(
+                        this@NavigationActivity,
+                        track.filename,
+                        track.album?.audio_folder ?: ""
+                    )
+                )
                 .setPositiveButton(R.string.txt_ok, null).show()
         }
     }
@@ -875,7 +877,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 .setPositiveButton(R.string.txt_agree) { _, _ ->
                     downloadAPK(apkUrl)
                 }.setNegativeButton(R.string.txt_disagree) { _, _ -> }.show()
-        } catch (ex: WindowManager.BadTokenException) {
+        } catch (_: Throwable) {
         }
     }
 
