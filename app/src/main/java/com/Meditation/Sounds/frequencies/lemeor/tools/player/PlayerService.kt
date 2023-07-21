@@ -222,7 +222,7 @@ class PlayerService : Service() {
                     currentPosition.postValue(position)
 
                     val dur = exoPlayer.duration
-                    if (dur > 0 && max.value != dur) {
+                    if (max.value != dur) {
                         max.postValue(dur)
                     }
                     duration.postValue(((max.value ?: dur) - position).coerceAtLeast(0))
@@ -308,8 +308,11 @@ class PlayerService : Service() {
                     playPosition = exoPlayer.currentPosition
 
                     exoPlayer.playWhenReady = false
-                    unregisterReceiver(becomingNoisyReceiver)
+                    if(mediaSession.isActive) {
+                        unregisterReceiver(becomingNoisyReceiver)
+                    }
                 }
+
                 mediaSession.setPlaybackState(
                     stateBuilder.setState(
                         PlaybackStateCompat.STATE_PAUSED,
@@ -426,6 +429,21 @@ class PlayerService : Service() {
                     exoPlayer.seekTo(playPosition)
                     Thread.sleep(100)
                     exoPlayer.volume = 1F
+                    exoPlayer.play()
+                    registerReceiver(
+                        becomingNoisyReceiver,
+                        IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                    )
+                    mediaSession.isActive = true
+                    mediaSession.setPlaybackState(
+                        stateBuilder.setState(
+                            PlaybackStateCompat.STATE_PLAYING,
+                            PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,
+                            1f
+                        ).build()
+                    )
+                    currentState = PlaybackStateCompat.STATE_PLAYING
+                    refreshNotificationAndForegroundStatus(currentState)
                 }
             }
 

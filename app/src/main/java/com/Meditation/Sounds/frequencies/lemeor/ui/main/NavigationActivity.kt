@@ -608,6 +608,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 .beginTransaction()
                 .add(R.id.player_ui_container, playerUI!!, playerUI!!.javaClass.simpleName)
                 .commitNow()
+        }else{
+
         }
     }
 
