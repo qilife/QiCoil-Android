@@ -183,59 +183,61 @@ class DownloadService : LifecycleService() {
     private fun observeWorker(request: OneTimeWorkRequest) {
         WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(request.id)
             .observe(this) { workInfo ->
-                val wasSuccess = workInfo.state == WorkInfo.State.SUCCEEDED
+                CoroutineScope(Dispatchers.Main).launch {
+                    val wasSuccess = workInfo.state == WorkInfo.State.SUCCEEDED
 
-                if (wasSuccess) {
-                    val trackId =
-                        workInfo.outputData.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
-                    fileProgressMap[trackId] = 100
-                    downloadErrorTracks.remove(trackId)
-                    checkDoneDownloaded()
-                    updateUIWithProgress()
-                    EventBus.getDefault().post(
-                        DownloadInfo(
-                            "$trackId",
-                            100,
-                            getCompletedFileCount(),
-                            tracks.size
-                        )
-                    )
-                } else if (workInfo.state == WorkInfo.State.FAILED) {
-                    val trackId =
-                        workInfo.outputData.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
-                    if (!downloadErrorTracks.any { trackId == it }) {
-                        tracks.firstOrNull { trackId == it.id }?.let {
-                            downloadErrorTracks.add(it.id)
-                            EventBus.getDefault()
-                                .post(
-                                    DownloadTrackErrorEvent(
-                                        trackId,
-                                        getTrackUrl(it.album, it.filename)
-                                    )
-                                )
-                        }
-                    }
-                    checkDoneDownloaded()
-                } else if (workInfo != null) {
-                    val total = workInfo.progress.getLong(DownLoadCourseAudioWorkManager.TOTAL, 0L)
-                    val downloaded =
-                        workInfo.progress.getLong(DownLoadCourseAudioWorkManager.DOWNLOADED, 0L)
-                    if (total > 0) {
+                    if (wasSuccess) {
                         val trackId =
-                            workInfo.progress.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
-                        val progress = (downloaded * 100 / total).toInt();
-                        fileProgressMap[trackId] = progress
+                            workInfo.outputData.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
+                        fileProgressMap[trackId] = 100
+                        downloadErrorTracks.remove(trackId)
+                        checkDoneDownloaded()
+                        updateUIWithProgress()
                         EventBus.getDefault().post(
                             DownloadInfo(
                                 "$trackId",
-                                progress,
+                                100,
                                 getCompletedFileCount(),
                                 tracks.size
                             )
                         )
+                    } else if (workInfo.state == WorkInfo.State.FAILED) {
+                        val trackId =
+                            workInfo.outputData.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
+                        if (!downloadErrorTracks.any { trackId == it }) {
+                            tracks.firstOrNull { trackId == it.id }?.let {
+                                downloadErrorTracks.add(it.id)
+                                EventBus.getDefault()
+                                    .post(
+                                        DownloadTrackErrorEvent(
+                                            trackId,
+                                            getTrackUrl(it.album, it.filename)
+                                        )
+                                    )
+                            }
+                        }
+                        checkDoneDownloaded()
+                    } else if (workInfo != null) {
+                        val total =
+                            workInfo.progress.getLong(DownLoadCourseAudioWorkManager.TOTAL, 0L)
+                        val downloaded =
+                            workInfo.progress.getLong(DownLoadCourseAudioWorkManager.DOWNLOADED, 0L)
+                        if (total > 0) {
+                            val trackId =
+                                workInfo.progress.getInt(DownLoadCourseAudioWorkManager.TRACK_ID, 0)
+                            val progress = (downloaded * 100 / total).toInt();
+                            fileProgressMap[trackId] = progress
+                            EventBus.getDefault().post(
+                                DownloadInfo(
+                                    "$trackId",
+                                    progress,
+                                    getCompletedFileCount(),
+                                    tracks.size
+                                )
+                            )
+                        }
                     }
                 }
-
             }
     }
 
