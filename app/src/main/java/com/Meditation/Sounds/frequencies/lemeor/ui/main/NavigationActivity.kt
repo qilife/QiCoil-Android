@@ -142,49 +142,51 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
-        if (event is DownloadInfo) {
-            mTvDownloadPercent.text = getString(
-                R.string.downloader_quantity_collapse,
-                event.completed,
-                event.total
-            )
-            viewGroupDownload.visibility = View.VISIBLE
-        }
+        runOnUiThread {
+            if (event is DownloadInfo) {
+                mTvDownloadPercent.text = getString(
+                    R.string.downloader_quantity_collapse,
+                    event.completed,
+                    event.total
+                )
+                viewGroupDownload.visibility = View.VISIBLE
+            }
 
-        if (event?.javaClass == DownloadCountInfo::class.java) {
-            mTvDownloadPercent.text = getString(
-                R.string.downloader_quantity_collapse,
-                1,
-                (event as DownloadCountInfo).total
-            )
-        }
+            if (event?.javaClass == DownloadCountInfo::class.java) {
+                mTvDownloadPercent.text = getString(
+                    R.string.downloader_quantity_collapse,
+                    1,
+                    (event as DownloadCountInfo).total
+                )
+            }
 
-        if (event?.javaClass == DownloadErrorEvent::class.java && !QApplication.isActivityDownloadStarted) {
-            AlertDialog.Builder(this@NavigationActivity)
-                .setTitle(R.string.download_error)
-                .setMessage(getString(R.string.download_error_message))
-                .setPositiveButton(R.string.txt_ok, null).show()
-        }
+            if (event?.javaClass == DownloadErrorEvent::class.java && !QApplication.isActivityDownloadStarted) {
+                AlertDialog.Builder(this@NavigationActivity)
+                    .setTitle(R.string.download_error)
+                    .setMessage(getString(R.string.download_error_message))
+                    .setPositiveButton(R.string.txt_ok, null).show()
+            }
 
-        if (event == DownloadService.DOWNLOAD_FINISH) {
-            viewGroupDownload.visibility = View.GONE
-        }
+            if (event == DownloadService.DOWNLOAD_FINISH) {
+                viewGroupDownload.visibility = View.GONE
+            }
 
-        if (event?.javaClass == DownloadTrackErrorEvent::class.java) {
-            if (isNetworkAvailable()) {
-                val trackInfo = event as DownloadTrackErrorEvent
-                GlobalScope.launch {
-                    try {
-                        mViewModel.reportTrack(trackInfo.id, trackInfo.url)
-                    } catch (_: HttpException) {
+            if (event?.javaClass == DownloadTrackErrorEvent::class.java) {
+                if (isNetworkAvailable()) {
+                    val trackInfo = event as DownloadTrackErrorEvent
+                    GlobalScope.launch {
+                        try {
+                            mViewModel.reportTrack(trackInfo.id, trackInfo.url)
+                        } catch (_: HttpException) {
+                        }
+
                     }
-
                 }
             }
-        }
 
-        if (event == SyncDataEvent) {
-            syncData()
+            if (event == SyncDataEvent) {
+                syncData()
+            }
         }
     }
 
