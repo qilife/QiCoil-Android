@@ -195,7 +195,17 @@ class NewAlbumDetailFragment : Fragment() {
                         t.isDownloaded = false
                         tracks.add(t)
                     }
-                    t.album = album
+                    t.album = Album(
+                        album.id, album.category_id,
+                        album.tier_id,
+                        album.name,
+                        album.image,
+                        album.audio_folder,
+                        album.is_free,
+                        album.order,
+                        album.updated_at, null, listOf(), null,
+                        isDownloaded = false, isUnlocked = false,
+                    )
 
                 }
 
