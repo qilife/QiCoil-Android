@@ -193,8 +193,10 @@ class NewAlbumDetailFragment : Fragment() {
                     if (!file.exists() && !preloaded.exists()) {
                         trackDao.isTrackDownloaded(true, t.id)
                         t.isDownloaded = false
+                        tracks.add(t)
                     }
                     t.album = album
+
                 }
 
                 CoroutineScope(Dispatchers.Main).launch {
