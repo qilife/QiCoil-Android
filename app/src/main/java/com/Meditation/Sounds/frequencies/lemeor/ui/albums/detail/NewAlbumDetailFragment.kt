@@ -1,19 +1,14 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.content.Intent
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -27,7 +22,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
@@ -42,11 +36,8 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
 
@@ -183,41 +174,37 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun playAndDownload(album: Album) {
-            firebaseAnalytics.logEvent("Downloads") {
-                param("Album Id", album.id.toString())
-                param("Album Name", album.name)
-                // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
-            }
-            if (Utils.isConnectedToNetwork(requireContext())) {
+        firebaseAnalytics.logEvent("Downloads") {
+            param("Album Id", album.id.toString())
+            param("Album Name", album.name)
+            // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+        }
+        if (Utils.isConnectedToNetwork(requireContext())) {
 
-                val tracks = ArrayList<Track>()
-                val trackDao = DataBase.getInstance(requireContext()).trackDao()
+            val tracks = ArrayList<Track>()
+            val trackDao = DataBase.getInstance(requireContext()).trackDao()
 
-                GlobalScope.launch {
-                    album.tracks.forEach { t ->
-                        val track = trackDao.getTrackById(t.id)
-                        val file = File(getSaveDir(requireContext(), t.filename, album.audio_folder))
-                        val preloaded = File(getPreloadedSaveDir(requireContext(), t.filename, album.audio_folder))
+            CoroutineScope(Dispatchers.IO).launch {
+                album.tracks.forEach { t ->
+                    val file = File(getSaveDir(requireContext(), t.filename, album.audio_folder))
+                    val preloaded =
+                        File(getPreloadedSaveDir(requireContext(), t.filename, album.audio_folder))
 
-                        if (!file.exists() && !preloaded.exists()) {
-                            GlobalScope.launch {
-                                trackDao.isTrackDownloaded(true, track?.id ?: 0)
-                            }
-                            track?.isDownloaded = false
-                            track?.let { tracks.add(it) }
-                        }
-
+                    if (!file.exists() && !preloaded.exists()) {
+                        trackDao.isTrackDownloaded(true, t.id)
+                        t.isDownloaded = false
                     }
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        activity?.let {
-                            DownloaderActivity.startDownload(it, tracks)
-                        }
-//                    startActivity(DownloaderActivity.newIntent(requireContext(), tracks))
-                    }
-
+                    t.album = album
                 }
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    activity?.let {
+                        DownloaderActivity.startDownload(it, tracks)
+                    }
+                }
+
             }
+        }
         play(album)
         EventBus.getDefault().post(PlayerSelected(0))
     }
@@ -238,7 +225,7 @@ class NewAlbumDetailFragment : Fragment() {
         val local = album.tracks
         val db = DataBase.getInstance(requireContext())
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             local.forEach {
                 try {
                     val track = db.trackDao().getTrackById(it.id)
