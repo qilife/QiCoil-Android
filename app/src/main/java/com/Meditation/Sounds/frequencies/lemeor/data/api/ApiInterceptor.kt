@@ -12,6 +12,7 @@ import java.net.UnknownHostException
 
 class ApiInterceptor(private val context: Context) : Interceptor {
     @Suppress("UNREACHABLE_CODE")
+    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val token: String? = preference(context).token

@@ -49,7 +49,7 @@ import java.util.*
 class PlayerService : Service() {
 
     companion object {
-        lateinit var musicRepository: MusicRepository
+        var musicRepository: MusicRepository? = null
         const val NOTIFICATION_ID = 404
         const val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
     }
@@ -160,7 +160,7 @@ class PlayerService : Service() {
 
         if (event?.javaClass == PlayerSelected::class.java) {
             val selected = event as PlayerSelected
-            musicRepository.currentItemIndex = selected.position?.minus(1)!!
+            musicRepository?.currentItemIndex = selected.position?.minus(1)!!
             mediaSessionCallback.onSkipToNext()
         }
     }
@@ -262,12 +262,12 @@ class PlayerService : Service() {
                         ex.printStackTrace()
                         //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
                     }
-                    val track = musicRepository.getCurrent()
+                    val track = musicRepository?.getCurrent()
 //                    mMultiPlay = track.multiplay
-
-                    updateMetadataFromTrack(track)
-
-                    prepareToPlay(track)
+                    if (track != null) {
+                        updateMetadataFromTrack(track)
+                        prepareToPlay(track)
+                    }
 
                     if (!audioFocusRequested) {
                         audioFocusRequested = true
@@ -362,33 +362,36 @@ class PlayerService : Service() {
                 playPosition = 0
 
                 val track = if (isMultiPlay) {
-                    musicRepository.getCurrent()
+                    musicRepository?.getCurrent()
                 } else {
 //                    mPart = 1
                     if (isShuffle) {
-                        musicRepository.getRandom()
+                        musicRepository?.getRandom()
                     } else {
-                        musicRepository.getNext()
+                        musicRepository?.getNext()
                     }
                 }
 
-                updateMetadataFromTrack(track)
-                refreshNotificationAndForegroundStatus(currentState)
-                prepareToPlay(track)
+                if (track != null) {
+                    updateMetadataFromTrack(track)
+                    refreshNotificationAndForegroundStatus(currentState)
+                    prepareToPlay(track)
+                }
             }
 
             override fun onSkipToPrevious() {
                 playPosition = 0
+                if (musicRepository != null) {
+                    val track: MusicRepository.Track = if (isShuffle) {
+                        musicRepository!!.getRandom()
+                    } else {
+                        musicRepository!!.getPrevious()
+                    }
 
-                val track: MusicRepository.Track = if (isShuffle) {
-                    musicRepository.getRandom()
-                } else {
-                    musicRepository.getPrevious()
+                    updateMetadataFromTrack(track)
+                    refreshNotificationAndForegroundStatus(currentState)
+                    prepareToPlay(track)
                 }
-
-                updateMetadataFromTrack(track)
-                refreshNotificationAndForegroundStatus(currentState)
-                prepareToPlay(track)
             }
 
             fun prepareToPlay(track: MusicRepository.Track) {
@@ -523,7 +526,7 @@ class PlayerService : Service() {
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
             if (state == ExoPlayer.STATE_ENDED) {
-                if (musicRepository.isLastTrack() && !isRepeatAll) {
+                if (musicRepository?.isLastTrack() == true && !isRepeatAll) {
                     mediaSessionCallback.onStop()
                 } else {
                     mediaSessionCallback.onSkipToNext()

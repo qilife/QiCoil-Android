@@ -299,7 +299,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             assets.copyAssetFolder(
                 "tracks", getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
                         File.separator +
-                        ".tracks"
+                        "tracks"
             )
         }
 
@@ -1014,20 +1014,19 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
     }
 
 
-    fun askRating() {
-        AppRating.Builder(this)
-            .setMinimumLaunchTimes(9)
-            .setMinimumDays(3)
-            .setMinimumLaunchTimesToShowAgain(9)
-            .setMinimumDaysToShowAgain(3)
-            .setRatingThreshold(RatingThreshold.FOUR)
-            .setConfirmButtonClickListener(ConfirmButtonClickListener {
-                AppRating.openPlayStoreListing(
-                    this@NavigationActivity
-                )
-            })
-            .showIfMeetsConditions()
-    }
-
+//    fun askRating() {
+//        AppRating.Builder(this)
+//            .setMinimumLaunchTimes(9)
+//            .setMinimumDays(3)
+//            .setMinimumLaunchTimesToShowAgain(9)
+//            .setMinimumDaysToShowAgain(3)
+//            .setRatingThreshold(RatingThreshold.FOUR)
+//            .setConfirmButtonClickListener(ConfirmButtonClickListener {
+//                AppRating.openPlayStoreListing(
+//                    this@NavigationActivity
+//                )
+//            })
+//            .showIfMeetsConditions()
+//    }
 
 }
