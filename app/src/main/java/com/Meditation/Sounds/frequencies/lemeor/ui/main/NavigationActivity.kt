@@ -1,7 +1,7 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
@@ -172,23 +172,25 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             CoroutineScope(Dispatchers.IO).launch {
                 val apkList = mViewModel.getApkList()
 
-                val currentVer = BuildConfig.VERSION_NAME
-                val apkUrl = apkList[0]
+                if (apkList.isNotEmpty()) {
+                    val currentVer = BuildConfig.VERSION_NAME
+                    val apkUrl = apkList[0]
 
-                val pathSplit = apkUrl.split("/")
+                    val pathSplit = apkUrl.split("/")
 
-                if (pathSplit.isNotEmpty()) {
-                    val fileName = pathSplit[pathSplit.size - 1]
-                    val newVersion = fileName.replace("Quantum_v", "").replace(".apk", "")
-                    val newVs = newVersion.split(".")
-                    val currentVs = currentVer.split(".")
+                    if (pathSplit.isNotEmpty()) {
+                        val fileName = pathSplit[pathSplit.size - 1]
+                        val newVersion = fileName.replace("Quantum_v", "").replace(".apk", "")
+                        val newVs = newVersion.split(".")
+                        val currentVs = currentVer.split(".")
 
-                    if (newVs.size == 3 && currentVs.size == 3) {
-                        if ((newVs[0].toInt() * 100 + newVs[1].toInt() * 10 + newVs[2].toInt())
-                            > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()
-                        ) {
+                        if (newVs.size == 3 && currentVs.size == 3) {
+                            if ((newVs[0].toInt() * 100 + newVs[1].toInt() * 10 + newVs[2].toInt())
+                                > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()
+                            ) {
 
-                            CoroutineScope(Dispatchers.Main).launch { dialogConfirmUpdateApk(apkUrl) }
+                                CoroutineScope(Dispatchers.Main).launch { dialogConfirmUpdateApk(apkUrl) }
+                            }
                         }
                     }
                 }
@@ -202,18 +204,42 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     @SuppressLint("CheckResult")
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(WRITE_EXTERNAL_STORAGE),
-                REQUEST_CODE_PERMISSION
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    READ_MEDIA_IMAGES
+                ) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(
+                    this,
+                    READ_MEDIA_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(
+                    this,
+                    READ_MEDIA_VIDEO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_AUDIO, READ_MEDIA_VIDEO),
+                    REQUEST_CODE_PERMISSION
+                )
+            } else {
+                deleteOldFiles()
+            }
         } else {
-            deleteOldFiles()
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(WRITE_EXTERNAL_STORAGE),
+                    REQUEST_CODE_PERMISSION
+                )
+            } else {
+                deleteOldFiles()
+            }
         }
     }
 

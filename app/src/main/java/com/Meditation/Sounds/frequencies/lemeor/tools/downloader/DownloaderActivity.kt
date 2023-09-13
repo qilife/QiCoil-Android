@@ -3,16 +3,11 @@ package com.Meditation.Sounds.frequencies.lemeor.tools.downloader
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ComponentName
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -52,19 +47,48 @@ class DownloaderActivity : AppCompatActivity() {
             tracks: ArrayList<Track>,
         ) {
             if (tracks.isNotEmpty()) {
-                if (ContextCompat.checkSelfPermission(
-                        activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    DownloadService.startService(context = activity, tracks)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.READ_MEDIA_IMAGES
+                        ) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.READ_MEDIA_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.READ_MEDIA_VIDEO
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        DownloadService.startService(context = activity, tracks)
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            activity,
+                            arrayOf(
+                                Manifest.permission.READ_MEDIA_IMAGES,
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                Manifest.permission.READ_MEDIA_VIDEO
+                            ),
+                            STORAGE_PERMISSION_CODE
+                        )
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(
-                        activity,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        STORAGE_PERMISSION_CODE
-                    )
+                    if (ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        DownloadService.startService(context = activity, tracks)
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            activity,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            STORAGE_PERMISSION_CODE
+                        )
+                    }
                 }
+
             }
         }
     }

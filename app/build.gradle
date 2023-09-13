@@ -55,8 +55,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2232
-            versionName "2.2.32"
+            versionCode 2233
+            versionName "2.2.33"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
