@@ -45,8 +45,8 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         return repository.reportTrack(trackId, trackUrl)
     }
 
-    suspend fun getAlbumById(id: Int): Album? {
-        return repository.getAlbumById(id)
+    suspend fun getAlbumById(id: Int, category_id: Int): Album? {
+        return repository.getAlbumById(id, category_id)
     }
 
     suspend fun searchAlbum(searchString: String): List<Album> {

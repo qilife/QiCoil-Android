@@ -28,7 +28,7 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
         return repository.getTrackById(id)
     }
 
-    suspend fun getAlbumById(id: Int): Album? {
-        return repository.getAlbumById(id)
+    suspend fun getAlbumById(id: Int, category_id: Int): Album? {
+        return repository.getAlbumById(id, category_id)
     }
 }

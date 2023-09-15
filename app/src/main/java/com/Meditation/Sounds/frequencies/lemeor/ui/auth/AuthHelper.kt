@@ -36,7 +36,7 @@ fun updateTier(context: Context, user: User) {
         val db = DataBase.getInstance(context)
         val tierDao = db.tierDao()
 
-        tierDao.getData()?.forEach { tier ->
+        tierDao.getData().forEach { tier ->
             if (tier.id >= 3) {
 
                 var isExist = false

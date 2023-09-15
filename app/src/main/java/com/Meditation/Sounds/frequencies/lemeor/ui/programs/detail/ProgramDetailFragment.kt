@@ -14,9 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
-import com.Meditation.Sounds.frequencies.lemeor.currentTrack
-import com.Meditation.Sounds.frequencies.lemeor.currentTrackIndex
+import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.ProgramDao
@@ -24,22 +22,10 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
-import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
-import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
-import com.Meditation.Sounds.frequencies.lemeor.isMultiPlay
-import com.Meditation.Sounds.frequencies.lemeor.isPlayAlbum
-import com.Meditation.Sounds.frequencies.lemeor.isPlayProgram
-import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
-import com.Meditation.Sounds.frequencies.lemeor.playAlbumId
-import com.Meditation.Sounds.frequencies.lemeor.playProgramId
-import com.Meditation.Sounds.frequencies.lemeor.positionFor
-import com.Meditation.Sounds.frequencies.lemeor.selectedNaviFragment
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
-import com.Meditation.Sounds.frequencies.lemeor.trackList
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
@@ -103,6 +89,7 @@ class ProgramDetailFragment : Fragment() {
         EventBus.getDefault().unregister(this)
         isTrackAdd = false
         albumIdBackProgram = -1
+        categoryIdBackProgram = -1
     }
 
     override fun onCreateView(
@@ -146,7 +133,7 @@ class ProgramDetailFragment : Fragment() {
         var fragment: Fragment?
 
         if (isTrackAdd) {
-            fragment = albumIdBackProgram?.let { NewAlbumDetailFragment.newInstance(it) }
+            fragment = albumIdBackProgram?.let { NewAlbumDetailFragment.newInstance(it, categoryIdBackProgram!!) }
         } else {
             fragment = selectedNaviFragment
             if (fragment == null) {
@@ -203,7 +190,7 @@ class ProgramDetailFragment : Fragment() {
                 }
             }
             tracks.forEach {
-                val album = dao.getAlbumById(it.albumId)
+                val album = dao.getAlbumById(it.albumId, it.category_id)
                 it.album = album
             }
 
@@ -243,7 +230,7 @@ class ProgramDetailFragment : Fragment() {
             val dao = DataBase.getInstance(requireContext()).albumDao()
             CoroutineScope(Dispatchers.IO).launch {
                 tracks.forEach { t ->
-                    val album = dao.getAlbumById(t.albumId)
+                    val album = dao.getAlbumById(t.albumId, t.category_id)
                     t.album = album
 
                     val file =

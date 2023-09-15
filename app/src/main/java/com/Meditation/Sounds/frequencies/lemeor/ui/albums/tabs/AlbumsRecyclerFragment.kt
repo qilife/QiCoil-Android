@@ -247,7 +247,7 @@ class AlbumsRecyclerFragment : Fragment() {
     fun unlockAlbum(album: Album) {
         val albumDao = DataBase.getInstance(requireContext()).albumDao()
         CoroutineScope(Dispatchers.IO).launch {
-            albumDao.setNewUnlockedById(true, album.id)
+            albumDao.setNewUnlockedById(true, album.id, album.category_id)
         }
 
         if (Utils.isConnectedToNetwork(activity)) {

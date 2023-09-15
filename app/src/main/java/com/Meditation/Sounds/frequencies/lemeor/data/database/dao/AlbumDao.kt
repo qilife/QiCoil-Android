@@ -34,11 +34,11 @@ interface AlbumDao {
     @Query("SELECT * FROM album WHERE descriptions LIKE :searchString OR descriptions LIKE :searchString")
     suspend fun searchAlbum(searchString: String): List<Album>
 
-    @Query("SELECT * FROM album WHERE id=:id ORDER BY `order` ASC")
-    fun getAlbumsById(id: Int) : LiveData<Album>
+    @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id ORDER BY `order` ASC")
+    fun getAlbumsById(id: Int, category_id: Int) : LiveData<Album>
 
-    @Query("SELECT * FROM album WHERE id=:id ORDER BY `order` ASC")
-    suspend fun getAlbumsByIdOnce(id: Int) : Album?
+    @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id ORDER BY `order` ASC")
+    suspend fun getAlbumsByIdOnce(id: Int, category_id: Int) : Album?
 
     @Query("UPDATE album SET isDownloaded=:isDownloaded WHERE id=:id")
     suspend fun isAlbumDownloaded(isDownloaded: Boolean, id: Int)
@@ -49,8 +49,8 @@ interface AlbumDao {
     @Query("SELECT * FROM album WHERE isUnlocked=:isUnlocked ORDER BY `order` ASC")
     suspend fun getUnlockedAlbums(isUnlocked: Boolean): List<Album>
 
-    @Query("SELECT * FROM album WHERE id=:id")
-    suspend fun getAlbumById(id: Int) : Album?
+    @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id")
+    suspend fun getAlbumById(id: Int, category_id: Int) : Album?
 
     @Query("SELECT * FROM album WHERE isUnlocked=:isUnlocked ORDER BY RANDOM() LIMIT 1")
     suspend fun getRandomAlbum(isUnlocked: Boolean) : Album?
@@ -64,14 +64,14 @@ interface AlbumDao {
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE id=:id")
     suspend fun syncAlbums(isUnlocked: Boolean, id: Int)
 
-    @Query("UPDATE album SET isDownloaded=:isDownloaded WHERE id=:id")
-    suspend fun syncDownloaded(isDownloaded: Boolean, id: Int)
+    @Query("UPDATE album SET isDownloaded=:isDownloaded WHERE id=:id AND category_id=:category_id")
+    suspend fun syncDownloaded(isDownloaded: Boolean, id: Int, category_id: Int)
 
 
 
     // new build 29.03.2021
-    @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE id=:id AND is_free=:isFree")
-    suspend fun setNewUnlockedById(isUnlocked: Boolean, id: Int, isFree: Boolean = false)
+    @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE id=:id AND is_free=:isFree AND category_id=:category_id")
+    suspend fun setNewUnlockedById(isUnlocked: Boolean, id: Int, category_id: Int, isFree: Boolean = false)
 
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE category_id=:categoryId AND is_free=:isFree")
     suspend fun setNewUnlockedByCategoryId(isUnlocked: Boolean, categoryId: Int, isFree: Boolean = false)

@@ -121,7 +121,7 @@ class DownloadService : LifecycleService() {
         CoroutineScope(Dispatchers.IO).launch {
             needToDownloadTrack.forEach { t ->
                 if (t.album == null) {
-                    val album = dao.getAlbumById(t.albumId)
+                    val album = dao.getAlbumById(t.albumId, t.category_id)
                     t.album = album
                 }
             }

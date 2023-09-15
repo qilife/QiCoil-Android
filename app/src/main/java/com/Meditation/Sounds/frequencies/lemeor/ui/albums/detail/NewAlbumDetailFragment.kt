@@ -48,6 +48,11 @@ class NewAlbumDetailFragment : Fragment() {
             ?: throw IllegalArgumentException("Must call through newInstance()")
     }
 
+    private val categoryId: Int by lazy {
+        arguments?.getInt(ARG_CATEGORY_ID)
+            ?: throw IllegalArgumentException("Must call through newInstance()")
+    }
+
     private lateinit var mViewModel: NewAlbumDetailViewModel
     private var mDescriptionAdapter: DescriptionAdapter? = null
     private var mTrackAdapter: AlbumTrackAdapter? = null
@@ -73,7 +78,7 @@ class NewAlbumDetailFragment : Fragment() {
         firebaseAnalytics = Firebase.analytics
         initUI()
 
-        mViewModel.album(albumId)?.observe(viewLifecycleOwner) {
+        mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) {
             if (it != null) {
                 album = it
                 setUI(it)
@@ -195,7 +200,7 @@ class NewAlbumDetailFragment : Fragment() {
                         t.isDownloaded = false
                         tracks.add(t)
                     }
-                    t.album = Album(
+                    t.album = Album(album.index,
                         album.id, album.category_id,
                         album.tier_id,
                         album.name,
@@ -274,6 +279,7 @@ class NewAlbumDetailFragment : Fragment() {
 
         if (requestCode == 1001 && resultCode == RESULT_OK) {
             albumIdBackProgram = albumId
+            categoryIdBackProgram = categoryId
             isTrackAdd = true
 
             parentFragmentManager.beginTransaction().setCustomAnimations(
@@ -291,12 +297,14 @@ class NewAlbumDetailFragment : Fragment() {
 
     companion object {
         const val ARG_ALBUM_ID = "arg_album"
+        const val ARG_CATEGORY_ID = "arg_category"
         var album: Album? = null
 
         @JvmStatic
-        fun newInstance(id: Int) = NewAlbumDetailFragment().apply {
+        fun newInstance(id: Int, category_id: Int) = NewAlbumDetailFragment().apply {
             arguments = Bundle().apply {
                 putInt(ARG_ALBUM_ID, id)
+                putInt(ARG_CATEGORY_ID, category_id)
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.categoryIdBackProgram
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -87,7 +88,7 @@ class NewProgramFragment : Fragment() {
 
                 tracks.forEach { t ->
 
-                    val temp_album = mViewModel.getAlbumById(t.albumId);
+                    val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
 
                     if (temp_album?.isUnlocked == false) {
                         isUnlocked = false
@@ -110,7 +111,7 @@ class NewProgramFragment : Fragment() {
             )
             .replace(
                 R.id.nav_host_fragment,
-                NewAlbumDetailFragment.newInstance(albumIdBackProgram!!),
+                NewAlbumDetailFragment.newInstance(albumIdBackProgram!!, categoryIdBackProgram!!),
                 NewAlbumDetailFragment().javaClass.simpleName
             )
             .commit()
@@ -200,7 +201,7 @@ class NewProgramFragment : Fragment() {
                             mViewModel.getTrackById(r)?.let { track -> tracks.add(track) }
                         }
                         tracks.forEach { t ->
-                            val temp_album = mViewModel.getAlbumById(t.albumId);
+                            val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
                             if (temp_album?.isUnlocked == false && album == null) {
                                 album = temp_album
                                 CoroutineScope(Dispatchers.Main).launch {

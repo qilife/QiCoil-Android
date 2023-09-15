@@ -60,7 +60,7 @@ class ProgramTrackAdapter(
         }
 
         GlobalScope.launch {
-            val album = DataBase.getInstance(mContext).albumDao().getAlbumById(track.albumId)
+            val album = DataBase.getInstance(mContext).albumDao().getAlbumById(track.albumId, track.category_id)
 
             CoroutineScope(Dispatchers.Main).launch {
                 loadImage(mContext, holder.itemView.item_track_image, album!!)

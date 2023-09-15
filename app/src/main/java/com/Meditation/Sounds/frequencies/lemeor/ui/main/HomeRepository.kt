@@ -39,8 +39,8 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         }
     )
 
-    suspend fun getAlbumById(id: Int): Album? {
-        return localData.albumDao().getAlbumById(id)
+    suspend fun getAlbumById(id: Int, category_id: Int): Album? {
+        return localData.albumDao().getAlbumById(id, category_id)
     }
 
     suspend fun searchAlbum(searchString: String): List<Album>{

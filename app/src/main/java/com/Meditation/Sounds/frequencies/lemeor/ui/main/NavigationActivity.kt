@@ -321,6 +321,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         initSearch()
 
+        getAllCategories()
+
         if (BuildConfig.IS_FREE) {
             assets.copyAssetFolder(
                 "tracks", getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
@@ -496,7 +498,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        askRating()
-        hideKeyboard(applicationContext, album_search)
+        closeSearch()
+//        hideKeyboard(applicationContext, album_search)
         when (item.itemId) {
             R.id.navigation_albums -> {
                 search_layout.visibility = View.VISIBLE
@@ -577,7 +580,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             override fun onTrackSearchClick(track: Track, i: Int) {
                 hideKeyboard(this@NavigationActivity, album_search)
                 CoroutineScope(Dispatchers.IO).launch {
-                    val album = mViewModel.getAlbumById(track.albumId)
+                    val album = mViewModel.getAlbumById(track.albumId, track.category_id)
                     CoroutineScope(Dispatchers.Main).launch {
                         view_data.visibility = View.GONE
                         album?.let { startAlbumDetails(it) }
@@ -637,6 +640,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
 
         albumsSearch.observe(this) {
             val converted = ArrayList<Album>()
+            if (mAlbumsSearchAdapter.getCategories().isEmpty()) {
+                getAllCategories()
+            }
             if (BuildConfig.IS_FREE) {
                 converted.addAll(it)
             } else {
@@ -729,6 +735,14 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         }
     }
 
+    private fun getAllCategories(){
+        val categoryDao = DataBase.getInstance(applicationContext).categoryDao()
+        GlobalScope.launch {
+            val categories = categoryDao.getData()
+            mAlbumsSearchAdapter.setCategories(categories)
+        }
+    }
+
     private fun closeSearch() {
         album_search.text = null
         hideKeyboard(applicationContext, album_search)
@@ -761,7 +775,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                 )
                 .replace(
                     R.id.nav_host_fragment,
-                    NewAlbumDetailFragment.newInstance(album.id),
+                    NewAlbumDetailFragment.newInstance(album.id, album.category_id),
                     NewAlbumDetailFragment().javaClass.simpleName
                 )
                 .commit()

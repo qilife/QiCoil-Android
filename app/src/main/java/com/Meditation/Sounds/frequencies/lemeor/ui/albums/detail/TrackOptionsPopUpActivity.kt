@@ -168,7 +168,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                 //for preloaded tracks
                 try {
                     track?.let {
-                        val album = it.album ?: dao.getAlbumById(it.albumId)
+                        val album = it.album ?: dao.getAlbumById(it.albumId, it.category_id)
                         it.album = album
                         val file = File(
                             getSaveDir(

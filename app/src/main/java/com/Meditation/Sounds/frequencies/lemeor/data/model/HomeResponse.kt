@@ -3,6 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.data.model
 import android.os.Parcelable
 import androidx.room.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
@@ -62,7 +63,10 @@ data class Category(
 @Entity(tableName = "album")
 @Parcelize
 data class Album(
-    @PrimaryKey var id: Int,
+    @PrimaryKey
+    @SerializedName("_id")
+    var index: Int,
+    var id: Int,
     var category_id: Int,
     var tier_id: Int,
     var name: String,
@@ -85,6 +89,7 @@ data class Track(
     var name: String,
     var filename: String,
     var tier_id: Int,
+    var category_id: Int,
     var updated_at: Long,
     var isSelected: Boolean,
     var isFavorite: Boolean,
@@ -100,6 +105,7 @@ data class Track(
         name: String,
         filename: String,
         tier_id: Int,
+        category_id: Int,
         updated_at: Long,
         isFavorite: Boolean,
         isDownloaded: Boolean,
@@ -111,6 +117,7 @@ data class Track(
         name,
         filename,
         tier_id,
+        category_id,
         updated_at,
         false,
         isFavorite,

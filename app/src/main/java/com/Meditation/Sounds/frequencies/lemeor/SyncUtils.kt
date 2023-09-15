@@ -115,18 +115,18 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
         responseData.forEach { r->
             var isFind = false
             localData.forEach { l->
-                if (r.id == l.id) {
+                if (r.id == l.id && r.category_id == l.category_id) {
                     isFind = true
 
                     if (r.updated_at > l.updated_at) {
-                        db.albumDao().insert(Album(r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
+                        db.albumDao().insert(Album(r.index, r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
                                 r.is_free, r.order, r.updated_at, r.descriptions, r.tracks, r.tag, l.isDownloaded, checkUnlocked(r.is_free)))
                     }
                 }
             }
 
             if (!isFind) {
-                db.albumDao().insert(Album(r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
+                db.albumDao().insert(Album(r.index, r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
                         r.is_free, r.order, r.updated_at, r.descriptions, r.tracks, r.tag, true, checkUnlocked(r.is_free)))
             }
         }
@@ -134,7 +134,7 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
         localData.forEach { l->
             var isFind = false
             responseData.forEach { r->
-                if (l.id == r.id) { isFind = true }
+                if (l.id == r.id && r.category_id == l.category_id) { isFind = true }
             }
 
             if (!isFind) {
@@ -157,9 +157,9 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
             responseData.forEach {
                 db.albumDao().syncAlbums(it.isDownloaded, checkUnlocked(it.is_free), it.id)
             }
-            db.albumDao().syncDownloaded(true, 1)
-            db.albumDao().syncDownloaded(true, 2)
-            db.albumDao().syncDownloaded(true, 3)
+            db.albumDao().syncDownloaded(true, 1, 1)
+            db.albumDao().syncDownloaded(true, 2, 1)
+            db.albumDao().syncDownloaded(true, 3, 1)
         }
     }
 }
@@ -174,6 +174,7 @@ suspend fun syncTracks(db: DataBase, response: HomeResponse?) {
             if (!BuildConfig.IS_FREE) { if (album.id == 1 || album.id == 2 || album.id == 3) { track.isDownloaded = true } }
 
             track.albumId = album.id
+            track.category_id = album.category_id
             track.isUnlocked = checkUnlocked(album.is_free)
         }
         responseData.addAll(album.tracks)
@@ -198,7 +199,7 @@ suspend fun syncTracks(db: DataBase, response: HomeResponse?) {
                     isFind = true
 
                     if (resp.updated_at > local.updated_at) {
-                        db.trackDao().insert(Track(resp.id, resp.name, resp.filename, resp.tier_id, resp.updated_at,
+                        db.trackDao().insert(Track(resp.id, resp.name, resp.filename, resp.tier_id, resp.category_id, resp.updated_at,
                                 false, local.isFavorite, local.isDownloaded, resp.albumId,
                                 local.isUnlocked, local.duration, null, 0))
                     }

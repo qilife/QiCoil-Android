@@ -41,6 +41,7 @@ val duration = MutableLiveData<Long>()
 //for track add to program
 var trackIdForProgram: Int? = -1
 var albumIdBackProgram: Int? = -1
+var categoryIdBackProgram: Int? = -1
 var isTrackAdd: Boolean = false
 var positionFor: Int? = -1
 
