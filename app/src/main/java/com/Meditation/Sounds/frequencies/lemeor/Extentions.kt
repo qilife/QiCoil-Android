@@ -123,7 +123,7 @@ fun getPreloadedSaveDir(context: Context, trackName: String, albumName: String):
                         File.separator +
                         "tracks" +
                         File.separator +
-                        albumName
+                        albumName.replace("/", " ")
             )
         else
             File(
@@ -131,7 +131,7 @@ fun getPreloadedSaveDir(context: Context, trackName: String, albumName: String):
                 File.separator +
                         ".tracks" +
                         File.separator +
-                        albumName +
+                        albumName.replace("/", " ") +
                         File.separator
             )
     fileDir.mkdirs()
@@ -150,7 +150,7 @@ fun getSaveDir(context: Context, trackName: String, albumName: String): String {
                         File.separator +
                         "tracks" +
                         File.separator +
-                        albumName
+                        albumName.replace("/", " ")
             )
         else
             File(
@@ -158,7 +158,7 @@ fun getSaveDir(context: Context, trackName: String, albumName: String): String {
                 File.separator +
                         ".tracks" +
                         File.separator +
-                        albumName +
+                        albumName.replace("/", " ") +
                         File.separator
             )
     fileDir.mkdirs()
@@ -167,7 +167,7 @@ fun getSaveDir(context: Context, trackName: String, albumName: String): String {
 
 fun getTempFile(context: Context, trackName: String, albumName: String): String {
     return (context.externalCacheDir ?: context.cacheDir).absolutePath +
-            File.separator + albumName + '_' +
+            File.separator + albumName.replace("/", " ") + '_' +
             trackName.replace("%", "")
 
 }

@@ -98,7 +98,8 @@ class AlbumsRecyclerFragment : Fragment() {
 
         mViewModel.albums(categoryId!!)?.observe(viewLifecycleOwner) {
             mListAlbum = it as ArrayList<Album>
-            mAlbumAdapter?.setData(it)
+            mListAlbum.sortedBy { it.order }
+            mAlbumAdapter?.setData(mListAlbum)
         }
 
         getAlbumData()

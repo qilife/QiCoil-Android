@@ -25,6 +25,7 @@ object ApiConfig {
     const val API_USER_DELETE = "user/profile/delete"
     const val API_APK = "apk"
     const val API_SUBMIT_TRACK_ERROR = "reportTrack"
+    const val API_SUBMIT_PROGRAM = "submitProgram"
 
     private const val API_RESET_PASS = "password/reset"
 
