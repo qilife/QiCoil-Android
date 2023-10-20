@@ -48,7 +48,7 @@ class AlbumsRecyclerFragment : Fragment() {
     private var mListener: AlbumsRecyclerListener? = null
     private lateinit var mViewModel: AlbumsViewModel
     private var mAlbumAdapter: AlbumsAdapter? = null
-    private var mListAlbum = ArrayList<Album>()
+    private var mListAlbum = arrayListOf<Album>()
 
     private var categoryId: Int? = null
     var isRegenerate = false
@@ -97,8 +97,8 @@ class AlbumsRecyclerFragment : Fragment() {
         ).get(AlbumsViewModel::class.java)
 
         mViewModel.albums(categoryId!!)?.observe(viewLifecycleOwner) {
-            mListAlbum = it as ArrayList<Album>
-            mListAlbum.sortedBy { it.order }
+            mListAlbum.clear()
+            mListAlbum.addAll(it.sortedBy { it.order_by })
             mAlbumAdapter?.setData(mListAlbum)
         }
 

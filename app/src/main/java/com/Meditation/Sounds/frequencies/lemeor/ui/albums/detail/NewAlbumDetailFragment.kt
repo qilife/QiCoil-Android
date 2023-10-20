@@ -208,6 +208,7 @@ class NewAlbumDetailFragment : Fragment() {
                         album.audio_folder,
                         album.is_free,
                         album.order,
+                        album.order_by,
                         album.updated_at, null, listOf(), null,
                         isDownloaded = false, isUnlocked = false,
                     )

@@ -74,6 +74,7 @@ data class Album(
     var audio_folder: String,
     var is_free: Int,
     var order: Int,
+    var order_by: Int,
     var updated_at: Long,
     @TypeConverters(StringConverter::class) var descriptions: List<String>?,
     @TypeConverters(TrackConverter::class) var tracks: List<Track>,

@@ -71,8 +71,8 @@ class AlbumsAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    fun setData(categoryList: List<Album>?) {
-        mData = categoryList as ArrayList<Album>
+    fun setData(categoryList: ArrayList<Album>) {
+        mData = categoryList
         notifyDataSetChanged()
     }
 }

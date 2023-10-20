@@ -120,14 +120,14 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
 
                     if (r.updated_at > l.updated_at) {
                         db.albumDao().insert(Album(r.index, r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
-                                r.is_free, r.order, r.updated_at, r.descriptions, r.tracks, r.tag, l.isDownloaded, checkUnlocked(r.is_free)))
+                                r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, l.isDownloaded, checkUnlocked(r.is_free)))
                     }
                 }
             }
 
             if (!isFind) {
                 db.albumDao().insert(Album(r.index, r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
-                        r.is_free, r.order, r.updated_at, r.descriptions, r.tracks, r.tag, true, checkUnlocked(r.is_free)))
+                        r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, true, checkUnlocked(r.is_free)))
             }
         }
 
