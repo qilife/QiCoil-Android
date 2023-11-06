@@ -8,6 +8,7 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="text_press">#0e1a40</color>
+    <color name="item_selected">#888888</color>
 
 
 
@@ -21,4 +22,6 @@
     <color name="subs_buy_now_color2">#fff000</color>
     <color name="color_gray">#808080</color>
     <color name="color_launcher">#2B1653</color>
+    <color name="color_green">#059F83</color>
+    <color name="color_greyB">#B5B5B5</color>
 </resources>

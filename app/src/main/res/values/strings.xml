@@ -6,6 +6,7 @@
 
     <!--region Navigation-->
     <string name="navigation_lbl_albums">Albums</string>
+    <string name="navigation_lbl_rife">Rife</string>
     <string name="navigation_lbl_programs">Programs</string>
     <string name="navigation_lbl_videos">Videos</string>
     <string name="navigation_lbl_discover">Shop</string>

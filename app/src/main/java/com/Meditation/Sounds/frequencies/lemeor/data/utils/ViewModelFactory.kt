@@ -22,6 +22,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.ProgramRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailViewModel
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.tabs.FrequencyViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.VideoRepository
 
@@ -67,6 +69,13 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
 
         if (modelClass.isAssignableFrom(ChangePassViewModel::class.java)) {
             return ChangePassViewModel(ChangePassRepository(apiHelper)) as T
+        }
+
+        if (modelClass.isAssignableFrom(NewRifeViewModel::class.java)) {
+            return NewRifeViewModel(ProgramRepository(localData)) as T
+        }
+        if (modelClass.isAssignableFrom(FrequencyViewModel::class.java)) {
+            return FrequencyViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

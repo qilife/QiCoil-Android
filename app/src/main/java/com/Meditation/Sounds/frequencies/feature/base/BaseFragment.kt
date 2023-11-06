@@ -63,11 +63,11 @@ abstract class BaseFragment : Fragment() {
             if (isShow) {
                 mProgressDialog!!.show()
             } else {
-                if (mProgressDialog!!.isShowing()) {
+                if (mProgressDialog!!.isShowing) {
                     mProgressDialog!!.dismiss()
                 }
             }
-        } catch (ex: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
         }
 
     }

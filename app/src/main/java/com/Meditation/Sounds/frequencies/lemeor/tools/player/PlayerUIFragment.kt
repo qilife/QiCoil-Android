@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.tools.player
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -23,6 +24,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.base.NewBaseFragment
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.player_ui_fragment.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class PlayerUIFragment : NewBaseFragment() {
@@ -35,6 +38,7 @@ class PlayerUIFragment : NewBaseFragment() {
                 playing = state.state == PlaybackStateCompat.STATE_PLAYING
                 player_play?.post {
                     if (playing) {
+                        EventBus.getDefault().post("play Album")
                         player_play.setImageDrawable(
                             getDrawable(
                                 requireContext(),
@@ -100,6 +104,21 @@ class PlayerUIFragment : NewBaseFragment() {
         )
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: Any?) {
+        if (event is String && event == "play Rife") {
+            val rotation: Animation =
+                AnimationUtils.loadAnimation(requireContext(), R.anim.clockwise_rotation)
+            rotation.repeatCount = Animation.INFINITE
+            player_repeat.clearAnimation()
+            if (mediaController != null)
+                if (playing) {
+                    isUserPaused = true
+                    mediaController?.transportControls?.pause()
+                }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -109,10 +128,17 @@ class PlayerUIFragment : NewBaseFragment() {
 
     private fun setListeners() {
         currentTrack.observe(viewLifecycleOwner) {
-            track_name.text = it.title
+            if(it is MusicRepository.Track){
+                track_name.text = it.title
 
-            loadImage(requireContext(), track_image, it.album)
-            Log.i("currenttracl", "t-->" + it.duration)
+                loadImage(requireContext(), track_image, it.album)
+                Log.i("currenttracl", "t-->" + it.duration)
+            }else if(it is MusicRepository.Frequency){
+                track_name.text = it.frequency.toString()
+
+//                loadImage(requireContext(), track_image, it.album)
+                Log.i("currenttracl", "t-->" + it.duration)
+            }
         }
 
         currentPosition.observe(viewLifecycleOwner) {

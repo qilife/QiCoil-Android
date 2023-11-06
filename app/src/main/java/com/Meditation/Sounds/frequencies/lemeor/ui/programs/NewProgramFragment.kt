@@ -30,6 +30,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetail
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.HIGHER_QUANTUM_TIER_ID
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.QUANTUM_TIER_ID
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
 import kotlinx.android.synthetic.main.fragment_new_program.*
 import kotlinx.coroutines.CoroutineScope

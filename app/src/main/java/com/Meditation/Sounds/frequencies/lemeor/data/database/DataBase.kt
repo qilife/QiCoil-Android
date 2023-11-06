@@ -8,33 +8,9 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.Meditation.Sounds.frequencies.BuildConfig
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.AlbumsConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.CategoryConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.Converters
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.IntConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.PlaylistConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.PlaylistItemConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.ProgramConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.StringConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.TagConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.TierConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.TrackConverter
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.AlbumDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.CategoryDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.HomeDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.PlaylistDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.ProgramDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TagDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TierDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Category
-import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Playlist
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Tag
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Tier
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
+import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.*
+import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 
 @Database(entities = [
     HomeResponse::class,
@@ -44,21 +20,23 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
     Album::class,
     Track::class,
     Program::class,
-    Playlist::class
+    Playlist::class,
+//    Rife::class,
 ], version = 2)
 
 @TypeConverters(
-        TierConverter::class,
-        CategoryConverter::class,
-        TagConverter::class,
-        AlbumsConverter::class,
-        PlaylistConverter::class,
-        PlaylistItemConverter::class,
-        ProgramConverter::class,
-        TrackConverter::class,
-        IntConverter::class,
-        StringConverter::class,
-        Converters::class
+    TierConverter::class,
+    CategoryConverter::class,
+    TagConverter::class,
+    AlbumsConverter::class,
+    PlaylistConverter::class,
+    PlaylistItemConverter::class,
+    ProgramConverter::class,
+    TrackConverter::class,
+    IntConverter::class,
+    StringConverter::class,
+    Converters::class,
+//    ListRifeConverter::class
 )
 abstract class DataBase : RoomDatabase() {
 

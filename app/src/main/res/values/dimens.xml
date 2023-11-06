@@ -105,4 +105,6 @@
     <dimen name="text_size_17">17sp</dimen>
     <dimen name="indent_6">6dp</dimen>
     <dimen name="text_size_24">24sp</dimen>
+    <dimen name="bottom_bar_icon_size">30sp</dimen>
+    <dimen name="bottom_bar_icon_padding">3sp</dimen>
 </resources>

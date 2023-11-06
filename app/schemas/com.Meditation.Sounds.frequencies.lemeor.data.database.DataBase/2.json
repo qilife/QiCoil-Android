@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "0279464bd9c218c7eb7114fcaf258d6c",
+    "identityHash": "0e41e4ee51cc9769f6ea21d44568531b",
     "entities": [
       {
         "tableName": "home",
@@ -212,7 +212,7 @@
       },
       {
         "tableName": "album",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`index` INTEGER NOT NULL, `id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, PRIMARY KEY(`index`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`index` INTEGER NOT NULL, `id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `order_by` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, PRIMARY KEY(`index`))",
         "fields": [
           {
             "fieldPath": "index",
@@ -265,6 +265,12 @@
           {
             "fieldPath": "order",
             "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order_by",
+            "columnName": "order_by",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -522,7 +528,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0279464bd9c218c7eb7114fcaf258d6c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0e41e4ee51cc9769f6ea21d44568531b')"
     ]
   }
 }

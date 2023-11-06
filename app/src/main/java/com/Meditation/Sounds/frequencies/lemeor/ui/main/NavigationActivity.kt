@@ -12,12 +12,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Environment
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -66,23 +68,23 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.options.NewOptionsFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
 import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.Meditation.Sounds.frequencies.tasks.BaseTask
 import com.Meditation.Sounds.frequencies.tasks.GetFlashSaleTask
-import com.Meditation.Sounds.frequencies.utils.*
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.CopyAssets.copyAssetFolder
+import com.Meditation.Sounds.frequencies.utils.QcAlarmManager
+import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
+import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.gson.Gson
-import com.suddenh4x.ratingdialog.AppRating
-import com.suddenh4x.ratingdialog.buttons.ConfirmButtonClickListener
-import com.suddenh4x.ratingdialog.preferences.RatingThreshold
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.coroutines.CoroutineScope
@@ -98,9 +100,9 @@ import java.io.File
 
 const val REQUEST_CODE_PERMISSION = 1111
 
-class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
+class NavigationActivity : AppCompatActivity(),
     CategoriesPagerListener, OnTiersFragmentListener, ApiListener<Any> {
-
+    private var mViewGroupCurrent: View? = null
     private lateinit var mViewModel: HomeViewModel
     private var playerUI: PlayerUIFragment? = null
 
@@ -404,9 +406,11 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             )
         ).get(HomeViewModel::class.java)
 
-        nav_view.setOnNavigationItemSelectedListener(this)
-
-        setFragment(TiersPagerFragment())
+        navigation_albums.onSelected {
+            closeSearch()
+            search_layout.visibility = View.VISIBLE
+            setFragment(TiersPagerFragment())
+        }
 
         flash_sale.visibility = View.GONE //At the request of the client
 
@@ -435,6 +439,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
                     Log.d("FACEBOOK", "Login onError")
                 }
             })
+        onButtonNavigationSelected()
     }
 
 
@@ -492,50 +497,57 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
             R.id.nav_host_fragment,
             fragment,
             fragment.javaClass.simpleName
-        )
-            .commit()
+        ).commit()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    @Suppress("UNSAFE_CALL_ON_PARTIALLY_DEFINED_RESOURCE")
+    private fun onButtonNavigationSelected() {
 //        askRating()
-        closeSearch()
 //        hideKeyboard(applicationContext, album_search)
-        when (item.itemId) {
-            R.id.navigation_albums -> {
+        navigation_albums.setOnClickListener {
+            navigation_albums.onSelected {
+                closeSearch()
                 search_layout.visibility = View.VISIBLE
                 setFragment(TiersPagerFragment())
-                return true
             }
-
-            R.id.navigation_programs -> {
+        }
+        navigation_rife.setOnClickListener {
+            navigation_rife.onSelected {
+                closeSearch()
+                isTrackAdd = false
+                search_layout.visibility = View.GONE
+                setFragment(NewRifeFragment())
+            }
+        }
+        navigation_programs.setOnClickListener {
+            navigation_programs.onSelected {
+                closeSearch()
                 isTrackAdd = false
                 search_layout.visibility = View.VISIBLE
                 setFragment(NewProgramFragment())
-                return true
             }
-
-            R.id.navigation_videos -> {
+        }
+        navigation_videos.setOnClickListener {
+            navigation_videos.onSelected {
+                closeSearch()
                 search_layout.visibility = View.VISIBLE
                 setFragment(NewVideosFragment())
-                return true
             }
-
-            R.id.navigation_discover -> {
+        }
+        navigation_discover.setOnClickListener {
+            navigation_discover.onSelected {
+                closeSearch()
                 search_layout.visibility = View.VISIBLE
                 setFragment(DiscoverFragment())
-                return true
             }
-
-            R.id.navigation_options -> {
-
+        }
+        navigation_options.setOnClickListener {
+            navigation_options.onSelected {
+                closeSearch()
                 search_layout.visibility = View.VISIBLE
                 setFragment(NewOptionsFragment())
-                return true
             }
-
         }
-
-        return false
     }
 
     fun showPlayerUI() {
@@ -559,6 +571,15 @@ class NavigationActivity : AppCompatActivity(), OnNavigationItemSelectedListener
         playerUI = null
     }
 
+
+    private fun View.onSelected(listener: () -> Unit) {
+        if (mViewGroupCurrent != this) {
+            mViewGroupCurrent?.isSelected = false
+            mViewGroupCurrent = this
+            mViewGroupCurrent?.isSelected = true
+            listener.invoke()
+        }
+    }
 
     //region SEARCH
     private fun initSearch() {

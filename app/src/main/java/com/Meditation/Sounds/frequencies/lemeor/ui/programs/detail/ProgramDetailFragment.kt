@@ -2,7 +2,6 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,11 +29,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailF
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.utils.Utils
-import kotlinx.android.synthetic.main.fragment_program_detail.program_back
-import kotlinx.android.synthetic.main.fragment_program_detail.program_name
-import kotlinx.android.synthetic.main.fragment_program_detail.program_play
-import kotlinx.android.synthetic.main.fragment_program_detail.program_time
-import kotlinx.android.synthetic.main.fragment_program_detail.program_tracks_recycler
+import kotlinx.android.synthetic.main.fragment_program_detail.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +37,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.Collections
+import java.util.*
 
 
 class ProgramDetailFragment : Fragment() {
@@ -203,9 +198,11 @@ class ProgramDetailFragment : Fragment() {
 
                 if (currentTrack.value != null) {
                     val track = currentTrack.value
-                    val indexSelected = tracks.indexOfFirst { it.id == track?.trackId }
-                    if (indexSelected >= 0) {
-                        mTrackAdapter?.setSelected(indexSelected)
+                    if (track is MusicRepository.Track) {
+                        val indexSelected = tracks.indexOfFirst { it.id == track?.trackId }
+                        if (indexSelected >= 0) {
+                            mTrackAdapter?.setSelected(indexSelected)
+                        }
                     }
                 }
 
@@ -306,7 +303,7 @@ class ProgramDetailFragment : Fragment() {
             }
 
             trackList = data
-
+            rifeList = null
             CoroutineScope(Dispatchers.Main).launch {
                 activity.showPlayerUI()
 

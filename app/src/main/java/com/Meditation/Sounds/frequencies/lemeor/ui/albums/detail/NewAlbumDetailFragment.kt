@@ -19,15 +19,18 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.AlbumDao
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
+import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -53,9 +56,17 @@ class NewAlbumDetailFragment : Fragment() {
             ?: throw IllegalArgumentException("Must call through newInstance()")
     }
 
+    private val type: String by lazy {
+        arguments?.getString(ARG_TYPE)
+            ?: throw IllegalArgumentException("Must call through newInstance()")
+    }
+
+    var mRife: Rife? = null
+
     private lateinit var mViewModel: NewAlbumDetailViewModel
     private var mDescriptionAdapter: DescriptionAdapter? = null
     private var mTrackAdapter: AlbumTrackAdapter? = null
+    private var mRifeAdapter: RifeAdapter? = null
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private var trackDao: TrackDao? = null
@@ -77,13 +88,19 @@ class NewAlbumDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         firebaseAnalytics = Firebase.analytics
         initUI()
-
-        mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) {
-            if (it != null) {
-                album = it
-                setUI(it)
+        if (type == Constants.TYPE_ALBUM) {
+            mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    album = it
+                    setUI(it)
+                }
+            }
+        } else if (type == Constants.TYPE_RIFE) {
+            if (mRife != null) {
+                setUI(mRife!!)
             }
         }
+
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
@@ -117,9 +134,10 @@ class NewAlbumDetailFragment : Fragment() {
                 DataBase.getInstance(requireContext())
             )
         ).get(NewAlbumDetailViewModel::class.java)
-
-        trackDao = DataBase.getInstance(requireContext()).trackDao()
-        albumDao = DataBase.getInstance(requireContext()).albumDao()
+        if (type == Constants.TYPE_ALBUM) {
+            trackDao = DataBase.getInstance(requireContext()).trackDao()
+            albumDao = DataBase.getInstance(requireContext()).albumDao()
+        }
     }
 
     private fun setUI(album: Album) {
@@ -170,9 +188,76 @@ class NewAlbumDetailFragment : Fragment() {
 
         if (currentTrack.value != null) {
             val track = currentTrack.value
-            val indexSelected = album.tracks.indexOfFirst { it.id == track?.trackId }
-            if (indexSelected >= 0) {
-                mTrackAdapter?.setSelected(indexSelected)
+            if (track is MusicRepository.Track) {
+                val indexSelected = album.tracks.indexOfFirst { it.id == track.trackId }
+                if (indexSelected >= 0) {
+                    mTrackAdapter?.setSelected(indexSelected)
+                }
+            }
+        }
+
+    }
+
+    private fun setUI(rife: Rife) {
+        currentTrack.value = null
+        currentTrackIndex.value = null
+
+        currentTrackIndex.observe(viewLifecycleOwner) {
+            rife.getFrequency().forEachIndexed { index, _ ->
+                if (index == it) {
+                    mRifeAdapter?.setSelected(index)
+                }
+            }
+        }
+
+        album_back.setOnClickListener { onBackPressed() }
+
+        album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
+
+//        loadImage(requireContext(), album_image, album)
+
+        mDescriptionAdapter =
+            DescriptionAdapter(requireContext(), arrayListOf(rife.title))
+        album_description_recycler.adapter = mDescriptionAdapter
+
+        album_play.setOnClickListener {
+            if (rife.getFrequency().isNotEmpty()) {
+                play(rife)
+            }
+        }
+        val local = rife.getFrequency().mapIndexed { index, s ->
+            MusicRepository.Frequency(
+                index,
+                rife.title,
+                s.toFloat(),
+                rife.id,
+                index,
+                false,
+                0,
+                0,
+            )
+        }
+        mRifeAdapter = RifeAdapter(requireContext(), local)
+
+        mRifeAdapter?.setOnClickListener(object : RifeAdapter.Listener {
+            override fun onTrackClick(frequency: MusicRepository.Frequency, i: Int) {
+                isMultiPlay = false
+                mRifeAdapter?.setSelected(i)
+                play(rife)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    EventBus.getDefault().post(PlayerSelected(i))
+                }, 200)
+            }
+        })
+        album_tracks_recycler.adapter = mRifeAdapter
+
+        if (currentTrack.value != null) {
+            val item = currentTrack.value
+            if (item is MusicRepository.Frequency) {
+                val indexSelected = item.rifeId
+                if (indexSelected >= 0) {
+                    mRifeAdapter?.setSelected(indexSelected)
+                }
             }
         }
 
@@ -200,7 +285,8 @@ class NewAlbumDetailFragment : Fragment() {
                         t.isDownloaded = false
                         tracks.add(t)
                     }
-                    t.album = Album(album.index,
+                    t.album = Album(
+                        album.index,
                         album.id, album.category_id,
                         album.tier_id,
                         album.name,
@@ -267,8 +353,53 @@ class NewAlbumDetailFragment : Fragment() {
                 }
             }
 
-            trackList = data
+            val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
+                putParcelableArrayListExtra("playlist", data)
+            }
+            requireActivity().startService(mIntent)
+            CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
+        }
+    }
 
+    fun play(rife: Rife) {
+        val activity = activity as NavigationActivity
+
+        if (isPlayProgram || playAlbumId != rife.id) {
+            activity.hidePlayerUI()
+        }
+
+        isPlayAlbum = true
+        playAlbumId = rife.id
+        isPlayProgram = false
+        playProgramId = -1
+
+        val data: ArrayList<MusicRepository.Frequency> = ArrayList()
+        val local = rife.getFrequency()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            local.forEachIndexed { index, s ->
+                try {
+                    data.add(
+                        MusicRepository.Frequency(
+                            index,
+                            rife.title,
+                            s.toFloat(),
+                            rife.id,
+                            index,
+                            false,
+                            0,
+                            0,
+                        )
+                    )
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
+            }
+
+            val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
+                putParcelableArrayListExtra("playlist", data)
+            }
+            requireActivity().startService(mIntent)
             CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
         }
     }
@@ -299,13 +430,21 @@ class NewAlbumDetailFragment : Fragment() {
     companion object {
         const val ARG_ALBUM_ID = "arg_album"
         const val ARG_CATEGORY_ID = "arg_category"
+        const val ARG_TYPE = "arg_type"
         var album: Album? = null
 
         @JvmStatic
-        fun newInstance(id: Int, category_id: Int) = NewAlbumDetailFragment().apply {
+        fun newInstance(
+            id: Int,
+            category_id: Int,
+            type: String = Constants.TYPE_ALBUM,
+            item: Rife? = null
+        ) = NewAlbumDetailFragment().apply {
+            mRife = item
             arguments = Bundle().apply {
                 putInt(ARG_ALBUM_ID, id)
                 putInt(ARG_CATEGORY_ID, category_id)
+                putString(ARG_TYPE, type)
             }
         }
     }

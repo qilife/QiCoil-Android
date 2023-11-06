@@ -8,22 +8,224 @@
     android:focusableInTouchMode="true"
     tools:context=".lemeor.ui.main.NavigationActivity">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <LinearLayout
         android:id="@+id/nav_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:animateLayoutChanges="true"
         android:background="@color/color_main_activity_navigation"
-        app:itemIconTint="@drawable/navigation_item_state_color"
-        app:itemTextColor="@drawable/navigation_item_state_color"
-        app:labelVisibilityMode="labeled"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        android:paddingBottom="4sp">
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_albums"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_albums"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_navigation_albums"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_albums"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_rife"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_rife"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_navigation_albums"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_rife"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_programs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_programs"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_navigation_playlist"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_programs"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_videos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_videos"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_navigation_video"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_videos"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_discover"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_discover"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_explore"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_discover"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navigation_options"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/bottom_bar_icon_size"
+                    android:layout_height="@dimen/bottom_bar_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/navigation_lbl_options"
+                    android:padding="@dimen/bottom_bar_icon_padding"
+                    android:src="@drawable/ic_navigation_option"
+                    app:tint="@color/color_gray_white_selected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_lbl_options"
+                    android:textColor="@color/color_gray_white_selected"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"

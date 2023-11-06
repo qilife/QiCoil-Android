@@ -1,7 +1,5 @@
 package com.Meditation.Sounds.frequencies.utils
 
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
-
 /**
  * Created by Admin on 3/9/2018.
  */
@@ -291,6 +289,7 @@ class Constants {
         var EXTENSION_MP3_FILE = "mp3"
         @JvmStatic
         val ALBUM_INFOR_FILE_NAME = "album_infor.json"
+
         @JvmStatic
         val IS_DOWNLOADED_ALL_ALBUM = "IS_DOWNLOADED_ALL_ALBUM"
 
@@ -300,5 +299,20 @@ class Constants {
 //        var tracks = ArrayList<Track>()
 
         var isGuestLogin = false
+
+        val optionsHz = arrayListOf(
+            Pair(0.0, 28000.0),
+            Pair(5.0, 500.0),
+            Pair(500.0, 1000.0),
+            Pair(1000.0, 3000.0),
+            Pair(3000.0, 11000.0),
+            Pair(11000.0, 28000.0),
+        )
+
+        @JvmField
+        var TYPE_ALBUM = "TYPE_ALBUM"
+
+        @JvmField
+        var TYPE_RIFE = "TYPE_RIFE"
     }
 }

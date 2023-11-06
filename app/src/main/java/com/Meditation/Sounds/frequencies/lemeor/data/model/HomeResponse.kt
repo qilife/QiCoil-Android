@@ -1,7 +1,10 @@
 package com.Meditation.Sounds.frequencies.lemeor.data.model
 
 import android.os.Parcelable
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
@@ -163,6 +166,31 @@ data class Playlist(
         updated_at,
         false
     )
+}
+
+@Entity(tableName = "rife")
+@Parcelize
+data class Rife(
+    @PrimaryKey
+    @SerializedName("_id")
+    var id: Int,
+    var title: String,
+    var description: String,
+    var image: String,
+    var likes: Int,
+    var frequencies: String,
+    var categoryId: String,
+    var subCategoryId: String,
+    var audioFolder: String,
+    var isFree: Boolean,
+    var qilifestoreUrl: String,
+    var lock: Boolean,
+    @Ignore
+    var tag: String,
+) : Parcelable {
+    fun getFrequency() =
+        if (frequencies.isEmpty() || frequencies == "") arrayListOf<String>()
+        else frequencies.split(',')
 }
 
 

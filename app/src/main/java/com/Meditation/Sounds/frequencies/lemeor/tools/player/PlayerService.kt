@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -25,6 +26,8 @@ import androidx.core.content.ContextCompat
 import androidx.media.app.NotificationCompat
 import androidx.media.session.MediaButtonReceiver
 import com.Meditation.Sounds.frequencies.R
+import com.Meditation.Sounds.frequencies.generators.SoundGenerator
+import com.Meditation.Sounds.frequencies.generators.model.WaveTypes
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.android.exoplayer2.*
@@ -49,20 +52,24 @@ import java.util.*
 class PlayerService : Service() {
 
     companion object {
-        var musicRepository: MusicRepository? = null
+        var musicRepository: MusicRepository<Any>? = null
         const val NOTIFICATION_ID = 404
         const val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
+        const val EXTRA_PLAYLIST = "playlist"
     }
 
+    private val soundFrequency = SoundGenerator().apply {
+        init(44100)
+        setWaveform(WaveTypes.SINUSOIDAL)
+        setVolume(1F)
+        setBalance(1F)
+        setAutoUpdateOneCycleSample(true)
+        refreshOneCycleData()
+    }
     private val metadataBuilder = MediaMetadataCompat.Builder()
 
     private val stateBuilder = PlaybackStateCompat.Builder().setActions(
-        PlaybackStateCompat.ACTION_PLAY
-                or PlaybackStateCompat.ACTION_STOP
-                or PlaybackStateCompat.ACTION_PAUSE
-                or PlaybackStateCompat.ACTION_PLAY_PAUSE
-                or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-                or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+        PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP or PlaybackStateCompat.ACTION_PAUSE or PlaybackStateCompat.ACTION_PLAY_PAUSE or PlaybackStateCompat.ACTION_SKIP_TO_NEXT or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
     )
     private var isRegisteredBusyReceiver = false
 
@@ -98,15 +105,18 @@ class PlayerService : Service() {
         SimpleExoPlayer.Builder(
             this,
             DefaultRenderersFactory(this),
-        ).setLoadControl(DefaultLoadControl())
-            .setTrackSelector(DefaultTrackSelector(this))
-            .build()
+        ).setLoadControl(DefaultLoadControl()).setTrackSelector(DefaultTrackSelector(this)).build()
     }
-    private val progressTimer = Timer()
+    private var progressTimer = Timer()
     private var isShuffle: Boolean = false
 
     private var playPosition: Long = 0
     private var isRepeatAll = false
+
+    private var totalPlayedSoundTime = 0L
+    private var startedPlaySoundTime = 0L
+
+    private val trackList = mutableListOf<MusicRepository.Music>()
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
@@ -167,14 +177,8 @@ class PlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
         EventBus.getDefault().register(this)
         //trackList = ArrayList()
-        if (trackList != null && trackList?.size != 0) {
-            musicRepository = trackList?.let { MusicRepository(it) }!!
-        } else {
-            return
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
@@ -214,28 +218,49 @@ class PlayerService : Service() {
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
         //send state
-        sendData()
     }
 
     private fun sendData() {
         progressTimer.schedule(object : TimerTask() {
             override fun run() {
                 CoroutineScope(Dispatchers.Main).launch {
+                    if (musicRepository != null) {
+                        if (musicRepository?.getCurrent() is MusicRepository.Track) {
+                            var position = exoPlayer.currentPosition
+                            if (position < 0) position = 0
 
-                    var position = exoPlayer.currentPosition
-                    if (position < 0) position = 0
+                            currentPosition.postValue(position)
 
-                    currentPosition.postValue(position)
+                            val dur = exoPlayer.duration
+                            duration.postValue(((max.value ?: dur) - position).coerceAtLeast(0))
+                        } else {
 
-                    val dur = exoPlayer.duration
-                    duration.postValue(((max.value ?: dur) - position).coerceAtLeast(0))
+                            val timePlayed =
+                                totalPlayedSoundTime + SystemClock.elapsedRealtime() - startedPlaySoundTime
+                            if (181000L - timePlayed < 0) {
+                                startedPlaySoundTime = SystemClock.elapsedRealtime()
+                            }
+                            duration.postValue((181000L - timePlayed).coerceAtLeast(0))
+                            currentPosition.postValue(timePlayed)
+
+                        }
+                    }
                 }
             }
-        }, 0, 300)
+        }, 0, 200)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         MediaButtonReceiver.handleIntent(mediaSession, intent)
+        if (intent.hasExtra(EXTRA_PLAYLIST)) {
+            val trackList =
+                intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
+            if (trackList?.isNotEmpty() == true) {
+                this.trackList.clear()
+                this.trackList.addAll(trackList)
+                musicRepository = MusicRepository(trackList)
+            }
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -246,6 +271,7 @@ class PlayerService : Service() {
         progressTimer.purge()
         mediaSession.release()
         exoPlayer.release()
+        soundFrequency.release()
     }
 
     private val mediaSessionCallback: MediaSessionCompat.Callback =
@@ -263,10 +289,21 @@ class PlayerService : Service() {
                         //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
                     }
                     val track = musicRepository?.getCurrent()
+                    //check obj frequency and track
 //                    mMultiPlay = track.multiplay
+
                     if (track != null) {
+                        if (track is MusicRepository.Frequency) {
+                            soundFrequency.startPlayback()
+                            max.postValue(181000)
+                        } else {
+                            soundFrequency.stopPlayback()
+                        }
                         updateMetadataFromTrack(track)
                         prepareToPlay(track)
+
+                    } else {
+                        soundFrequency.stopPlayback()
                     }
 
                     if (!audioFocusRequested) {
@@ -309,10 +346,14 @@ class PlayerService : Service() {
 
             override fun onPause() {
                 if (exoPlayer.playWhenReady) {
+                    soundFrequency.stopPlayback()
+                    progressTimer.cancel()
+                    progressTimer.purge()
+                    totalPlayedSoundTime += SystemClock.elapsedRealtime() - startedPlaySoundTime
                     playPosition = exoPlayer.currentPosition
 
                     exoPlayer.playWhenReady = false
-                    if(isRegisteredBusyReceiver) {
+                    if (isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = false
                         unregisterReceiver(becomingNoisyReceiver)
                     }
@@ -331,8 +372,11 @@ class PlayerService : Service() {
 
             override fun onStop() {
                 if (exoPlayer.playWhenReady) {
+                    soundFrequency.stopPlayback()
+                    progressTimer.cancel()
+                    progressTimer.purge()
                     exoPlayer.playWhenReady = false
-                    if(isRegisteredBusyReceiver) {
+                    if (isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = false
                         unregisterReceiver(becomingNoisyReceiver)
                     }
@@ -380,80 +424,96 @@ class PlayerService : Service() {
             }
 
             override fun onSkipToPrevious() {
-                playPosition = 0
-                if (musicRepository != null) {
-                    val track: MusicRepository.Track = if (isShuffle) {
-                        musicRepository!!.getRandom()
-                    } else {
-                        musicRepository!!.getPrevious()
-                    }
+                try {
+                    playPosition = 0
+                    if (musicRepository != null) {
+                        val track: MusicRepository.Music = if (isShuffle) {
+                            musicRepository!!.getRandom() as MusicRepository.Music
+                        } else {
+                            musicRepository!!.getPrevious() as MusicRepository.Music
+                        }
 
-                    updateMetadataFromTrack(track)
-                    refreshNotificationAndForegroundStatus(currentState)
-                    prepareToPlay(track)
+                        updateMetadataFromTrack(track)
+                        refreshNotificationAndForegroundStatus(currentState)
+                        prepareToPlay(track)
+                    }
+                } catch (_: Exception) {
+
                 }
             }
 
-            fun prepareToPlay(track: MusicRepository.Track) {
-                val file = File(
-                    getSaveDir(
-                        applicationContext, track.filename,
-                        track.album.audio_folder
+            fun prepareToPlay(item: Any) {
+                if (item is MusicRepository.Track) {
+                    val file = File(
+                        getSaveDir(
+                            applicationContext, item.filename, item.album.audio_folder
+                        )
                     )
-                )
-                val preloaded = File(
-                    getPreloadedSaveDir(
-                        applicationContext,
-                        track.filename,
-                        track.album.audio_folder
+                    val preloaded = File(
+                        getPreloadedSaveDir(
+                            applicationContext, item.filename, item.album.audio_folder
+                        )
                     )
-                )
 
-                var uri: Uri? = null
-                if (file.exists()) {
-                    uri = Uri.fromFile(file)
-                }
-
-                if (preloaded.exists()) {
-                    uri = Uri.fromFile(preloaded)
-                }
-                if (uri == null) {
-                    uri = Uri.parse(
-                        getTrackUrl(track.album, track.filename)
-                    )
-                    if (!Utils.isConnectedToNetwork(applicationContext)) {
-                        Toast.makeText(
-                            applicationContext,
-                            getString(R.string.err_network_available),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    var uri: Uri? = null
+                    if (file.exists()) {
+                        uri = Uri.fromFile(file)
                     }
-                }
-                uri?.let {
-                    if (currentUri?.toString() != uri.toString()
-                        || (exoPlayer.playbackState != PlaybackState.STATE_PAUSED
-                                && exoPlayer.playbackState != PlaybackState.STATE_PLAYING)
-                    ) {
-                        currentUri = uri
 
-                        //todo remake this ugly fading
-                        exoPlayer.volume = 0F
-                        Thread.sleep(100)
-                        buildMediaSource(uri).let { exoPlayer.setMediaSource(it) }
-                        exoPlayer.prepare()
-                        exoPlayer.seekTo(playPosition)
-                        Thread.sleep(100)
-                        exoPlayer.volume = 1F
-                        duration.postValue(0)
-                    } else {
-                        exoPlayer.seekTo(playPosition)
+                    if (preloaded.exists()) {
+                        uri = Uri.fromFile(preloaded)
                     }
-                    exoPlayer.play()
-                    if(!isRegisteredBusyReceiver) {
+                    if (uri == null) {
+                        uri = Uri.parse(
+                            getTrackUrl(item.album, item.filename)
+                        )
+                        if (!Utils.isConnectedToNetwork(applicationContext)) {
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.err_network_available),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    uri?.let {
+                        if (currentUri?.toString() != uri.toString() || (exoPlayer.playbackState != PlaybackState.STATE_PAUSED && exoPlayer.playbackState != PlaybackState.STATE_PLAYING)) {
+                            currentUri = uri
+
+                            //todo remake this ugly fading
+                            exoPlayer.volume = 0F
+                            Thread.sleep(100)
+                            buildMediaSource(uri).let { exoPlayer.setMediaSource(it) }
+                            exoPlayer.prepare()
+                            exoPlayer.seekTo(playPosition)
+                            Thread.sleep(100)
+                            exoPlayer.volume = 1F
+                            duration.postValue(0)
+                        } else {
+                            exoPlayer.seekTo(playPosition)
+                        }
+                        exoPlayer.play()
+                        if (!isRegisteredBusyReceiver) {
+                            isRegisteredBusyReceiver = true
+                            registerReceiver(
+                                becomingNoisyReceiver, IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                            )
+                        }
+                        mediaSession.isActive = true
+                        mediaSession.setPlaybackState(
+                            stateBuilder.setState(
+                                PlaybackStateCompat.STATE_PLAYING,
+                                PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,
+                                1f
+                            ).build()
+                        )
+                        currentState = PlaybackStateCompat.STATE_PLAYING
+                        refreshNotificationAndForegroundStatus(currentState)
+                    }
+                } else if (item is MusicRepository.Frequency) {
+                    if (!isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = true
                         registerReceiver(
-                            becomingNoisyReceiver,
-                            IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                            becomingNoisyReceiver, IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
                         )
                     }
                     mediaSession.isActive = true
@@ -467,6 +527,11 @@ class PlayerService : Service() {
                     currentState = PlaybackStateCompat.STATE_PLAYING
                     refreshNotificationAndForegroundStatus(currentState)
                 }
+                progressTimer.cancel()
+                progressTimer.purge()
+                startedPlaySoundTime = SystemClock.elapsedRealtime()
+                progressTimer = Timer()
+                sendData()
             }
 
             private fun buildMediaSource(uri: Uri): MediaSource {
@@ -477,19 +542,36 @@ class PlayerService : Service() {
                 return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
             }
 
-            fun updateMetadataFromTrack(track: MusicRepository.Track) {
-                metadataBuilder.putBitmap(
-                    MediaMetadataCompat.METADATA_KEY_ART,
-                    BitmapFactory.decodeResource(resources, track.resId)
-                )
-                metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
-                metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.artist)
-                metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
-                metadataBuilder.putLong(
-                    MediaMetadataCompat.METADATA_KEY_DURATION,
-                    track.duration.takeIf { it>0 }?: exoPlayer.duration
-                )
-                mediaSession.setMetadata(metadataBuilder.build())
+            fun updateMetadataFromTrack(item: Any) {
+                if (item is MusicRepository.Track) {
+                    metadataBuilder.putBitmap(
+                        MediaMetadataCompat.METADATA_KEY_ART,
+                        BitmapFactory.decodeResource(resources, item.resId)
+                    )
+                    metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.title)
+                    metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, item.artist)
+                    metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, item.artist)
+                    metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
+                        item.duration.takeIf { it > 0 } ?: exoPlayer.duration)
+                    mediaSession.setMetadata(metadataBuilder.build())
+                } else if (item is MusicRepository.Frequency) {
+                    soundFrequency.frequency = item.frequency
+                    metadataBuilder.putBitmap(
+                        MediaMetadataCompat.METADATA_KEY_ART,
+                        BitmapFactory.decodeResource(resources, item.resId)
+                    )
+                    metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.title)
+                    metadataBuilder.putString(
+                        MediaMetadataCompat.METADATA_KEY_ALBUM, item.frequency.toString()
+                    )
+                    metadataBuilder.putString(
+                        MediaMetadataCompat.METADATA_KEY_ARTIST, item.frequency.toString()
+                    )
+                    metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
+                        item.duration.takeIf { it > 0 } ?: exoPlayer.duration)
+                    mediaSession.setMetadata(metadataBuilder.build())
+                }
+
 //                max.postValue(track.duration)
 //                duration.postValue(track.duration)
             }
