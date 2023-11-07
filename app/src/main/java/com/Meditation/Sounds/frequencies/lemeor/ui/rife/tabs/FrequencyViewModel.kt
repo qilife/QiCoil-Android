@@ -27,8 +27,8 @@ class FrequencyViewModel : ViewModel() {
         setWaveform(WaveTypes.SINUSOIDAL)
         setVolume(1F)
         setBalance(1F)
-        setAutoUpdateOneCycleSample(true)
-        refreshOneCycleData()
+//        setAutoUpdateOneCycleSample(true)
+//        refreshOneCycleData()
     }
 
     fun updateCurrent(v: Float) {

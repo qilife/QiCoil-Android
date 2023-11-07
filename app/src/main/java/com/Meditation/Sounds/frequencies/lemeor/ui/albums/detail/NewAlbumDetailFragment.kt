@@ -66,11 +66,14 @@ class NewAlbumDetailFragment : Fragment() {
     private lateinit var mViewModel: NewAlbumDetailViewModel
     private var mDescriptionAdapter: DescriptionAdapter? = null
     private var mTrackAdapter: AlbumTrackAdapter? = null
+
     private var mRifeAdapter: RifeAdapter? = null
+
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private var trackDao: TrackDao? = null
     private var albumDao: AlbumDao? = null
+    private var isFirst = true
 
     override fun onDestroy() {
         super.onDestroy()
@@ -199,12 +202,10 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun setUI(rife: Rife) {
-        currentTrack.value = null
-        currentTrackIndex.value = null
 
         currentTrackIndex.observe(viewLifecycleOwner) {
             rife.getFrequency().forEachIndexed { index, _ ->
-                if (index == it) {
+                if (index == it && playAlbumId == rife.id) {
                     mRifeAdapter?.setSelected(index)
                 }
             }
@@ -214,7 +215,7 @@ class NewAlbumDetailFragment : Fragment() {
 
         album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
 
-//        loadImage(requireContext(), album_image, album)
+//        loadImage(requireContext(), album_image, )
 
         mDescriptionAdapter =
             DescriptionAdapter(requireContext(), arrayListOf(rife.title))
@@ -237,25 +238,21 @@ class NewAlbumDetailFragment : Fragment() {
                 0,
             )
         }
-        mRifeAdapter = RifeAdapter(requireContext(), local)
-
-        mRifeAdapter?.setOnClickListener(object : RifeAdapter.Listener {
-            override fun onTrackClick(frequency: MusicRepository.Frequency, i: Int) {
-                isMultiPlay = false
-                mRifeAdapter?.setSelected(i)
-                play(rife)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    EventBus.getDefault().post(PlayerSelected(i))
-                }, 200)
-            }
+        mRifeAdapter = RifeAdapter(requireContext(), local, listener = {
+            isMultiPlay = false
+            mRifeAdapter?.setSelected(it)
+            play(rife)
+            Handler(Looper.getMainLooper()).postDelayed({
+                EventBus.getDefault().post(PlayerSelected(it))
+            }, 200)
         })
         album_tracks_recycler.adapter = mRifeAdapter
 
         if (currentTrack.value != null) {
             val item = currentTrack.value
             if (item is MusicRepository.Frequency) {
-                val indexSelected = item.rifeId
-                if (indexSelected >= 0) {
+                val indexSelected = item.index
+                if (indexSelected >= 0 && playAlbumId == rife.id) {
                     mRifeAdapter?.setSelected(indexSelected)
                 }
             }
@@ -352,11 +349,13 @@ class NewAlbumDetailFragment : Fragment() {
                     ex.printStackTrace()
                 }
             }
-
-            val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
-                putParcelableArrayListExtra("playlist", data)
+            if (isFirst) {
+                val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
+                    putParcelableArrayListExtra("playlist", data)
+                }
+                requireActivity().startService(mIntent)
+                isFirst = false
             }
-            requireActivity().startService(mIntent)
             CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
         }
     }
@@ -395,11 +394,14 @@ class NewAlbumDetailFragment : Fragment() {
                     ex.printStackTrace()
                 }
             }
-
-            val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
-                putParcelableArrayListExtra("playlist", data)
+            if (isFirst) {
+                val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
+                    putParcelableArrayListExtra("playlist", data)
+                }
+                requireActivity().startService(mIntent)
+                isFirst = false
             }
-            requireActivity().startService(mIntent)
+
             CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
         }
     }

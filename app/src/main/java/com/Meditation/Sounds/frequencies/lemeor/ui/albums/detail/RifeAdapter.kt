@@ -13,17 +13,8 @@ import kotlinx.android.synthetic.main.item_album_track.view.*
 class RifeAdapter(
     private val mContext: Context,
     private var mData: List<MusicRepository.Frequency>,
+    private val listener: (Int) -> Unit,
 ) : RecyclerView.Adapter<RifeAdapter.ViewHolder>() {
-
-    interface Listener {
-        fun onTrackClick(frequency: MusicRepository.Frequency, i: Int)
-    }
-
-    private var mListener: Listener? = null
-
-    fun setOnClickListener(listener: Listener) {
-        mListener = listener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -73,7 +64,7 @@ class RifeAdapter(
 
         holder.itemView.item_album_name.text = "03:00"
 
-        holder.itemView.setOnClickListener { mListener?.onTrackClick(frequency, position) }
+        holder.itemView.setOnClickListener { listener.invoke(position) }
 
         if (position == mData.size - 1) {
             holder.itemView.divider.visibility = View.INVISIBLE

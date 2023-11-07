@@ -63,10 +63,11 @@ class PlayerService : Service() {
         setWaveform(WaveTypes.SINUSOIDAL)
         setVolume(1F)
         setBalance(1F)
-        setAutoUpdateOneCycleSample(true)
-        refreshOneCycleData()
+//        setAutoUpdateOneCycleSample(true)
+//        refreshOneCycleData()
     }
     private val metadataBuilder = MediaMetadataCompat.Builder()
+
 
     private val stateBuilder = PlaybackStateCompat.Builder().setActions(
         PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP or PlaybackStateCompat.ACTION_PAUSE or PlaybackStateCompat.ACTION_PLAY_PAUSE or PlaybackStateCompat.ACTION_SKIP_TO_NEXT or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
@@ -112,6 +113,8 @@ class PlayerService : Service() {
 
     private var playPosition: Long = 0
     private var isRepeatAll = false
+    private var typePlayer = 1
+    private var timerPlayRife = 3 * 60 * 1000L
 
     private var totalPlayedSoundTime = 0L
     private var startedPlaySoundTime = 0L
@@ -128,7 +131,7 @@ class PlayerService : Service() {
         if (event?.javaClass == PlayerRepeat::class.java) {
             val repeat = event as PlayerRepeat
             var type = repeat.type
-
+            typePlayer = repeat.type
             if (type == REPEAT_MODE_ALL) {
                 isRepeatAll = true
                 type = REPEAT_MODE_OFF
@@ -221,11 +224,12 @@ class PlayerService : Service() {
     }
 
     private fun sendData() {
-        progressTimer.schedule(object : TimerTask() {
-            override fun run() {
-                CoroutineScope(Dispatchers.Main).launch {
-                    if (musicRepository != null) {
-                        if (musicRepository?.getCurrent() is MusicRepository.Track) {
+        if (musicRepository != null) {
+            val item = musicRepository?.getCurrent()
+            progressTimer.schedule(object : TimerTask() {
+                override fun run() {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (item is MusicRepository.Track) {
                             var position = exoPlayer.currentPosition
                             if (position < 0) position = 0
 
@@ -234,25 +238,37 @@ class PlayerService : Service() {
                             val dur = exoPlayer.duration
                             duration.postValue(((max.value ?: dur) - position).coerceAtLeast(0))
                         } else {
-
                             val timePlayed =
                                 totalPlayedSoundTime + SystemClock.elapsedRealtime() - startedPlaySoundTime
-                            if (181000L - timePlayed < 0) {
+                            if (timerPlayRife - timePlayed < 0) {
                                 startedPlaySoundTime = SystemClock.elapsedRealtime()
-                            }
-                            duration.postValue((181000L - timePlayed).coerceAtLeast(0))
-                            currentPosition.postValue(timePlayed)
+                                totalPlayedSoundTime = 0
+                                if (typePlayer == REPEAT_MODE_OFF) {
+                                    if (musicRepository?.isLastTrack() == true) {
+                                        mediaSessionCallback.onStop()
+                                    }
+                                } else if (typePlayer == REPEAT_MODE_ALL) {
+                                    mediaSessionCallback.onSkipToNext()
+                                }
 
+                            }
+                            duration.postValue((timerPlayRife - timePlayed).coerceAtLeast(0))
+                            currentPosition.postValue(timePlayed)
                         }
                     }
                 }
-            }
-        }, 0, 200)
+            }, 0, 200)
+        } else {
+            progressTimer.cancel()
+            progressTimer.purge()
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         MediaButtonReceiver.handleIntent(mediaSession, intent)
         if (intent.hasExtra(EXTRA_PLAYLIST)) {
+            progressTimer.cancel()
+            progressTimer.purge()
             val trackList =
                 intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
             if (trackList?.isNotEmpty() == true) {
@@ -293,17 +309,8 @@ class PlayerService : Service() {
 //                    mMultiPlay = track.multiplay
 
                     if (track != null) {
-                        if (track is MusicRepository.Frequency) {
-                            soundFrequency.startPlayback()
-                            max.postValue(181000)
-                        } else {
-                            soundFrequency.stopPlayback()
-                        }
                         updateMetadataFromTrack(track)
                         prepareToPlay(track)
-
-                    } else {
-                        soundFrequency.stopPlayback()
                     }
 
                     if (!audioFocusRequested) {
@@ -346,10 +353,6 @@ class PlayerService : Service() {
 
             override fun onPause() {
                 if (exoPlayer.playWhenReady) {
-                    soundFrequency.stopPlayback()
-                    progressTimer.cancel()
-                    progressTimer.purge()
-                    totalPlayedSoundTime += SystemClock.elapsedRealtime() - startedPlaySoundTime
                     playPosition = exoPlayer.currentPosition
 
                     exoPlayer.playWhenReady = false
@@ -358,7 +361,10 @@ class PlayerService : Service() {
                         unregisterReceiver(becomingNoisyReceiver)
                     }
                 }
-
+                soundFrequency.stopPlayback()
+                progressTimer.cancel()
+                progressTimer.purge()
+                totalPlayedSoundTime += SystemClock.elapsedRealtime() - startedPlaySoundTime
                 mediaSession.setPlaybackState(
                     stateBuilder.setState(
                         PlaybackStateCompat.STATE_PAUSED,
@@ -403,6 +409,7 @@ class PlayerService : Service() {
             }
 
             override fun onSkipToNext() {
+                totalPlayedSoundTime = 0
                 playPosition = 0
 
                 val track = if (isMultiPlay) {
@@ -443,6 +450,7 @@ class PlayerService : Service() {
             }
 
             fun prepareToPlay(item: Any) {
+                soundFrequency.stopPlayback()
                 if (item is MusicRepository.Track) {
                     val file = File(
                         getSaveDir(
@@ -526,6 +534,8 @@ class PlayerService : Service() {
                     )
                     currentState = PlaybackStateCompat.STATE_PLAYING
                     refreshNotificationAndForegroundStatus(currentState)
+                    max.postValue(timerPlayRife)
+                    soundFrequency.startPlayback()
                 }
                 progressTimer.cancel()
                 progressTimer.purge()
