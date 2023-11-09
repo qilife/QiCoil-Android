@@ -29,6 +29,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.generators.SoundGenerator
 import com.Meditation.Sounds.frequencies.generators.model.WaveTypes
 import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
@@ -294,52 +295,99 @@ class PlayerService : Service() {
         object : MediaSessionCompat.Callback() {
 
             override fun onPlay() {
-                if (!exoPlayer.playWhenReady) {
-                    try {
-                        ContextCompat.startForegroundService(
-                            applicationContext,
-                            Intent(applicationContext, PlayerService::class.java)
-                        )
-                    } catch (ex: Exception) {
-                        ex.printStackTrace()
-                        //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
-                    }
-                    val track = musicRepository?.getCurrent()
-                    //check obj frequency and track
+                val track = musicRepository?.getCurrent()
+                track?.let { item ->
+                    if(item is Track){
+                        soundFrequency.stopPlayback()
+                        if (!exoPlayer.playWhenReady) {
+                            try {
+                                ContextCompat.startForegroundService(
+                                    applicationContext,
+                                    Intent(applicationContext, PlayerService::class.java)
+                                )
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                                //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
+                            }
+                            //check obj frequency and track
 //                    mMultiPlay = track.multiplay
 
-                    if (track != null) {
-                        updateMetadataFromTrack(track)
-                        prepareToPlay(track)
-                    }
+                            updateMetadataFromTrack(item)
+                            prepareToPlay(item)
 
-                    if (!audioFocusRequested) {
-                        audioFocusRequested = true
+                            if (!audioFocusRequested) {
+                                audioFocusRequested = true
 
-                        val audioFocusResult: Int =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                audioManager.requestAudioFocus(audioFocusRequest!!)
-                            } else {
-                                audioManager.requestAudioFocus(
-                                    audioFocusChangeListener,
-                                    STREAM_MUSIC,
-                                    AUDIOFOCUS_GAIN
-                                )
+                                val audioFocusResult: Int =
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        audioManager.requestAudioFocus(audioFocusRequest!!)
+                                    } else {
+                                        audioManager.requestAudioFocus(
+                                            audioFocusChangeListener,
+                                            STREAM_MUSIC,
+                                            AUDIOFOCUS_GAIN
+                                        )
+                                    }
+
+                                if (audioFocusResult != AUDIOFOCUS_REQUEST_GRANTED) return
                             }
 
-                        if (audioFocusResult != AUDIOFOCUS_REQUEST_GRANTED) return
+                            mediaSession.isActive = true
+                            if(!isRegisteredBusyReceiver) {
+                                isRegisteredBusyReceiver = true
+                                registerReceiver(
+                                    becomingNoisyReceiver,
+                                    IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                                )
+                            }
+                            exoPlayer.playWhenReady = true
+                        }
+                    }else {
+                        exoPlayer.stop()
+                        try {
+                            ContextCompat.startForegroundService(
+                                applicationContext,
+                                Intent(applicationContext, PlayerService::class.java)
+                            )
+                        } catch (ex: Exception) {
+                            ex.printStackTrace()
+                            //applicationContext.stopService(Intent(applicationContext, PlayerService::class.java))
+                        }
+                        //check obj frequency and track
+//                    mMultiPlay = track.multiplay
+
+                        updateMetadataFromTrack(item)
+                        prepareToPlay(item)
+
+                        if (!audioFocusRequested) {
+                            audioFocusRequested = true
+
+                            val audioFocusResult: Int =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    audioManager.requestAudioFocus(audioFocusRequest!!)
+                                } else {
+                                    audioManager.requestAudioFocus(
+                                        audioFocusChangeListener,
+                                        STREAM_MUSIC,
+                                        AUDIOFOCUS_GAIN
+                                    )
+                                }
+
+                            if (audioFocusResult != AUDIOFOCUS_REQUEST_GRANTED) return
+                        }
+
+                        mediaSession.isActive = true
+                        if(!isRegisteredBusyReceiver) {
+                            isRegisteredBusyReceiver = true
+                            registerReceiver(
+                                becomingNoisyReceiver,
+                                IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                            )
+                        }
                     }
 
-                    mediaSession.isActive = true
-                    if(!isRegisteredBusyReceiver) {
-                        isRegisteredBusyReceiver = true
-                        registerReceiver(
-                            becomingNoisyReceiver,
-                            IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
-                        )
-                    }
-                    exoPlayer.playWhenReady = true
                 }
+
                 mediaSession.setPlaybackState(
                     stateBuilder.setState(
                         PlaybackStateCompat.STATE_PLAYING,
@@ -451,6 +499,7 @@ class PlayerService : Service() {
 
             fun prepareToPlay(item: Any) {
                 soundFrequency.stopPlayback()
+                exoPlayer.pause()
                 if (item is MusicRepository.Track) {
                     val file = File(
                         getSaveDir(
@@ -577,8 +626,7 @@ class PlayerService : Service() {
                     metadataBuilder.putString(
                         MediaMetadataCompat.METADATA_KEY_ARTIST, item.frequency.toString()
                     )
-                    metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
-                        item.duration.takeIf { it > 0 } ?: exoPlayer.duration)
+                    metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
                     mediaSession.setMetadata(metadataBuilder.build())
                 }
 

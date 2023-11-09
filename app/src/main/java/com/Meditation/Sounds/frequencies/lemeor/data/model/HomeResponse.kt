@@ -66,9 +66,7 @@ data class Category(
 @Entity(tableName = "album")
 @Parcelize
 data class Album(
-    @PrimaryKey
-    @SerializedName("_id")
-    var index: Int,
+    @PrimaryKey @SerializedName("_id") var index: Int,
     var id: Int,
     var category_id: Int,
     var tier_id: Int,
@@ -159,21 +157,14 @@ data class Playlist(
     var isSelected: Boolean
 ) {
     constructor(id: Int, name: String, youtube_id: String, order: Int, updated_at: Long) : this(
-        id,
-        name,
-        youtube_id,
-        order,
-        updated_at,
-        false
+        id, name, youtube_id, order, updated_at, false
     )
 }
 
 @Entity(tableName = "rife")
 @Parcelize
 data class Rife(
-    @PrimaryKey
-    @SerializedName("_id")
-    var id: Int,
+    @PrimaryKey @SerializedName("_id") var id: Int,
     var title: String,
     var description: String,
     var image: String,
@@ -185,12 +176,10 @@ data class Rife(
     var isFree: Boolean,
     var qilifestoreUrl: String,
     var lock: Boolean,
-    @Ignore
-    var tag: String,
+    @Ignore var tag: String,
 ) : Parcelable {
-    fun getFrequency() =
-        if (frequencies.isEmpty() || frequencies == "") arrayListOf<String>()
-        else frequencies.split(',')
+    fun getFrequency() = if (frequencies.isEmpty() || frequencies == "") arrayListOf<String>()
+    else frequencies.split(',')
 }
 
 

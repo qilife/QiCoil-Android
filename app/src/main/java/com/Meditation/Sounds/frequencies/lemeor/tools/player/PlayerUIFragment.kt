@@ -88,9 +88,10 @@ class PlayerUIFragment : NewBaseFragment() {
     private var shuffle: Boolean = false
     private var isSeeking = false
 
+    private var isTrack = true
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.player_ui_fragment, container, false)
     }
@@ -129,11 +130,13 @@ class PlayerUIFragment : NewBaseFragment() {
     private fun setListeners() {
         currentTrack.observe(viewLifecycleOwner) {
             if(it is MusicRepository.Track){
+                isTrack = true
                 track_name.text = it.title
 
                 loadImage(requireContext(), track_image, it.album)
                 Log.i("currenttracl", "t-->" + it.duration)
             }else if(it is MusicRepository.Frequency){
+                isTrack = false
                 track_name.text = it.frequency.toString()
 
 //                loadImage(requireContext(), track_image, it.album)
@@ -160,12 +163,16 @@ class PlayerUIFragment : NewBaseFragment() {
             override fun onProgressChanged(p0: SeekBar, p1: Int, p2: Boolean) {}
 
             override fun onStartTrackingTouch(p0: SeekBar) {
-                isSeeking = true
+                if (isTrack) {
+                    isSeeking = true
+                }
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                isSeeking = false
-                EventBus.getDefault().post(PlayerSeek(seekBar.progress))
+                if (isTrack) {
+                    isSeeking = false
+                    EventBus.getDefault().post(PlayerSeek(seekBar.progress))
+                }
             }
         })
     }

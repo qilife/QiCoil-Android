@@ -11,6 +11,7 @@ import com.Meditation.Sounds.frequencies.lemeor.convertedTrackName
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.loadImage
+import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import kotlinx.android.synthetic.main.item_program_track.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,14 +19,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ProgramTrackAdapter(
-        private val mContext: Context,
-        private var mData: List<Track>,
-        private var isMy: Boolean
+    private val mContext: Context,
+    private var mData: List<Any>,
+    private var isMy: Boolean
 ) : RecyclerView.Adapter<ProgramTrackAdapter.ViewHolder>() {
 
     interface Listener {
-        fun onTrackClick(track: Track, i: Int)
-        fun onTrackOptions(track: Track, i: Int)
+        fun onTrackClick(track: Any, i: Int)
+        fun onTrackOptions(track: Any, i: Int)
     }
 
     private var mListener: Listener? = null
@@ -50,44 +51,125 @@ class ProgramTrackAdapter(
         } else {
             holder.itemView.item_track_options.visibility = View.GONE
         }
-
-        if (track.isSelected) {
-            holder.itemView.item_track_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-            holder.itemView.item_album_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-        } else {
-            holder.itemView.item_track_name.setTextColor(ContextCompat.getColor(mContext, android.R.color.white))
-            holder.itemView.item_album_name.setTextColor(ContextCompat.getColor(mContext, android.R.color.white))
-        }
-
-        GlobalScope.launch {
-            val album = DataBase.getInstance(mContext).albumDao().getAlbumById(track.albumId, track.category_id)
-
-            CoroutineScope(Dispatchers.Main).launch {
-                loadImage(mContext, holder.itemView.item_track_image, album!!)
-                holder.itemView.item_track_name.text = convertedTrackName(album, track)
-                holder.itemView.item_album_name.text = album.name
+        if (track is Track) {
+            if (track.isSelected) {
+                holder.itemView.item_track_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimary
+                    )
+                )
+                holder.itemView.item_album_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimary
+                    )
+                )
+            } else {
+                holder.itemView.item_track_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        android.R.color.white
+                    )
+                )
+                holder.itemView.item_album_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        android.R.color.white
+                    )
+                )
             }
+
+            GlobalScope.launch {
+                val album = DataBase.getInstance(mContext).albumDao()
+                    .getAlbumById(track.albumId, track.category_id)
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    loadImage(mContext, holder.itemView.item_track_image, album!!)
+                    holder.itemView.item_track_name.text = convertedTrackName(album, track)
+                    holder.itemView.item_album_name.text = album.name
+                }
+            }
+
+            holder.itemView.item_track_options.setOnClickListener {
+                mListener?.onTrackOptions(
+                    track,
+                    position
+                )
+            }
+            holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position) }
+        } else if (track is MusicRepository.Frequency) {
+            if (track.isSelected) {
+                holder.itemView.item_track_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimary
+                    )
+                )
+                holder.itemView.item_album_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimary
+                    )
+                )
+            } else {
+                holder.itemView.item_track_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        android.R.color.white
+                    )
+                )
+                holder.itemView.item_album_name.setTextColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        android.R.color.white
+                    )
+                )
+            }
+            holder.itemView.item_track_name.text = track.title
+            holder.itemView.item_album_name.text = track.frequency.toString()
+            holder.itemView.item_track_options.setOnClickListener {
+                mListener?.onTrackOptions(
+                    track,
+                    position
+                )
+            }
+            holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position) }
         }
 
-        holder.itemView.item_track_options.setOnClickListener { mListener?.onTrackOptions(track, position) }
-        holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position) }
-
-        if (position == mData.size - 1) { holder.itemView.divider.visibility = View.INVISIBLE }
-        else { holder.itemView.divider.visibility = View.VISIBLE }
+        if (position == mData.size - 1) {
+            holder.itemView.divider.visibility = View.INVISIBLE
+        } else {
+            holder.itemView.divider.visibility = View.VISIBLE
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    fun setData(trackList: List<Track>?) {
-        mData = trackList as ArrayList<Track>
+    fun setData(trackList: List<Any>?) {
+        mData = trackList as ArrayList<Any>
         notifyDataSetChanged()
     }
 
     fun setSelected(selectedPosition: Int) {
-        if (selectedPosition > mData.size - 1) { return }
+        if (selectedPosition > mData.size - 1) {
+            return
+        }
 
-        mData.forEach { it.isSelected = false }
-        mData[selectedPosition].isSelected = true
+        mData.forEach {
+            if (it is Track) {
+                it.isSelected = false
+            } else if (it is MusicRepository.Frequency) {
+                it.isSelected = false
+            }
+        }
+        mData[selectedPosition].also {
+            if (it is Track) {
+                it.isSelected = true
+            } else if (it is MusicRepository.Frequency) {
+                it.isSelected = true
+            }
+        }
         notifyDataSetChanged()
     }
 }

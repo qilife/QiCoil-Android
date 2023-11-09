@@ -85,39 +85,46 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     }
 
     private fun setUI() {
-        val trackId = intent.getIntExtra(EXTRA_TRACK_ID, -1)
-        if (trackId == -1) {
+        //  program add two obj(rife and track) "rife limit 0-28000" and "track id integer"
+        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
+        if (trackId == -29000.0) {
             Toast.makeText(applicationContext, "Track error", Toast.LENGTH_SHORT).show()
             return
         }
+        if (trackId >= 0.0) {
+            CoroutineScope(Dispatchers.IO).launch {
+                track = trackDao?.getTrackById(trackId.toInt())
+                if (track is Track) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (track == null) {
+                            finish()
+                        }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            track = trackDao?.getTrackById(trackId)
+                        if (track != null && (track as Track).isFavorite) {
+                            track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
+                        } else {
+                            track_add_favorites.text = getString(R.string.tv_add_to_favorites)
+                        }
 
-            CoroutineScope(Dispatchers.Main).launch {
-                if (track == null) {
-                    finish()
+
+                        val dur = (track as Track).duration
+                        duration = if (dur > 0) {
+                            dur
+                        } else {
+                            300000
+                        }
+                        tv_duration.text = getConvertedTime(duration)
+                    }
                 }
-
-                if (track != null && track?.isFavorite!!) {
-                    track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
-                } else {
-                    track_add_favorites.text = getString(R.string.tv_add_to_favorites)
-                }
-
-
-                val dur = track?.duration!!
-                duration = if (dur > 0) {
-                    dur
-                } else {
-                    300000
-                }
-                tv_duration.text = getConvertedTime(duration)
             }
         }
 
         track_add_program.setOnClickListener {
-            trackIdForProgram = track?.id
+            if (trackId < 0.0 && trackId >= -28000) {
+                trackIdForProgram = trackId.toInt()
+            } else {
+                trackIdForProgram = track?.id
+            }
 
             val intent = Intent()
             setResult(RESULT_OK, intent)
@@ -229,14 +236,16 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
-        CoroutineScope(Dispatchers.IO).launch { trackDao?.setDuration(duration, track?.id!!) }
+        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
+        if (trackId >= 0.0) {
+            CoroutineScope(Dispatchers.IO).launch { trackDao?.setDuration(duration, track?.id!!) }
+        }
     }
 
     companion object {
         const val EXTRA_TRACK_ID = "extra_track_id"
 
-        fun newIntent(context: Context?, id: Int): Intent {
+        fun newIntent(context: Context?, id: Double): Intent {
             val intent = Intent(context, TrackOptionsPopUpActivity::class.java)
             intent.putExtra(EXTRA_TRACK_ID, id)
             return intent

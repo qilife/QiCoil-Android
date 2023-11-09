@@ -182,7 +182,7 @@ class NewAlbumDetailFragment : Fragment() {
             override fun onTrackOptions(track: Track, i: Int) {
                 startActivityForResult(
                     TrackOptionsPopUpActivity.newIntent(
-                        requireContext(), track.id
+                        requireContext(), track.id.toDouble()
                     ), 1001
                 )
             }
@@ -238,13 +238,21 @@ class NewAlbumDetailFragment : Fragment() {
                 0,
             )
         }
-        mRifeAdapter = RifeAdapter(requireContext(), local, listener = {
-            isMultiPlay = false
-            mRifeAdapter?.setSelected(it)
-            play(rife)
-            Handler(Looper.getMainLooper()).postDelayed({
-                EventBus.getDefault().post(PlayerSelected(it))
-            }, 200)
+        mRifeAdapter = RifeAdapter(requireContext(), local, listener = { frequency, index, option ->
+            if (option == 0) {
+                isMultiPlay = false
+                mRifeAdapter?.setSelected(index)
+                play(rife)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    EventBus.getDefault().post(PlayerSelected(index))
+                }, 200)
+            } else if (option == 1) {
+                startActivityForResult(
+                    TrackOptionsPopUpActivity.newIntent(
+                        requireContext(), -frequency.frequency.toDouble()
+                    ), 1001
+                )
+            }
         })
         album_tracks_recycler.adapter = mRifeAdapter
 
