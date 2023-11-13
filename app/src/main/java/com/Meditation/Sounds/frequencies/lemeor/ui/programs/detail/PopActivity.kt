@@ -63,19 +63,21 @@ class PopActivity : AppCompatActivity() {
     }
 
     private fun setUI() {
-        val trackId = intent.getIntExtra(TrackOptionsPopUpActivity.EXTRA_TRACK_ID, -1)
+        val trackId = intent.getDoubleExtra(TrackOptionsPopUpActivity.EXTRA_TRACK_ID, -29000.0)
 
-        if (trackId == -1) {
+        if (trackId <= -29000) {
             Toast.makeText(applicationContext, "Track error", Toast.LENGTH_SHORT).show()
             return
         }
 
         GlobalScope.launch {
-            track = trackDao?.getTrackById(trackId)
+            if(trackId >= 0){
+                track = trackDao?.getTrackById(trackId.toInt())
 
-            val dur = track?.duration!!
-            duration = if (dur > 0) { dur } else { 300000 }
-            pop_tv_duration.text = getConvertedTime(duration)
+                val dur = track?.duration!!
+                duration = if (dur > 0) { dur } else { 300000 }
+                pop_tv_duration.text = getConvertedTime(duration)
+            }
         }
 
         track_move_up.setOnClickListener {
@@ -119,7 +121,7 @@ class PopActivity : AppCompatActivity() {
         GlobalScope.launch { trackDao?.setDuration(duration, track?.id!!) }
     }
 
-    private fun sendResult(action: String, trackId: Int) {
+    private fun sendResult(action: String, trackId: Double) {
         val intent = Intent()
         intent.putExtra(EXTRA_ACTION, action)
         intent.putExtra(EXTRA_TRACK_ID, trackId)
@@ -131,7 +133,7 @@ class PopActivity : AppCompatActivity() {
         const val EXTRA_TRACK_ID = "extra_track_id"
         const val EXTRA_ACTION = "extra_action"
 
-        fun newIntent(context: Context?, id: Int): Intent {
+        fun newIntent(context: Context?, id: Double): Intent {
             val intent = Intent(context, PopActivity::class.java)
             intent.putExtra(EXTRA_TRACK_ID, id)
             return intent
