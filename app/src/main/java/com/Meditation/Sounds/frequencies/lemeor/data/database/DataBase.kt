@@ -12,17 +12,19 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.*
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 
-@Database(entities = [
-    HomeResponse::class,
-    Tier::class,
-    Category::class,
-    Tag::class,
-    Album::class,
-    Track::class,
-    Program::class,
-    Playlist::class,
-//    Rife::class,
-], version = 2)
+@Database(
+    entities = [
+        HomeResponse::class,
+        Tier::class,
+        Category::class,
+        Tag::class,
+        Album::class,
+        Track::class,
+        Program::class,
+        Playlist::class,
+        Rife::class,
+    ], version = 3
+)
 
 @TypeConverters(
     TierConverter::class,
@@ -34,9 +36,10 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
     ProgramConverter::class,
     TrackConverter::class,
     IntConverter::class,
+    DoubleConverter::class,
+    RifeConverter::class,
     StringConverter::class,
-    Converters::class,
-//    ListRifeConverter::class
+    Converters::class
 )
 abstract class DataBase : RoomDatabase() {
 
@@ -48,6 +51,7 @@ abstract class DataBase : RoomDatabase() {
     abstract fun trackDao(): TrackDao
     abstract fun programDao(): ProgramDao
     abstract fun playlistDao(): PlaylistDao
+    abstract fun rifeDao(): RifeDao
 
     companion object {
 
@@ -60,16 +64,49 @@ abstract class DataBase : RoomDatabase() {
                 database.execSQL("ALTER TABLE track ADD COLUMN tier_id INTEGER DEFAULT 0 NOT NULL")
             }
         }
+        private val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE program ADD COLUMN is_dirty INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE program ADD COLUMN is_deleted INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE program ADD COLUMN server_id INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE program ADD COLUMN user_id INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS rife (" +
+                            "`id` INTEGER DEFAULT 0 NOT NULL, " +
+                            "`user_id` INTEGER DEFAULT 0 NOT NULL, " +
+                            "`title` TEXT DEFAULT '' NOT NULL, " +
+                            "`description` TEXT DEFAULT '' NOT NULL, " +
+                            "`image` TEXT DEFAULT '', " +
+                            "`audio_folder` TEXT DEFAULT '', " +
+                            "`likes` INTEGER DEFAULT 0 NOT NULL, " +
+                            "`frequencies` TEXT DEFAULT '', " +
+                            "`type` TEXT DEFAULT 'rife', " +
+                            "`subtype` TEXT DEFAULT '', " +
+                            "`CDate` TEXT DEFAULT '', " +
+                            "`mDate` TEXT DEFAULT '', " +
+                            " PRIMARY KEY(id))"
+                )
+            }
+        }
 
-        @Volatile private var instance: DataBase? = null
+        @Volatile
+        private var instance: DataBase? = null
 
         fun getInstance(context: Context): DataBase =
-                instance ?: synchronized(this) { instance ?: buildDatabase(context).also { instance = it } }
+            instance ?: synchronized(this) {
+                instance ?: buildDatabase(context).also {
+                    instance = it
+                }
+            }
 
         private fun buildDatabase(context: Context) =
-                Room.databaseBuilder(context.applicationContext, DataBase::class.java, BuildConfig.DB_NAME)
-                        .allowMainThreadQueries()
-                        .addMigrations(MIGRATION_1_2)
-                        .build()
+            Room.databaseBuilder(
+                context.applicationContext,
+                DataBase::class.java,
+                BuildConfig.DB_NAME
+            )
+                .allowMainThreadQueries()
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                .build()
     }
 }

@@ -6,15 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
+import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
+import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
+import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.listTest
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.ItemOffsetBottomDecoration
 import kotlinx.android.synthetic.main.fragment_program_page.*
 
 class ProgramPageFragment : Fragment() {
+    private lateinit var mViewModel: NewRifeViewModel
     private var rifeId: Int? = null
     var mainFm: NewRifeFragment? = null
     private val mProgramAdapter = ProgramAdapter {
@@ -42,6 +49,13 @@ class ProgramPageFragment : Fragment() {
 
 
     private fun initView() {
+        mViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        ).get(NewRifeViewModel::class.java)
         val itemDecoration = ItemOffsetBottomDecoration(
             requireContext(),
             if (Utils.isTablet(context)) R.dimen.item_offset else R.dimen.margin_buttons
@@ -50,8 +64,11 @@ class ProgramPageFragment : Fragment() {
             adapter = mProgramAdapter
             addItemDecoration(itemDecoration)
         }
-        mProgramAdapter.setListRife(listTest)
+        mViewModel.getRifeList().observe(viewLifecycleOwner){
+            mProgramAdapter.setListRife(it)
+        }
     }
+
 
     companion object {
         private const val ARG_RIFE_ID = "arg_rife_id"

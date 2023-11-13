@@ -26,6 +26,9 @@ object ApiConfig {
     const val API_APK = "apk"
     const val API_SUBMIT_TRACK_ERROR = "reportTrack"
     const val API_SUBMIT_PROGRAM = "submitProgram"
+    const val API_RIFE = "rifes"
+    const val API_PROGRAMS_UPDATE = "programs/updateTrack"
+    const val API_PROGRAMS = "programs"
 
     private const val API_RESET_PASS = "password/reset"
 

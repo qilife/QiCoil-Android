@@ -53,4 +53,11 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
     suspend fun reportTrack(trackId: Int, trackUrl: String) = apiService.reportTrack(trackId, trackUrl)
 
     suspend fun submitProgram(trackId: Int, trackUrl: String) = apiService.submitProgram(trackId, trackUrl)
+
+    suspend fun getRife() = getResult{ apiService.getRife() }
+
+
+    suspend fun getPrograms() = getResult{ apiService.getPrograms() }
+
+    suspend fun createPrograms(name: String) = apiService.createPrograms(mapOf("name" to name))
 }

@@ -9,6 +9,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
+import java.util.*
 
 
 @Entity(tableName = "home")
@@ -134,17 +135,46 @@ data class Track(
 
 @Entity(tableName = "program")
 data class Program(
-    @PrimaryKey(autoGenerate = true) var id: Int,
-    var name: String,
-    var order: Int,
-    var updated_at: Long,
-    @TypeConverters(IntConverter::class) var records: ArrayList<Int>,
-    var isMy: Boolean,
-    var isUnlocked: Boolean
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    var name: String = "",
+    var user_id: Int = 0,
+    var order: Int = 0,
+    var updated_at: Long = Date().time,
+    @TypeConverters(DoubleConverter::class) var records: ArrayList<Double> = arrayListOf(),
+    @SerializedName("favorited")
+    var isMy: Boolean = true,
+    var isUnlocked: Boolean = true,
+    @Ignore
+    var server_id: Int = 0,
+    @Ignore
+    var is_dirty: Boolean = false,
+    @Ignore
+    var is_deleted: Boolean = false,
 ) {
     constructor(
-        id: Int, name: String, order: Int, updated_at: Long, records: ArrayList<Int>, isMy: Boolean
-    ) : this(id, name, order, updated_at, records, isMy, false)
+        id: Int,
+        name: String,
+        user_id : Int,
+        order: Int,
+        updated_at: Long,
+        records: ArrayList<Double>,
+        isMy: Boolean,
+        server_id: Int,
+        is_dirty: Boolean,
+        is_deleted: Boolean,
+    ) : this(
+        id = id,
+        name = name,
+        user_id = user_id,
+        order = order,
+        updated_at = updated_at,
+        records = records,
+        isMy = isMy,
+        isUnlocked = false,
+        server_id = server_id,
+        is_dirty = is_dirty,
+        is_deleted = is_deleted,
+    )
 }
 
 @Entity(tableName = "playlist")
@@ -157,30 +187,34 @@ data class Playlist(
     var isSelected: Boolean
 ) {
     constructor(id: Int, name: String, youtube_id: String, order: Int, updated_at: Long) : this(
-        id, name, youtube_id, order, updated_at, false
+        id,
+        name,
+        youtube_id,
+        order,
+        updated_at,
+        false
     )
 }
 
-@Entity(tableName = "rife")
 @Parcelize
+@Entity(tableName = "rife")
 data class Rife(
-    @PrimaryKey @SerializedName("_id") var id: Int,
-    var title: String,
-    var description: String,
-    var image: String,
-    var likes: Int,
-    var frequencies: String,
-    var categoryId: String,
-    var subCategoryId: String,
-    var audioFolder: String,
-    var isFree: Boolean,
-    var qilifestoreUrl: String,
-    var lock: Boolean,
-    @Ignore var tag: String,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    var user_id: Int = 0,
+    var title: String = "",
+    var description: String = "",
+    var image: String? = "",
+    var audio_folder: String? = "",
+    var likes: Int = 0,
+    var frequencies: String? = "",
+    var subtype: String? = "",
+    var type: String? = "",
+    var CDate: String? = "",
+    var mDate: String? = "",
+    @Ignore var tag: String = "",
 ) : Parcelable {
-    fun getFrequency() = if (frequencies.isEmpty() || frequencies == "") arrayListOf<String>()
-    else frequencies.split(',')
+    fun getFrequency() = if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()
+    else frequencies!!.split('/')
 }
-
 
 

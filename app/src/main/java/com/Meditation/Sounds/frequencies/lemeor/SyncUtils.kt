@@ -253,8 +253,8 @@ suspend fun syncPrograms(db: DataBase, response: HomeResponse?) {
         db.programDao().deletePrograms(delete)
     } else {
         db.programDao().insertAll(responseData)
-        db.programDao().insert(Program(0, FAVORITES, 0, 0, arrayListOf(), isMy = true))
-        db.programDao().insert(Program(0, "Playlist 1", 0, 0, arrayListOf(), isMy = true))
+        db.programDao().insert(Program(0, FAVORITES, 0, 0, 0, arrayListOf(), isMy = true))
+        db.programDao().insert(Program(0, "Playlist 1", 0, 0, 0, arrayListOf(), isMy = true))
     }
 }
 
@@ -312,5 +312,20 @@ suspend fun syncTags(db: DataBase, response: HomeResponse?) {
 
 fun checkUnlocked(isFree: Int): Boolean {
     return isFree == 1
+}
+
+suspend fun syncRife(db: DataBase, response: RifeResponse?) {
+    Log.d("LOG", "syncRife")
+
+    val localData = db.rifeDao().getData().toMutableList()
+    val responseData = (response?.data ?: listOf()).toMutableList()
+
+    if (localData.isNotEmpty()) {
+        Log.d("LOG", "Local bd is not empty")
+    } else {
+        Log.d("LOG", "Bd is empty")
+        Log.d("LOG", "Bd ${responseData}")
+        db.rifeDao().insertAll(responseData)
+    }
 }
 

@@ -8,26 +8,19 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
+import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
-import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
-import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
-import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
-import com.Meditation.Sounds.frequencies.lemeor.trackIdForProgram
 import com.Meditation.Sounds.frequencies.utils.Utils
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.btn_minus
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.btn_plus
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_add_favorites
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_add_program
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_redownload
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.tv_duration
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,7 +80,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     private fun setUI() {
         //  program add two obj(rife and track) "rife limit 0-28000" and "track id integer"
         val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
-        if (trackId == -29000.0) {
+        if (trackId <= -29000.0) {
             Toast.makeText(applicationContext, "Track error", Toast.LENGTH_SHORT).show()
             return
         }
@@ -117,6 +110,9 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                     }
                 }
             }
+        } else {
+            track_add_favorites.visibility = View.GONE
+            track_redownload.visibility = View.GONE
         }
 
         track_add_program.setOnClickListener {
@@ -144,9 +140,9 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val program = programDao?.getProgramByName(FAVORITES)
                 if (track?.isFavorite!!) {
-                    program?.records?.remove(track?.id!!)
+                    program?.records?.remove(track?.id!!.toDouble())
                 } else {
-                    program?.records?.add(track?.id!!)
+                    program?.records?.add(track?.id!!.toDouble())
                 }
                 program?.let { it1 -> programDao.updateProgram(it1) }
 
@@ -244,10 +240,13 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TRACK_ID = "extra_track_id"
+        private const val EXTRA_RIFE = "extra_rife"
 
-        fun newIntent(context: Context?, id: Double): Intent {
+        fun newIntent(context: Context?, id: Double, rife: Rife? = null): Intent {
             val intent = Intent(context, TrackOptionsPopUpActivity::class.java)
             intent.putExtra(EXTRA_TRACK_ID, id)
+            intent.putExtra(EXTRA_RIFE, rife)
+
             return intent
         }
     }

@@ -2,7 +2,10 @@ package com.Meditation.Sounds.frequencies.lemeor.data.api
 
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @GET(ApiConfig.API_HOME)
@@ -78,9 +81,25 @@ interface ApiService {
     suspend fun deleteuser(@Query("password") password: String): Status
 
     @GET(ApiConfig.API_SUBMIT_TRACK_ERROR)
-    suspend fun reportTrack(@Query("track_id") track_id: Int, @Query("track_url") track_url: String ): Status
+    suspend fun reportTrack(
+        @Query("track_id") track_id: Int,
+        @Query("track_url") track_url: String
+    ): Status
 
     @GET(ApiConfig.API_SUBMIT_PROGRAM)
-    suspend fun submitProgram(@Query("track_id") track_id: Int, @Query("track_url") track_url: String ): Status
+    suspend fun submitProgram(
+        @Query("track_id") track_id: Int,
+        @Query("track_url") track_url: String
+    ): Status
+
+    @GET(ApiConfig.API_RIFE)
+    suspend fun getRife(): Response<RifeResponse>
+
+
+    @GET(ApiConfig.API_PROGRAMS)
+    suspend fun getPrograms(): Response<ProgramsResponse>
+
+    @POST(ApiConfig.API_PROGRAMS)
+    suspend fun createPrograms(@Body map: Map<String, String>): Status
 }
 

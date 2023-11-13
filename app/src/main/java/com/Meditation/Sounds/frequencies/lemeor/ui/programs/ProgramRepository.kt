@@ -2,11 +2,10 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs
 
 import androidx.lifecycle.LiveData
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 
-class ProgramRepository(private val localData: DataBase) {
+class ProgramRepository(private val localData: DataBase, private val apiHelper: ApiHelper) {
 
     fun getMy(): LiveData<List<Program>> {
         return localData.programDao().getMy(true)
@@ -31,4 +30,9 @@ class ProgramRepository(private val localData: DataBase) {
     suspend fun getAlbumById(id: Int, category_id: Int): Album? {
         return localData.albumDao().getAlbumById(id, category_id)
     }
+
+    suspend fun createProgram(name: String): Status {
+        return apiHelper.createPrograms(name)
+    }
+    suspend fun getProgramsRemote() = apiHelper.getPrograms()
 }

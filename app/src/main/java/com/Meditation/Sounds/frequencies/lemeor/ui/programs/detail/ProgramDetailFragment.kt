@@ -30,6 +30,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import kotlinx.android.synthetic.main.fragment_program_detail.*
 import kotlinx.coroutines.CoroutineScope
@@ -61,8 +62,10 @@ class ProgramDetailFragment : Fragment() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 program?.records?.forEach {
-                    mViewModel.getTrackById(it)?.let { track ->
-                        tracks.add(track)
+                    if (it >= 0) {
+                        mViewModel.getTrackById(it.toInt())?.let { track ->
+                            tracks.add(track)
+                        }
                     }
                 }
 
@@ -130,7 +133,23 @@ class ProgramDetailFragment : Fragment() {
         var fragment: Fragment?
 
         if (isTrackAdd) {
-            fragment = albumIdBackProgram?.let { NewAlbumDetailFragment.newInstance(it, categoryIdBackProgram!!) }
+            if (typeBack == Constants.TYPE_ALBUM) {
+                fragment = albumIdBackProgram?.let {
+                    NewAlbumDetailFragment.newInstance(
+                        it,
+                        categoryIdBackProgram!!
+                    )
+                }
+            } else {
+                fragment = rifeBackProgram?.let {
+                    NewAlbumDetailFragment.newInstance(
+                        0,
+                        categoryIdBackProgram!!,
+                        type = typeBack,
+                        item = it
+                    )
+                }
+            }
         } else {
             fragment = selectedNaviFragment
             if (fragment == null) {
@@ -147,7 +166,6 @@ class ProgramDetailFragment : Fragment() {
 
     private fun setUI(program: Program) {
 
-        Log.d("tyhoang", "setUI: ${program.records.joinToString()}")
         val tracks: ArrayList<Any> = ArrayList()
 
         program_back.setOnClickListener { onBackPressed() }
@@ -176,9 +194,9 @@ class ProgramDetailFragment : Fragment() {
             override fun onTrackOptions(track: Any, i: Int) {
                 positionFor = i
                 if (track is Track) {
-                    startActivityForResult(PopActivity.newIntent(requireContext(), track.id), 1002)
+                    startActivityForResult(PopActivity.newIntent(requireContext(), track.id.toDouble()), 1002)
                 }else if(track is MusicRepository.Frequency) {
-                    startActivityForResult(PopActivity.newIntent(requireContext(), track.index), 1002)
+                    startActivityForResult(PopActivity.newIntent(requireContext(), track.frequency.toDouble()), 1002)
                 }
             }
         })
@@ -188,7 +206,7 @@ class ProgramDetailFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             program.records.forEachIndexed { index, it ->
                 if (it >= 0) {
-                    mViewModel.getTrackById(it)?.let { track ->
+                    mViewModel.getTrackById(it.toInt())?.let { track ->
                         tracks.add(track)
                     }
                 } else {
@@ -374,7 +392,7 @@ class ProgramDetailFragment : Fragment() {
             activity.hidePlayerUI()
 
             CoroutineScope(Dispatchers.IO).launch {
-                val list = program?.records as MutableList<Int>
+                val list = program?.records as MutableList<Double>
 
                 when {
                     action.equals("track_move_up") -> {
@@ -422,7 +440,7 @@ class ProgramDetailFragment : Fragment() {
                         }
 
                         list.removeAt(positionFor!!)
-                        program?.records = list as ArrayList<Int>
+                        program?.records = list as ArrayList<Double>
                         program?.let { programDao.updateProgram(it) }
                     }
                 }
@@ -430,7 +448,11 @@ class ProgramDetailFragment : Fragment() {
         }
     }
 
-    private suspend fun moveTrack(list: MutableList<Int>, isMoveUp: Boolean, programDao: ProgramDao) {
+    private suspend fun moveTrack(
+        list: MutableList<Double>,
+        isMoveUp: Boolean,
+        programDao: ProgramDao
+    ) {
         val positionFrom = positionFor!!
         val positionTo = if (isMoveUp) {
             positionFor!! - 1
@@ -438,7 +460,7 @@ class ProgramDetailFragment : Fragment() {
             positionFor!! + 1
         }
         Collections.swap(list, positionFrom, positionTo)
-        program?.records = list as ArrayList<Int>
+        program?.records = list as ArrayList<Double>
         program?.let { programDao.updateProgram(it) }
     }
 

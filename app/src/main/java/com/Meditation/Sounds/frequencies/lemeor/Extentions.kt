@@ -13,9 +13,11 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.exception.ApiException
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiConfig
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.CustomFontEditText
 import com.bumptech.glide.Glide
@@ -43,6 +45,8 @@ val duration = MutableLiveData<Long>()
 var trackIdForProgram: Int? = -29000
 var albumIdBackProgram: Int? = -1
 var categoryIdBackProgram: Int? = -1
+var typeBack: String = Constants.TYPE_ALBUM
+var rifeBackProgram: Rife? = null
 var isTrackAdd: Boolean = false
 var positionFor: Int? = -1
 

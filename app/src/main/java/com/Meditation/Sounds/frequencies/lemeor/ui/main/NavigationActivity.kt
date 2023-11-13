@@ -467,6 +467,7 @@ class NavigationActivity : AppCompatActivity(),
                     }
                 }
             }
+            mViewModel.getRife().observe(this) {}
         } else {
             if (BuildConfig.IS_FREE) {
                 mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
@@ -625,7 +626,7 @@ class NavigationActivity : AppCompatActivity(),
 
                         CoroutineScope(Dispatchers.IO).launch {
                             val p = programDao.getProgramById(program.id)
-                            p?.records?.add(trackIdForProgram!!)
+                            p?.records?.add(trackIdForProgram!!.toDouble())
                             p?.let { it1 -> programDao.updateProgram(it1) }
                         }
                     }

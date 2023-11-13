@@ -2,18 +2,18 @@ package com.Meditation.Sounds.frequencies.lemeor.data.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderViewModel
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.AlbumsRepository
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.AlbumsViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.AlbumDetailRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailViewModel
+import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.AlbumsRepository
+import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.AlbumsViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.AuthRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.AuthViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeRepository
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.NewOptionsRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.NewOptionsViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassRepository
@@ -23,6 +23,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.ProgramRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.RifeRepository
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.tabs.FrequencyViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.VideoRepository
@@ -52,7 +53,7 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
         }
 
         if (modelClass.isAssignableFrom(NewProgramViewModel::class.java)) {
-            return NewProgramViewModel(ProgramRepository(localData)) as T
+            return NewProgramViewModel(ProgramRepository(localData,apiHelper)) as T
         }
 
         if (modelClass.isAssignableFrom(ProgramDetailViewModel::class.java)) {
@@ -72,7 +73,7 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
         }
 
         if (modelClass.isAssignableFrom(NewRifeViewModel::class.java)) {
-            return NewRifeViewModel(ProgramRepository(localData)) as T
+            return NewRifeViewModel(RifeRepository(apiHelper, localData)) as T
         }
         if (modelClass.isAssignableFrom(FrequencyViewModel::class.java)) {
             return FrequencyViewModel() as T

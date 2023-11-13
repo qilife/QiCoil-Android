@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
+import android.util.Log
 import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
@@ -81,4 +82,21 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
             )
         }
     }
+
+
+    fun getRife() = performGetOperation(
+        databaseQuery = {
+            localData.rifeDao().getListRife()
+
+        },
+        networkCall = {
+            val data = apiHelper.getRife()
+            data
+        },
+        saveCallResult = {
+            CoroutineScope(Dispatchers.IO).launch {
+                syncRife(localData, it)
+            }
+        }
+    )
 }

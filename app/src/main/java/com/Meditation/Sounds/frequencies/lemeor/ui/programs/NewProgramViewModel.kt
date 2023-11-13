@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Status
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 
 class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel() {
@@ -31,4 +32,10 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
     suspend fun getAlbumById(id: Int, category_id: Int): Album? {
         return repository.getAlbumById(id, category_id)
     }
+
+    suspend fun createProgram(name: String): Status {
+        return repository.createProgram(name)
+    }
+
+
 }

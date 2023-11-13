@@ -112,18 +112,17 @@ class NewRifeFragment : Fragment() {
 
 val item = Rife(
     1,
+    1,
     "Abdominal Cramps 1",
-    "demo",
     "url",
-    0,
-    "75,255,235,660,750",
-    "0",
-    "0",
     "",
-    true,
-    "url",
-    false,
-    "a"
+    "",
+    0,
+    "75/255/235/660/750",
+    "rife",
+    "",
+    "",
+    "",
 )
 
 val listTest = arrayListOf(

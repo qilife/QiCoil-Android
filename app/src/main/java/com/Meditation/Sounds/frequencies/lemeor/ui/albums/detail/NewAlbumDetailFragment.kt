@@ -249,7 +249,8 @@ class NewAlbumDetailFragment : Fragment() {
             } else if (option == 1) {
                 startActivityForResult(
                     TrackOptionsPopUpActivity.newIntent(
-                        requireContext(), -frequency.frequency.toDouble()
+                        requireContext(), -frequency.frequency.toDouble(),
+                        rife = mRife
                     ), 1001
                 )
             }
@@ -420,6 +421,8 @@ class NewAlbumDetailFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1001 && resultCode == RESULT_OK) {
+            typeBack= type
+            rifeBackProgram = mRife
             albumIdBackProgram = albumId
             categoryIdBackProgram = categoryId
             isTrackAdd = true

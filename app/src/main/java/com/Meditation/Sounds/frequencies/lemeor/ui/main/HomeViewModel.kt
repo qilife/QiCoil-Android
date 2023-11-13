@@ -1,14 +1,11 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
-import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Status
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.getErrorMsg
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
@@ -25,8 +22,12 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         return repository.getHome(id)
     }
 
+    fun getRife() : LiveData<Resource<List<Rife>>> {
+        return repository.getRife()
+    }
 
-    fun getProfile( ) = liveData(Dispatchers.IO) {
+
+    fun getProfile() = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = repository.getProfile()))

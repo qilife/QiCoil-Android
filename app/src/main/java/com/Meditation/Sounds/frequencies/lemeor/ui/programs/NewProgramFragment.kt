@@ -14,8 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
-import com.Meditation.Sounds.frequencies.lemeor.categoryIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -23,19 +22,13 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
-import com.Meditation.Sounds.frequencies.lemeor.trackIdForProgram
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
-import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.HIGHER_QUANTUM_TIER_ID
-import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity.Companion.QUANTUM_TIER_ID
-import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
 import kotlinx.android.synthetic.main.fragment_new_program.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class NewProgramFragment : Fragment() {
@@ -82,7 +75,9 @@ class NewProgramFragment : Fragment() {
                 val tracks: ArrayList<Track> = ArrayList()
 
                 program.records.forEach { r ->
-                    mViewModel.getTrackById(r)?.let { track -> tracks.add(track) }
+                    if (r >= 0) {
+                        mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
+                    }
                 }
 
                 var isUnlocked = true
@@ -112,7 +107,10 @@ class NewProgramFragment : Fragment() {
             )
             .replace(
                 R.id.nav_host_fragment,
-                NewAlbumDetailFragment.newInstance(albumIdBackProgram!!, categoryIdBackProgram!!),
+                NewAlbumDetailFragment.newInstance(
+                    albumIdBackProgram!!, categoryIdBackProgram!!,
+                    typeBack, rifeBackProgram
+                ),
                 NewAlbumDetailFragment().javaClass.simpleName
             )
             .commit()
@@ -138,6 +136,7 @@ class NewProgramFragment : Fragment() {
         ).get(NewProgramViewModel::class.java)
 
         program_create_new.setOnClickListener {
+            // call api create program
             val dialogBuilder = AlertDialog.Builder(requireContext()).create()
             val inflater = this.layoutInflater
             val dialogView: View = inflater.inflate(R.layout.dialog_add_edit_playlist, null)
@@ -148,16 +147,37 @@ class NewProgramFragment : Fragment() {
 
             btnAdd.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    mViewModel.insert(
-                        Program(
-                            0,
-                            programName.text.toString(),
-                            0,
-                            0,
-                            ArrayList(),
-                            isMy = true
+                    try {
+                        mViewModel.createProgram(programName.text.toString())
+                        mViewModel.insert(
+                            Program(
+                                0,
+                                programName.text.toString(),
+                                0,
+                                0,
+                                0,
+                                ArrayList(),
+                                isMy = true,
+                                false,
+                                is_dirty = true
+                            )
                         )
-                    )
+                    } catch (_: Throwable) {
+                        mViewModel.insert(
+                            Program(
+                                0,
+                                programName.text.toString(),
+                                0,
+                                0,
+                                0,
+                                ArrayList(),
+                                isMy = true,
+                                false,
+                                is_dirty = false
+                            )
+                        )
+                    }
+
                 }
                 dialogBuilder.dismiss()
             }
@@ -175,7 +195,7 @@ class NewProgramFragment : Fragment() {
 
                         CoroutineScope(Dispatchers.IO).launch {
                             val p = programDao.getProgramById(program.id)
-                            p?.records?.add(trackIdForProgram!!)
+                            p?.records?.add(trackIdForProgram!!.toDouble())
                             p?.let { it1 -> programDao.updateProgram(it1) }
                         }
                     }
@@ -199,7 +219,10 @@ class NewProgramFragment : Fragment() {
                     val tracks: ArrayList<Track> = ArrayList()
                     CoroutineScope(Dispatchers.IO).launch {
                         program.records.forEach { r ->
-                            mViewModel.getTrackById(r)?.let { track -> tracks.add(track) }
+                            if (r >= 0) {
+                                mViewModel.getTrackById(r.toInt())
+                                    ?.let { track -> tracks.add(track) }
+                            }
                         }
                         tracks.forEach { t ->
                             val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
