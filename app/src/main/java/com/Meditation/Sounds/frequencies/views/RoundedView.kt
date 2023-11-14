@@ -36,8 +36,8 @@ class RoundedView :View{
         mPain.style = Paint.Style.FILL
     }
 
-    override fun draw(canvas: Canvas?) {
+    override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        canvas?.drawCircle(width/2f, height/2f, Math.min(width, height)/2f, mPain)
+        canvas.drawCircle(width/2f, height/2f, Math.min(width, height)/2f, mPain)
     }
 }

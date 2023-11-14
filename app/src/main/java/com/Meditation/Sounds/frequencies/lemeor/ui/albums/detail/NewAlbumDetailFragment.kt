@@ -292,7 +292,6 @@ class NewAlbumDetailFragment : Fragment() {
                         tracks.add(t)
                     }
                     t.album = Album(
-                        album.index,
                         album.id, album.category_id,
                         album.tier_id,
                         album.name,

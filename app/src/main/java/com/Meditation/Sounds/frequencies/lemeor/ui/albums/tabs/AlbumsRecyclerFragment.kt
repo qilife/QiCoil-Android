@@ -62,10 +62,10 @@ class AlbumsRecyclerFragment : Fragment() {
         //shareDialog.registerCallback(callbackManager, FacebookCallback<Sharer.Result>() {})
         shareDialog!!.registerCallback(
                 callbackManager!!,
-                object : FacebookCallback<Sharer.Result?> {
+                object : FacebookCallback<Sharer.Result> {
                     override fun onError(e: FacebookException) {}
                     override fun onCancel() {}
-                    override fun onSuccess(result: Sharer.Result?) {
+                    override fun onSuccess(result: Sharer.Result) {
                         //Toast.makeText(context,"Successs",Toast.LENGTH_LONG).show()
                         unlockAlbum(selectedAlbum!!)
                     }

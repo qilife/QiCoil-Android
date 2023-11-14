@@ -28,7 +28,7 @@
         android:layout_margin="@dimen/padding_left_right_item_title"
         android:orientation="horizontal">
 
-        <WebView
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/mvideoView"
             android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
             android:layout_width="0dp"

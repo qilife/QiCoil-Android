@@ -661,7 +661,7 @@ class PlayerService : Service() {
         }
     }
 
-    private val exoPlayerListener: Player.EventListener = object : Player.EventListener {
+    private val exoPlayerListener: Player.Listener = object : Player.Listener {
 
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
@@ -682,7 +682,7 @@ class PlayerService : Service() {
             }
         }
 
-        override fun onPlayerError(error: ExoPlaybackException) {
+        override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
             mediaSessionCallback.onStop()
         }

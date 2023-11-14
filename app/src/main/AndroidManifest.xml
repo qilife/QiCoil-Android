@@ -133,7 +133,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+        <receiver
+            android:name="androidx.media.session.MediaButtonReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -158,9 +159,10 @@
             android:name=".MusicService"
             android:exported="false" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{239929504671610}"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="com.facebook.app.FacebookContentProvider{239929504671619}"
+            android:exported="true" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -173,6 +175,10 @@
                 tools:node="remove" />
 
         </provider>
+
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="FB_CLIENT_TOKEN" />
     </application>
 
 </manifest>

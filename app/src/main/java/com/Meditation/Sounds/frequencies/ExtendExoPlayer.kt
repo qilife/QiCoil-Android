@@ -10,7 +10,6 @@ import com.Meditation.Sounds.frequencies.models.PlaylistItemSongAndSong
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -23,7 +22,7 @@ class ExtendExoPlayer(var context: Context) {
     private var extendPreparedListener: MediaPlayer.OnPreparedListener? = null
     private var extendOnCompletionListener: MediaPlayer.OnCompletionListener? = null
     private var dataSourceFactory: DefaultDataSourceFactory
-    private lateinit var mediaSource: ExtractorMediaSource
+    private lateinit var mediaSource: MediaItem
     private var player: SimpleExoPlayer
 
     var isCompleted = false
@@ -67,10 +66,7 @@ class ExtendExoPlayer(var context: Context) {
     }
 
     init {
-        player = ExoPlayerFactory.newSimpleInstance(
-                context,
-                DefaultTrackSelector(),
-                DefaultLoadControl())
+        player = SimpleExoPlayer.Builder(context).build()
         dataSourceFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, "ExoPlayerInfo"))
 
         mAudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -86,10 +82,11 @@ class ExtendExoPlayer(var context: Context) {
         try {
 //            Toast.makeText(context, song.song.path, Toast.LENGTH_SHORT).show()
             val newFile = song.song.path?.let { FileEncyptUtil.renameToMp3File(it) }
-            mediaSource = ExtractorMediaSource.Factory(EncryptedFileDataSourceFactory(dataSourceFactory.createDataSource())).createMediaSource(Uri.fromFile(File(newFile)))
-            player.addListener(object : Player.EventListener {
+            mediaSource = MediaItem.fromUri(Uri.fromFile(File(newFile)))
+            player.addListener(object : Player.Listener {
 
-                override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
                     if (player.playbackState == ExoPlayer.STATE_ENDED) {
 
                         ratioDiv++
@@ -104,12 +101,13 @@ class ExtendExoPlayer(var context: Context) {
                     }
                 }
 
-                override fun onPlayerError(error: ExoPlaybackException) {
+                override fun onPlayerError(error: PlaybackException) {
+                    super.onPlayerError(error)
                     isError = true
                     extendErrorListener?.onError(MediaPlayer(), 0, 0)
                 }
             })
-            player.prepare(mediaSource)
+            player.setMediaItem(mediaSource)
             player.playWhenReady = true
         } catch (e: Exception) {
             Log.e("MUSIC SERVICE", "Error setting data source", e)

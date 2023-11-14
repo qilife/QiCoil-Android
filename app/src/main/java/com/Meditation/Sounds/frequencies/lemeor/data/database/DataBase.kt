@@ -23,7 +23,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
         Program::class,
         Playlist::class,
         Rife::class,
-    ], version = 3
+    ], version = 4
 )
 
 @TypeConverters(
@@ -88,6 +88,27 @@ abstract class DataBase : RoomDatabase() {
                 )
             }
         }
+        private val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE IF EXISTS album")
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `album` (`id` INTEGER NOT NULL, " +
+                            "`category_id` INTEGER NOT NULL, " +
+                            "`tier_id` INTEGER NOT NULL, " +
+                            "`name` TEXT NOT NULL, `image` TEXT NOT NULL, " +
+                            "`audio_folder` TEXT NOT NULL, " +
+                            "`is_free` INTEGER NOT NULL, " +
+                            "`order` INTEGER NOT NULL, " +
+                            "`order_by` INTEGER NOT NULL, " +
+                            "`updated_at` INTEGER NOT NULL, " +
+                            "`descriptions` TEXT, " +
+                            "`tracks` TEXT NOT NULL, " +
+                            "`tag` TEXT, `isDownloaded` INTEGER NOT NULL, " +
+                            "`isUnlocked` INTEGER NOT NULL, " +
+                            "PRIMARY KEY(`id`, `category_id`))"
+                )
+            }
+        }
 
         @Volatile
         private var instance: DataBase? = null
@@ -106,7 +127,7 @@ abstract class DataBase : RoomDatabase() {
                 BuildConfig.DB_NAME
             )
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                 .build()
     }
 }

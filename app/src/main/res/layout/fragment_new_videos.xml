@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".lemeor.ui.videos.NewVideosFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -13,25 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/indent_16"
+        android:layout_marginTop="@dimen/indent_8"
         android:layout_marginRight="@dimen/indent_16"
         android:layout_marginBottom="@dimen/indent_16"
-        android:layout_marginTop="@dimen/indent_8"
-        android:padding="@dimen/indent_8"
-        android:orientation="horizontal"
         android:background="@drawable/rounded_album_category_background"
+        android:orientation="horizontal"
+        android:padding="@dimen/indent_8"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_category"/>
+        tools:listitem="@layout/item_category" />
 
-    <WebView
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/mvideoView"
         android:layout_width="match_parent"
         android:layout_height="280dp"
-        android:layout_marginBottom="@dimen/indent_16"
-        />
+        android:layout_marginBottom="@dimen/indent_16" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/videos_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

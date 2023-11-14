@@ -8,19 +8,19 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 @Dao
 interface ProgramDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(program: Program?)
+    fun insert(program: Program?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(list: List<Program>?)
+    fun insertAll(list: List<Program>?)
 
     @Delete
-    suspend fun delete(program: Program?)
+    fun delete(program: Program?)
 
     @Delete
-    suspend fun deletePrograms(list: List<Program>?)
+    fun deletePrograms(list: List<Program>?)
 
     @Query("DELETE FROM program")
-    suspend fun clear()
+    fun clear()
 
     @Query("SELECT * FROM program ORDER BY `order` ASC")
     fun getPrograms() : LiveData<List<Program>>
@@ -32,20 +32,20 @@ interface ProgramDao {
     fun getProgramByIdLive(id: Int) : LiveData<Program>
 
     @Query("SELECT * FROM program WHERE id=:id")
-    suspend fun getProgramById(id: Int) : Program?
+    fun getProgramById(id: Int) : Program?
 
     @Query("SELECT * FROM program WHERE name=:name")
-    suspend fun getProgramByName(name: String) : Program?
+    fun getProgramByName(name: String) : Program?
 
     @Update
-    suspend fun updateProgram(program: Program)
+    fun updateProgram(program: Program)
 
     @Query("SELECT * FROM program WHERE name LIKE :searchString")
-    suspend fun searchProgram(searchString: String): List<Program>
+    fun searchProgram(searchString: String): List<Program>
 
     @Query("SELECT * FROM program WHERE isMy=:isMy ORDER BY `order` ASC")
-    suspend fun getData(isMy: Boolean) : List<Program>
+    fun getData(isMy: Boolean) : List<Program>
 
     @Query("UPDATE program SET isMy=:isMy WHERE id=:id")
-    suspend fun syncPrograms(isMy: Boolean, id: Int)
+    fun syncPrograms(isMy: Boolean, id: Int)
 }

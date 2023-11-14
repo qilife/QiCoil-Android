@@ -40,98 +40,71 @@ data class HomeResponse(
 
 @Entity(tableName = "tag")
 data class Tag(
-    @PrimaryKey var id: Int, var name: String, var order: Int, var updated_at: Long
+    @PrimaryKey var id: Int = 0,
+    var name: String= "",
+    var order: Int = 0,
+    var updated_at: Long = 0L
 )
 
 @Entity(tableName = "tier")
 data class Tier(
-    @PrimaryKey var id: Int,
-    var name: String,
-    var order: Int,
-    var updated_at: Long,
-    var isShow: Boolean,
-    var isPurchased: Boolean
+    @PrimaryKey var id: Int = 0,
+    var name: String = "",
+    var order: Int = 0,
+    var updated_at: Long = 0L,
+    var isShow: Boolean = false,
+    var isPurchased: Boolean = false
 )
 
 @Entity(tableName = "category")
 data class Category(
-    @PrimaryKey var id: Int,
-    var tier_id: Int,
-    var name: String,
-    var order: Int,
-    var updated_at: Long,
-    var isShow: Boolean,
-    var isPurchased: Boolean
+    @PrimaryKey var id: Int = 0,
+    var tier_id: Int = 0,
+    var name: String = "",
+    var order: Int = 0,
+    var updated_at: Long = 0L,
+    var isShow: Boolean = false,
+    var isPurchased: Boolean = false
 )
 
-@Entity(tableName = "album")
+@Entity(tableName = "album", primaryKeys = ["id", "category_id"])
 @Parcelize
 data class Album(
-    @PrimaryKey @SerializedName("_id") var index: Int,
-    var id: Int,
-    var category_id: Int,
-    var tier_id: Int,
-    var name: String,
-    var image: String,
+    var id: Int = 0,
+    var category_id: Int = 0,
+    var tier_id: Int = 0,
+    var name: String = "",
+    var image: String = "",
     var audio_folder: String,
-    var is_free: Int,
-    var order: Int,
-    var order_by: Int,
-    var updated_at: Long,
-    @TypeConverters(StringConverter::class) var descriptions: List<String>?,
-    @TypeConverters(TrackConverter::class) var tracks: List<Track>,
-    @TypeConverters(IntConverter::class) var tag: ArrayList<Int>?,
-    var isDownloaded: Boolean,
-    var isUnlocked: Boolean
+    var is_free: Int = 0,
+    var order: Int = 0,
+    var order_by: Int = 0,
+    var updated_at: Long = 0L,
+    @TypeConverters(StringConverter::class) var descriptions: List<String>? = null,
+    @TypeConverters(TrackConverter::class) var tracks: List<Track> = listOf(),
+    @TypeConverters(IntConverter::class) var tag: ArrayList<Int>? = null,
+    var isDownloaded: Boolean = false,
+    var isUnlocked: Boolean = false
 ) : Parcelable
 
 @Entity(tableName = "track")
 @Parcelize
 data class Track(
-    @PrimaryKey var id: Int,
-    var name: String,
-    var filename: String,
-    var tier_id: Int,
-    var category_id: Int,
-    var updated_at: Long,
-    var isSelected: Boolean,
-    var isFavorite: Boolean,
-    var isDownloaded: Boolean,
-    var albumId: Int,
-    var isUnlocked: Boolean,
-    var duration: Long,
+    @PrimaryKey var id: Int = 0,
+    var name: String = "",
+    var filename: String = "",
+    var tier_id: Int = 0,
+    var category_id: Int = 0,
+    var updated_at: Long = 0L,
+    var isSelected: Boolean = false,
+    var isFavorite: Boolean = false,
+    var isDownloaded: Boolean = false,
+    var albumId: Int = 0,
+    var isUnlocked: Boolean = false,
+    var duration: Long = 0L,
     @TypeConverters(Converters::class) var album: @RawValue Album?,
-    var progress: Int
-) : Parcelable {
-    constructor(
-        id: Int,
-        name: String,
-        filename: String,
-        tier_id: Int,
-        category_id: Int,
-        updated_at: Long,
-        isFavorite: Boolean,
-        isDownloaded: Boolean,
-        albumId: Int,
-        isUnlocked: Boolean,
-        duration: Long
-    ) : this(
-        id,
-        name,
-        filename,
-        tier_id,
-        category_id,
-        updated_at,
-        false,
-        isFavorite,
-        isDownloaded,
-        albumId,
-        isUnlocked,
-        duration,
-        null,
-        0
-    )
-}
+    var progress: Int = 0
+) : Parcelable
 
 @Entity(tableName = "program")
 data class Program(
@@ -151,50 +124,17 @@ data class Program(
     @Ignore
     var is_deleted: Boolean = false,
 ) {
-    constructor(
-        id: Int,
-        name: String,
-        user_id : Int,
-        order: Int,
-        updated_at: Long,
-        records: ArrayList<Double>,
-        isMy: Boolean,
-        server_id: Int,
-        is_dirty: Boolean,
-        is_deleted: Boolean,
-    ) : this(
-        id = id,
-        name = name,
-        user_id = user_id,
-        order = order,
-        updated_at = updated_at,
-        records = records,
-        isMy = isMy,
-        isUnlocked = false,
-        server_id = server_id,
-        is_dirty = is_dirty,
-        is_deleted = is_deleted,
-    )
 }
 
 @Entity(tableName = "playlist")
 data class Playlist(
-    @PrimaryKey var id: Int,
-    var name: String,
-    var youtube_id: String,
-    var order: Int,
-    var updated_at: Long,
-    var isSelected: Boolean
-) {
-    constructor(id: Int, name: String, youtube_id: String, order: Int, updated_at: Long) : this(
-        id,
-        name,
-        youtube_id,
-        order,
-        updated_at,
-        false
-    )
-}
+    @PrimaryKey var id: Int = 0,
+    var name: String = "",
+    var youtube_id: String = "",
+    var order: Int = 0,
+    var updated_at: Long = 0L,
+    var isSelected: Boolean = false
+)
 
 @Parcelize
 @Entity(tableName = "rife")

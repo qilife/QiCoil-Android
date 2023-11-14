@@ -28,22 +28,22 @@ import com.Meditation.Sounds.frequencies.utils.Utils
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import kotlinx.android.synthetic.main.fragment_new_videos.*
 import kotlinx.android.synthetic.main.fragment_new_videos.mvideoView
 import kotlinx.android.synthetic.main.fragment_video.*
 import org.json.JSONException
 
-
-class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
+class NewVideosFragment : Fragment() {
 
     private lateinit var mViewModel: NewVideosViewModel
-    private var mYouTubePlayer: YouTubePlayer? = null
     private var mVideoAdapter: VideoAdapter? = null
     private var mListVideo = ArrayList<Video>()
     private var mPlaylistAdapter: PlaylistAdapter? = null
     private var mListPlaylist = ArrayList<Playlist>()
+    private var mYouTubePlayer: YouTubePlayer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -51,7 +51,6 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -95,59 +94,25 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
       //  mediaController.setAnchorView(mvideoView)
        // mvideoView.setMediaController(mediaController)
 
-        if (Utils.isConnectedToNetwork(activity) && isAdded){
-            if (mListVideo.isNotEmpty()) {
-                val videoId = mListVideo[0].videoId
-                val videoStr = """<html><body style='margin:0;padding:0;'><iframe class="youtube-player" style="border: 0; width: 100%; height: 96%;padding:0px; margin:0px" id="ytplayer" type="text/html" src="http://www.youtube.com/embed/$videoId?&theme=dark&autohide=2&modestbranding=1&showinfo=0&autoplay=1s=0" frameborder="0" allowfullscreen autobuffer controls onclick="this.play()"></iframe></body></html>"""
-                mvideoView?.setWebViewClient(object : WebViewClient() {
-                    @Deprecated("Deprecated in Java", ReplaceWith("false"))
-                    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                        return false
-                    }
-                })
-                val ws: WebSettings = mvideoView.settings
-                ws.javaScriptEnabled = true
-                ws.mediaPlaybackRequiresUserGesture = false
-                mvideoView?.loadData(videoStr, "text/html", "utf-8")
+        mvideoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady( youTubePlayer: YouTubePlayer) {
+                if (Utils.isConnectedToNetwork(activity) && isAdded) {
+                    mYouTubePlayer = youTubePlayer
+                    youTubePlayer.cueVideo(mListVideo[0].videoId, 0f)
+                }
             }
-
-        }
+        })
 
         mVideoAdapter = VideoAdapter(context, mListVideo)
         mVideoAdapter?.setOnClickListener(object : VideoAdapter.IOnClickItemListener {
             override fun onClickItem(video: Video, position: Int) {
                 val videoId = video.videoId
-                val videoStr = """<html><body style='margin:0;padding:0;'><iframe class="youtube-player" style="border: 0; width: 100%; height: 96%;padding:0px; margin:0px" id="ytplayer" type="text/html" src="http://www.youtube.com/embed/$videoId?&theme=dark&autohide=2&modestbranding=1&showinfo=0&autoplay=1s=0" frameborder="0" allowfullscreen autobuffer controls onclick="this.play()"></iframe></body></html>"""
-                mvideoView.setWebViewClient(object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                        return false
-                    }
-                })
-                val ws: WebSettings = mvideoView.getSettings()
-                ws.javaScriptEnabled = true
-                ws.mediaPlaybackRequiresUserGesture = false
-                mvideoView.loadData(videoStr, "text/html", "utf-8")
+                mYouTubePlayer?.loadVideo(videoId, 0f)
             }
         })
         videos_recycler_view.adapter = mVideoAdapter
     }
 
-    override fun onInitializationSuccess(provider: YouTubePlayer.Provider?, player: YouTubePlayer?, wasRestored: Boolean) {
-        mYouTubePlayer = player
-        mYouTubePlayer?.setShowFullscreenButton(false)
-        mYouTubePlayer?.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT)
-        if (mListVideo.isNotEmpty()) {
-            mYouTubePlayer?.cueVideo(mListVideo[0].videoId)
-        }
-    }
-
-    override fun onInitializationFailure(provider: YouTubePlayer.Provider?, result: YouTubeInitializationResult?) {
-        if (result?.isUserRecoverableError == true) {
-            result.getErrorDialog(activity, RECOVERY_DIALOG_REQUEST).show()
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.player_error, result.toString()), Toast.LENGTH_LONG).show()
-        }
-    }
 
     //todo make this pretty
     private fun getJsonPlaylist(url: String) {
@@ -180,16 +145,7 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
                     //  val videoStr = "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"+mListVideo[0].videoId+"\\frameborder=\"0\" allowfullscreen></iframe></body></html>"
 
                     val videoId = mListVideo[0].videoId;
-                    val videoStr = """<html><body style='margin:0;padding:0;'><iframe class="youtube-player" style="border: 0; width: 100%; height: 96%;padding:0px; margin:0px" id="ytplayer" type="text/html" src="http://www.youtube.com/embed/$videoId?&theme=dark&autohide=2&modestbranding=1&showinfo=0&autoplay=1s=0" frameborder="0" allowfullscreen autobuffer controls onclick="this.play()"></iframe></body></html>"""
-                    mvideoView.setWebViewClient(object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                            return false
-                        }
-                    })
-                    val ws: WebSettings = mvideoView.getSettings()
-                    ws.javaScriptEnabled = true
-                    ws.mediaPlaybackRequiresUserGesture = false
-                    mvideoView.loadData(videoStr, "text/html", "utf-8")
+                    mYouTubePlayer?.cueVideo(videoId, 0f)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
