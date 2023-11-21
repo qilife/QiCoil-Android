@@ -24,6 +24,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetail
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.RifeRepository
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.SearchRifeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.tabs.FrequencyViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.VideoRepository
@@ -33,7 +34,7 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(HomeRepository(apiHelper, localData)) as T
+            return HomeViewModel(HomeRepository(apiHelper, localData),localData) as T
         }
 
         if (modelClass.isAssignableFrom(AlbumsViewModel::class.java)) {
@@ -74,6 +75,9 @@ class ViewModelFactory(private val apiHelper: ApiHelper, private val localData: 
 
         if (modelClass.isAssignableFrom(NewRifeViewModel::class.java)) {
             return NewRifeViewModel(RifeRepository(apiHelper, localData)) as T
+        }
+        if (modelClass.isAssignableFrom(SearchRifeViewModel::class.java)) {
+            return SearchRifeViewModel(RifeRepository(apiHelper, localData)) as T
         }
         if (modelClass.isAssignableFrom(FrequencyViewModel::class.java)) {
             return FrequencyViewModel() as T

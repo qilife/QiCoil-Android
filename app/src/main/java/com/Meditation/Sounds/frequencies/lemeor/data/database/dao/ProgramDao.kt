@@ -2,7 +2,6 @@ package com.Meditation.Sounds.frequencies.lemeor.data.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 
 @Dao
@@ -25,6 +24,9 @@ interface ProgramDao {
     @Query("SELECT * FROM program ORDER BY `order` ASC")
     fun getPrograms() : LiveData<List<Program>>
 
+    @Query("SELECT * FROM program WHERE deleted=0 ORDER BY `order` ASC")
+    fun getListProgram() : LiveData<List<Program>>
+
     @Query("SELECT * FROM program WHERE isMy=:isMy ORDER BY `order` ASC")
     fun getMy(isMy: Boolean) : LiveData<List<Program>>
 
@@ -44,8 +46,11 @@ interface ProgramDao {
     fun searchProgram(searchString: String): List<Program>
 
     @Query("SELECT * FROM program WHERE isMy=:isMy ORDER BY `order` ASC")
-    fun getData(isMy: Boolean) : List<Program>
+    fun getData(isMy: Boolean): List<Program>
 
-    @Query("UPDATE program SET isMy=:isMy WHERE id=:id")
-    fun syncPrograms(isMy: Boolean, id: Int)
+    @Query("UPDATE program SET deleted=:deleted WHERE id=:id")
+    fun update(id: Int, deleted: Boolean)
+
+    @Query("SELECT * FROM program")
+    fun getAllData(): List<Program>
 }

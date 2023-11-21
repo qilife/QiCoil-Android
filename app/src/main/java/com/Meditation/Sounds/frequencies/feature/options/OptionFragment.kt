@@ -2,10 +2,16 @@ package com.Meditation.Sounds.frequencies.feature.options
 
 import android.content.*
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.feature.base.BaseActivity
 import com.Meditation.Sounds.frequencies.feature.base.BaseFragment
 import com.Meditation.Sounds.frequencies.feature.main.MainActivity
+import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
+import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
+import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.models.Profile
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.FilesUtils
@@ -18,7 +24,7 @@ class OptionFragment : BaseFragment() {
 
     private var mBaseActivity: BaseActivity? = null
     private var mUser: Profile? = null
-
+    private lateinit var mViewModel: HomeViewModel
     private var broadcastReceiverReload = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
             initComponents()
@@ -35,6 +41,13 @@ class OptionFragment : BaseFragment() {
         mContext?.registerReceiver(broadcastReceiverReload, IntentFilter("RELOAD_VIEW"))
 
         mBaseActivity = mContext as BaseActivity
+
+        mViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        )[HomeViewModel::class.java]
 
         val tvSignIn = view?.findViewById<CustomFontTextView>(R.id.tvSignIn)
         val mBtnLogout = view?.findViewById<CustomFontTextView>(R.id.mBtnLogout)
@@ -68,6 +81,8 @@ class OptionFragment : BaseFragment() {
         mBtnLogout?.setOnClickListener {
             if (Utils.isConnectedToNetwork(mContext)) {
                 mBaseActivity?.showAlertWithAction(getString(R.string.txt_msg_logout), R.string.txt_ok, R.string.txt_no, DialogInterface.OnClickListener { _, _ ->
+
+                    mViewModel.syncProgramsToServer()
                     SharedPreferenceHelper.getInstance()[(Constants.PREF_PROFILE)] = null
                     SharedPreferenceHelper.getInstance()[(Constants.PREF_SESSION_ID)] = null
                     SharedPreferenceHelper.getInstance().setBool(Constants.IS_PREMIUM, false)

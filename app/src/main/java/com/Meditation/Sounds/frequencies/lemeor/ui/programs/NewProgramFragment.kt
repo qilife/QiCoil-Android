@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_new_program.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class NewProgramFragment : Fragment() {
 
@@ -147,36 +148,20 @@ class NewProgramFragment : Fragment() {
 
             btnAdd.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        mViewModel.createProgram(programName.text.toString())
-                        mViewModel.insert(
-                            Program(
-                                0,
-                                programName.text.toString(),
-                                0,
-                                0,
-                                0,
-                                ArrayList(),
-                                isMy = true,
-                                false,
-                                is_dirty = true
-                            )
+                    //call api createProgram
+                    mViewModel.insert(
+                        Program(
+                            0,
+                            programName.text.toString(),
+                            "",
+                            0,
+                            Date().time,
+                            ArrayList(),
+                            isMy = true,
+                            false,
+                            is_dirty = false
                         )
-                    } catch (_: Throwable) {
-                        mViewModel.insert(
-                            Program(
-                                0,
-                                programName.text.toString(),
-                                0,
-                                0,
-                                0,
-                                ArrayList(),
-                                isMy = true,
-                                false,
-                                is_dirty = false
-                            )
-                        )
-                    }
+                    )
 
                 }
                 dialogBuilder.dismiss()
@@ -250,7 +235,13 @@ class NewProgramFragment : Fragment() {
                     requireContext(),
                     object : AlertMessageDialog.IOnSubmitListener {
                         override fun submit() {
-                            CoroutineScope(Dispatchers.IO).launch { mViewModel.delete(program) }
+                            CoroutineScope(Dispatchers.IO).launch {
+                                mViewModel.udpate(
+                                    program.copy(
+                                        deleted = true
+                                    )
+                                )
+                            }
                             Toast.makeText(
                                 requireContext(),
                                 requireContext().getString(R.string.txt_delete_playlist_name_success),

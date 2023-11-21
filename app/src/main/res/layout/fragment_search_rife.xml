@@ -25,16 +25,17 @@
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="7dp"
+        android:layout_marginEnd="@dimen/image_size_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toBottomOf="@+id/nav_view">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center"
             android:contentDescription="@null"
-            android:src="@drawable/ic_search_white" />
+            android:src="@drawable/ic_search_black" />
 
         <com.Meditation.Sounds.frequencies.views.CustomFontEditText
             android:id="@+id/rife_search"
@@ -49,8 +50,8 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             android:textSize="14sp"
             app:fontText="fonts/HelveticaNeue_Thin.otf" />
 

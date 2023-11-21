@@ -1,11 +1,9 @@
 package com.Meditation.Sounds.frequencies.lemeor.data.api
 
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.Update
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @GET(ApiConfig.API_HOME)
@@ -101,5 +99,11 @@ interface ApiService {
 
     @POST(ApiConfig.API_PROGRAMS)
     suspend fun createPrograms(@Body map: Map<String, String>): Status
+
+    @DELETE(ApiConfig.API_PROGRAMS + "/{program_id}")
+    suspend fun deleteProgram(@Path("program_id") program_id: String): Status
+
+    @POST(ApiConfig.API_PROGRAMS_SYNC)
+    suspend fun syncProgramsToServer(@Body map: List<Update>): Status
 }
 

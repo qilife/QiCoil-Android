@@ -96,6 +96,9 @@
     <dimen name="indent_24">24dp</dimen>
     <dimen name="indent_32">32dp</dimen>
     <dimen name="indent_48">48dp</dimen>
+    <dimen name="indent_35">35dp</dimen>
+    <dimen name="indent_40">40dp</dimen>
+    <dimen name="indent_100">100dp</dimen>
 
 
     <dimen name="text_size_12">12sp</dimen>

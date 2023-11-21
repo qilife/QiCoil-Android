@@ -446,6 +446,9 @@ class NavigationActivity : AppCompatActivity(),
     private fun syncData() {
         if (isNetworkAvailable()) {
             val user = PreferenceHelper.getUser(this)
+            if(user?.id != null){
+                mViewModel.syncProgramsToServer()
+            }
             mViewModel.getHome("" + user?.id).observe(this) {
                 when (it.status) {
                     Resource.Status.SUCCESS -> {

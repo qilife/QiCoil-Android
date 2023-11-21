@@ -284,6 +284,7 @@ class PlayerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+//        unregisterReceiver(becomingNoisyReceiver)
         progressTimer.cancel()
         progressTimer.purge()
         mediaSession.release()
@@ -567,12 +568,6 @@ class PlayerService : Service() {
                         refreshNotificationAndForegroundStatus(currentState)
                     }
                 } else if (item is MusicRepository.Frequency) {
-                    if (!isRegisteredBusyReceiver) {
-                        isRegisteredBusyReceiver = true
-                        registerReceiver(
-                            becomingNoisyReceiver, IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
-                        )
-                    }
                     mediaSession.isActive = true
                     mediaSession.setPlaybackState(
                         stateBuilder.setState(

@@ -6,6 +6,8 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
+import com.google.gson.TypeAdapter
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
@@ -110,21 +112,16 @@ data class Track(
 data class Program(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     var name: String = "",
-    var user_id: Int = 0,
+    var user_id: String = "",
     var order: Int = 0,
     var updated_at: Long = Date().time,
     @TypeConverters(DoubleConverter::class) var records: ArrayList<Double> = arrayListOf(),
-    @SerializedName("favorited")
     var isMy: Boolean = true,
     var isUnlocked: Boolean = true,
-    @Ignore
-    var server_id: Int = 0,
-    @Ignore
+    var favorited: Boolean = false,
     var is_dirty: Boolean = false,
-    @Ignore
-    var is_deleted: Boolean = false,
-) {
-}
+    var deleted: Boolean = false,
+)
 
 @Entity(tableName = "playlist")
 data class Playlist(
@@ -155,6 +152,17 @@ data class Rife(
 ) : Parcelable {
     fun getFrequency() = if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()
     else frequencies!!.split('/')
+}
+
+class IntToBooleanAdapter : TypeAdapter<Boolean>() {
+
+    override fun write(out: com.google.gson.stream.JsonWriter?, value: Boolean?) {
+    }
+
+    override fun read(`in`: com.google.gson.stream.JsonReader?): Boolean {
+        val intValue = `in`?.nextInt() ?: 0
+        return intValue != 0
+    }
 }
 
 

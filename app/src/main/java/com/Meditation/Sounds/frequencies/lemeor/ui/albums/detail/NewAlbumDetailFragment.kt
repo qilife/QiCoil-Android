@@ -74,6 +74,7 @@ class NewAlbumDetailFragment : Fragment() {
     private var trackDao: TrackDao? = null
     private var albumDao: AlbumDao? = null
     private var isFirst = true
+    private var timeDelay = 500L
 
     override fun onDestroy() {
         super.onDestroy()
@@ -176,7 +177,8 @@ class NewAlbumDetailFragment : Fragment() {
                 play(album)
                 Handler(Looper.getMainLooper()).postDelayed({
                     EventBus.getDefault().post(PlayerSelected(i))
-                }, 200)
+                    timeDelay = 200L
+                }, timeDelay)
             }
 
             override fun onTrackOptions(track: Track, i: Int) {
@@ -245,7 +247,8 @@ class NewAlbumDetailFragment : Fragment() {
                 play(rife)
                 Handler(Looper.getMainLooper()).postDelayed({
                     EventBus.getDefault().post(PlayerSelected(index))
-                }, 200)
+                    timeDelay = 200L
+                }, timeDelay)
             } else if (option == 1) {
                 startActivityForResult(
                     TrackOptionsPopUpActivity.newIntent(
@@ -361,6 +364,7 @@ class NewAlbumDetailFragment : Fragment() {
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
                     putParcelableArrayListExtra("playlist", data)
                 }
+                requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)
                 isFirst = false
             }
@@ -406,6 +410,7 @@ class NewAlbumDetailFragment : Fragment() {
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
                     putParcelableArrayListExtra("playlist", data)
                 }
+                requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)
                 isFirst = false
             }

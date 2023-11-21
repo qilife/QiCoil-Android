@@ -5,19 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
-import com.Meditation.Sounds.frequencies.lemeor.ui.rife.listTest
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.ItemOffsetBottomDecoration
+import com.Meditation.Sounds.frequencies.views.RecyclerSectionItemDecoration
 import kotlinx.android.synthetic.main.fragment_program_page.*
 
 class ProgramPageFragment : Fragment() {
@@ -25,8 +24,26 @@ class ProgramPageFragment : Fragment() {
     private var rifeId: Int? = null
     var mainFm: NewRifeFragment? = null
     private val mProgramAdapter = ProgramAdapter {
-        if(mainFm != null){
+        if (mainFm != null) {
             mainFm!!.openAlbum(it)
+        }
+    }
+    private var listRife = listOf<Rife>()
+    private val mStickyHeaderAdapter = StickyHeaderAdapter { tab ->
+        val positionToScroll = listRife.indexOfFirst {
+            if (tab.first().isLetter()) tab.uppercase().first() == it.title.uppercase()
+                .first() else !it.title.first().isLetter()
+        }
+        val layoutManager = rcvProgram.layoutManager
+        layoutManager?.scrollToPosition(positionToScroll)
+
+        rcvProgram.post {
+            val child = layoutManager?.findViewByPosition(positionToScroll)
+            child?.let {
+                val offsetY =
+                    rcvProgram.context.resources.getDimensionPixelOffset(R.dimen.indent_40)
+                rcvProgram.scrollBy(0, it.top - offsetY)
+            }
         }
     }
 
@@ -50,22 +67,47 @@ class ProgramPageFragment : Fragment() {
 
     private fun initView() {
         mViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
+            this, ViewModelFactory(
                 ApiHelper(RetrofitBuilder(requireContext()).apiService),
                 DataBase.getInstance(requireContext())
             )
-        ).get(NewRifeViewModel::class.java)
+        )[NewRifeViewModel::class.java]
+
         val itemDecoration = ItemOffsetBottomDecoration(
             requireContext(),
             if (Utils.isTablet(context)) R.dimen.item_offset else R.dimen.margin_buttons
         )
-        rcvProgram.apply {
-            adapter = mProgramAdapter
-            addItemDecoration(itemDecoration)
-        }
-        mViewModel.getRifeList().observe(viewLifecycleOwner){
-            mProgramAdapter.setListRife(it)
+        rcvProgram.adapter = mProgramAdapter
+        rcvProgram.itemAnimator = null
+        rcvTabList.adapter = mStickyHeaderAdapter
+        rcvTabList.itemAnimator = null
+        mViewModel.getRifeList().observe(viewLifecycleOwner) { listRift ->
+            val list = listRift.sortedWith(compareBy<Rife> {
+                when {
+                    it.title.lowercase().firstOrNull()?.isLetter() == true -> 0
+                    else -> 1
+                }
+            }.thenBy { it.title.lowercase() })
+            listRife = list
+            val sectionItemDecoration = RecyclerSectionItemDecoration(
+                resources.getDimensionPixelSize(R.dimen.height_calander_icon),
+                true, RecyclerSectionItemDecorator(list),
+                top = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+                left = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+                right = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+                bottom = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+            )
+            mProgramAdapter.setListRife(list)
+            rcvProgram.addItemDecoration(sectionItemDecoration)
+            val uniqueFirstChars = list
+                .map {
+                    if (it.title.uppercase().first().isLetter())
+                        it.title.uppercase().first().toString()
+                    else "#"
+                }
+                .distinct()
+                .toList()
+            mStickyHeaderAdapter.setData(uniqueFirstChars)
         }
     }
 
@@ -80,6 +122,32 @@ class ProgramPageFragment : Fragment() {
                 arguments = Bundle().apply {
                     putInt(ARG_RIFE_ID, rifeId)
                 }
+            }
+        }
+    }
+
+    class RecyclerSectionItemDecorator(private var listRife: List<Rife>) :
+        RecyclerSectionItemDecoration.SectionCallBack {
+
+        override fun isSection(position: Int): Boolean {
+            return if (position == 0) {
+                true
+            } else if (listRife[position].title.lowercase().firstOrNull()?.isLetter() == false) {
+                listRife[position].title.lowercase().firstOrNull()
+                    ?.isLetter() == false && listRife[position - 1].title.lowercase().firstOrNull()
+                    ?.isLetter() == true
+            } else {
+                listRife[position].title.lowercase()
+                    .codePointAt(0) != listRife[position - 1].title.lowercase().codePointAt(0)
+            }
+        }
+
+        override fun getSectionHeader(position: Int): String {
+            val sub = listRife[position].title.uppercase()[0]
+            return if (sub.isLetter()) {
+                sub.toString()
+            } else {
+                "#"
             }
         }
     }

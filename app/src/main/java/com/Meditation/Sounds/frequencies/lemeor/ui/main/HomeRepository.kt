@@ -69,7 +69,7 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         syncTiers(localData, it)
         syncCategories(localData, it)
         syncTags(localData, it)
-        syncPrograms(localData, it)
+        syncPrograms(localData, it, user)
         syncPlaylists(localData, it)
         syncAlbums(localData, it)
         syncTracks(localData, it)
@@ -99,4 +99,8 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
             }
         }
     )
+
+    suspend fun deleteProgram(id: String) = apiHelper.deleteProgram(id)
+    suspend fun syncProgramsApi(listProgram: List<Update>) =
+        apiHelper.syncProgramsToServer(listProgram)
 }

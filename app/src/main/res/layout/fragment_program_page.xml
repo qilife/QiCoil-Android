@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<!--    android:layout_marginHorizontal="@dimen/image_size_14"-->
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginHorizontal="@dimen/image_size_14"
         android:id="@+id/rcvProgram"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,4 +16,18 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="20"
         tools:listitem="@layout/item_rife_program" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginEnd="@dimen/margin_item_10"
+        android:id="@+id/rcvTabList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="20"
+        tools:listitem="@layout/item_string_frequency"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

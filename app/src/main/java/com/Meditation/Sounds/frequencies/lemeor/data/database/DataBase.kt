@@ -39,7 +39,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
     DoubleConverter::class,
     RifeConverter::class,
     StringConverter::class,
-    Converters::class
+    Converters::class,
 )
 abstract class DataBase : RoomDatabase() {
 
@@ -66,10 +66,10 @@ abstract class DataBase : RoomDatabase() {
         }
         private val MIGRATION_2_3: Migration = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE program ADD COLUMN favorited INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE program ADD COLUMN deleted INTEGER DEFAULT 0 NOT NULL")
                 database.execSQL("ALTER TABLE program ADD COLUMN is_dirty INTEGER DEFAULT 0 NOT NULL")
-                database.execSQL("ALTER TABLE program ADD COLUMN is_deleted INTEGER DEFAULT 0 NOT NULL")
-                database.execSQL("ALTER TABLE program ADD COLUMN server_id INTEGER DEFAULT 0 NOT NULL")
-                database.execSQL("ALTER TABLE program ADD COLUMN user_id INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE program ADD COLUMN user_id TEXT DEFAULT '' NOT NULL")
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS rife (" +
                             "`id` INTEGER DEFAULT 0 NOT NULL, " +

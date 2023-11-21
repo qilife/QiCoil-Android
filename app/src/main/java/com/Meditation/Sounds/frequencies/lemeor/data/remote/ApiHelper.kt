@@ -1,6 +1,7 @@
 package com.Meditation.Sounds.frequencies.lemeor.data.remote
 
 import com.Meditation.Sounds.frequencies.lemeor.data.api.ApiService
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.Update
 
 class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
     suspend fun getHome(user_id : String) = getResult{ apiService.getHome(user_id) }
@@ -43,21 +44,28 @@ class ApiHelper(private val apiService: ApiService) : BaseDataSource() {
     suspend fun getProfile() = apiService.getProfile()
 
     suspend fun updateProfile(
-            email: String,
-            password_old: String,
-            password: String,
-            name: String?,
-            password_confirmation: String
+        email: String,
+        password_old: String,
+        password: String,
+        name: String?,
+        password_confirmation: String
     ) = apiService.updateProfile(email, password_old, password, name, password_confirmation)
 
-    suspend fun reportTrack(trackId: Int, trackUrl: String) = apiService.reportTrack(trackId, trackUrl)
+    suspend fun reportTrack(trackId: Int, trackUrl: String) =
+        apiService.reportTrack(trackId, trackUrl)
 
-    suspend fun submitProgram(trackId: Int, trackUrl: String) = apiService.submitProgram(trackId, trackUrl)
+    suspend fun submitProgram(trackId: Int, trackUrl: String) =
+        apiService.submitProgram(trackId, trackUrl)
 
-    suspend fun getRife() = getResult{ apiService.getRife() }
+    suspend fun getRife() = getResult { apiService.getRife() }
 
 
-    suspend fun getPrograms() = getResult{ apiService.getPrograms() }
+    suspend fun getPrograms() = getResult { apiService.getPrograms() }
 
     suspend fun createPrograms(name: String) = apiService.createPrograms(mapOf("name" to name))
+
+    suspend fun deleteProgram(id: String) = apiService.deleteProgram(id)
+
+    suspend fun syncProgramsToServer(listProgram: List<Update>) =
+        apiService.syncProgramsToServer(listProgram)
 }

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -55,17 +54,32 @@ class ProgramDetailFragment : Fragment() {
     private lateinit var mViewModel: ProgramDetailViewModel
     private var mTrackAdapter: ProgramTrackAdapter? = null
     private var isFirst = true
+    private var timeDelay = 500L
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
             val tracks: ArrayList<Any> = ArrayList()
 
             CoroutineScope(Dispatchers.IO).launch {
-                program?.records?.forEach {
+                program?.records?.forEachIndexed { index, it ->
                     if (it >= 0) {
                         mViewModel.getTrackById(it.toInt())?.let { track ->
                             tracks.add(track)
                         }
+                    } else {
+                        tracks.add(
+                            MusicRepository.Frequency(
+                                index,
+                                "",
+                                (it * -1).toFloat(),
+                                -index,
+                                index,
+                                false,
+                                0,
+                                0,
+                            )
+                        )
                     }
                 }
 
@@ -177,7 +191,12 @@ class ProgramDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Empty List", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            playOrDownload(tracks.filterIsInstance<Track>() as ArrayList<Track>)
+            val list = tracks.filterIsInstance<Track>() as ArrayList<Track>
+            if (list.isNotEmpty()) {
+                playOrDownload(list)
+            }
+            play(tracks)
+            EventBus.getDefault().post(PlayerSelected(0))
         }
 
         mTrackAdapter = ProgramTrackAdapter(requireContext(), tracks, program.isMy)
@@ -188,7 +207,8 @@ class ProgramDetailFragment : Fragment() {
                 play(tracks)
                 Handler(Looper.getMainLooper()).postDelayed({
                     EventBus.getDefault().post(PlayerSelected(i))
-                }, 200)
+                    timeDelay = 200L
+                }, timeDelay)
             }
 
             override fun onTrackOptions(track: Any, i: Int) {
@@ -306,8 +326,6 @@ class ProgramDetailFragment : Fragment() {
                 }
             }
         }
-        play(tracks as ArrayList<Any>)
-        EventBus.getDefault().post(PlayerSelected(0))
     }
 
     fun play(tracks: ArrayList<Any>) {
@@ -356,6 +374,7 @@ class ProgramDetailFragment : Fragment() {
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
                     putParcelableArrayListExtra("playlist", data)
                 }
+                requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)
                 isFirst = false
             }

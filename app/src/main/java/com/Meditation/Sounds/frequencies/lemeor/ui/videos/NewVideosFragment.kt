@@ -96,10 +96,13 @@ class NewVideosFragment : Fragment() {
 
         mvideoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady( youTubePlayer: YouTubePlayer) {
-                if (Utils.isConnectedToNetwork(activity) && isAdded) {
-                    mYouTubePlayer = youTubePlayer
-                    youTubePlayer.cueVideo(mListVideo[0].videoId, 0f)
-                }
+                try {
+                    if (Utils.isConnectedToNetwork(activity) && isAdded) {
+                        mYouTubePlayer = youTubePlayer
+                        youTubePlayer.cueVideo(mListVideo[0].videoId, 0f)
+                    }
+                }catch (_:Throwable){}
+
             }
         })
 

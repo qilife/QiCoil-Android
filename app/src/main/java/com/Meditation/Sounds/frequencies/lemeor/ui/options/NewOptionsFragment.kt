@@ -30,6 +30,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.saveUser
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.token
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.AuthActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
@@ -59,7 +60,7 @@ const val REQUEST_CODE_AUTH = 2222
 class NewOptionsFragment : Fragment() {
 
     private lateinit var mViewModel: NewOptionsViewModel
-
+    private lateinit var mHomeViewModel: HomeViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_options, container, false)
@@ -77,6 +78,13 @@ class NewOptionsFragment : Fragment() {
                         ApiHelper(RetrofitBuilder(requireContext()).apiService),
                         DataBase.getInstance(requireContext()))
         ).get(NewOptionsViewModel::class.java)
+
+        mHomeViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        )[HomeViewModel::class.java]
 
         //region Update UI
         val user = PreferenceHelper.getUser(requireContext())
@@ -385,6 +393,7 @@ class NewOptionsFragment : Fragment() {
                         onLogoutSuccess()
                         dialog.dismiss()
                     } else {
+                        mHomeViewModel.syncProgramsToServer()
                         mViewModel.logout().observe(viewLifecycleOwner) {
                             it?.let { resource ->
                                 when (resource.status) {

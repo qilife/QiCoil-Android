@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -78,10 +79,10 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     }
 
     private fun setUI() {
-        //  program add two obj(rife and track) "rife limit 0-28000" and "track id integer"
+        //  program add two obj(rife and track) "rife limit -28000->0" and "track id integer"
         val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
         if (trackId <= -29000.0) {
-            Toast.makeText(applicationContext, "Track error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Not found", Toast.LENGTH_SHORT).show()
             return
         }
         if (trackId >= 0.0) {
@@ -111,8 +112,21 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                 }
             }
         } else {
-            track_add_favorites.visibility = View.GONE
+            val programDao = db?.programDao()
+            CoroutineScope(Dispatchers.IO).launch {
+                val program = programDao?.getProgramByName(FAVORITES)
+                val frequency = program?.records?.firstOrNull {
+                    it == trackId
+                }
+                if (frequency != null) {
+                    track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
+                } else {
+                    track_add_favorites.text = getString(R.string.tv_add_to_favorites)
+                }
+            }
+            track_add_favorites.visibility = View.VISIBLE
             track_redownload.visibility = View.GONE
+
         }
 
         track_add_program.setOnClickListener {
@@ -129,24 +143,51 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
         track_add_favorites.setOnClickListener {
             val programDao = db?.programDao()
-
-            if (track?.isFavorite!!) {
-                Toast.makeText(applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT).show()
-            }
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val program = programDao?.getProgramByName(FAVORITES)
-                if (track?.isFavorite!!) {
-                    program?.records?.remove(track?.id!!.toDouble())
-                } else {
-                    program?.records?.add(track?.id!!.toDouble())
+            if (trackId < 0.0 && trackId >= -28000) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val program = programDao?.getProgramByName(FAVORITES)
+                    val frequency = program?.records?.firstOrNull {
+                        it == trackId
+                    }
+                    withContext(Dispatchers.Main){
+                        if (frequency != null) {
+                            Toast.makeText(
+                                applicationContext,
+                                "Removed from Favorites",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        } else {
+                            Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                    if (frequency != null) {
+                        program.records.remove(frequency)
+                    } else {
+                        program?.records?.add(trackId)
+                    }
+                    program?.let { it1 -> programDao.updateProgram(it1) }
                 }
-                program?.let { it1 -> programDao.updateProgram(it1) }
+            } else {
+                if (track?.isFavorite!!) {
+                    Toast.makeText(applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT).show()
+                }
 
-                trackDao?.isTrackFavorite(!track?.isFavorite!!, track?.id!!)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val program = programDao?.getProgramByName(FAVORITES)
+                    if (track?.isFavorite!!) {
+                        program?.records?.remove(track?.id!!.toDouble())
+                    } else {
+                        program?.records?.add(track?.id!!.toDouble())
+                    }
+                    program?.let { it1 -> programDao.updateProgram(it1) }
+
+                    trackDao?.isTrackFavorite(!track?.isFavorite!!, track?.id!!)
+                }
             }
             finish()
         }
