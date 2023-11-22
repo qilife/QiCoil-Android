@@ -37,6 +37,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
+import kotlinx.android.synthetic.main.player_ui_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -216,8 +217,7 @@ class NewAlbumDetailFragment : Fragment() {
         album_back.setOnClickListener { onBackPressed() }
 
         album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
-
-//        loadImage(requireContext(), album_image, )
+        album_image.setImageResource(R.drawable.frequency)
 
         mDescriptionAdapter =
             DescriptionAdapter(requireContext(), arrayListOf(rife.title))
@@ -333,7 +333,7 @@ class NewAlbumDetailFragment : Fragment() {
         isPlayProgram = false
         playProgramId = -1
 
-        val data: ArrayList<MusicRepository.Track> = ArrayList()
+        val data: ArrayList<MusicRepository.Music> = ArrayList()
         val local = album.tracks
         val db = DataBase.getInstance(requireContext())
 
@@ -361,8 +361,10 @@ class NewAlbumDetailFragment : Fragment() {
                 }
             }
             if (isFirst) {
+                trackList?.clear()
+                trackList = data
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
-                    putParcelableArrayListExtra("playlist", data)
+                    putParcelableArrayListExtra("playlist", arrayListOf<MusicRepository.Music>())
                 }
                 requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)
@@ -384,7 +386,7 @@ class NewAlbumDetailFragment : Fragment() {
         isPlayProgram = false
         playProgramId = -1
 
-        val data: ArrayList<MusicRepository.Frequency> = ArrayList()
+        val data: ArrayList<MusicRepository.Music> = ArrayList()
         val local = rife.getFrequency()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -407,8 +409,10 @@ class NewAlbumDetailFragment : Fragment() {
                 }
             }
             if (isFirst) {
+                trackList?.clear()
+                trackList = data
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
-                    putParcelableArrayListExtra("playlist", data)
+                    putParcelableArrayListExtra("playlist", arrayListOf<MusicRepository.Music>())
                 }
                 requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)

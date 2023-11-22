@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
 import kotlinx.android.synthetic.main.item_string_frequency.view.*
@@ -29,8 +30,9 @@ class StickyHeaderAdapter(val listener: (String) -> Unit) :
         val tabHeader = categories[position]
 
         holder.itemView.tvTitle.text = tabHeader
+        holder.itemView.tvTitle.setPadding(20,0,20,0)
         holder.itemView.tvTitle.setTextColor(Color.parseColor("#FFFFFF"))
-        holder.itemView.tvTitle.textSize = 16F
+        holder.itemView.tvTitle.textSize = 14F
         holder.itemView.setOnClickListener {
             val previous = selectedItem
             selectedItem = position
@@ -39,11 +41,6 @@ class StickyHeaderAdapter(val listener: (String) -> Unit) :
 
             listener.invoke(tabHeader)
         }
-//        if (selectedItem == position) {
-//            holder.itemView.tvTitle.setTextColor(Color.parseColor("#059F83"))
-//        } else {
-//            holder.itemView.tvTitle.setTextColor(Color.parseColor("#FFFFFF"))
-//        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

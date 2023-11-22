@@ -237,7 +237,7 @@ fun syncPrograms(db: DataBase, response: HomeResponse?, user: User?) {
 
     if (responseData.isNotEmpty()) {
         db.programDao().clear()
-        val list = responseData.filter { it.name == FAVORITES}
+        val list = responseData.filter { it.name.uppercase() == FAVORITES.uppercase()}
         if (list.isEmpty()) {
             db.programDao().insert(
                 Program(
@@ -250,46 +250,30 @@ fun syncPrograms(db: DataBase, response: HomeResponse?, user: User?) {
         }
         db.programDao().insertAll(responseData)
     } else {
-        if (user != null) {
-            if (localMy.isNotEmpty()) {
-                val list = localMy.filter { it.name == FAVORITES }
-                if (list.isEmpty()) {
-                    db.programDao().insert(
-                        Program(
-                            0, FAVORITES, "", 0, 0, arrayListOf(), isMy = true, isUnlocked = true,
-                            favorited = true,
-                            is_dirty = false,
-                            deleted = false
-                        )
-                    )
-                }
-            }else {
-                db.programDao().insert(
-                    Program(
-                        0, FAVORITES, "", 0, 0, arrayListOf(), isMy = true, isUnlocked = true,
-                        favorited = true,
-                        is_dirty = false,
-                        deleted = false
-                    )
-                )
-                db.programDao()
-                    .insert(
-                        Program(
-                            0,
-                            "Playlist 1",
-                            "",
-                            0,
-                            0,
-                            arrayListOf(),
-                            isMy = true,
-                            isUnlocked = true,
-                            favorited = false,
-                            is_dirty = false,
-                            deleted = false
-                        )
-                    )
-            }
-        }
+//        if (user != null) {
+//            if (localMy.isNotEmpty()) {
+//                val list = localMy.filter { it.name == FAVORITES }
+//                if (list.isEmpty()) {
+//                    db.programDao().insert(
+//                        Program(
+//                            0, FAVORITES, "", 0, 0, arrayListOf(), isMy = true, isUnlocked = true,
+//                            favorited = true,
+//                            is_dirty = false,
+//                            deleted = false
+//                        )
+//                    )
+//                }
+//            }else {
+//                db.programDao().insert(
+//                    Program(
+//                        0, FAVORITES, "", 0, 0, arrayListOf(), isMy = true, isUnlocked = true,
+//                        favorited = true,
+//                        is_dirty = false,
+//                        deleted = false
+//                    )
+//                )
+//            }
+//        }
     }
 }
 

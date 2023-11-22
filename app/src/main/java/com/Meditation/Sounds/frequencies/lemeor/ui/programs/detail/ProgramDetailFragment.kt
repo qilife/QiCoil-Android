@@ -371,15 +371,15 @@ class ProgramDetailFragment : Fragment() {
 
             }
             if (isFirst) {
+                trackList?.clear()
+                trackList = data
                 val mIntent = Intent(requireContext(), PlayerService::class.java).apply {
-                    putParcelableArrayListExtra("playlist", data)
+                    putParcelableArrayListExtra("playlist", arrayListOf<MusicRepository.Music>())
                 }
                 requireActivity().stopService(mIntent)
                 requireActivity().startService(mIntent)
                 isFirst = false
             }
-            trackList = data
-            rifeList = null
             CoroutineScope(Dispatchers.Main).launch {
                 activity.showPlayerUI()
             }

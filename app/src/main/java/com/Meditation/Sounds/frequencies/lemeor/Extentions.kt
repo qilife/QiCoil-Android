@@ -33,7 +33,6 @@ import java.net.URL
 const val FAVORITES = "Favorites"
 
 var trackList: ArrayList<MusicRepository.Music>? = null
-var rifeList: ArrayList<MusicRepository.Frequency>? = null
 
 val currentTrack = MutableLiveData<Any>()
 val currentTrackIndex = MutableLiveData<Int>()

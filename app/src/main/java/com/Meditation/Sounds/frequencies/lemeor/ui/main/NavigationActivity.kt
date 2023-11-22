@@ -461,9 +461,9 @@ class NavigationActivity : AppCompatActivity(),
                     }
 
                     Resource.Status.ERROR -> {
-                        if (BuildConfig.IS_FREE) {
-                            mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
-                        }
+//                        if (BuildConfig.IS_FREE) {
+//                            mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
+//                        }
                     }
 
                     Resource.Status.LOADING -> {
@@ -472,9 +472,9 @@ class NavigationActivity : AppCompatActivity(),
             }
             mViewModel.getRife().observe(this) {}
         } else {
-            if (BuildConfig.IS_FREE) {
-                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
-            }
+//            if (BuildConfig.IS_FREE) {
+//                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
+//            }
         }
     }
 

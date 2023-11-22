@@ -120,7 +120,7 @@ class PlayerService : Service() {
     private var totalPlayedSoundTime = 0L
     private var startedPlaySoundTime = 0L
 
-    private val trackList = mutableListOf<MusicRepository.Music>()
+    private val trackListService = mutableListOf<MusicRepository.Music>()
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
@@ -258,7 +258,7 @@ class PlayerService : Service() {
                         }
                     }
                 }
-            }, 0, 200)
+            }, 0, 300)
         } else {
             progressTimer.cancel()
             progressTimer.purge()
@@ -270,12 +270,12 @@ class PlayerService : Service() {
         if (intent.hasExtra(EXTRA_PLAYLIST)) {
             progressTimer.cancel()
             progressTimer.purge()
-            val trackList =
-                intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
-            if (trackList?.isNotEmpty() == true) {
-                this.trackList.clear()
-                this.trackList.addAll(trackList)
-                musicRepository = MusicRepository(trackList)
+//            val trackList =
+//                intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
+            if(trackList?.isNotEmpty() == true){
+                this.trackListService.clear()
+                this.trackListService.addAll(trackList!!)
+                musicRepository = MusicRepository(trackListService)
             }
         }
         return super.onStartCommand(intent, flags, startId)

@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_new_program.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class NewProgramFragment : Fragment() {
@@ -53,7 +54,9 @@ class NewProgramFragment : Fragment() {
         mViewModel.getPrograms(isTrackAdd).observe(viewLifecycleOwner) {
             CoroutineScope(Dispatchers.IO).launch {
                 val data = checkUnlocked(it)
-                CoroutineScope(Dispatchers.Main).launch { mProgramAdapter.setData(data) }
+                withContext(Dispatchers.Main){
+                    mProgramAdapter.setData(data)
+                }
             }
         }
 
@@ -70,29 +73,48 @@ class NewProgramFragment : Fragment() {
     private suspend fun checkUnlocked(programList: List<Program>): List<Program> {
         //todo remake this(some freezing?)
         programList.forEach { program ->
-            if (program.isMy) {
-                program.isUnlocked = true
-            } else {
-                val tracks: ArrayList<Track> = ArrayList()
+            val tracks: ArrayList<Track> = ArrayList()
 
-                program.records.forEach { r ->
-                    if (r >= 0) {
-                        mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
-                    }
+            program.records.forEach { r ->
+                if (r >= 0) {
+                    mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
                 }
-
-                var isUnlocked = true
-
-                tracks.forEach { t ->
-
-                    val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
-
-                    if (temp_album?.isUnlocked == false) {
-                        isUnlocked = false
-                    }
-                }
-                program.isUnlocked = isUnlocked
             }
+
+            var isUnlocked = true
+
+            tracks.forEach { t ->
+
+                val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id)
+
+                if (temp_album?.isUnlocked == false) {
+                    isUnlocked = false
+                }
+            }
+            program.isUnlocked = isUnlocked
+//            if(program.name.uppercase() == FAVORITES.uppercase()){
+//                program.isUnlocked = true
+//            } else {
+//                val tracks: ArrayList<Track> = ArrayList()
+//
+//                program.records.forEach { r ->
+//                    if (r >= 0) {
+//                        mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
+//                    }
+//                }
+//
+//                var isUnlocked = true
+//
+//                tracks.forEach { t ->
+//
+//                    val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id)
+//
+//                    if (temp_album?.isUnlocked == false) {
+//                        isUnlocked = false
+//                    }
+//                }
+//                program.isUnlocked = isUnlocked
+//            }
         }
         return programList
     }

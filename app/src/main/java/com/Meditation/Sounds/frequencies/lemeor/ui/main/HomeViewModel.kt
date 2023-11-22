@@ -107,7 +107,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
                         try {
                             val dataToSend = syncData.map {
                                 Update(
-                                    id = it.id,
+                                    id = if (it.user_id.isEmpty()) -1 else it.id,
                                     name = it.name,
                                     favorited = (it.name == FAVORITES),
                                     tracks = it.records.toList()

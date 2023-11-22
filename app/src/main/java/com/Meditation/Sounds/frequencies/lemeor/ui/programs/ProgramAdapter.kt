@@ -1,6 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.programs
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,6 @@ import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
 import kotlinx.android.synthetic.main.item_program.view.*
-import java.util.*
 
 class ProgramAdapter(
     private var mData: List<Program> = listOf()
@@ -45,23 +44,35 @@ class ProgramAdapter(
             R.string.total_time,
             getConvertedTime((program.records.size * 300000).toLong())
         )
-
-        if (program.isMy) {
-            if (program.name == FAVORITES) {
-                holder.itemView.item_program_delete.visibility = View.INVISIBLE
-                holder.itemView.item_program_lock.visibility = View.INVISIBLE
-            } else {
-                holder.itemView.item_program_delete.visibility = View.VISIBLE
-                holder.itemView.item_program_lock.visibility = View.INVISIBLE
-            }
-        } else {
+        if (program.name.uppercase() == FAVORITES.uppercase()) {
             holder.itemView.item_program_delete.visibility = View.INVISIBLE
-            if (program.isUnlocked) {
-                holder.itemView.item_program_lock.visibility = View.INVISIBLE
-            } else {
+            holder.itemView.item_program_lock.visibility = View.INVISIBLE
+            if (!program.isUnlocked){
                 holder.itemView.item_program_lock.visibility = View.VISIBLE
             }
+        } else if (program.isUnlocked) {
+            holder.itemView.item_program_lock.visibility = View.INVISIBLE
+            holder.itemView.item_program_delete.visibility = View.VISIBLE
+        } else {
+            holder.itemView.item_program_delete.visibility = View.INVISIBLE
+            holder.itemView.item_program_lock.visibility = View.VISIBLE
         }
+//        if (program.isMy) {
+//            if (program.name == FAVORITES) {
+//                holder.itemView.item_program_delete.visibility = View.INVISIBLE
+//                holder.itemView.item_program_lock.visibility = View.INVISIBLE
+//            } else {
+//                holder.itemView.item_program_delete.visibility = View.VISIBLE
+//                holder.itemView.item_program_lock.visibility = View.INVISIBLE
+//            }
+//        } else {
+//            holder.itemView.item_program_delete.visibility = View.INVISIBLE
+//            if (program.isUnlocked) {
+//                holder.itemView.item_program_lock.visibility = View.INVISIBLE
+//            } else {
+//                holder.itemView.item_program_lock.visibility = View.VISIBLE
+//            }
+//        }
 
         holder.itemView.item_program_delete.setOnClickListener {
             mListener?.onDeleteItem(
@@ -80,8 +91,11 @@ class ProgramAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(programList: List<Program>?) {
-        mData = ArrayList(programList as MutableList).sortedWith(compareByDescending { it.isMy })
+        mData =
+            ArrayList(programList as MutableList).reversed()
+                .sortedWith(compareByDescending { it.name.uppercase() == FAVORITES.uppercase() })
         notifyDataSetChanged()
     }
 }

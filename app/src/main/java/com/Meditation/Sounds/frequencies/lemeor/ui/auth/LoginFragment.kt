@@ -87,8 +87,8 @@ class LoginFragment : Fragment() {
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
         if (com.Meditation.Sounds.frequencies.BuildConfig.DEBUG) {
-            mEdEmailSignIn.setText("tester03@yopmail.com")
-            mEdPasswordSignIn.setText("123123")
+//            mEdEmailSignIn.setText("tester03@yopmail.com")
+//            mEdPasswordSignIn.setText("123123")
 //        mEdEmailSignIn.setText("manufacturing@qilifestore.com")
 //        mEdPasswordSignIn.setText("12345678")
 //        mEdPasswordSignIn.setText("1234test")

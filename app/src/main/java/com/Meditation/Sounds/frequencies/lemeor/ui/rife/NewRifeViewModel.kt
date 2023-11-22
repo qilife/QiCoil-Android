@@ -27,8 +27,8 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
                 }
             }.thenBy { it.title.lowercase() })
         } else {
-            _result.value = listRife.filter { it.title.contains(keySearch) }
-                .sortedBy { it.title.uppercase().indexOf(keySearch.uppercase()) != 0 }
+            _result.value = listRife.filter { it.title.lowercase().contains(keySearch.lowercase()) }
+                .sortedBy { it.title.lowercase().indexOf(keySearch.lowercase()) != 0 }
         }
     }
 }

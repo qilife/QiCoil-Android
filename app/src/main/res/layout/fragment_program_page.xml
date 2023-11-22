@@ -18,7 +18,7 @@
         tools:listitem="@layout/item_rife_program" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginEnd="@dimen/margin_item_10"
+        android:paddingEnd="@dimen/margin_item_5"
         android:id="@+id/rcvTabList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
