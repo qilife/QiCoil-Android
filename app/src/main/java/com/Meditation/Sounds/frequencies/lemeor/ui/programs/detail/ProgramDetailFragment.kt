@@ -28,7 +28,9 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import kotlinx.android.synthetic.main.fragment_program_detail.*
@@ -52,6 +54,7 @@ class ProgramDetailFragment : Fragment() {
     private var mTracks: ArrayList<Any>? = null
     private var program: Program? = null
     private lateinit var mViewModel: ProgramDetailViewModel
+    private lateinit var mNewProgramViewModel: NewProgramViewModel
     private var mTrackAdapter: ProgramTrackAdapter? = null
     private var isFirst = true
     private var timeDelay = 500L
@@ -119,8 +122,10 @@ class ProgramDetailFragment : Fragment() {
         initUI()
 
         mViewModel.program(programId)?.observe(viewLifecycleOwner) {
-            program = it
-            setUI(it)
+            if(it != null){
+                program = it
+                setUI(it)
+            }
         }
 
         view?.isFocusableInTouchMode = true
@@ -141,6 +146,14 @@ class ProgramDetailFragment : Fragment() {
                 DataBase.getInstance(requireContext())
             )
         ).get(ProgramDetailViewModel::class.java)
+
+        mNewProgramViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        ).get(NewProgramViewModel::class.java)
     }
 
     private fun onBackPressed() {
@@ -457,10 +470,27 @@ class ProgramDetailFragment : Fragment() {
                                 }
                             }
                         }
-
+                        val trackId = list[positionFor!!]
                         list.removeAt(positionFor!!)
                         program?.records = list as ArrayList<Double>
-                        program?.let { programDao.updateProgram(it) }
+                        program?.let {
+                            programDao.updateProgram(it)
+                            if (it.user_id.isNotEmpty()) {
+                                try {
+                                    mNewProgramViewModel.updateTrackToProgram(
+                                        UpdateTrack(
+                                            track_id = if (trackId >= 0) trackId else trackId * -1,
+                                            id = it.id,
+                                            track_type = if (trackId >= 0
+                                            ) "mp3" else "rife",
+                                            request_type = "remove",
+                                            is_favorite = it.name.uppercase() == FAVORITES.uppercase()
+                                        )
+                                    )
+                                } catch (_: Exception) {
+                                }
+                            }
+                        }
                     }
                 }
             }

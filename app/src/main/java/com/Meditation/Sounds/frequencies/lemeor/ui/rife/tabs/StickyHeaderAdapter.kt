@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
 import kotlinx.android.synthetic.main.item_string_frequency.view.*
@@ -13,7 +12,7 @@ import kotlinx.android.synthetic.main.item_string_frequency.view.*
 class StickyHeaderAdapter(val listener: (String) -> Unit) :
     RecyclerView.Adapter<StickyHeaderAdapter.ViewHolder>() {
     var selectedItem = 0
-    private var categories = arrayListOf<String>()
+    private var categories = listOf<String>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -47,7 +46,7 @@ class StickyHeaderAdapter(val listener: (String) -> Unit) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(albumList: List<String>?) {
-        categories = albumList as ArrayList<String>
+        categories = albumList ?: listOf()
         notifyDataSetChanged()
     }
 

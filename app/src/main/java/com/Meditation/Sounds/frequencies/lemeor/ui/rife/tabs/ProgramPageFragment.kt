@@ -130,24 +130,33 @@ class ProgramPageFragment : Fragment() {
         RecyclerSectionItemDecoration.SectionCallBack {
 
         override fun isSection(position: Int): Boolean {
-            return if (position == 0) {
-                true
-            } else if (listRife[position].title.lowercase().firstOrNull()?.isLetter() == false) {
-                listRife[position].title.lowercase().firstOrNull()
-                    ?.isLetter() == false && listRife[position - 1].title.lowercase().firstOrNull()
-                    ?.isLetter() == true
-            } else {
-                listRife[position].title.lowercase()
-                    .codePointAt(0) != listRife[position - 1].title.lowercase().codePointAt(0)
-            }
+            if (listRife.isNotEmpty()) {
+                return if (position == 0) {
+                    true
+                } else if (listRife[position].title.lowercase().firstOrNull()
+                        ?.isLetter() == false
+                ) {
+                    listRife[position].title.lowercase().firstOrNull()
+                        ?.isLetter() == false && listRife[position - 1].title.lowercase()
+                        .firstOrNull()
+                        ?.isLetter() == true
+                } else {
+                    listRife[position].title.lowercase()
+                        .codePointAt(0) != listRife[position - 1].title.lowercase().codePointAt(0)
+                }
+            } else return false
         }
 
         override fun getSectionHeader(position: Int): String {
-            val sub = listRife[position].title.uppercase()[0]
-            return if (sub.isLetter()) {
-                sub.toString()
+            if (listRife.isNotEmpty()) {
+                val sub = listRife[position].title.uppercase()[0]
+                return if (sub.isLetter()) {
+                    sub.toString()
+                } else {
+                    "#"
+                }
             } else {
-                "#"
+                return ""
             }
         }
     }

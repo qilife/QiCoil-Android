@@ -15,3 +15,8 @@ data class ProgramsResponse(
     val message: String,
     @TypeConverters(ProgramConverter::class) var data: List<Program>,
 )
+
+data class ProgramCreateResponse(
+    val message: String,
+    @TypeConverters(ProgramConverter::class) var data: Program,
+)

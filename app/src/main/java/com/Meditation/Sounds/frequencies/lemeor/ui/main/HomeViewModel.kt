@@ -130,3 +130,11 @@ data class Update(
     val favorited: Boolean = false,
     var tracks: List<Double> = listOf()
 )
+
+data class UpdateTrack(
+    var track_id: Double = 0.0,
+    var id: Int = 0,
+    var track_type: String = "mp3",
+    var request_type: String = "add",
+    var is_favorite: Boolean = false,
+)

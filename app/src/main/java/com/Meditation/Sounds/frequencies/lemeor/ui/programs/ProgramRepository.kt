@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
+import retrofit2.Response
 
 class ProgramRepository(private val localData: DataBase, private val apiHelper: ApiHelper) {
 
@@ -31,9 +33,9 @@ class ProgramRepository(private val localData: DataBase, private val apiHelper: 
         return localData.albumDao().getAlbumById(id, category_id)
     }
 
-    suspend fun createProgram(name: String): Status {
-        return apiHelper.createPrograms(name)
-    }
+    suspend fun createProgram(name: String) = apiHelper.createPrograms(name)
+    suspend fun deleteProgram(idProgram: String) = apiHelper.deleteProgram(idProgram)
+    suspend fun updateTrackToProgram(track: UpdateTrack) = apiHelper.updateTrackToProgram(track)
     suspend fun getProgramsRemote() = apiHelper.getPrograms()
     suspend fun update(program: Program) {
         localData.programDao().update(program.id,program.deleted)

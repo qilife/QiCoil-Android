@@ -2,10 +2,9 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Status
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
+import retrofit2.Response
 
 class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel() {
 
@@ -29,9 +28,11 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
         return repository.getAlbumById(id, category_id)
     }
 
-    suspend fun createProgram(name: String): Status {
-        return repository.createProgram(name)
-    }
+    suspend fun createProgram(name: String) = repository.createProgram(name)
+    suspend fun deleteProgram(idProgram: String) = repository.deleteProgram(idProgram)
+
+    suspend fun updateTrackToProgram(track: UpdateTrack) = repository.updateTrackToProgram(track)
+
     suspend fun udpate(program: Program) {
         repository.update(program)
     }

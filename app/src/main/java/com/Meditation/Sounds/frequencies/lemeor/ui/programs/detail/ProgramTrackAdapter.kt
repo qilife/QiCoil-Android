@@ -13,7 +13,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.loadImage
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import kotlinx.android.synthetic.main.item_program_track.view.*
-import kotlinx.android.synthetic.main.player_ui_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -127,8 +126,9 @@ class ProgramTrackAdapter(
                     )
                 )
             }
+
             holder.itemView.item_track_image.setImageResource(R.drawable.frequency)
-            holder.itemView.item_track_name.text = track.title
+            holder.itemView.item_track_name.text = "Rife"
             holder.itemView.item_album_name.text = track.frequency.toString()
             holder.itemView.item_track_options.setOnClickListener {
                 mListener?.onTrackOptions(

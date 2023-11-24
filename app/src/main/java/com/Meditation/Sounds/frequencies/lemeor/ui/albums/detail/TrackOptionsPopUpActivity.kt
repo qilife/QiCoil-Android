@@ -11,14 +11,20 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
+import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
+import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.utils.Utils
 import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +41,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     private var duration: Long = 0
     private var db: DataBase? = null
     private var trackDao: TrackDao? = null
+    private lateinit var mViewModel: NewProgramViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
@@ -49,7 +56,13 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
         db = DataBase.getInstance(applicationContext)
         trackDao = db?.trackDao()
-
+        mViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(this).apiService),
+                DataBase.getInstance(this)
+            )
+        ).get(NewProgramViewModel::class.java)
         initUI()
 
         setUI()
@@ -131,9 +144,9 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
         track_add_program.setOnClickListener {
             if (trackId < 0.0 && trackId >= -28000) {
-                trackIdForProgram = trackId.toInt()
+                trackIdForProgram = trackId
             } else {
-                trackIdForProgram = track?.id
+                trackIdForProgram = track?.id?.toDouble()
             }
 
             val intent = Intent()
@@ -158,7 +171,11 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                             )
                                 .show()
                         } else {
-                            Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT)
+                            Toast.makeText(
+                                applicationContext,
+                                "Added to Favorites",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }
@@ -167,7 +184,23 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                     } else {
                         program?.records?.add(trackId)
                     }
-                    program?.let { it1 -> programDao.updateProgram(it1) }
+                    program?.let { it1 ->
+                        programDao.updateProgram(it1)
+                        if (it1.user_id.isNotEmpty()) {
+                            try {
+                                mViewModel.updateTrackToProgram(
+                                    UpdateTrack(
+                                        track_id = trackId * -1,
+                                        id = it1.id,
+                                        track_type = "rife",
+                                        request_type = if (frequency != null) "remove" else "add",
+                                        is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                    )
+                                )
+                            } catch (_: Exception) {
+                            }
+                        }
+                    }
                 }
             } else {
                 if (track?.isFavorite!!) {
@@ -184,7 +217,23 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                     } else {
                         program?.records?.add(track?.id!!.toDouble())
                     }
-                    program?.let { it1 -> programDao.updateProgram(it1) }
+                    program?.let { it1 ->
+                        programDao.updateProgram(it1)
+                        if (it1.user_id.isNotEmpty()) {
+                            try {
+                                mViewModel.updateTrackToProgram(
+                                    UpdateTrack(
+                                        track_id = if (track?.id!!.toDouble() >= 0) track?.id!!.toDouble() else track?.id!!.toDouble() * -1,
+                                        id = it1.id,
+                                        track_type = if (track?.id!!.toDouble() >= 0) "mp3" else "rife",
+                                        request_type = if (track?.isFavorite!!) "remove" else "add",
+                                        is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                    )
+                                )
+                            } catch (_: Exception) {
+                            }
+                        }
+                    }
 
                     trackDao?.isTrackFavorite(!track?.isFavorite!!, track?.id!!)
                 }

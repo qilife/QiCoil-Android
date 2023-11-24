@@ -23,6 +23,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
@@ -171,19 +172,29 @@ class NewProgramFragment : Fragment() {
             btnAdd.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     //call api createProgram
-                    mViewModel.insert(
-                        Program(
-                            0,
-                            programName.text.toString(),
-                            "",
-                            0,
-                            Date().time,
-                            ArrayList(),
-                            isMy = true,
-                            false,
-                            is_dirty = false
+                    try {
+                        val result =
+                            withContext(Dispatchers.Default) {
+                                mViewModel.createProgram(programName.text.toString())
+                            }
+                        val program = result.data
+                        mViewModel.insert(program)
+                    } catch (_: Exception) {
+                        mViewModel.insert(
+                            Program(
+                                0,
+                                programName.text.toString(),
+                                "",
+                                0,
+                                Date().time,
+                                ArrayList(),
+                                isMy = true,
+                                false,
+                                is_dirty = false
+                            )
                         )
-                    )
+                    }
+
 
                 }
                 dialogBuilder.dismiss()
@@ -196,14 +207,35 @@ class NewProgramFragment : Fragment() {
         mProgramAdapter.setOnClickListener(object : ProgramAdapter.Listener {
             override fun onClickItem(program: Program, i: Int) {
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != -1) {
+                    if (isTrackAdd && trackIdForProgram != -29000.0) {
                         val db = DataBase.getInstance(requireContext())
                         val programDao = db.programDao()
 
                         CoroutineScope(Dispatchers.IO).launch {
                             val p = programDao.getProgramById(program.id)
-                            p?.records?.add(trackIdForProgram!!.toDouble())
-                            p?.let { it1 -> programDao.updateProgram(it1) }
+                            p?.records?.add((trackIdForProgram ?: 0.0).toDouble())
+                            p?.let { it1 ->
+                                programDao.updateProgram(it1)
+                                if (it1.user_id.isNotEmpty()) {
+                                    try {
+                                        mViewModel.updateTrackToProgram(
+                                            UpdateTrack(
+                                                track_id = if ((trackIdForProgram
+                                                        ?: 0.0).toDouble() >= 0
+                                                ) (trackIdForProgram
+                                                    ?: 0.0).toDouble() else (trackIdForProgram
+                                                    ?: 0.0).toDouble() * -1,
+                                                id = it1.id,
+                                                track_type = if ((trackIdForProgram
+                                                        ?: 0.0).toDouble() >= 0
+                                                ) "mp3" else "rife",
+                                                request_type = "add",
+                                                is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                            )
+                                        )
+                                    } catch (_: Exception) {}
+                                }
+                            }
                         }
                     }
 
@@ -248,7 +280,6 @@ class NewProgramFragment : Fragment() {
                             }
                         }
                     }
-
                 }
             }
 
@@ -258,11 +289,17 @@ class NewProgramFragment : Fragment() {
                     object : AlertMessageDialog.IOnSubmitListener {
                         override fun submit() {
                             CoroutineScope(Dispatchers.IO).launch {
-                                mViewModel.udpate(
-                                    program.copy(
-                                        deleted = true
+                                //call api delete program
+                                try {
+                                    mViewModel.deleteProgram(program.id.toString())
+                                    mViewModel.delete(program)
+                                } catch (_: Exception) {
+                                    mViewModel.udpate(
+                                        program.copy(
+                                            deleted = true
+                                        )
                                     )
-                                )
+                                }
                             }
                             Toast.makeText(
                                 requireContext(),

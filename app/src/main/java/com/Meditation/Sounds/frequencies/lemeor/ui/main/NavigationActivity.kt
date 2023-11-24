@@ -66,6 +66,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.auth.AuthActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateTier
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.NewOptionsFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
@@ -104,6 +105,7 @@ class NavigationActivity : AppCompatActivity(),
     CategoriesPagerListener, OnTiersFragmentListener, ApiListener<Any> {
     private var mViewGroupCurrent: View? = null
     private lateinit var mViewModel: HomeViewModel
+    private lateinit var mNewProgramViewModel: NewProgramViewModel
     private var playerUI: PlayerUIFragment? = null
 
     private var mLocalApkPath: String? = null
@@ -406,6 +408,14 @@ class NavigationActivity : AppCompatActivity(),
             )
         ).get(HomeViewModel::class.java)
 
+        mNewProgramViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(this).apiService),
+                DataBase.getInstance(this)
+            )
+        ).get(NewProgramViewModel::class.java)
+
         navigation_albums.onSelected {
             closeSearch()
             search_layout.visibility = View.VISIBLE
@@ -519,7 +529,11 @@ class NavigationActivity : AppCompatActivity(),
             navigation_rife.onSelected {
                 closeSearch()
                 isTrackAdd = false
-                search_layout.visibility = View.GONE
+                if (Utils.isTablet(this)) {
+                    search_layout.visibility = View.VISIBLE
+                } else {
+                    search_layout.visibility = View.GONE
+                }
                 setFragment(NewRifeFragment())
             }
         }
@@ -623,14 +637,36 @@ class NavigationActivity : AppCompatActivity(),
                 hideKeyboard(this@NavigationActivity, album_search)
                 view_data.visibility = View.GONE
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != -1) {
+                    if (isTrackAdd && trackIdForProgram != -29000.0) {
                         val db = DataBase.getInstance(this@NavigationActivity)
                         val programDao = db.programDao()
 
                         CoroutineScope(Dispatchers.IO).launch {
                             val p = programDao.getProgramById(program.id)
-                            p?.records?.add(trackIdForProgram!!.toDouble())
-                            p?.let { it1 -> programDao.updateProgram(it1) }
+                            p?.records?.add((trackIdForProgram ?: 0).toDouble())
+                            p?.let { it1 ->
+                                programDao.updateProgram(it1)
+                                if (it1.user_id.isNotEmpty()) {
+                                    try {
+                                        mNewProgramViewModel.updateTrackToProgram(
+                                            UpdateTrack(
+                                                track_id = if ((trackIdForProgram
+                                                        ?: 0.0).toDouble() >= 0
+                                                ) (trackIdForProgram
+                                                    ?: 0.0).toDouble() else (trackIdForProgram
+                                                    ?: 0.0).toDouble() * -1,
+                                                id = it1.id,
+                                                track_type = if ((trackIdForProgram
+                                                        ?: 0.0).toDouble() >= 0
+                                                ) "mp3" else "rife",
+                                                request_type = "add",
+                                                is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                            )
+                                        )
+                                    } catch (_: Exception) {
+                                    }
+                                }
+                            }
                         }
                     }
 

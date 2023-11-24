@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/image_size_20"
+        android:layout_height="@dimen/image_size_20"
+        android:layout_marginStart="@dimen/image_size_14"
+        app:layout_constraintBottom_toBottomOf="@id/ltSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ltSearch"
+        app:srcCompat="@drawable/ic_back_white" />
+
+    <LinearLayout
+        android:id="@+id/ltSearch"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="@dimen/image_size_10"
+        android:layout_weight="1"
+        android:background="@drawable/bg_search_home"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="7dp"
+        android:layout_marginEnd="@dimen/image_size_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_search_black" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
+            android:id="@+id/rife_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_item_5"
+            android:layout_marginRight="@dimen/margin_item_5"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="14sp"
+            app:fontText="fonts/HelveticaNeue_Thin.otf" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/rife_search_clear"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_close" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/image_size_14"
+        android:layout_marginTop="@dimen/image_size_10"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ltSearch"
+        tools:listitem="@layout/item_rife_program" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
