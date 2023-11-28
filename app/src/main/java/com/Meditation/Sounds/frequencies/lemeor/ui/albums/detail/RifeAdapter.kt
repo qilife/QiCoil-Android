@@ -28,7 +28,7 @@ class RifeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val frequency = mData[position]
-
+//        holder.itemView.item_track_options.visibility = View.GONE
         if (frequency.isSelected) {
             holder.itemView.item_track_name.setTextColor(
                 ContextCompat.getColor(

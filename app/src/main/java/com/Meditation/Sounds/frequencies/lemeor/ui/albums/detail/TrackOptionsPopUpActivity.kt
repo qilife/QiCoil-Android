@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
+import kotlin.math.abs
 
 class TrackOptionsPopUpActivity : AppCompatActivity() {
 
@@ -76,9 +78,9 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         val height = dm.heightPixels
 
         if (resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            window.setLayout((width * .3).toInt(), (height * .55).toInt())
+            window.setLayout((width * .25).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
         } else if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            window.setLayout((width * .55).toInt(), (height * .3).toInt())
+            window.setLayout((width * .55).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
         val params = window.attributes
@@ -190,7 +192,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                             try {
                                 mViewModel.updateTrackToProgram(
                                     UpdateTrack(
-                                        track_id = trackId * -1,
+                                        track_id = listOf(trackId),
                                         id = it1.id,
                                         track_type = "rife",
                                         request_type = if (frequency != null) "remove" else "add",
@@ -223,7 +225,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                             try {
                                 mViewModel.updateTrackToProgram(
                                     UpdateTrack(
-                                        track_id = if (track?.id!!.toDouble() >= 0) track?.id!!.toDouble() else track?.id!!.toDouble() * -1,
+                                        track_id = listOf(track?.id!!.toDouble()),
                                         id = it1.id,
                                         track_type = if (track?.id!!.toDouble() >= 0) "mp3" else "rife",
                                         request_type = if (track?.isFavorite!!) "remove" else "add",

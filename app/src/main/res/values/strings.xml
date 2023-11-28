@@ -6,6 +6,7 @@
 
     <!--region Navigation-->
     <string name="navigation_lbl_albums">Albums</string>
+    <string name="navigation_lbl_quantum">Quantum</string>
     <string name="navigation_lbl_rife">Rife</string>
     <string name="navigation_lbl_programs">Programs</string>
     <string name="navigation_lbl_videos">Videos</string>
@@ -26,6 +27,7 @@
     <!--endregion-->
 
     <string name="btn_play">Play</string>
+    <string name="btn_add">Add</string>
 
     <!--region Fetch-->
     <string name="start_fetching">Start fetching files.</string>

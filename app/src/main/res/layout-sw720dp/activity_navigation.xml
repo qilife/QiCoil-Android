@@ -51,15 +51,17 @@
                         android:layout_width="@dimen/bottom_bar_icon_size"
                         android:layout_height="@dimen/bottom_bar_icon_size"
                         android:layout_gravity="center"
-                        android:contentDescription="@string/navigation_lbl_albums"
+                        android:contentDescription="@string/navigation_lbl_quantum"
                         android:padding="@dimen/bottom_bar_icon_padding"
-                        android:src="@drawable/ic_navigation_albums"
+                        android:src="@drawable/ic_navigation_quantum"
                         app:tint="@color/color_gray_white_selected" />
 
                     <TextView
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/navigation_lbl_albums"
+                        android:text="@string/navigation_lbl_quantum"
                         android:textColor="@color/color_gray_white_selected"
                         android:textSize="@dimen/text_size_small"
                         android:visibility="visible" />
@@ -87,7 +89,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="@string/navigation_lbl_rife"
                         android:padding="@dimen/bottom_bar_icon_padding"
-                        android:src="@drawable/ic_navigation_albums"
+                        android:src="@drawable/ic_navigation_rife"
                         app:tint="@color/color_gray_white_selected" />
 
                     <TextView

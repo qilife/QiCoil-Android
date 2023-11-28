@@ -73,10 +73,6 @@ class ProgramPageFragment : Fragment() {
             )
         )[NewRifeViewModel::class.java]
 
-        val itemDecoration = ItemOffsetBottomDecoration(
-            requireContext(),
-            if (Utils.isTablet(context)) R.dimen.item_offset else R.dimen.margin_buttons
-        )
         rcvProgram.adapter = mProgramAdapter
         rcvProgram.itemAnimator = null
         rcvTabList.adapter = mStickyHeaderAdapter

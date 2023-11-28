@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="@dimen/indent_16"
+    android:paddingHorizontal="@dimen/indent_16"
+    android:paddingVertical="@dimen/indent_35"
     android:background="@drawable/bg_menu_detail_song"
     tools:context=".lemeor.ui.programs.detail.PopActivity">
 

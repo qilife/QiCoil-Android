@@ -132,7 +132,7 @@ data class Update(
 )
 
 data class UpdateTrack(
-    var track_id: Double = 0.0,
+    var track_id: List<Double> = listOf(),
     var id: Int = 0,
     var track_type: String = "mp3",
     var request_type: String = "add",

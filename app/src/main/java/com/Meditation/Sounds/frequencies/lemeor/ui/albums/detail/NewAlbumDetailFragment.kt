@@ -205,7 +205,15 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun setUI(rife: Rife) {
-
+//        track_options.visibility = View.VISIBLE
+//        track_options.setOnClickListener {
+//            startActivityForResult(
+//                TrackOptionsPopUpActivity.newIntent(
+//                    requireContext(), -2800.0,
+//                    rife = mRife
+//                ), 1001
+//            )
+//        }
         currentTrackIndex.observe(viewLifecycleOwner) {
             rife.getFrequency().forEachIndexed { index, _ ->
                 if (index == it && playAlbumId == rife.id) {

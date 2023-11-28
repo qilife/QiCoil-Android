@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Gravity
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.Meditation.Sounds.frequencies.R
@@ -47,9 +48,9 @@ class PopActivity : AppCompatActivity() {
         val height = dm.heightPixels
 
         if (resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            window.setLayout((width * .3).toInt(), (height * .55).toInt())
+            window.setLayout((width * .25).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
         } else if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            window.setLayout((width * .55).toInt(), (height * .3).toInt())
+            window.setLayout((width * .55).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
         val params = window.attributes

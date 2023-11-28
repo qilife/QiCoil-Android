@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
+import kotlin.math.abs
 
 
 class ProgramDetailFragment : Fragment() {
@@ -479,10 +480,9 @@ class ProgramDetailFragment : Fragment() {
                                 try {
                                     mNewProgramViewModel.updateTrackToProgram(
                                         UpdateTrack(
-                                            track_id = if (trackId >= 0) trackId else trackId * -1,
+                                            track_id = listOf(trackId) ,
                                             id = it.id,
-                                            track_type = if (trackId >= 0
-                                            ) "mp3" else "rife",
+                                            track_type = if (trackId >= 0) "mp3" else "rife",
                                             request_type = "remove",
                                             is_favorite = it.name.uppercase() == FAVORITES.uppercase()
                                         )

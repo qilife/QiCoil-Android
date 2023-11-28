@@ -63,19 +63,48 @@
                 android:layout_weight="1.2"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/album_play"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/indent_16"
-                    android:paddingLeft="@dimen/image_size_40"
-                    android:paddingRight="@dimen/image_size_40"
-                    android:minHeight="35dp"
-                    android:background="@drawable/rounded_btn_play"
-                    android:layout_gravity="center"
-                    android:textColor="@android:color/white"
-                    android:text="@string/btn_play">
-                </Button>
+                    android:layout_gravity="center">
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/album_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/indent_16"
+                        android:background="@drawable/rounded_btn_play"
+                        android:minHeight="35dp"
+                        android:paddingLeft="@dimen/image_size_40"
+                        android:paddingRight="@dimen/image_size_40"
+                        android:text="@string/btn_play"
+                        android:textColor="@android:color/white" />
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/track_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:paddingStart="@dimen/indent_8"
+                        android:paddingEnd="@dimen/indent_16"
+                        android:src="@drawable/ic_menu_detail"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.258"
+                        tools:ignore="ContentDescription" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/album_tracks_recycler"

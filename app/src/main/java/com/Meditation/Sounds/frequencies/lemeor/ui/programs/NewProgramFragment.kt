@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.math.abs
 
 class NewProgramFragment : Fragment() {
 
@@ -220,11 +221,8 @@ class NewProgramFragment : Fragment() {
                                     try {
                                         mViewModel.updateTrackToProgram(
                                             UpdateTrack(
-                                                track_id = if ((trackIdForProgram
-                                                        ?: 0.0).toDouble() >= 0
-                                                ) (trackIdForProgram
-                                                    ?: 0.0).toDouble() else (trackIdForProgram
-                                                    ?: 0.0).toDouble() * -1,
+                                                track_id = listOf((trackIdForProgram
+                                                    ?: 0.0).toDouble()),
                                                 id = it1.id,
                                                 track_type = if ((trackIdForProgram
                                                         ?: 0.0).toDouble() >= 0

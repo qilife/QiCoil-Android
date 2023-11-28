@@ -481,6 +481,7 @@ class PlayerService : Service() {
 
             override fun onSkipToPrevious() {
                 try {
+                    totalPlayedSoundTime = 0
                     playPosition = 0
                     if (musicRepository != null) {
                         val track: MusicRepository.Music = if (isShuffle) {

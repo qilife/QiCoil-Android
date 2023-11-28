@@ -55,7 +55,7 @@ class NewRifeFragment : Fragment() {
         rife_tabs.setupWithViewPager(rife_view_pager)
         rifePagerAdapter?.setData(
             arrayListOf(
-                "Programs",
+                "Rife",
                 "Frequencies",
             )
         )

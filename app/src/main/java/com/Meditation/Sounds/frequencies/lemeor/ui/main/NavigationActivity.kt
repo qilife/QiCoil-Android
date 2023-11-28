@@ -97,6 +97,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.HttpException
 import java.io.File
+import kotlin.math.abs
 
 
 const val REQUEST_CODE_PERMISSION = 1111
@@ -650,11 +651,8 @@ class NavigationActivity : AppCompatActivity(),
                                     try {
                                         mNewProgramViewModel.updateTrackToProgram(
                                             UpdateTrack(
-                                                track_id = if ((trackIdForProgram
-                                                        ?: 0.0).toDouble() >= 0
-                                                ) (trackIdForProgram
-                                                    ?: 0.0).toDouble() else (trackIdForProgram
-                                                    ?: 0.0).toDouble() * -1,
+                                                track_id = listOf((trackIdForProgram
+                                                    ?: 0.0).toDouble()),
                                                 id = it1.id,
                                                 track_type = if ((trackIdForProgram
                                                         ?: 0.0).toDouble() >= 0
