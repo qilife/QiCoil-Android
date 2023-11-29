@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvTitle"
+        android:layout_marginBottom="@dimen/indent_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_categories"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size_nomarl"
+        android:visibility="gone"
+        app:fontText="fonts/HelveticaNeue_Bold.otf" />
+    <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+        android:id="@+id/tvSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/margin_item_5"
+        android:layout_marginRight="@dimen/margin_item_5"
+        android:layout_marginBottom="@dimen/margin_item_5"
+        android:background="@color/transparent"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size_nomarl"
+        app:fontText="fonts/HelveticaNeue_Thin.otf"
+        tools:text="Life Force the Source of Qi" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

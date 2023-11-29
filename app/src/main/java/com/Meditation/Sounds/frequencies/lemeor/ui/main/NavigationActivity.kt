@@ -17,8 +17,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
@@ -30,6 +28,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.R
@@ -41,6 +40,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Search
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
@@ -56,9 +56,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.*
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerUIFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.AlbumsSearchAdapter
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.ProgramsSearchAdapter
-import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.TracksSearchAdapter
+import com.Meditation.Sounds.frequencies.lemeor.ui.albums.search.SearchAdapter
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.CategoriesPagerFragment.CategoriesPagerListener
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment.OnTiersFragmentListener
@@ -74,11 +72,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
 import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.Meditation.Sounds.frequencies.tasks.BaseTask
 import com.Meditation.Sounds.frequencies.tasks.GetFlashSaleTask
-import com.Meditation.Sounds.frequencies.utils.Constants
+import com.Meditation.Sounds.frequencies.utils.*
 import com.Meditation.Sounds.frequencies.utils.CopyAssets.copyAssetFolder
-import com.Meditation.Sounds.frequencies.utils.QcAlarmManager
-import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
-import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -88,16 +83,16 @@ import com.facebook.login.LoginResult
 import com.google.gson.Gson
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.android.synthetic.main.activity_navigation.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.HttpException
 import java.io.File
-import kotlin.math.abs
 
 
 const val REQUEST_CODE_PERMISSION = 1111
@@ -113,9 +108,79 @@ class NavigationActivity : AppCompatActivity(),
     private var refId: Long = 0
 
     //search
-    private val mAlbumsSearchAdapter = AlbumsSearchAdapter()
-    private val mTracksSearchAdapter = TracksSearchAdapter()
-    private val mProgramsSearchAdapter = ProgramsSearchAdapter()
+    private val searchAdapter by lazy {
+        SearchAdapter { item, i ->
+            hideKeyboard(this@NavigationActivity, album_search)
+            view_data.visibility = View.GONE
+            if (item.obj is Album) {
+                val album = item.obj as Album
+                startAlbumDetails(album)
+            } else if (item.obj is Track) {
+                val track = item.obj as Track
+                CoroutineScope(Dispatchers.IO).launch {
+                    val album = mViewModel.getAlbumById(track.albumId, track.category_id)
+                    withContext(Dispatchers.Main) {
+                        view_data.visibility = View.GONE
+                        album?.let { startAlbumDetails(it) }
+                    }
+                }
+            } else if (item.obj is Program) {
+                val program = item.obj as Program
+                if (program.isUnlocked) {
+                    if (isTrackAdd && trackIdForProgram != -29000.0) {
+                        val db = DataBase.getInstance(this@NavigationActivity)
+                        val programDao = db.programDao()
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val p = programDao.getProgramById(program.id)
+                            p?.records?.add((trackIdForProgram ?: 0).toDouble())
+                            p?.let { it1 ->
+                                programDao.updateProgram(it1)
+                                if (it1.user_id.isNotEmpty()) {
+                                    try {
+                                        mNewProgramViewModel.updateTrackToProgram(
+                                            UpdateTrack(
+                                                track_id = listOf(
+                                                    (trackIdForProgram ?: 0.0).toDouble()
+                                                ),
+                                                id = it1.id,
+                                                track_type = if ((trackIdForProgram
+                                                        ?: 0.0).toDouble() >= 0
+                                                ) "mp3" else "rife",
+                                                request_type = "add",
+                                                is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                            )
+                                        )
+                                    } catch (_: Exception) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    supportFragmentManager.beginTransaction().setCustomAnimations(
+                        R.anim.trans_right_to_left_in,
+                        R.anim.trans_right_to_left_out,
+                        R.anim.trans_left_to_right_in,
+                        R.anim.trans_left_to_right_out
+                    ).replace(
+                        R.id.nav_host_fragment,
+                        ProgramDetailFragment.newInstance(program.id),
+                        ProgramDetailFragment().javaClass.simpleName
+                    ).commit()
+                } else {
+                    startActivity(
+                        NewPurchaseActivity.newIntent(
+                            this@NavigationActivity,
+                            NewPurchaseActivity.QUANTUM_TIER_ID,
+                            NewPurchaseActivity.QUANTUM_TIER_ID,
+                            1
+                        )
+                    )
+                }
+            }
+        }
+    }
 
     private var albumsSearch = MutableLiveData<List<Album>>()
     private var tracksSearch = MutableLiveData<List<Track>>()
@@ -311,6 +376,7 @@ class NavigationActivity : AppCompatActivity(),
         }
     }
 
+    @OptIn(FlowPreview::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -330,9 +396,8 @@ class NavigationActivity : AppCompatActivity(),
 
         if (BuildConfig.IS_FREE) {
             assets.copyAssetFolder(
-                "tracks", getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +
-                        File.separator +
-                        "tracks"
+                "tracks",
+                getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator + "tracks"
             )
         }
 
@@ -344,24 +409,23 @@ class NavigationActivity : AppCompatActivity(),
             showDisclaimerDialog()
         }
 
-        album_search?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().trim().isNotEmpty()) {
-                    album_search_clear.visibility = View.VISIBLE
-                    view_data.visibility = View.VISIBLE
-                    search(s)
-                } else {
-                    clearSearch()
-                    album_search_clear.visibility = View.GONE
-                    view_data.visibility = View.GONE
-                    hideKeyboard(applicationContext, album_search)
+        lifecycleScope.launch(Dispatchers.Main) {
+            FlowSearch.fromSearchView(album_search).debounce(500).map { text -> text.trim() }
+                .distinctUntilChanged().flowOn(Dispatchers.IO).collect { result ->
+                    run {
+                        if (result.isNotEmpty()) {
+                            album_search_clear.visibility = View.VISIBLE
+                            view_data.visibility = View.VISIBLE
+                            search(result)
+                        } else {
+                            clearSearch()
+                            album_search_clear.visibility = View.GONE
+                            view_data.visibility = View.GONE
+                            hideKeyboard(applicationContext, album_search)
+                        }
+                    }
                 }
-            }
-        })
+        }
 
 //        album_search.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
 //            if (b) {
@@ -407,15 +471,13 @@ class NavigationActivity : AppCompatActivity(),
                 ApiHelper(RetrofitBuilder(applicationContext).apiService),
                 DataBase.getInstance(applicationContext)
             )
-        ).get(HomeViewModel::class.java)
+        )[HomeViewModel::class.java]
 
         mNewProgramViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
-                ApiHelper(RetrofitBuilder(this).apiService),
-                DataBase.getInstance(this)
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(this).apiService), DataBase.getInstance(this)
             )
-        ).get(NewProgramViewModel::class.java)
+        )[NewProgramViewModel::class.java]
 
         navigation_albums.onSelected {
             closeSearch()
@@ -481,7 +543,9 @@ class NavigationActivity : AppCompatActivity(),
                     }
                 }
             }
-            mViewModel.getRife().observe(this) {}
+            if (user?.id != null) {
+                mViewModel.getRife().observe(this) {}
+            }
         } else {
 //            if (BuildConfig.IS_FREE) {
 //                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
@@ -602,182 +666,87 @@ class NavigationActivity : AppCompatActivity(),
 
     //region SEARCH
     private fun initSearch() {
-        //albums search
-        mAlbumsSearchAdapter.setOnClickListener(object : AlbumsSearchAdapter.Listener {
-            override fun onAlbumSearchClick(album: Album, i: Int) {
-                hideKeyboard(this@NavigationActivity, album_search)
-                view_data.visibility = View.GONE
-                startAlbumDetails(album)
-            }
-        })
-
-        search_albums_recycler.adapter = mAlbumsSearchAdapter
-        search_albums_recycler.setHasFixedSize(true)
-        search_albums_recycler.itemAnimator = null
-
-        //track search
-        mTracksSearchAdapter.setOnClickListener(object : TracksSearchAdapter.Listener {
-            override fun onTrackSearchClick(track: Track, i: Int) {
-                hideKeyboard(this@NavigationActivity, album_search)
-                CoroutineScope(Dispatchers.IO).launch {
-                    val album = mViewModel.getAlbumById(track.albumId, track.category_id)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        view_data.visibility = View.GONE
-                        album?.let { startAlbumDetails(it) }
+        search_categories_recycler.apply {
+            adapter = searchAdapter
+            itemAnimator = null
+        }
+        Combined3LiveData(
+            albumsSearch,
+            tracksSearch,
+            programsSearch,
+            combine = { data1, data2, data3 ->
+                val search = mutableListOf<Search>()
+                var i = 0
+                data1?.let {
+                    val converted = ArrayList<Album>()
+                    if (searchAdapter.getCategories().isEmpty()) {
+                        getAllCategories()
                     }
-                }
-            }
-        })
-        search_tracks_recycler.adapter = mTracksSearchAdapter
-        search_tracks_recycler.setHasFixedSize(true)
-        search_tracks_recycler.itemAnimator = null
-
-        //program search
-        mProgramsSearchAdapter.setOnClickListener(object : ProgramsSearchAdapter.Listener {
-            override fun onProgramSearchClick(program: Program, i: Int) {
-                hideKeyboard(this@NavigationActivity, album_search)
-                view_data.visibility = View.GONE
-                if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != -29000.0) {
-                        val db = DataBase.getInstance(this@NavigationActivity)
-                        val programDao = db.programDao()
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val p = programDao.getProgramById(program.id)
-                            p?.records?.add((trackIdForProgram ?: 0).toDouble())
-                            p?.let { it1 ->
-                                programDao.updateProgram(it1)
-                                if (it1.user_id.isNotEmpty()) {
-                                    try {
-                                        mNewProgramViewModel.updateTrackToProgram(
-                                            UpdateTrack(
-                                                track_id = listOf((trackIdForProgram
-                                                    ?: 0.0).toDouble()),
-                                                id = it1.id,
-                                                track_type = if ((trackIdForProgram
-                                                        ?: 0.0).toDouble() >= 0
-                                                ) "mp3" else "rife",
-                                                request_type = "add",
-                                                is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
-                                            )
-                                        )
-                                    } catch (_: Exception) {
-                                    }
+                    if (BuildConfig.IS_FREE) {
+                        it.forEach { album ->
+                            search.add(Search(i, album))
+                            i++
+                        }
+                        converted.addAll(it)
+                    } else {
+                        it.forEach { album ->
+                            if (album.tier_id == 1 || album.tier_id == 2) {
+                                converted.add(album)
+                                search.add(Search(i, album))
+                                i++
+                            } else {
+                                if (album.tier_id == 3 && (preference(applicationContext).isHighQuantum)) {
+                                    converted.add(album)
+                                    search.add(Search(i, album))
+                                    i++
+                                }
+                                if (album.tier_id == 4 && (preference(applicationContext).isInnerCircle)) {
+                                    converted.add(album)
+                                    search.add(Search(i, album))
+                                    i++
                                 }
                             }
                         }
                     }
-
-                    supportFragmentManager
-                        .beginTransaction()
-                        .setCustomAnimations(
-                            R.anim.trans_right_to_left_in,
-                            R.anim.trans_right_to_left_out,
-                            R.anim.trans_left_to_right_in,
-                            R.anim.trans_left_to_right_out
-                        )
-                        .replace(
-                            R.id.nav_host_fragment,
-                            ProgramDetailFragment.newInstance(program.id),
-                            ProgramDetailFragment().javaClass.simpleName
-                        )
-                        .commit()
-                } else {
-                    startActivity(
-                        NewPurchaseActivity.newIntent(
-                            this@NavigationActivity,
-                            NewPurchaseActivity.QUANTUM_TIER_ID,
-                            NewPurchaseActivity.QUANTUM_TIER_ID, 1
-                        )
-                    )
+                    var groupAlbum = converted.groupingBy { it.name }.eachCount()
+                    searchAdapter.setGroupAlbum(groupAlbum)
                 }
-            }
-        })
-        search_programs_recycler.adapter = mProgramsSearchAdapter
-        search_programs_recycler.setHasFixedSize(true)
-        search_programs_recycler.itemAnimator = null
-
-        albumsSearch.observe(this) {
-            val converted = ArrayList<Album>()
-            if (mAlbumsSearchAdapter.getCategories().isEmpty()) {
-                getAllCategories()
-            }
-            if (BuildConfig.IS_FREE) {
-                converted.addAll(it)
-            } else {
-                it.forEach { album ->
-                    if (album.tier_id == 1 || album.tier_id == 2) {
-                        converted.add(album)
-                    } else {
-                        if (album.tier_id == 3
-                            && (preference(applicationContext).isHighQuantum)
-                        ) {
-                            converted.add(album)
-                        }
-                        if (album.tier_id == 4
-                            && (preference(applicationContext).isInnerCircle)
-                        ) {
-                            converted.add(album)
+                data2?.let {
+                    val converted = ArrayList<Track>()
+                    it.forEach { track ->
+                        if (track.tier_id == 1 || track.tier_id == 2) {
+                            converted.add(track)
+                            search.add(Search(i, track))
+                            i++
+                        } else {
+                            if (track.tier_id == 3 && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)) {
+                                converted.add(track)
+                                search.add(Search(i, track))
+                                i++
+                            }
+                            if (track.tier_id == 4 && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)) {
+                                converted.add(track)
+                                search.add(Search(i, track))
+                                i++
+                            }
                         }
                     }
                 }
-            }
-
-            mAlbumsSearchAdapter.setData(converted)
-            if (converted.size != 0) {
-                lblheaderalbums.visibility = View.VISIBLE
-                lblnoresult.visibility = View.GONE
-            } else {
-                lblheaderalbums.visibility = View.GONE
-                if (mAlbumsSearchAdapter.itemCount == 0
-                    && mProgramsSearchAdapter.itemCount == 0
-                    && mTracksSearchAdapter.itemCount == 0
-                )
-                    lblnoresult.visibility = View.VISIBLE
-            }
-
-        }
-
-        tracksSearch.observe(this) {
-            val converted = ArrayList<Track>()
-
-            it.forEach { track ->
-                if (track.tier_id == 1 || track.tier_id == 2) {
-                    converted.add(track)
-                } else {
-                    if (track.tier_id == 3
-                        && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)
-                    ) {
-                        converted.add(track)
-                    }
-                    if (track.tier_id == 4
-                        && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)
-                    ) {
-                        converted.add(track)
+                data3?.let {
+                    it.forEach { program ->
+                        search.add(Search(i, program))
+                        i++
                     }
                 }
-            }
-            if (converted.size != 0) {
-                lblheaderfrequencies.visibility = View.VISIBLE
-                lblnoresult.visibility = View.GONE
+                return@Combined3LiveData search
+            }).observe(this) {
+            if (it.isEmpty()) {
+                lblnoresult.visibility = View.VISIBLE
             } else {
-                lblheaderfrequencies.visibility = View.GONE
-                if (mAlbumsSearchAdapter.itemCount == 0 && mProgramsSearchAdapter.itemCount == 0 && mTracksSearchAdapter.itemCount == 0)
-                    lblnoresult.visibility = View.VISIBLE
-            }
-            mTracksSearchAdapter.setData(converted)
-        }
-
-        programsSearch.observe(this) {
-            if (it.isNotEmpty()) {
-                lblheaderprograms.visibility = View.VISIBLE
+                search_categories_recycler.scrollToPosition(0)
                 lblnoresult.visibility = View.GONE
-            } else {
-                lblheaderprograms.visibility = View.GONE
-                if (mAlbumsSearchAdapter.itemCount == 0 && mProgramsSearchAdapter.itemCount == 0 && mTracksSearchAdapter.itemCount == 0)
-                    lblnoresult.visibility = View.VISIBLE
             }
-            mProgramsSearchAdapter.setData(it)
+            searchAdapter.submitList(it)
         }
     }
 
@@ -798,28 +767,20 @@ class NavigationActivity : AppCompatActivity(),
         val categoryDao = DataBase.getInstance(applicationContext).categoryDao()
         GlobalScope.launch {
             val categories = categoryDao.getData()
-            mAlbumsSearchAdapter.setCategories(categories)
+            withContext(Dispatchers.Main) {
+                searchAdapter.setCategories(categories)
+            }
         }
     }
 
     private fun closeSearch() {
-        album_search.text = null
-        hideKeyboard(applicationContext, album_search)
+        album_search.text.clear()
         album_search.clearFocus()
-        lblnoresult.visibility = View.GONE
-        lblheaderprograms.visibility = View.GONE
-        lblheaderfrequencies.visibility = View.GONE
-        lblheaderalbums.visibility = View.GONE
+        hideKeyboard(applicationContext, album_search)
     }
 
     private fun clearSearch() {
-        mAlbumsSearchAdapter.setData(ArrayList())
-        mTracksSearchAdapter.setData(ArrayList())
-        mProgramsSearchAdapter.setData(ArrayList())
-        lblheaderprograms.visibility = View.GONE
-        lblheaderfrequencies.visibility = View.GONE
-        lblheaderalbums.visibility = View.GONE
-        lblnoresult.visibility = View.VISIBLE
+        searchAdapter.submitList(arrayListOf())
     }
 
     private fun startAlbumDetails(album: Album) {

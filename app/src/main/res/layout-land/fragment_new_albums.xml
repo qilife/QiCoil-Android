@@ -114,91 +114,40 @@
             android:layout_weight="2"
             android:layout_marginEnd="5dp" />
 
-        <ScrollView
+        <LinearLayout
             android:id="@+id/view_data"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_search_home"
+            android:orientation="vertical"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="@dimen/indent_16"
             android:layout_marginRight="@dimen/indent_16"
+            android:paddingHorizontal="@dimen/margin_left_top_icon"
             android:layout_marginBottom="@dimen/indent_4"
-            android:scrollbars="none"
             android:visibility="gone">
-
-            <LinearLayout
+            <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                android:id="@+id/lblnoresult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_no_result"
+                android:textColor="#000000"
+                android:visibility="gone"
+                android:layout_marginVertical="@dimen/indent_35"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/text_size_nomarl"
+                app:fontText="fonts/HelveticaNeue_Bold.otf" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_categories_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/width_seekbar"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_left_top_icon">
+                android:overScrollMode="never"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_categories"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_size_nomarl"
-                    app:fontText="fonts/HelveticaNeue_Bold.otf"
-                    android:visibility="gone"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_categories_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:visibility="gone"/>
+        </LinearLayout>
 
-                <!--            android:layout_marginTop="@dimen/padding_left_right_item"-->
-                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tv_albums"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_size_nomarl"
-                    app:fontText="fonts/HelveticaNeue_Bold.otf" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_albums_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_left_right_item"
-                    android:text="@string/tv_frequencies"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_size_nomarl"
-                    app:fontText="fonts/HelveticaNeue_Bold.otf" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_tracks_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_left_right_item"
-                    android:text="@string/tv_programs"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_size_nomarl"
-                    app:fontText="fonts/HelveticaNeue_Bold.otf" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_programs_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

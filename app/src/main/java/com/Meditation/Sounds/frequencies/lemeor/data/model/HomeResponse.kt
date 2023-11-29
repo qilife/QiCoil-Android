@@ -154,15 +154,9 @@ data class Rife(
     else frequencies!!.split('/')
 }
 
-class IntToBooleanAdapter : TypeAdapter<Boolean>() {
 
-    override fun write(out: com.google.gson.stream.JsonWriter?, value: Boolean?) {
-    }
-
-    override fun read(`in`: com.google.gson.stream.JsonReader?): Boolean {
-        val intValue = `in`?.nextInt() ?: 0
-        return intValue != 0
-    }
-}
-
+data class Search(
+    var id: Int,
+    var obj: Any,
+)
 
