@@ -83,9 +83,9 @@ class NewPurchaseActivity : AppCompatActivity() {
             if (BuildConfig.IS_FREE) {
                 when (tierId) {
                     4 -> {
-                        purchase_continue.setText("APPLY NOW")
+                        purchase_continue.text = getText(R.string.tv_apply_now)
                     }else -> {
-                        purchase_continue.setText("UNLOCK NOW")
+                        purchase_continue.text = getText(R.string.tv_unlock_now)
                     }
                 }
 

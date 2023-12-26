@@ -55,8 +55,8 @@ class NewRifeFragment : Fragment() {
         rife_tabs.setupWithViewPager(rife_view_pager)
         rifePagerAdapter?.setData(
             arrayListOf(
-                "Rife",
-                "Frequencies",
+                getString(R.string.navigation_lbl_rife),
+                getString(R.string.tv_frequencies),
             )
         )
 
@@ -109,47 +109,3 @@ class NewRifeFragment : Fragment() {
     }
 
 }
-
-val item = Rife(
-    1,
-    1,
-    "Abdominal Cramps 1",
-    "url",
-    "",
-    "",
-    0,
-    "75/255/235/660/750",
-    "rife",
-    "",
-    "",
-    "",
-)
-
-val listTest = arrayListOf(
-    item,
-    item.copy(
-        id = 2,
-        title = "Abdominal Cramps 2"
-    ),
-    item.copy(
-        id = 3,
-        title = "Abdominal Cramps 3",
-        frequencies = ""
-    ),
-    item.copy(
-        id = 4,
-        title = "Abdominal Cramps 4"
-    ),
-    item.copy(
-        id = 5,
-        title = "Abdominal Cramps 5"
-    ),
-    item.copy(
-        id = 6,
-        title = "Abdominal Cramps 6"
-    ),
-    item.copy(
-        id = 7,
-        title = "Abdominal Cramps 7"
-    ),
-)

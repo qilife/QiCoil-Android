@@ -3,6 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 
 
@@ -14,4 +15,6 @@ class ProgramDetailViewModel (private val repository: ProgramDetailRepository) :
     suspend fun getTrackById(id: Int): Track? {
         return repository.getTrackById(id)
     }
+
+    fun addRife(rife: Rife) = repository.insertRife(rife)
 }

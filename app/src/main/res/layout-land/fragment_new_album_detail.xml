@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -46,6 +47,19 @@
                     android:layout_marginBottom="@dimen/indent_16"
                     tools:src="@drawable/ic_album_1"
                     tools:ignore="ContentDescription"/>
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/program_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/image_size_10"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_nomarl"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    font:fontText="fonts/BebasNeue_Book.otf"
+                    tools:text="total time" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/album_description_recycler"

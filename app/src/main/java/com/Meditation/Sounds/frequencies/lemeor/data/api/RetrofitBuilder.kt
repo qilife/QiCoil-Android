@@ -32,7 +32,6 @@ class RetrofitBuilder(val context: Context) {
         .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
         .addInterceptor(authInterceptor)
-        .retryOnConnectionFailure(true)
         .addInterceptor(ChuckerInterceptor.Builder(context).build())
         .build()
 

@@ -37,7 +37,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
             emit(Resource.success(data = repository.getProfile()))
         } catch (exception: HttpException) {
             emit(Resource.error(data = null, message = getErrorMsg(exception)))
-        } catch (exception: Exception) {
+        } catch (exception: Throwable) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }

@@ -33,7 +33,7 @@
                     android:layout_marginRight="4dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
-                    android:text="Unlock Quantum \n Meditation Frequencies"
+                    android:text="@string/tv_title_trial"
                     android:textColor="#fff"
                     android:textSize="18sp" />
 
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
-                        android:text="200+ Quantum Frequencies"
+                        android:text="@string/tv_trial_package_200"
                         android:textColor="#fff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -95,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
-                        android:text="Unlimited use"
+                        android:text="@string/tv_trial_unlimited_use"
                         android:textColor="#fff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
-                        android:text="Custom Playlists"
+                        android:text="@string/tv_trial_custom_playlists"
                         android:textColor="#fff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -139,8 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
-
-                        android:text="Free Updates"
+                        android:text="@string/tv_trial_free_updates"
                         android:textColor="#fff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -154,7 +153,7 @@
                     android:layout_marginRight="4dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
-                    android:text="Try 7 days for Free"
+                    android:text="@string/tv_trial_free_7_days"
                     android:textColor="#fff"
                     android:textSize="18sp" />
 
@@ -167,7 +166,7 @@
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_btn_play"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="CONTINUE"
+                    android:text="@string/tv_continue"
                     android:textColor="#ffffffff" />
 
                 <TextView
@@ -179,7 +178,7 @@
                     android:layout_marginRight="4dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
-                    android:text="$59.99 per year after FREE 7-day trial"
+                    android:text="@string/tv_trial_pay_7_days"
                     android:textColor="#fff"
                     android:textSize="14sp" />
             </LinearLayout>

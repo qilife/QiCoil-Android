@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/margin_buttons"
         android:layout_marginBottom="@dimen/margin_buttons"
         android:paddingLeft="50dp"
-        tools:text="Category name"
+        tools:text="@string/tv_category_name"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_18"
         app:fontText="fonts/MyriadPro_Semibold.otf"

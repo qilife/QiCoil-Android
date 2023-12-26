@@ -29,6 +29,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.generators.SoundGenerator
 import com.Meditation.Sounds.frequencies.generators.model.WaveTypes
 import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.android.exoplayer2.*
@@ -64,8 +65,6 @@ class PlayerService : Service() {
         setWaveform(WaveTypes.SINUSOIDAL)
         setVolume(1F)
         setBalance(1F)
-//        setAutoUpdateOneCycleSample(true)
-//        refreshOneCycleData()
     }
     private val metadataBuilder = MediaMetadataCompat.Builder()
 
@@ -119,6 +118,9 @@ class PlayerService : Service() {
 
     private var totalPlayedSoundTime = 0L
     private var startedPlaySoundTime = 0L
+    private var timePlayed = 0L
+
+    private var seconds = 0L
 
     private val trackListService = mutableListOf<MusicRepository.Music>()
 
@@ -239,7 +241,7 @@ class PlayerService : Service() {
                             val dur = exoPlayer.duration
                             duration.postValue(((max.value ?: dur) - position).coerceAtLeast(0))
                         } else {
-                            val timePlayed =
+                            timePlayed =
                                 totalPlayedSoundTime + SystemClock.elapsedRealtime() - startedPlaySoundTime
                             if (timerPlayRife - timePlayed < 0) {
                                 startedPlaySoundTime = SystemClock.elapsedRealtime()
@@ -251,10 +253,18 @@ class PlayerService : Service() {
                                 } else if (typePlayer == REPEAT_MODE_ALL) {
                                     mediaSessionCallback.onSkipToNext()
                                 }
-
                             }
                             duration.postValue((timerPlayRife - timePlayed).coerceAtLeast(0))
                             currentPosition.postValue(timePlayed)
+                            if (seconds / 1000 == 1L) {
+                                playRife?.apply {
+                                    this.playtime = (this.playtime.toLong() - 1).toString()
+                                    EventBus.getDefault().post(this)
+                                }
+                                seconds %= 1000
+                            } else {
+                                seconds += 300
+                            }
                         }
                     }
                 }
@@ -265,14 +275,14 @@ class PlayerService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         MediaButtonReceiver.handleIntent(mediaSession, intent)
-        if (intent.hasExtra(EXTRA_PLAYLIST)) {
+        if (intent?.hasExtra(EXTRA_PLAYLIST) == true) {
             progressTimer.cancel()
             progressTimer.purge()
 //            val trackList =
 //                intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
-            if(trackList?.isNotEmpty() == true){
+            if (trackList?.isNotEmpty() == true) {
                 this.trackListService.clear()
                 this.trackListService.addAll(trackList!!)
                 musicRepository = MusicRepository(trackListService)
@@ -282,6 +292,9 @@ class PlayerService : Service() {
     }
 
     override fun onDestroy() {
+        playRife?.let {
+            DataBase.getInstance(this@PlayerService).rifeDao().insert(it)
+        }
         super.onDestroy()
         EventBus.getDefault().unregister(this)
 //        unregisterReceiver(becomingNoisyReceiver)
@@ -294,7 +307,6 @@ class PlayerService : Service() {
 
     private val mediaSessionCallback: MediaSessionCompat.Callback =
         object : MediaSessionCompat.Callback() {
-
             override fun onPlay() {
                 val track = musicRepository?.getCurrent()
                 track?.let { item ->

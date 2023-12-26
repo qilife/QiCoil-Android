@@ -5,7 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <!--    android:layout_marginHorizontal="@dimen/image_size_14"-->
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srlRife"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvProgram"
         android:layout_width="match_parent"
@@ -16,6 +20,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="20"
         tools:listitem="@layout/item_rife_program" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:paddingEnd="@dimen/margin_item_5"
@@ -30,4 +35,5 @@
         tools:itemCount="20"
         tools:listitem="@layout/item_string_frequency"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

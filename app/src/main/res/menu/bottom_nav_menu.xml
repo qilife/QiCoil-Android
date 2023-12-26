@@ -18,7 +18,7 @@
     <item
         android:id="@+id/navigation_discover"
         android:icon="@drawable/ic_explore"
-        android:title="@string/navigation_lbl_discover" />
+        android:title="@string/navigation_lbl_shop" />
 
     <item
         android:id="@+id/navigation_options"

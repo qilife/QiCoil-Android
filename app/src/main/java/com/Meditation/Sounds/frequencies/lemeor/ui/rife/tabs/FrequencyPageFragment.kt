@@ -170,7 +170,7 @@ class FrequencyPageFragment : Fragment() {
                 "500-1k",
                 "1k-3k",
                 "3k-11k",
-                "11k-28k",
+                "11k-22k",
             )
         )
         sbHz.getCurrent(minValue, maxValue, 0.5)

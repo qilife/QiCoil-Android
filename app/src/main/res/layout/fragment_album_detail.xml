@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutDetail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +19,7 @@
         android:contentDescription="@null"
         android:padding="5dp"
         android:src="@drawable/ic_close"
-        android:tint="#fff" />
+        app:tint="#fff" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -81,11 +83,25 @@
                         app:fontText="fonts/BebasNeue_Book.otf" />
                 </LinearLayout>
 
+                <com.Meditation.Sounds.frequencies.views.CustomFontTextView
+                    android:id="@+id/program_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_item_10"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_nomarl"
+                    android:visibility="gone"
+                    android:textStyle="bold"
+                    font:fontText="fonts/BebasNeue_Book.otf"
+                    tools:text="total time" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_item_10" />
+
 
                 <com.Meditation.Sounds.frequencies.views.CustomFontButton
                     android:id="@+id/btnPlay"

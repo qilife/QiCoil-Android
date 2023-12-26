@@ -3,6 +3,7 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail
 import androidx.lifecycle.LiveData
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 
 class ProgramDetailRepository(private val localData: DataBase) {
@@ -12,5 +13,8 @@ class ProgramDetailRepository(private val localData: DataBase) {
 
     suspend fun getTrackById(id: Int): Track? {
         return localData.trackDao().getTrackById(id)
+    }
+    fun insertRife(rife: Rife){
+        return localData.rifeDao().insert(rife)
     }
 }

@@ -164,14 +164,18 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
     }
 }
 
-suspend fun syncTracks(db: DataBase, response: HomeResponse?) {
+fun syncTracks(db: DataBase, response: HomeResponse?) {
     val localData = db.trackDao().getData().toMutableList()
     val responseData: ArrayList<Track> = arrayListOf()
 
     response?.albums?.forEach { album ->
         album.tracks.forEach { track ->
 
-            if (!BuildConfig.IS_FREE) { if (album.id == 1 || album.id == 2 || album.id == 3) { track.isDownloaded = true } }
+            if (!BuildConfig.IS_FREE) {
+                if (album.id == 1 || album.id == 2 || album.id == 3) {
+                    track.isDownloaded = true
+                }
+            }
 
             track.albumId = album.id
             track.category_id = album.category_id
@@ -333,18 +337,19 @@ fun checkUnlocked(isFree: Int): Boolean {
     return isFree == 1
 }
 
-suspend fun syncRife(db: DataBase, response: RifeResponse?) {
+fun syncRife(db: DataBase, response: RifeResponse?) {
     Log.d("LOG", "syncRife")
 
     val localData = db.rifeDao().getData().toMutableList()
     val responseData = (response?.data ?: listOf()).toMutableList()
-
     if (localData.isNotEmpty()) {
-        Log.d("LOG", "Local bd is not empty")
-    } else {
-        Log.d("LOG", "Bd is empty")
-        Log.d("LOG", "Bd ${responseData}")
-        db.rifeDao().insertAll(responseData)
+        localData.zip(responseData).forEach { (localItem, responseItem) ->
+            if (localItem.id == responseItem.id) {
+                responseItem.playtime = localItem.playtime
+            }
+        }
     }
+    db.rifeDao().clear()
+    db.rifeDao().insertAll(responseData)
 }
 

@@ -148,6 +148,7 @@ data class Rife(
     var type: String? = "",
     var CDate: String? = "",
     var mDate: String? = "",
+    @Ignore var playtime: String = "0",
     @Ignore var tag: String = "",
 ) : Parcelable {
     fun getFrequency() = if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()

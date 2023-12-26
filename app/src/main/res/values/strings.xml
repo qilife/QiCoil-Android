@@ -10,7 +10,7 @@
     <string name="navigation_lbl_rife">Rife</string>
     <string name="navigation_lbl_programs">Programs</string>
     <string name="navigation_lbl_videos">Videos</string>
-    <string name="navigation_lbl_discover">Shop</string>
+    <string name="navigation_lbl_shop">Shop</string>
     <string name="navigation_lbl_options">Options</string>
     <!--endregion-->
 
@@ -344,4 +344,25 @@
     <!-- <string name="facebook_app_id">554730859218975</string> -->
     <string name="download_error">Download Error</string>
     <string name="download_error_message">Some files that cannot be downloaded. Try again later!</string>
+
+    <!-- new text-->
+    <string name="tv_from">From</string>
+    <string name="tv_now">Now</string>
+    <string name="tv_category_name">Category name</string>
+    <string name="tv_title_trial">Unlock Quantum \n Meditation Frequencies</string>
+    <string name="tv_trial_package_200">200+ Quantum Frequencies</string>
+    <string name="tv_trial_unlimited_use">Unlimited use</string>
+    <string name="tv_trial_custom_playlists">Custom Playlists</string>
+    <string name="tv_trial_free_updates">Free Updates</string>
+    <string name="tv_trial_free_7_days">Try 7 days for Free</string>
+    <string name="tv_trial_pay_7_days">$59.99 per year after FREE 7-day trial</string>
+    <string name="tv_downloading">Downloading</string>
+    <string name="tv_yearly_payment_of_49">Yearly Payment of $49</string>
+    <string name="tv_fine_tune_hz">Fine Tune Hz</string>
+    <string name="tv_hz">Hz</string>
+    <string name="tv_disclaimer">Disclaimer</string>
+    <string name="tv_unlock_now">UNLOCK NOW</string>
+    <string name="tv_apply_now">APPLY NOW</string>
+    <string name="tv_count_frequencies">%s frequencies / 00:03:00</string>
+
 </resources>

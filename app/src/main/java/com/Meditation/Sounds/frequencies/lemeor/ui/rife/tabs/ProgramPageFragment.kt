@@ -12,15 +12,16 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.playRife
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
-import com.Meditation.Sounds.frequencies.utils.Utils
-import com.Meditation.Sounds.frequencies.views.ItemOffsetBottomDecoration
 import com.Meditation.Sounds.frequencies.views.RecyclerSectionItemDecoration
 import kotlinx.android.synthetic.main.fragment_program_page.*
 
 class ProgramPageFragment : Fragment() {
     private lateinit var mViewModel: NewRifeViewModel
+    private lateinit var mHomeViewModel: HomeViewModel
     private var rifeId: Int? = null
     var mainFm: NewRifeFragment? = null
     private val mProgramAdapter = ProgramAdapter {
@@ -72,11 +73,28 @@ class ProgramPageFragment : Fragment() {
                 DataBase.getInstance(requireContext())
             )
         )[NewRifeViewModel::class.java]
-
+        mHomeViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        )[HomeViewModel::class.java]
+        val sectionItemDecoration = RecyclerSectionItemDecoration(
+            resources.getDimensionPixelSize(R.dimen.height_calander_icon),
+            true,
+            top = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+            left = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+            right = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+            bottom = resources.getDimensionPixelSize(R.dimen.margin_item_10),
+        )
+        sectionItemDecoration.setParent(rcvProgram)
         rcvProgram.adapter = mProgramAdapter
         rcvProgram.itemAnimator = null
+        rcvProgram.addItemDecoration(sectionItemDecoration)
+
         rcvTabList.adapter = mStickyHeaderAdapter
         rcvTabList.itemAnimator = null
+
         mViewModel.getRifeList().observe(viewLifecycleOwner) { listRift ->
             val list = listRift.sortedWith(compareBy<Rife> {
                 when {
@@ -85,16 +103,10 @@ class ProgramPageFragment : Fragment() {
                 }
             }.thenBy { it.title.lowercase() })
             listRife = list
-            val sectionItemDecoration = RecyclerSectionItemDecoration(
-                resources.getDimensionPixelSize(R.dimen.height_calander_icon),
-                true, RecyclerSectionItemDecorator(list),
-                top = resources.getDimensionPixelSize(R.dimen.margin_item_10),
-                left = resources.getDimensionPixelSize(R.dimen.margin_item_10),
-                right = resources.getDimensionPixelSize(R.dimen.margin_item_10),
-                bottom = resources.getDimensionPixelSize(R.dimen.margin_item_10),
-            )
+
             mProgramAdapter.setListRife(list)
-            rcvProgram.addItemDecoration(sectionItemDecoration)
+            sectionItemDecoration.addSectionCallBack(RecyclerSectionItemDecorator(list))
+            sectionItemDecoration.notifyDataChanged()
             val uniqueFirstChars = list
                 .map {
                     if (it.title.uppercase().first().isLetter())
@@ -105,8 +117,21 @@ class ProgramPageFragment : Fragment() {
                 .toList()
             mStickyHeaderAdapter.setData(uniqueFirstChars)
         }
+
+        srlRife.setOnRefreshListener {
+            refreshData()
+        }
     }
 
+    private fun refreshData() {
+        srlRife.visibility = View.GONE
+        try {
+            mHomeViewModel.getRife().observe(viewLifecycleOwner) {}
+        } catch (_: Exception) {
+        }
+        srlRife.visibility = View.VISIBLE
+        srlRife.isRefreshing = false
+    }
 
     companion object {
         private const val ARG_RIFE_ID = "arg_rife_id"
@@ -126,8 +151,8 @@ class ProgramPageFragment : Fragment() {
         RecyclerSectionItemDecoration.SectionCallBack {
 
         override fun isSection(position: Int): Boolean {
-            if (listRife.isNotEmpty()) {
-                return if (position == 0) {
+            return if (listRife.isNotEmpty()) {
+                if (position == 0) {
                     true
                 } else if (listRife[position].title.lowercase().firstOrNull()
                         ?.isLetter() == false
@@ -140,19 +165,19 @@ class ProgramPageFragment : Fragment() {
                     listRife[position].title.lowercase()
                         .codePointAt(0) != listRife[position - 1].title.lowercase().codePointAt(0)
                 }
-            } else return false
+            } else false
         }
 
         override fun getSectionHeader(position: Int): String {
-            if (listRife.isNotEmpty()) {
+            return if (listRife.isNotEmpty()) {
                 val sub = listRife[position].title.uppercase()[0]
-                return if (sub.isLetter()) {
+                if (sub.isLetter()) {
                     sub.toString()
                 } else {
                     "#"
                 }
             } else {
-                return ""
+                ""
             }
         }
     }

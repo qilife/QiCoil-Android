@@ -165,7 +165,7 @@
                     android:layout_gravity="top"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:text="From"
+                    android:text="@string/tv_from"
                     android:textColor="#989898"
                     android:textSize="11sp"
                     app:fontText="fonts/BebasNeue_Bold.otf" />
@@ -196,7 +196,7 @@
                     android:layout_gravity="top"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:text="Now"
+                    android:text="@string/tv_now"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
                     app:fontText="fonts/BebasNeue_Bold.otf" />

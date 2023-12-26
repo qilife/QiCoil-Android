@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:font="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutDetail"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_track_list"
@@ -16,7 +17,7 @@
         android:contentDescription="@null"
         android:padding="5dp"
         android:src="@drawable/ic_close"
-        android:tint="#fff" />
+        app:tint="#fff" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -110,8 +111,8 @@
                 <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_left_right_item_title"
-                    android:text="TOTAL TIME"
+                    android:layout_marginStart="7dp"
+                    android:text="@string/txt_total_time"
                     android:textColor="#FFF"
                     android:textSize="@dimen/text_size_nomarl"
                     android:textStyle="bold"

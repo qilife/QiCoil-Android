@@ -42,7 +42,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
-import kotlin.math.abs
 
 
 class ProgramDetailFragment : Fragment() {
@@ -343,6 +342,10 @@ class ProgramDetailFragment : Fragment() {
     }
 
     fun play(tracks: ArrayList<Any>) {
+        playRife?.let {
+            mViewModel.addRife(it)
+        }
+        playRife = null
         val activity = activity as NavigationActivity
 
         if (isPlayAlbum || playProgramId != programId) {

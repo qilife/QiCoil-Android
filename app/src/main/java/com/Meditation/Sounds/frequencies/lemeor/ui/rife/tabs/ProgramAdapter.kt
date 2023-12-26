@@ -23,13 +23,14 @@ class ProgramAdapter(
         return listRife.size
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "StringFormatInvalid")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val rife = listRife[position]
 
         holder.itemView.tvTitle.text = rife.title
-        holder.itemView.tvLineTime.text = "${rife.getFrequency().size} frequencies / 00:03:00"
-
+        holder.itemView.tvLineTime.text = holder.itemView.context.getString(
+            R.string.tv_count_frequencies, rife.getFrequency().size.toString()
+        )
         holder.itemView.setOnClickListener { onClick.invoke(rife) }
     }
 

@@ -903,7 +903,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/padding_left_right_item"
-                    android:text="Yearly Payment of $49"
+                    android:text="@string/tv_yearly_payment_of_49"
                     android:textColor="#FFF"
                     android:textSize="@dimen/text_small_10"
                     app:fontText="fonts/MyriadPro_Semibold.otf" />

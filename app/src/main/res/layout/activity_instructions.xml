@@ -33,7 +33,7 @@
                 android:layout_gravity="center_vertical"
                 android:padding="@dimen/padding_icon_actionbar"
                 android:src="@drawable/ic_back"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                 android:layout_width="wrap_content"

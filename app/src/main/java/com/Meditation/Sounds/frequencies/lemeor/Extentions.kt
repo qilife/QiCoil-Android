@@ -37,6 +37,7 @@ var trackList: ArrayList<MusicRepository.Music>? = null
 val currentTrack = MutableLiveData<Any>()
 val currentTrackIndex = MutableLiveData<Int>()
 val currentPosition = MutableLiveData<Long>()
+var playRife: Rife? = null
 val max = MutableLiveData<Long>(0)
 val duration = MutableLiveData<Long>()
 
@@ -223,3 +224,10 @@ fun hideKeyboard(context: Context, view: CustomFontEditText) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun convertSecondsToTime(seconds: Long): String {
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val remainingSeconds = seconds % 60
+
+    return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)
+}

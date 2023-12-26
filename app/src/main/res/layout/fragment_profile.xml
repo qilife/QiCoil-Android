@@ -33,7 +33,7 @@
                     android:layout_marginLeft="@dimen/margin_item_dialog"
                     android:layout_marginTop="@dimen/margin_item_dialog_20"
                     android:padding="@dimen/padding_left_right_item_title"
-                    android:text="Marvin Dela Cruz"
+                    tools:text="Marvin Dela Cruz"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_large_17"
                     font:fontText="fonts/MyriadPro_Semibold.otf" />

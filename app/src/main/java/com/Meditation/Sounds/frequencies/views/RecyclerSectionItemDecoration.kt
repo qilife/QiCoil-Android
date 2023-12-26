@@ -13,15 +13,14 @@ import kotlin.math.max
 class RecyclerSectionItemDecoration(
     headerHeight: Int,
     private var sticky: Boolean,
-    private var sectionCallBack: SectionCallBack,
     private var top: Int = 0,
     private var left: Int = 0,
     private var right: Int = 0,
     private var bottom: Int = 0,
 ) : RecyclerView.ItemDecoration() {
-
+    private var sectionCallBack: SectionCallBack? = null
     private var headerOffSet: Int = headerHeight
-
+    private var recyclerView: RecyclerView? = null
     private lateinit var headerView: View
     private lateinit var header: TextView
 
@@ -33,15 +32,34 @@ class RecyclerSectionItemDecoration(
     ) {
 
         val pos: Int = parent.getChildAdapterPosition(view)
-        if (sectionCallBack.isSection(pos)) {
-            outRect.top = headerOffSet + top
-            outRect.left = left
-            outRect.right = right
-            outRect.bottom = bottom
-        } else {
-            outRect.left = left
-            outRect.right = right
-            outRect.bottom = bottom
+        if (sectionCallBack != null) {
+            if (sectionCallBack!!.isSection(pos)) {
+                outRect.top = headerOffSet + top
+                outRect.left = left
+                outRect.right = right
+                outRect.bottom = bottom
+            } else {
+                outRect.left = left
+                outRect.right = right
+                outRect.bottom = bottom
+            }
+        }
+    }
+
+    fun setParent(recyclerView: RecyclerView) {
+        this.recyclerView = recyclerView
+    }
+
+    fun addSectionCallBack(sectionCallBack: SectionCallBack) {
+        this.sectionCallBack = sectionCallBack
+    }
+
+    fun notifyDataChanged() {
+        if (recyclerView != null) {
+            headerView = inflateHeaderView(parent = recyclerView!!)
+            header = headerView.findViewById(R.id.mTextView)
+            fixLayoutSize(headerView, recyclerView!!)
+            recyclerView!!.invalidateItemDecorations()
         }
     }
 
@@ -52,16 +70,18 @@ class RecyclerSectionItemDecoration(
         fixLayoutSize(headerView, parent)
 
         var previousHeader = ""
-        for (i in 0..parent.childCount) {
-            if (parent.getChildAt(i) != null) {
-                val child: View = parent.getChildAt(i)
-                val position: Int = parent.getChildAdapterPosition(child)
+        if (sectionCallBack != null) {
+            for (i in 0..parent.childCount) {
+                if (parent.getChildAt(i) != null) {
+                    val child: View = parent.getChildAt(i)
+                    val position: Int = parent.getChildAdapterPosition(child)
 
-                val title: String = sectionCallBack.getSectionHeader(position)
-                header.text = title
-                if (previousHeader != title || sectionCallBack.isSection(position)) {
-                    drawHeader(c, child, headerView)
-                    previousHeader = title
+                    val title: String = sectionCallBack!!.getSectionHeader(position)
+                    header.text = title
+                    if (previousHeader != title || sectionCallBack!!.isSection(position)) {
+                        drawHeader(c, child, headerView)
+                        previousHeader = title
+                    }
                 }
             }
         }

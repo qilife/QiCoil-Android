@@ -239,31 +239,39 @@ class NavigationActivity : AppCompatActivity(),
         }
 
         if (isNetworkAvailable()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val apkList = mViewModel.getApkList()
+            try {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val apkList = mViewModel.getApkList()
 
-                if (apkList.isNotEmpty()) {
-                    val currentVer = BuildConfig.VERSION_NAME
-                    val apkUrl = apkList[0]
+                    if (apkList.isNotEmpty()) {
+                        val currentVer = BuildConfig.VERSION_NAME
+                        val apkUrl = apkList[0]
 
-                    val pathSplit = apkUrl.split("/")
+                        val pathSplit = apkUrl.split("/")
 
-                    if (pathSplit.isNotEmpty()) {
-                        val fileName = pathSplit[pathSplit.size - 1]
-                        val newVersion = fileName.replace("Quantum_v", "").replace(".apk", "")
-                        val newVs = newVersion.split(".")
-                        val currentVs = currentVer.split(".")
+                        if (pathSplit.isNotEmpty()) {
+                            val fileName = pathSplit[pathSplit.size - 1]
+                            val newVersion = fileName.replace("Quantum_v", "").replace(".apk", "")
+                            val newVs = newVersion.split(".")
+                            val currentVs = currentVer.split(".")
 
-                        if (newVs.size == 3 && currentVs.size == 3) {
-                            if ((newVs[0].toInt() * 100 + newVs[1].toInt() * 10 + newVs[2].toInt())
-                                > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()
-                            ) {
+                            if (newVs.size == 3 && currentVs.size == 3) {
+                                if ((newVs[0].toInt() * 100 + newVs[1].toInt() * 10 + newVs[2].toInt())
+                                    > currentVs[0].toInt() * 100 + currentVs[1].toInt() * 10 + currentVs[2].toInt()
+                                ) {
 
-                                CoroutineScope(Dispatchers.Main).launch { dialogConfirmUpdateApk(apkUrl) }
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        dialogConfirmUpdateApk(
+                                            apkUrl
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            } catch (_: Exception) {
+
             }
             registerReceiver(
                 downloadNewApkReceiver,
@@ -518,34 +526,39 @@ class NavigationActivity : AppCompatActivity(),
 
     private fun syncData() {
         if (isNetworkAvailable()) {
-            val user = PreferenceHelper.getUser(this)
-            if(user?.id != null){
-                mViewModel.syncProgramsToServer()
-            }
-            mViewModel.getHome("" + user?.id).observe(this) {
-                when (it.status) {
-                    Resource.Status.SUCCESS -> {
-                        if (preference(applicationContext).isFirstSync) {
-                            preference(applicationContext).isFirstSync = true
-                            if (it.data == null && !BuildConfig.IS_FREE) {
-                                mViewModel.loadFromCache(applicationContext)
+            try {
+                val user = PreferenceHelper.getUser(this)
+                if(user?.id != null){
+                    mViewModel.syncProgramsToServer()
+                }
+                mViewModel.getHome("" + user?.id).observe(this) {
+                    when (it.status) {
+                        Resource.Status.SUCCESS -> {
+                            if (preference(applicationContext).isFirstSync) {
+                                preference(applicationContext).isFirstSync = true
+                                if (it.data == null && !BuildConfig.IS_FREE) {
+                                    try {
+                                        mViewModel.loadFromCache(applicationContext)
+                                    } catch (_: Exception) {
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    Resource.Status.ERROR -> {
+                        Resource.Status.ERROR -> {
 //                        if (BuildConfig.IS_FREE) {
 //                            mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
 //                        }
-                    }
+                        }
 
-                    Resource.Status.LOADING -> {
+                        Resource.Status.LOADING -> {
+                        }
                     }
                 }
-            }
-            if (user?.id != null) {
-                mViewModel.getRife().observe(this) {}
-            }
+                if (user?.id != null) {
+                    mViewModel.getRife().observe(this) {}
+                }
+            }catch (_:Exception){}
         } else {
 //            if (BuildConfig.IS_FREE) {
 //                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
@@ -677,6 +690,29 @@ class NavigationActivity : AppCompatActivity(),
             combine = { data1, data2, data3 ->
                 val search = mutableListOf<Search>()
                 var i = 0
+//                Frequencies
+                data2?.let {
+                    val converted = ArrayList<Track>()
+                    it.forEach { track ->
+                        if (track.tier_id == 1 || track.tier_id == 2) {
+                            converted.add(track)
+                            search.add(Search(i, track))
+                            i++
+                        } else {
+                            if (track.tier_id == 3 && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)) {
+                                converted.add(track)
+                                search.add(Search(i, track))
+                                i++
+                            }
+                            if (track.tier_id == 4 && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)) {
+                                converted.add(track)
+                                search.add(Search(i, track))
+                                i++
+                            }
+                        }
+                    }
+                }
+//                Albums
                 data1?.let {
                     val converted = ArrayList<Album>()
                     if (searchAdapter.getCategories().isEmpty()) {
@@ -711,27 +747,7 @@ class NavigationActivity : AppCompatActivity(),
                     var groupAlbum = converted.groupingBy { it.name }.eachCount()
                     searchAdapter.setGroupAlbum(groupAlbum)
                 }
-                data2?.let {
-                    val converted = ArrayList<Track>()
-                    it.forEach { track ->
-                        if (track.tier_id == 1 || track.tier_id == 2) {
-                            converted.add(track)
-                            search.add(Search(i, track))
-                            i++
-                        } else {
-                            if (track.tier_id == 3 && (preference(applicationContext).isHighQuantum || BuildConfig.IS_FREE)) {
-                                converted.add(track)
-                                search.add(Search(i, track))
-                                i++
-                            }
-                            if (track.tier_id == 4 && (preference(applicationContext).isInnerCircle || BuildConfig.IS_FREE)) {
-                                converted.add(track)
-                                search.add(Search(i, track))
-                                i++
-                            }
-                        }
-                    }
-                }
+//                Programs
                 data3?.let {
                     it.forEach { program ->
                         search.add(Search(i, program))

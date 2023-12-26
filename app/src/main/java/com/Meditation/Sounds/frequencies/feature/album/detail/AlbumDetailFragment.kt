@@ -26,6 +26,7 @@ import com.Meditation.Sounds.frequencies.utils.Utils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_album_detail.*
+import kotlin.math.max
 
 class AlbumDetailFragment : BaseFragment(), MusicService.IGetSongPlaying {
 
@@ -258,7 +259,7 @@ class AlbumDetailFragment : BaseFragment(), MusicService.IGetSongPlaying {
                         var mediaType = Constants.MEDIA_TYPE_BASIC_FREE
                         var totalTime = 0L
                         var max = 0L
-                        max = Math.max(max, itemSong.item.endOffset - itemSong.item.startOffset)
+                        max = max(max, itemSong.item.endOffset - itemSong.item.startOffset)
                         totalTime += max
                         if (mediaType < itemSong.song.mediaType!!) {
                             mediaType = itemSong.song.mediaType!!

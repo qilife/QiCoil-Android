@@ -37,11 +37,12 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_new_album_detail.*
-import kotlinx.android.synthetic.main.player_ui_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 
 
@@ -77,6 +78,12 @@ class NewAlbumDetailFragment : Fragment() {
     private var isFirst = true
     private var timeDelay = 500L
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
@@ -88,11 +95,24 @@ class NewAlbumDetailFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_new_album_detail, container, false)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: Any?) {
+        if (event is Rife) {
+            event.let { r ->
+                if (r.id == mRife!!.id) {
+                    program_time.text =
+                        getString(R.string.total_time, convertSecondsToTime(r.playtime.toLong()))
+                }
+            }
+        }
+    }
+
     @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         firebaseAnalytics = Firebase.analytics
         initUI()
+        program_time.visibility = View.GONE
         if (type == Constants.TYPE_ALBUM) {
             mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -102,6 +122,15 @@ class NewAlbumDetailFragment : Fragment() {
             }
         } else if (type == Constants.TYPE_RIFE) {
             if (mRife != null) {
+                program_time.visibility = View.VISIBLE
+                if (mRife!!.playtime == "0") {
+                    mRife!!.apply {
+                        this.playtime = (this.getFrequency().size * 3 * 60).toString()
+                    }
+                    mViewModel.addRife(mRife!!)
+                }
+                program_time.text =
+                    getString(R.string.total_time, convertSecondsToTime(mRife!!.playtime.toLong()))
                 setUI(mRife!!)
             }
         }
@@ -281,6 +310,10 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun playAndDownload(album: Album) {
+        playRife?.let {
+            mViewModel.addRife(it)
+        }
+        playRife = null
         firebaseAnalytics.logEvent("Downloads") {
             param("Album Id", album.id.toString())
             param("Album Name", album.name)
@@ -330,6 +363,10 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     fun play(album: Album) {
+        playRife?.let {
+            mViewModel.addRife(it)
+        }
+        playRife = null
         val activity = activity as NavigationActivity
 
         if (isPlayProgram || playAlbumId != album.id) {
@@ -383,6 +420,7 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     fun play(rife: Rife) {
+        playRife = mRife
         val activity = activity as NavigationActivity
 
         if (isPlayProgram || playAlbumId != rife.id) {
@@ -437,7 +475,7 @@ class NewAlbumDetailFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1001 && resultCode == RESULT_OK) {
-            typeBack= type
+            typeBack = type
             rifeBackProgram = mRife
             albumIdBackProgram = albumId
             categoryIdBackProgram = categoryId

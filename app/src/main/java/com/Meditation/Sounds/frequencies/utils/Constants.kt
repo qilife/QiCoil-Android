@@ -301,12 +301,12 @@ class Constants {
         var isGuestLogin = false
 
         val optionsHz = arrayListOf(
-            Pair(0.0, 28000.0),
+            Pair(0.0, 22000.0),
             Pair(5.0, 500.0),
             Pair(500.0, 1000.0),
             Pair(1000.0, 3000.0),
             Pair(3000.0, 11000.0),
-            Pair(11000.0, 28000.0),
+            Pair(11000.0, 22000.0),
         )
 
         @JvmField
