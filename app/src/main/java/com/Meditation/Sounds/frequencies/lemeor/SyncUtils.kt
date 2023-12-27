@@ -340,15 +340,7 @@ fun checkUnlocked(isFree: Int): Boolean {
 fun syncRife(db: DataBase, response: RifeResponse?) {
     Log.d("LOG", "syncRife")
 
-    val localData = db.rifeDao().getData().toMutableList()
     val responseData = (response?.data ?: listOf()).toMutableList()
-    if (localData.isNotEmpty()) {
-        localData.zip(responseData).forEach { (localItem, responseItem) ->
-            if (localItem.id == responseItem.id) {
-                responseItem.playtime = localItem.playtime
-            }
-        }
-    }
     db.rifeDao().clear()
     db.rifeDao().insertAll(responseData)
 }

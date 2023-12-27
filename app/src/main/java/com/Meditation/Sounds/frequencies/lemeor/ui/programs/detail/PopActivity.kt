@@ -75,7 +75,7 @@ class PopActivity : AppCompatActivity() {
             if(trackId >= 0){
                 track = trackDao?.getTrackById(trackId.toInt())
 
-                val dur = track?.duration!!
+                val dur = track?.duration ?: 0
                 duration = if (dur > 0) { dur } else { 300000 }
                 pop_tv_duration.text = getConvertedTime(duration)
             }

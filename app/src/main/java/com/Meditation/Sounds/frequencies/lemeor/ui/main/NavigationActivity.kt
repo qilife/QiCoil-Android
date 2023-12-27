@@ -241,8 +241,11 @@ class NavigationActivity : AppCompatActivity(),
         if (isNetworkAvailable()) {
             try {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val apkList = mViewModel.getApkList()
-
+                    var apkList = listOf<String>()
+                    try {
+                        apkList = mViewModel.getApkList()
+                    } catch (_: Exception) {
+                    }
                     if (apkList.isNotEmpty()) {
                         val currentVer = BuildConfig.VERSION_NAME
                         val apkUrl = apkList[0]

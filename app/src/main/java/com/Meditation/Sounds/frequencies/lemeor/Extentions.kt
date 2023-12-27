@@ -38,6 +38,7 @@ val currentTrack = MutableLiveData<Any>()
 val currentTrackIndex = MutableLiveData<Int>()
 val currentPosition = MutableLiveData<Long>()
 var playRife: Rife? = null
+var playtimeRife = 0L
 val max = MutableLiveData<Long>(0)
 val duration = MutableLiveData<Long>()
 

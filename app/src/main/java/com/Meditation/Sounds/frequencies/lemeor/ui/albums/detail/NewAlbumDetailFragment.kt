@@ -101,7 +101,7 @@ class NewAlbumDetailFragment : Fragment() {
             event.let { r ->
                 if (r.id == mRife!!.id) {
                     program_time.text =
-                        getString(R.string.total_time, convertSecondsToTime(r.playtime.toLong()))
+                        getString(R.string.total_time, convertSecondsToTime(r.playtime))
                 }
             }
         }
@@ -123,14 +123,23 @@ class NewAlbumDetailFragment : Fragment() {
         } else if (type == Constants.TYPE_RIFE) {
             if (mRife != null) {
                 program_time.visibility = View.VISIBLE
-                if (mRife!!.playtime == "0") {
-                    mRife!!.apply {
-                        this.playtime = (this.getFrequency().size * 3 * 60).toString()
+                if (playRife != null) {
+                    if (playRife!!.id == mRife!!.id && playtimeRife > 0L) {
+                        program_time.text = getString(
+                            R.string.total_time, convertSecondsToTime(playtimeRife)
+                        )
+                    } else {
+                        program_time.text = getString(
+                            R.string.total_time,
+                            convertSecondsToTime((mRife!!.getFrequency().size * 3 * 60).toLong())
+                        )
                     }
-                    mViewModel.addRife(mRife!!)
+                } else {
+                    program_time.text = getString(
+                        R.string.total_time,
+                        convertSecondsToTime((mRife!!.getFrequency().size * 3 * 60).toLong())
+                    )
                 }
-                program_time.text =
-                    getString(R.string.total_time, convertSecondsToTime(mRife!!.playtime.toLong()))
                 setUI(mRife!!)
             }
         }
@@ -310,9 +319,6 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     private fun playAndDownload(album: Album) {
-        playRife?.let {
-            mViewModel.addRife(it)
-        }
         playRife = null
         firebaseAnalytics.logEvent("Downloads") {
             param("Album Id", album.id.toString())
@@ -363,9 +369,6 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     fun play(album: Album) {
-        playRife?.let {
-            mViewModel.addRife(it)
-        }
         playRife = null
         val activity = activity as NavigationActivity
 
@@ -420,7 +423,13 @@ class NewAlbumDetailFragment : Fragment() {
     }
 
     fun play(rife: Rife) {
-        playRife = mRife
+        if (playRife != null) {
+            if (playRife!!.id != mRife!!.id) {
+                playRife = mRife
+            }
+        } else {
+            playRife = mRife
+        }
         val activity = activity as NavigationActivity
 
         if (isPlayProgram || playAlbumId != rife.id) {

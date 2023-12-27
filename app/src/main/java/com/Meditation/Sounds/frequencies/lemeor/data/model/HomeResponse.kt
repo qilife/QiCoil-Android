@@ -6,9 +6,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
-import com.google.gson.TypeAdapter
-import com.google.gson.annotations.JsonAdapter
-import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.*
@@ -148,7 +145,7 @@ data class Rife(
     var type: String? = "",
     var CDate: String? = "",
     var mDate: String? = "",
-    @Ignore var playtime: String = "0",
+    @Ignore var playtime: Long = 0L,
     @Ignore var tag: String = "",
 ) : Parcelable {
     fun getFrequency() = if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()

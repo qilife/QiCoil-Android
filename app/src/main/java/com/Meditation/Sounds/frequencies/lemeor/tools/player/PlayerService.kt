@@ -29,7 +29,6 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.generators.SoundGenerator
 import com.Meditation.Sounds.frequencies.generators.model.WaveTypes
 import com.Meditation.Sounds.frequencies.lemeor.*
-import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.android.exoplayer2.*
@@ -258,7 +257,7 @@ class PlayerService : Service() {
                             currentPosition.postValue(timePlayed)
                             if (seconds / 1000 == 1L) {
                                 playRife?.apply {
-                                    this.playtime = (this.playtime.toLong() - 1).toString()
+                                    this.playtime = playtimeRife - timePlayed / 1000
                                     EventBus.getDefault().post(this)
                                 }
                                 seconds %= 1000
@@ -292,9 +291,6 @@ class PlayerService : Service() {
     }
 
     override fun onDestroy() {
-        playRife?.let {
-            DataBase.getInstance(this@PlayerService).rifeDao().insert(it)
-        }
         super.onDestroy()
         EventBus.getDefault().unregister(this)
 //        unregisterReceiver(becomingNoisyReceiver)
@@ -581,6 +577,9 @@ class PlayerService : Service() {
                         refreshNotificationAndForegroundStatus(currentState)
                     }
                 } else if (item is MusicRepository.Frequency) {
+                    if (musicRepository != null) {
+                        playtimeRife = musicRepository!!.getTime(3)
+                    }
                     mediaSession.isActive = true
                     mediaSession.setPlaybackState(
                         stateBuilder.setState(

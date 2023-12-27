@@ -342,9 +342,6 @@ class ProgramDetailFragment : Fragment() {
     }
 
     fun play(tracks: ArrayList<Any>) {
-        playRife?.let {
-            mViewModel.addRife(it)
-        }
         playRife = null
         val activity = activity as NavigationActivity
 

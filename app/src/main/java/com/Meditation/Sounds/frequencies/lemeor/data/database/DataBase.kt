@@ -23,7 +23,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.*
         Program::class,
         Playlist::class,
         Rife::class,
-    ], version = 5
+    ], version = 4
 )
 
 @TypeConverters(
@@ -109,11 +109,6 @@ abstract class DataBase : RoomDatabase() {
                 )
             }
         }
-        private val MIGRATION_4_5: Migration = object : Migration(4, 5) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE rife ADD COLUMN playtime TEXT DEFAULT '0' NOT NULL")
-            }
-        }
 
         @Volatile
         private var instance: DataBase? = null
@@ -132,7 +127,7 @@ abstract class DataBase : RoomDatabase() {
                 BuildConfig.DB_NAME
             )
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                 .build()
     }
 }

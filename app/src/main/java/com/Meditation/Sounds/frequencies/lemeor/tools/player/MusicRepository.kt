@@ -42,6 +42,8 @@ class MusicRepository<T>(private val data: List<T>) {
         return currentItemIndex == maxIndex
     }
 
+    fun getTime(minutes : Int) = ((data.size - currentItemIndex) * minutes * 60).toLong()
+
     @Parcelize
     class Track(
         val trackId: Int,

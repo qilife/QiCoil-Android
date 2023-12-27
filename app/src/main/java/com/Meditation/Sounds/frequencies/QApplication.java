@@ -33,6 +33,7 @@ import com.appsflyer.AppsFlyerLib;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
@@ -152,6 +153,16 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
 
     @Override
     public void onConnectionError(BaseTask task, Exception exception) {
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (Locale.getDefault() != newConfig.locale) {
+
+        }
 
     }
 

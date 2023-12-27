@@ -14,7 +14,7 @@ class ProgramDetailRepository(private val localData: DataBase) {
     suspend fun getTrackById(id: Int): Track? {
         return localData.trackDao().getTrackById(id)
     }
-    fun insertRife(rife: Rife){
+    fun insertRife(rife: Rife) {
         return localData.rifeDao().insert(rife)
     }
 }
