@@ -7,7 +7,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 
 class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
-    private val listRife = repository.getListRife()
+    private var listRife = listOf<Rife>()
 
     private val _result = MutableLiveData<List<Rife>>()
 
@@ -16,7 +16,10 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
     fun getRifeList() = repository.getAllRife()
 
-    fun getRifeLocal() = listRife
+    fun getRifeLocal(): List<Rife> {
+        listRife = repository.getListRife()
+        return listRife
+    }
 
     fun search(keySearch: String) {
         if (keySearch == "" || keySearch.isEmpty()) {
@@ -26,6 +29,15 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
                     else -> 1
                 }
             }.thenBy { it.title.lowercase() })
+        } else {
+            _result.value = listRife.filter { it.title.lowercase().contains(keySearch.lowercase()) }
+                .sortedBy { it.title.lowercase().indexOf(keySearch.lowercase()) != 0 }
+        }
+    }
+
+    fun searchMain(keySearch: String) {
+        if (keySearch == "" || keySearch.isEmpty()) {
+            _result.value = arrayListOf<Rife>()
         } else {
             _result.value = listRife.filter { it.title.lowercase().contains(keySearch.lowercase()) }
                 .sortedBy { it.title.lowercase().indexOf(keySearch.lowercase()) != 0 }

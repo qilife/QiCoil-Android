@@ -1,6 +1,6 @@
-<resources>
-    <string name="facebook_app_id">239929504671619</string>
-    <string name="fb_login_protocol_scheme">fb239929504671619</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="facebook_app_id" translatable="false">239929504671619</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb239929504671619</string>
 
     <string name="action_settings">Settings</string>
 
@@ -32,7 +32,7 @@
     <!--region Fetch-->
     <string name="start_fetching">Start fetching files.</string>
     <string name="start">Start</string>
-    <string name="complete_over">%1$d/%2$d</string>
+    <string name="complete_over" translatable="false">%1$d/%2$d</string>
     <string name="fetch_done">Fetching done.</string>
     <string name="reset">RESET</string>
     <string name="game_download_error">An error occurred, could not get files.</string>
@@ -49,17 +49,17 @@
     <!--endregion-->
 
     <!--region Downloader-->
-    <string name="downloader_utils_eta_sec">%1$ds left</string>
-    <string name="downloader_utils_eta_min">%1$dm %2$ds left</string>
-    <string name="downloader_utils_eta_hrs">%1$dh %2$dm %3$ds left</string>
-    <string name="download_speed_bytes">%1$d B/s</string>
-    <string name="download_speed_kb">%1$s KB/s</string>
-    <string name="download_speed_mb">%1$s MB/s</string>
+    <string name="downloader_utils_eta_sec" translatable="false">%1$ds left</string>
+    <string name="downloader_utils_eta_min" translatable="false">%1$dm %2$ds left</string>
+    <string name="downloader_utils_eta_hrs" translatable="false">%1$dh %2$dm %3$ds left</string>
+    <string name="download_speed_bytes" translatable="false">%1$d B/s</string>
+    <string name="download_speed_kb" translatable="false">%1$s KB/s</string>
+    <string name="download_speed_mb" translatable="false">%1$s MB/s</string>
     <!--endregion-->
 
     <string name="total_time">total time %1$s</string>
 
-    <string name="options_version">&#160;v %1$s</string>
+    <string name="options_version" translatable="false">&#160;v %1$s</string>
 
     <string name="toast_download_complete">Download Complete!</string>
     <string name="txt_total_time">TOTAL TIME</string>
@@ -83,7 +83,7 @@
     <string name="txt_search_songs">Search Frequencies</string>
     <string name="txt_no_playlist">No Programs</string>
     <string name="txt_no_albums">No albums</string>
-    <string name="msg_download_data">Downloading data&#8230;\nPlease wait</string>
+    <string name="msg_download_data">Downloading data&#8230; Please wait</string>
     <string name="msg_error_when_download">Cannot download data! Please try again</string>
     <string name="txt_try_again">Try again</string>
     <string name="txt_cancel">Cancel</string>
@@ -162,7 +162,7 @@
     <string name="tv_pay_once">pay once</string>
     <string name="tv_continue">Continue</string>
     <string name="tv_basic_subscription">Essential Subscription</string>
-    <string name="tv_unlock_meditation_prequencies">UNLOCK \n MEDITATION FREQUENCIES</string>
+    <string name="tv_unlock_meditation_prequencies">UNLOCK   MEDITATION FREQUENCIES</string>
     <string name="tv_unlock_meditation_prequencies_2">UNLOCK MEDITATION FREQUENCIES</string>
     <string name="tv_try_7_days_free">Try 7 Days Free</string>
     <!--new-->
@@ -244,7 +244,7 @@
     <string name="tv_title_subscription">Subscription automatically renews unless auto-renew is turned off at least 24 hours before current period ends. payment is charged to your GooglePlay account. Manage subscriptions and turn off auto-renewal in GooglePlay settings.</string>
     <string name="tv_title_subscription_new">This subscription automatically renews unless auto-renew is turned off at least 24-hours before current period ends. Payment is charged to your GooglePlay account. Manage subscriptions and turn off auto renewal in GooglePlay account settings.</string>
     <string name="flash_sale_50_off">Flash Sale - 50% OFF</string>
-    <string name="tv_forgotten_password">&lt;u&gt;Forgotten password?&lt;/u&gt;</string>
+    <string name="tv_forgotten_password" >&lt;u&gt;Forgotten password?&lt;/u&gt;</string>
     <string name="tv_link_sign_in">&lt;u&gt; Sign in.&lt;/u&gt;</string>
     <string name="tv_link_sign_up">&lt;u&gt; Sign up.&lt;/u&gt;</string>
     <string name="tv_signUp">Don\'t have an account?</string>
@@ -271,10 +271,10 @@
     <string name="txt_msg_logout">Are you sure you want to logout?</string>
     <string name="txt_msg_deleteuser">Are you sure you want to delete user?</string>
     <string name="tv_name">Name</string>
-    <string name="err_network_available" translatable="false">Please check the network connection!</string>
-    <string name="err_unexpected_exception" translatable="false">Please try again!</string>
-    <string name="err_unexpected_exception_api" translatable="false">Connection fail. Please try again!</string>
-    <string name="txt_warning_login_fail" translatable="false">Wrong email or password. Try again or select Forgotten password to reset it.</string>
+    <string name="err_network_available">Please check the network connection!</string>
+    <string name="err_unexpected_exception">Please try again!</string>
+    <string name="err_unexpected_exception_api">Connection fail. Please try again!</string>
+    <string name="txt_warning_login_fail">Wrong email or password. Try again or select Forgotten password to reset it.</string>
     <string name="txt_waiting">Please waiting...</string>
     <string name="txt_clear_data">Clear data...</string>
     <string name="txt_email_exist">This email is already registered.</string>
@@ -311,36 +311,35 @@
     <string name="tv_remove_from_favorite">Remove from Favorite</string>
 
     <!--region Delete-->
-    <string name="title_activity_navigation">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="title_activity_qwe">MainActivity</string>
+    <string name="title_activity_navigation" translatable="false">MainActivity</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="title_activity_qwe" translatable="false">MainActivity</string>
     <!--endregion-->
 
     <!--Lemeor-->
     <string name="video_url" translatable="false">https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&amp;playlistId=%1$s&amp;key=%2$s&amp;maxResults=50</string>
-    <string name="flash_sale_colon">:</string>
-    <string name="flash_sale_00">00</string>
-    <string name="some_dot">•</string>
+    <string name="flash_sale_colon" translatable="false">:</string>
+    <string name="flash_sale_00" translatable="false">00</string>
+    <string name="some_dot" translatable="false">•</string>
     <string name="btn_download">Download</string>
     <string name="program_favorites">Favorites</string>
     <string name="txt_flash_sale">Flash Sale</string>
     <string name="search_hint">Search</string>
     <string name="lbl_categories">Categories</string>
     <string name="downloader_quantity">Downloading (%1$d/%2$d)</string>
-    <string name="downloader_quantity_collapse">%1$d/%2$d</string>
+    <string name="downloader_quantity_collapse" translatable="false">%1$d/%2$d</string>
 
     <string name="tst_download_successful">Download successful</string>
 
     <string name="inapp_purchase_info">One Time Payment of: %1$s</string>
-    <string name="subs_purchase_info">Subscribe for %1$s/month or %2$s/year</string>
     <string name="purchase_dialog_btn_month">Month</string>
     <string name="purchase_dialog_btn_annual">Annual</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
-    <string name="share_message">I found this new meditation app Qi Coil \n https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies</string>
+    <string name="share_message">I found this new meditation app Qi Coil   https://play.google.com/store/apps/details?id=com.Meditation.Sounds.frequencies</string>
     <!-- <string name="facebook_app_id">554730859218975</string> -->
     <string name="download_error">Download Error</string>
     <string name="download_error_message">Some files that cannot be downloaded. Try again later!</string>
@@ -364,5 +363,7 @@
     <string name="tv_unlock_now">UNLOCK NOW</string>
     <string name="tv_apply_now">APPLY NOW</string>
     <string name="tv_count_frequencies">%s frequencies / 00:03:00</string>
-
+    <string name="subs_purchase_info">Subscribe for %1$s/month or %2$s/year</string>
+    <string name="error_hz_exceeded">The Hz is exceeded $s</string>
+    <string name="tv_rifes">Rifes</string>
 </resources>

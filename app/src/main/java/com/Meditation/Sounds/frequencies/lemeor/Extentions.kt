@@ -43,7 +43,8 @@ val max = MutableLiveData<Long>(0)
 val duration = MutableLiveData<Long>()
 
 //for track add to program
-var trackIdForProgram: Double? = -29000.0
+
+var trackIdForProgram: Double? = Constants.defaultHz - 1
 var albumIdBackProgram: Int? = -1
 var categoryIdBackProgram: Int? = -1
 var typeBack: String = Constants.TYPE_ALBUM

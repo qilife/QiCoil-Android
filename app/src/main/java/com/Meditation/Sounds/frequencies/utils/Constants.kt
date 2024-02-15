@@ -308,6 +308,16 @@ class Constants {
             Pair(3000.0, 11000.0),
             Pair(11000.0, 22000.0),
         )
+        val textHz = arrayListOf(
+            "All",
+            "5-500 hz",
+            "500-1k",
+            "1k-3k",
+            "3k-11k",
+            "11k-22k",
+        )
+
+        const val defaultHz = -22000.0
 
         @JvmField
         var TYPE_ALBUM = "TYPE_ALBUM"

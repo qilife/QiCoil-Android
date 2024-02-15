@@ -255,7 +255,7 @@ class NewOptionsFragment : Fragment() {
         options_about.setOnClickListener {
             activity?.let {
                 AlertDialog.Builder(it)
-                        .setTitle(R.string.txt_about)
+                        .setTitle(R.string.profile_lbl_about)
                         .setMessage(getString(R.string.app_name) + getString(R.string.options_version, BuildConfig.VERSION_NAME))
                         .setPositiveButton(R.string.txt_ok, null).show()
             }

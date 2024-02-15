@@ -17,6 +17,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.TrackOptionsPopUpActivity
+import com.Meditation.Sounds.frequencies.utils.Constants
 import kotlinx.android.synthetic.main.activity_pop.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -64,19 +65,25 @@ class PopActivity : AppCompatActivity() {
     }
 
     private fun setUI() {
-        val trackId = intent.getDoubleExtra(TrackOptionsPopUpActivity.EXTRA_TRACK_ID, -29000.0)
+        val trackId =
+            intent.getDoubleExtra(TrackOptionsPopUpActivity.EXTRA_TRACK_ID, Constants.defaultHz - 1)
 
-        if (trackId <= -29000) {
-            Toast.makeText(applicationContext, "Track error", Toast.LENGTH_SHORT).show()
+        if (trackId <= Constants.defaultHz - 1) {
+            Toast.makeText(applicationContext, "The Hz is exceeded 28,000", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
         GlobalScope.launch {
-            if(trackId >= 0){
+            if (trackId >= 0) {
                 track = trackDao?.getTrackById(trackId.toInt())
 
                 val dur = track?.duration ?: 0
-                duration = if (dur > 0) { dur } else { 300000 }
+                duration = if (dur > 0) {
+                    dur
+                } else {
+                    300000
+                }
                 pop_tv_duration.text = getConvertedTime(duration)
             }
         }
@@ -118,8 +125,12 @@ class PopActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
-        GlobalScope.launch { trackDao?.setDuration(duration, track?.id!!) }
+        try {
+            if (track != null) {
+                GlobalScope.launch { trackDao?.setDuration(duration, track?.id!!) }
+            }
+        } catch (_: Exception) {
+        }
     }
 
     private fun sendResult(action: String, trackId: Double) {

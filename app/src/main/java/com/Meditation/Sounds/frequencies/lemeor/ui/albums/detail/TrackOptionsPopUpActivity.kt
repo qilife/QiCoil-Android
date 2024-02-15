@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -26,6 +27,7 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
 import kotlinx.coroutines.CoroutineScope
@@ -93,11 +95,16 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
+    @SuppressLint("StringFormatInvalid")
     private fun setUI() {
-        //  program add two obj(rife and track) "rife limit -28000->0" and "track id integer"
-        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
-        if (trackId <= -29000.0) {
-            Toast.makeText(applicationContext, "Not found", Toast.LENGTH_SHORT).show()
+        //  program add two obj(rife and track) "rife limit -22000->0" and "track id integer"
+        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
+        if (trackId <= Constants.defaultHz - 1) {
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.error_hz_exceeded, abs(Constants.defaultHz)),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
         if (trackId >= 0.0) {
@@ -145,10 +152,10 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         }
 
         track_add_program.setOnClickListener {
-            if (trackId < 0.0 && trackId >= -28000) {
-                trackIdForProgram = trackId
+            trackIdForProgram = if (trackId < 0.0 && trackId >= Constants.defaultHz) {
+                trackId
             } else {
-                trackIdForProgram = track?.id?.toDouble()
+                track?.id?.toDouble()
             }
 
             val intent = Intent()
@@ -158,27 +165,21 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
         track_add_favorites.setOnClickListener {
             val programDao = db?.programDao()
-            if (trackId < 0.0 && trackId >= -28000) {
+            if (trackId < 0.0 && trackId >= Constants.defaultHz) {
                 CoroutineScope(Dispatchers.IO).launch {
                     val program = programDao?.getProgramByName(FAVORITES)
                     val frequency = program?.records?.firstOrNull {
                         it == trackId
                     }
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         if (frequency != null) {
                             Toast.makeText(
-                                applicationContext,
-                                "Removed from Favorites",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT
+                            ).show()
                         } else {
                             Toast.makeText(
-                                applicationContext,
-                                "Added to Favorites",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                applicationContext, "Added to Favorites", Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                     if (frequency != null) {
@@ -267,16 +268,12 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                         it.album = album
                         val file = File(
                             getSaveDir(
-                                applicationContext,
-                                it.filename,
-                                album?.audio_folder ?: ""
+                                applicationContext, it.filename, album?.audio_folder ?: ""
                             )
                         )
                         val preloaded = File(
                             getPreloadedSaveDir(
-                                applicationContext,
-                                it.filename,
-                                album?.audio_folder ?: ""
+                                applicationContext, it.filename, album?.audio_folder ?: ""
                             )
                         )
                         if (!file.exists() && !preloaded.exists()) {
@@ -324,7 +321,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, -29000.0)
+        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
         if (trackId >= 0.0) {
             CoroutineScope(Dispatchers.IO).launch { trackDao?.setDuration(duration, track?.id!!) }
         }

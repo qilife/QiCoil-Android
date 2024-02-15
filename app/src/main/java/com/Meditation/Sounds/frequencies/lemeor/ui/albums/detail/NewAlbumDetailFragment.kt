@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -287,7 +288,7 @@ class NewAlbumDetailFragment : Fragment() {
             )
         }
         mRifeAdapter = RifeAdapter(requireContext(), local, listener = { frequency, index, option ->
-            if (option == 0) {
+            if (option == 0 && -frequency.frequency.toDouble() >= Constants.defaultHz) {
                 isMultiPlay = false
                 mRifeAdapter?.setSelected(index)
                 play(rife)
@@ -296,12 +297,17 @@ class NewAlbumDetailFragment : Fragment() {
                     timeDelay = 200L
                 }, timeDelay)
             } else if (option == 1) {
-                startActivityForResult(
-                    TrackOptionsPopUpActivity.newIntent(
-                        requireContext(), -frequency.frequency.toDouble(),
-                        rife = mRife
-                    ), 1001
-                )
+                if (-frequency.frequency.toDouble() >= Constants.defaultHz) {
+                    startActivityForResult(
+                        TrackOptionsPopUpActivity.newIntent(
+                            requireContext(), -frequency.frequency.toDouble(), rife = mRife
+                        ), 1001
+                    )
+                } else {
+                    Toast.makeText(
+                        requireContext(), "The Hz is exceeded 28,000", Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         })
         album_tracks_recycler.adapter = mRifeAdapter

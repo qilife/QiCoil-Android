@@ -38,10 +38,7 @@ import com.Meditation.Sounds.frequencies.feature.discover.DiscoverFragment
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Search
-import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.model.*
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
@@ -68,6 +65,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
 import com.Meditation.Sounds.frequencies.models.event.SyncDataEvent
 import com.Meditation.Sounds.frequencies.tasks.BaseTask
@@ -102,6 +100,7 @@ class NavigationActivity : AppCompatActivity(),
     private var mViewGroupCurrent: View? = null
     private lateinit var mViewModel: HomeViewModel
     private lateinit var mNewProgramViewModel: NewProgramViewModel
+    private lateinit var mNewRifeViewModel: NewRifeViewModel
     private var playerUI: PlayerUIFragment? = null
 
     private var mLocalApkPath: String? = null
@@ -127,7 +126,7 @@ class NavigationActivity : AppCompatActivity(),
             } else if (item.obj is Program) {
                 val program = item.obj as Program
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != -29000.0) {
+                    if (isTrackAdd && trackIdForProgram != Constants.defaultHz - 1) {
                         val db = DataBase.getInstance(this@NavigationActivity)
                         val programDao = db.programDao()
 
@@ -178,6 +177,18 @@ class NavigationActivity : AppCompatActivity(),
                         )
                     )
                 }
+            } else if (item.obj is Rife) {
+                val rife = item.obj as Rife
+                supportFragmentManager.beginTransaction().setCustomAnimations(
+                        R.anim.trans_right_to_left_in,
+                        R.anim.trans_right_to_left_out,
+                        R.anim.trans_left_to_right_in,
+                        R.anim.trans_left_to_right_out
+                    ).replace(
+                        R.id.nav_host_fragment,
+                        NewAlbumDetailFragment.newInstance(0, 0, Constants.TYPE_RIFE, rife),
+                        NewAlbumDetailFragment().javaClass.simpleName
+                    ).commit()
             }
         }
     }
@@ -185,6 +196,7 @@ class NavigationActivity : AppCompatActivity(),
     private var albumsSearch = MutableLiveData<List<Album>>()
     private var tracksSearch = MutableLiveData<List<Track>>()
     private var programsSearch = MutableLiveData<List<Program>>()
+    private var rifesSearch = MutableLiveData<List<Rife>>()
 
     private var mCallbackManager: CallbackManager? = null
 
@@ -490,6 +502,12 @@ class NavigationActivity : AppCompatActivity(),
             )
         )[NewProgramViewModel::class.java]
 
+        mNewRifeViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(this).apiService), DataBase.getInstance(this)
+            )
+        )[NewRifeViewModel::class.java]
+
         navigation_albums.onSelected {
             closeSearch()
             search_layout.visibility = View.VISIBLE
@@ -559,7 +577,9 @@ class NavigationActivity : AppCompatActivity(),
                     }
                 }
                 if (user?.id != null) {
-                    mViewModel.getRife().observe(this) {}
+                    mViewModel.getRife().observe(this) {
+                        mNewRifeViewModel.getRifeLocal()
+                    }
                 }
             }catch (_:Exception){}
         } else {
@@ -567,6 +587,7 @@ class NavigationActivity : AppCompatActivity(),
 //                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
 //            }
         }
+
     }
 
     private fun showDisclaimerDialog() {
@@ -686,11 +707,12 @@ class NavigationActivity : AppCompatActivity(),
             adapter = searchAdapter
             itemAnimator = null
         }
-        Combined3LiveData(
+        Combined4LiveData(
             albumsSearch,
             tracksSearch,
             programsSearch,
-            combine = { data1, data2, data3 ->
+            mNewRifeViewModel.result,
+            combine = { data1, data2, data3, data4 ->
                 val search = mutableListOf<Search>()
                 var i = 0
 //                Frequencies
@@ -757,7 +779,15 @@ class NavigationActivity : AppCompatActivity(),
                         i++
                     }
                 }
-                return@Combined3LiveData search
+//                Rife
+                data4?.let {
+                    it.forEach { rife ->
+                        search.add(Search(i, rife))
+                        i++
+                    }
+                }
+
+                return@Combined4LiveData search
             }).observe(this) {
             if (it.isEmpty()) {
                 lblnoresult.visibility = View.VISIBLE
@@ -774,6 +804,9 @@ class NavigationActivity : AppCompatActivity(),
             val albums = mViewModel.searchAlbum("%$s%")
             val tracks = mViewModel.searchTrack("%$s%")
             val programs = mViewModel.searchProgram("%$s%")
+            withContext(Dispatchers.Main) {
+                mNewRifeViewModel.searchMain(s.toString())
+            }
             CoroutineScope(Dispatchers.Main).launch {
                 albumsSearch.value = albums
                 tracksSearch.value = tracks

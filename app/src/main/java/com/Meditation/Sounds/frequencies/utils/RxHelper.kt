@@ -75,6 +75,47 @@ class Combined3LiveData<T, K, M, S>(
     }
 }
 
+class Combined4LiveData<T, K, M, N, S>(
+    source1: LiveData<T>,
+    source2: LiveData<K>,
+    source3: LiveData<M>,
+    source4: LiveData<N>,
+    private val combine: (data1: T?, data2: K?, data3: M?, data4: N?) -> S
+) : MediatorLiveData<S>() {
+
+    private var data1: T? = null
+    private var data2: K? = null
+    private var data3: M? = null
+    private var data4: N? = null
+
+    init {
+        super.addSource(source1) {
+            data1 = it
+            value = combine(data1, data2, data3, data4)
+        }
+        super.addSource(source2) {
+            data2 = it
+            value = combine(data1, data2, data3, data4)
+        }
+        super.addSource(source3) {
+            data3 = it
+            value = combine(data1, data2, data3, data4)
+        }
+        super.addSource(source4) {
+            data4 = it
+            value = combine(data1, data2, data3, data4)
+        }
+    }
+
+    override fun <S : Any?> addSource(source: LiveData<S>, onChanged: Observer<in S>) {
+        throw UnsupportedOperationException()
+    }
+
+    override fun <T : Any?> removeSource(toRemove: LiveData<T>) {
+        throw UnsupportedOperationException()
+    }
+}
+
 
 class FlowSearch {
     companion object {

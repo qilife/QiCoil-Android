@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -159,9 +160,8 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     @Override
     public void onConfigurationChanged(@NonNull android.content.res.Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        if (Locale.getDefault() != newConfig.locale) {
-
+        if (!Locale.getDefault().getISO3Language().equals(newConfig.locale.getISO3Language())) {
+            Log.d("tyhoang", "onConfigurationChanged: "+Locale.getDefault().getISO3Language());
         }
 
     }

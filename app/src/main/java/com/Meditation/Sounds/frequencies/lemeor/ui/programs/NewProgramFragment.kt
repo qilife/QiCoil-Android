@@ -26,6 +26,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailF
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
 import kotlinx.android.synthetic.main.fragment_new_program.*
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +34,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.math.abs
 
 class NewProgramFragment : Fragment() {
 
@@ -146,7 +146,7 @@ class NewProgramFragment : Fragment() {
             program_title.text = getString(R.string.txt_my_playlists)
             program_back.visibility = View.VISIBLE
         } else {
-            program_title.text = getString(R.string.tv_programs)
+            program_title.text = getString(R.string.navigation_lbl_programs)
             program_back.visibility = View.INVISIBLE
         }
 
@@ -208,31 +208,36 @@ class NewProgramFragment : Fragment() {
         mProgramAdapter.setOnClickListener(object : ProgramAdapter.Listener {
             override fun onClickItem(program: Program, i: Int) {
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != -29000.0) {
+                    if (isTrackAdd && trackIdForProgram != Constants.defaultHz - 1) {
                         val db = DataBase.getInstance(requireContext())
                         val programDao = db.programDao()
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            val p = programDao.getProgramById(program.id)
-                            p?.records?.add((trackIdForProgram ?: 0.0).toDouble())
-                            p?.let { it1 ->
-                                programDao.updateProgram(it1)
-                                if (it1.user_id.isNotEmpty()) {
-                                    try {
-                                        mViewModel.updateTrackToProgram(
-                                            UpdateTrack(
-                                                track_id = listOf((trackIdForProgram
-                                                    ?: 0.0).toDouble()),
-                                                id = it1.id,
-                                                track_type = if ((trackIdForProgram
-                                                        ?: 0.0).toDouble() >= 0
-                                                ) "mp3" else "rife",
-                                                request_type = "add",
-                                                is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                            try {
+                                val p = programDao.getProgramById(program.id)
+                                p?.records?.add((trackIdForProgram ?: 0.0).toDouble())
+                                p?.let { it1 ->
+                                    programDao.updateProgram(it1)
+                                    if (it1.user_id.isNotEmpty()) {
+                                        try {
+                                            mViewModel.updateTrackToProgram(
+                                                UpdateTrack(
+                                                    track_id = listOf(
+                                                        (trackIdForProgram ?: 0.0).toDouble()
+                                                    ),
+                                                    id = it1.id,
+                                                    track_type = if ((trackIdForProgram
+                                                            ?: 0.0).toDouble() >= 0
+                                                    ) "mp3" else "rife",
+                                                    request_type = "add",
+                                                    is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                                )
                                             )
-                                        )
-                                    } catch (_: Exception) {}
+                                        } catch (_: Exception) {
+                                        }
+                                    }
                                 }
+                            } catch (_: Exception) {
                             }
                         }
                     }
@@ -255,27 +260,30 @@ class NewProgramFragment : Fragment() {
                     var album: Album? = null
                     val tracks: ArrayList<Track> = ArrayList()
                     CoroutineScope(Dispatchers.IO).launch {
-                        program.records.forEach { r ->
-                            if (r >= 0) {
-                                mViewModel.getTrackById(r.toInt())
-                                    ?.let { track -> tracks.add(track) }
-                            }
-                        }
-                        tracks.forEach { t ->
-                            val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
-                            if (temp_album?.isUnlocked == false && album == null) {
-                                album = temp_album
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    startActivity(
-                                        NewPurchaseActivity.newIntent(
-                                            requireContext(),
-                                            temp_album.category_id,
-                                            temp_album.tier_id,
-                                            temp_album.id
-                                        )
-                                    )
+                        try {
+                            program.records.forEach { r ->
+                                if (r >= 0) {
+                                    mViewModel.getTrackById(r.toInt())
+                                        ?.let { track -> tracks.add(track) }
                                 }
                             }
+                            tracks.forEach { t ->
+                                val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
+                                if (temp_album?.isUnlocked == false && album == null) {
+                                    album = temp_album
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        startActivity(
+                                            NewPurchaseActivity.newIntent(
+                                                requireContext(),
+                                                temp_album.category_id,
+                                                temp_album.tier_id,
+                                                temp_album.id
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        } catch (_: Exception) {
                         }
                     }
                 }

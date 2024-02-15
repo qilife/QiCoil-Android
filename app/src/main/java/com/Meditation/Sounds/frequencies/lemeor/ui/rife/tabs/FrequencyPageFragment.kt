@@ -163,16 +163,7 @@ class FrequencyPageFragment : Fragment() {
             addItemDecoration(itemDecoration)
             itemAnimator = null
         }
-        mFrequencyAdapter.setCategories(
-            arrayListOf(
-                "All",
-                "5-500 hz",
-                "500-1k",
-                "1k-3k",
-                "3k-11k",
-                "11k-22k",
-            )
-        )
+        mFrequencyAdapter.setCategories(Constants.textHz)
         sbHz.getCurrent(minValue, maxValue, 0.5)
         resetTune()
         lastValidProgress = sbTune.progress

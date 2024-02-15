@@ -66,6 +66,8 @@ class SearchAdapter(private val onClick: (Search, Int) -> Unit) :
                     itemView.tvSearch.text = (item.obj as Program).name
                 } else if (item.obj is Track) {
                     itemView.tvSearch.text = (item.obj as Track).name
+                }else if(item.obj is Rife){
+                    itemView.tvSearch.text = (item.obj as Rife).title
                 }
             }
             itemView.tvSearch.setOnClickListener {
@@ -107,15 +109,19 @@ class SearchAdapter(private val onClick: (Search, Int) -> Unit) :
         view.apply {
             when (obj) {
                 is Album -> {
-                    tvTitle.text = "Albums"
+                    tvTitle.text = view.context.getString(R.string.tv_albums)
                     tvTitle.visibility = View.VISIBLE
                 }
                 is Track -> {
-                    tvTitle.text = "Frequencies"
+                    tvTitle.text = view.context.getString(R.string.tv_frequencies)
                     tvTitle.visibility = View.VISIBLE
                 }
                 is Program -> {
-                    tvTitle.text = "Programs"
+                    tvTitle.text = view.context.getString(R.string.tv_programs)
+                    tvTitle.visibility = View.VISIBLE
+                }
+                is Rife -> {
+                    tvTitle.text = view.context.getString(R.string.tv_rifes)
                     tvTitle.visibility = View.VISIBLE
                 }
                 else -> {
