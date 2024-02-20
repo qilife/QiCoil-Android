@@ -263,7 +263,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                 val eventValues = HashMap<String, Any>()
                 eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                 AppsFlyerLib.getInstance().logEvent(
-                    getApplicationContext(),
+                    applicationContext,
                     "purchase",
                     eventValues
                 )
@@ -275,7 +275,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                 val eventValues = HashMap<String, Any>()
                 eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                 AppsFlyerLib.getInstance().logEvent(
-                    getApplicationContext(),
+                    applicationContext,
                     "cancel_purchase",
                     eventValues
                 )
@@ -284,21 +284,23 @@ class NewPurchaseActivity : AppCompatActivity() {
         }
 
     private fun startConnection() {
-        billingClient?.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    Log.d("TAG_INAPP", "Setup Billing Done")
-                    // The BillingClient is ready. You can query purchases here.
-                    queryAvailableProducts()
+        try {
+            billingClient?.startConnection(object : BillingClientStateListener {
+                override fun onBillingSetupFinished(billingResult: BillingResult) {
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        Log.d("TAG_INAPP", "Setup Billing Done")
+                        // The BillingClient is ready. You can query purchases here.
+                        queryAvailableProducts()
+                    }
                 }
-            }
 
-            override fun onBillingServiceDisconnected() {
-                Log.e("TAG_INAPP", "Billing client Disconnected")
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-            }
-        })
+                override fun onBillingServiceDisconnected() {
+                    Log.e("TAG_INAPP", "Billing client Disconnected")
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                }
+            })
+        } catch (_: Exception) {}
     }
 
     private fun queryAvailableProducts() {

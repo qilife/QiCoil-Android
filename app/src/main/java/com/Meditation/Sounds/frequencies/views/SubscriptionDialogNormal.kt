@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -110,7 +111,11 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
         addListTitleHigher()
         initComponents()
         addListener()
-        mContext.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),Context.RECEIVER_EXPORTED)
+        }else{
+            mContext.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+        }
     }
 
     private fun addListTitleHigher() {

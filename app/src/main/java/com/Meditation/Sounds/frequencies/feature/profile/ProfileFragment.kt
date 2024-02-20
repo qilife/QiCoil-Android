@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.CountDownTimer
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -49,13 +50,24 @@ class ProfileFragment : BaseFragment(), ApiListener<Any> {
     }
 
     override fun initComponents() {
-        mContext?.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext?.registerReceiver(
+                broadcastReceiverSubscriptionController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext?.registerReceiver(
+                broadcastReceiverSubscriptionController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
+        }
 
         val userJson = SharedPreferenceHelper.getInstance().get(Constants.PREF_PROFILE)
         mUser = Gson().fromJson(userJson, Profile::class.java)
-        if (userJson!= null){
+        if (userJson != null) {
             mTvUser.visibility = View.VISIBLE
-        }else{
+        } else {
             mTvUser.visibility = View.GONE
         }
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "2832426a65d82d2c87b9ba53e9e7df25",
+    "identityHash": "5da0aed6b223430a315ff7da9c4f47b7",
     "entities": [
       {
         "tableName": "home",
@@ -212,7 +212,7 @@
       },
       {
         "tableName": "album",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `order_by` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, PRIMARY KEY(`id`, `category_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `order_by` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, `unlock_url` TEXT, `benefits_text` TEXT, PRIMARY KEY(`id`, `category_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -303,6 +303,18 @@
             "columnName": "isUnlocked",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "unlock_url",
+            "columnName": "unlock_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "benefits_text",
+            "columnName": "benefits_text",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -545,7 +557,7 @@
       },
       {
         "tableName": "rife",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` TEXT, `audio_folder` TEXT, `likes` INTEGER NOT NULL, `frequencies` TEXT, `subtype` TEXT, `type` TEXT, `CDate` TEXT, `mDate` TEXT, `playtime` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` TEXT, `audio_folder` TEXT, `likes` INTEGER NOT NULL, `frequencies` TEXT, `subtype` TEXT, `type` TEXT, `CDate` TEXT, `mDate` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -618,12 +630,6 @@
             "columnName": "mDate",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "playtime",
-            "columnName": "playtime",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -639,7 +645,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2832426a65d82d2c87b9ba53e9e7df25')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5da0aed6b223430a315ff7da9c4f47b7')"
     ]
   }
 }

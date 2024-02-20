@@ -44,7 +44,7 @@ class ProgramAdapter(
             R.string.total_time,
             getConvertedTime((program.records.size * 300000).toLong())
         )
-        if (program.name.uppercase() == FAVORITES.uppercase()) {
+        if (program.name.uppercase() == FAVORITES.uppercase() && program.favorited) {
             holder.itemView.item_program_delete.visibility = View.INVISIBLE
             holder.itemView.item_program_lock.visibility = View.INVISIBLE
             if (!program.isUnlocked){

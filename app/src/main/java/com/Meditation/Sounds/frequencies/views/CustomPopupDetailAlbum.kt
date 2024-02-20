@@ -1,9 +1,11 @@
 package com.Meditation.Sounds.frequencies.views
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -13,6 +15,7 @@ import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.models.Song
 import com.Meditation.Sounds.frequencies.utils.StringsUtils
 
+@SuppressLint("InflateParams")
 class CustomPopupDetailAlbum(var mContext: Context, var song: Song,
                              var duration: Long,
                              var mListener: IOnItemClickListener) : PopupWindow() {
@@ -43,8 +46,13 @@ class CustomPopupDetailAlbum(var mContext: Context, var song: Song,
         width = WindowManager.LayoutParams.WRAP_CONTENT
         height = WindowManager.LayoutParams.WRAP_CONTENT
         view = contentView
-        mContext.registerReceiver(broadcastReceiver, IntentFilter("BROADCAST_RELOAD_POPUP_ALBUM"))
-        mContext.registerReceiver(broadcastDismissReceiver, IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext.registerReceiver(broadcastReceiver, IntentFilter("BROADCAST_RELOAD_POPUP_ALBUM"), Context.RECEIVER_EXPORTED)
+            mContext.registerReceiver(broadcastDismissReceiver, IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM"), Context.RECEIVER_EXPORTED)
+        }else{
+            mContext.registerReceiver(broadcastReceiver, IntentFilter("BROADCAST_RELOAD_POPUP_ALBUM"))
+            mContext.registerReceiver(broadcastDismissReceiver, IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM"))
+        }
         initComponent(contentView)
     }
 

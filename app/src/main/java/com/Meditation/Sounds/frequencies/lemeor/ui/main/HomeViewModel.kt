@@ -109,7 +109,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
                                 Update(
                                     id = if (it.user_id.isEmpty()) -1 else it.id,
                                     name = it.name,
-                                    favorited = (it.name == FAVORITES),
+                                    favorited = (it.name.lowercase() == FAVORITES.lowercase() && it.favorited),
                                     tracks = it.records.toList()
                                 )
                             }

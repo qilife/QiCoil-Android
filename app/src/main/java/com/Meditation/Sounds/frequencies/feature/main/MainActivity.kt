@@ -4,7 +4,9 @@ package com.Meditation.Sounds.frequencies.feature.main
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.DownloadManager
+import android.app.NotificationManager
+import android.app.ProgressDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -269,10 +271,17 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Utils.createKeyHash(this)
-        registerReceiver(
-            broadcastReceiverPurchase,
-            IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                broadcastReceiverPurchase,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED), Context.RECEIVER_EXPORTED
+            )
+        } else {
+            registerReceiver(
+                broadcastReceiverPurchase,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
+        }
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         super.onCreate(savedInstanceState)
 
@@ -373,15 +382,29 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             }
         }
 
-        registerReceiver(
-            broadCastReceiverPlaylistController,
-            IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST)
-        )
-        registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        registerReceiver(
-            broadCastReDownloadMp3Files,
-            IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                broadCastReceiverPlaylistController,
+                IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST),
+                RECEIVER_EXPORTED
+            )
+            registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),RECEIVER_EXPORTED)
+            registerReceiver(
+                broadCastReDownloadMp3Files,
+                IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3),
+                RECEIVER_EXPORTED
+            )
+        }else{
+            registerReceiver(
+                broadCastReDownloadMp3Files,
+                IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3)
+            )
+            registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+            registerReceiver(
+                broadCastReceiverPlaylistController,
+                IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST)
+            )
+        }
 
 //        if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)
 //            && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)

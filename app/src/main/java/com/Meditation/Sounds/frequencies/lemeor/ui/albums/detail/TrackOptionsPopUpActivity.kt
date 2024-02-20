@@ -197,7 +197,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                                         id = it1.id,
                                         track_type = "rife",
                                         request_type = if (frequency != null) "remove" else "add",
-                                        is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                        is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
                                     )
                                 )
                             } catch (_: Exception) {
@@ -230,7 +230,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                                         id = it1.id,
                                         track_type = if (track?.id!!.toDouble() >= 0) "mp3" else "rife",
                                         request_type = if (track?.isFavorite!!) "remove" else "add",
-                                        is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                        is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
                                     )
                                 )
                             } catch (_: Exception) {

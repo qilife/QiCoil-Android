@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Handler
 import android.view.View
 import android.widget.Toast
@@ -55,8 +56,13 @@ class PlaylistFragment : BaseFragment() {
     override fun initLayout(): Int { return R.layout.fragment_playlist }
 
     override fun initComponents() {
-        mContext?.registerReceiver(broadcastReceiverPurchased, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
-        mContext?.registerReceiver(broadcastReceiver, IntentFilter(Constants.BROADCAST_ADD_SONG_TO_ALBUM))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext?.registerReceiver(broadcastReceiverPurchased, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),Context.RECEIVER_EXPORTED)
+            mContext?.registerReceiver(broadcastReceiver, IntentFilter(Constants.BROADCAST_ADD_SONG_TO_ALBUM),Context.RECEIVER_EXPORTED)
+        }else{
+            mContext?.registerReceiver(broadcastReceiverPurchased, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+            mContext?.registerReceiver(broadcastReceiver, IntentFilter(Constants.BROADCAST_ADD_SONG_TO_ALBUM))
+        }
         mViewModelPD = ViewModelProviders.of(this).get(PlaylistDetailViewModel::class.java)
 
         if (fromAlbumDetail) {

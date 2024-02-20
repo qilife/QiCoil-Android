@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.Meditation.Sounds.frequencies.lemeor.data.database.converters.*
+import com.Meditation.Sounds.frequencies.utils.Constants
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.*
@@ -83,7 +84,9 @@ data class Album(
     @TypeConverters(TrackConverter::class) var tracks: List<Track> = listOf(),
     @TypeConverters(IntConverter::class) var tag: ArrayList<Int>? = null,
     var isDownloaded: Boolean = false,
-    var isUnlocked: Boolean = false
+    var isUnlocked: Boolean = false,
+    var unlock_url: String?,
+    var benefits_text: String?,
 ) : Parcelable
 
 @Entity(tableName = "track")
@@ -148,10 +151,23 @@ data class Rife(
     @Ignore var playtime: Long = 0L,
     @Ignore var tag: String = "",
 ) : Parcelable {
-    fun getFrequency() = if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()
-    else frequencies!!.split('/')
+    fun getFrequency(): List<Float> {
+        return if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf<Float>()
+        else {
+            val fs = frequencies!!.split('/')
+            fs.filter { it.toDouble() <= Constants.optionsHz[0].second && it.toDouble() >= Constants.optionsHz[0].first }
+                .map {
+                    it.floatOrError()
+                }
+        }
+    }
 }
 
+fun String.floatOrError() = try {
+    toFloat()
+} catch (e: NumberFormatException) {
+    0F
+}
 
 data class Search(
     var id: Int,

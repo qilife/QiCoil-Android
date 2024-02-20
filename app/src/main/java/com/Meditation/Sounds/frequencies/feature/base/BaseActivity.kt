@@ -1,27 +1,27 @@
 package com.Meditation.Sounds.frequencies.feature.base
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.*
 import android.content.pm.ActivityInfo
-import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.exception.ApiException
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput
 import com.Meditation.Sounds.frequencies.feature.main.MainActivity
-import com.Meditation.Sounds.frequencies.tasks.UpdateDurationOfAllPlaylistTask
-import com.Meditation.Sounds.frequencies.utilbilling.*
+import com.Meditation.Sounds.frequencies.utilbilling.IabBroadcastReceiver
+import com.Meditation.Sounds.frequencies.utilbilling.Purchase
 import com.Meditation.Sounds.frequencies.utils.Constants
-import com.Meditation.Sounds.frequencies.utils.QcAlarmManager
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.SubscriptionDialogFlashSale
@@ -501,6 +501,7 @@ abstract class BaseActivity : AppCompatActivity(), IabBroadcastReceiver.IabBroad
         }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -508,13 +509,32 @@ abstract class BaseActivity : AppCompatActivity(), IabBroadcastReceiver.IabBroad
         mProgressDialog!!.setCancelable(false)
         mProgressDialog!!.setMessage(getString(R.string.txt_waiting))
 
-        registerReceiver(broadcastReceiverFlashSaleNotification, IntentFilter(Constants.ACTION_RECEIVE_FLASHSALE_NOTIFICATION))
-        registerReceiver(broadcastReceiverPurchase2, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
-
-        if (Utils.isTablet(this)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                broadcastReceiverFlashSaleNotification,
+                IntentFilter(Constants.ACTION_RECEIVE_FLASHSALE_NOTIFICATION),
+                RECEIVER_EXPORTED
+            )
+            registerReceiver(
+                broadcastReceiverPurchase2,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                RECEIVER_EXPORTED
+            )
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            registerReceiver(
+                broadcastReceiverFlashSaleNotification,
+                IntentFilter(Constants.ACTION_RECEIVE_FLASHSALE_NOTIFICATION)
+            )
+            registerReceiver(
+                broadcastReceiverPurchase2,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
+        }
+
+        requestedOrientation = if (Utils.isTablet(this)) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
         val layoutId = initLayout()
         if (layoutId != 0) {

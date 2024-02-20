@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.feature.album.detail.DescriptionAdapter
 import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
@@ -67,7 +66,6 @@ class NewAlbumDetailFragment : Fragment() {
     var mRife: Rife? = null
 
     private lateinit var mViewModel: NewAlbumDetailViewModel
-    private var mDescriptionAdapter: DescriptionAdapter? = null
     private var mTrackAdapter: AlbumTrackAdapter? = null
 
     private var mRifeAdapter: RifeAdapter? = null
@@ -192,15 +190,12 @@ class NewAlbumDetailFragment : Fragment() {
                 }
             }
         }
-
+        tvDescription.text = album.benefits_text
         album_back.setOnClickListener { onBackPressed() }
 
         album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
 
         loadImage(requireContext(), album_image, album)
-
-        mDescriptionAdapter = album.descriptions?.let { DescriptionAdapter(requireContext(), it) }
-        album_description_recycler.adapter = mDescriptionAdapter
 
         album_play.setOnClickListener {
             if (album.tracks.isNotEmpty()) {
@@ -266,9 +261,7 @@ class NewAlbumDetailFragment : Fragment() {
         album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
         album_image.setImageResource(R.drawable.frequency)
 
-        mDescriptionAdapter =
-            DescriptionAdapter(requireContext(), arrayListOf(rife.title))
-        album_description_recycler.adapter = mDescriptionAdapter
+        tvDescription.text = rife.description
 
         album_play.setOnClickListener {
             if (rife.getFrequency().isNotEmpty()) {
@@ -279,7 +272,7 @@ class NewAlbumDetailFragment : Fragment() {
             MusicRepository.Frequency(
                 index,
                 rife.title,
-                s.toFloat(),
+                s,
                 rife.id,
                 index,
                 false,
@@ -305,7 +298,7 @@ class NewAlbumDetailFragment : Fragment() {
                     )
                 } else {
                     Toast.makeText(
-                        requireContext(), "The Hz is exceeded 28,000", Toast.LENGTH_SHORT
+                        requireContext(), "The Hz is exceeded 22,000", Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -358,6 +351,7 @@ class NewAlbumDetailFragment : Fragment() {
                         album.order_by,
                         album.updated_at, null, listOf(), null,
                         isDownloaded = false, isUnlocked = false,
+                        album.unlock_url, album.benefits_text
                     )
 
                 }

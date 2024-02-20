@@ -276,16 +276,19 @@ class PlayerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         MediaButtonReceiver.handleIntent(mediaSession, intent)
-        if (intent?.hasExtra(EXTRA_PLAYLIST) == true) {
-            progressTimer.cancel()
-            progressTimer.purge()
+        try {
+            if (intent?.hasExtra(EXTRA_PLAYLIST) == true) {
+                progressTimer.cancel()
+                progressTimer.purge()
 //            val trackList =
 //                intent.getParcelableArrayListExtra<MusicRepository.Music>(EXTRA_PLAYLIST)
-            if (trackList?.isNotEmpty() == true) {
-                this.trackListService.clear()
-                this.trackListService.addAll(trackList!!)
-                musicRepository = MusicRepository(trackListService)
+                trackList?.let {
+                    this.trackListService.clear()
+                    this.trackListService.addAll(it)
+                    musicRepository = MusicRepository(this.trackListService)
+                }
             }
+        } catch (_: Exception) {
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -344,10 +347,18 @@ class PlayerService : Service() {
                             mediaSession.isActive = true
                             if(!isRegisteredBusyReceiver) {
                                 isRegisteredBusyReceiver = true
-                                registerReceiver(
-                                    becomingNoisyReceiver,
-                                    IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
-                                )
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    registerReceiver(
+                                        becomingNoisyReceiver,
+                                        IntentFilter(ACTION_AUDIO_BECOMING_NOISY),
+                                        Context.RECEIVER_EXPORTED
+                                    )
+                                }else{
+                                    registerReceiver(
+                                        becomingNoisyReceiver,
+                                        IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                                    )
+                                }
                             }
                             exoPlayer.playWhenReady = true
                         }
@@ -388,10 +399,18 @@ class PlayerService : Service() {
                         mediaSession.isActive = true
                         if(!isRegisteredBusyReceiver) {
                             isRegisteredBusyReceiver = true
-                            registerReceiver(
-                                becomingNoisyReceiver,
-                                IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
-                            )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                registerReceiver(
+                                    becomingNoisyReceiver,
+                                    IntentFilter(ACTION_AUDIO_BECOMING_NOISY),
+                                    Context.RECEIVER_EXPORTED
+                                )
+                            }else{
+                                registerReceiver(
+                                    becomingNoisyReceiver,
+                                    IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                                )
+                            }
                         }
                     }
 
@@ -561,9 +580,17 @@ class PlayerService : Service() {
                         exoPlayer.play()
                         if (!isRegisteredBusyReceiver) {
                             isRegisteredBusyReceiver = true
-                            registerReceiver(
-                                becomingNoisyReceiver, IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
-                            )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                registerReceiver(
+                                    becomingNoisyReceiver,
+                                    IntentFilter(ACTION_AUDIO_BECOMING_NOISY),
+                                    Context.RECEIVER_EXPORTED
+                                )
+                            } else {
+                                registerReceiver(
+                                    becomingNoisyReceiver, IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
+                                )
+                            }
                         }
                         mediaSession.isActive = true
                         mediaSession.setPlaybackState(

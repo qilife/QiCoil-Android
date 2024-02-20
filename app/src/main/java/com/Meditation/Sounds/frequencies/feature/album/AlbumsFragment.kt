@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.recyclerview.widget.GridLayoutManager
@@ -219,10 +220,18 @@ class AlbumsFragment : BaseFragment() {
         })
         mTabBasic.isSelected = true
 
-        mContext!!.registerReceiver(
-            broadcastReceiverPurchased,
-            IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext!!.registerReceiver(
+                broadcastReceiverPurchased,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                Context.RECEIVER_EXPORTED
+            )
+        }else {
+            mContext!!.registerReceiver(
+                broadcastReceiverPurchased,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
+        }
     }
 
     private var TAB_ALBUM = 0

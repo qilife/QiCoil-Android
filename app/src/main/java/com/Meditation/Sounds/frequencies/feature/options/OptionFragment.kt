@@ -1,6 +1,7 @@
 package com.Meditation.Sounds.frequencies.feature.options
 
 import android.content.*
+import android.os.Build
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -38,7 +39,15 @@ class OptionFragment : BaseFragment() {
     override fun initComponents() {
         val userJson = SharedPreferenceHelper.getInstance().get(Constants.PREF_PROFILE)
         mUser = Gson().fromJson(userJson, Profile::class.java)
-        mContext?.registerReceiver(broadcastReceiverReload, IntentFilter("RELOAD_VIEW"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext?.registerReceiver(
+                broadcastReceiverReload,
+                IntentFilter("RELOAD_VIEW"),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext?.registerReceiver(broadcastReceiverReload, IntentFilter("RELOAD_VIEW"))
+        }
 
         mBaseActivity = mContext as BaseActivity
 

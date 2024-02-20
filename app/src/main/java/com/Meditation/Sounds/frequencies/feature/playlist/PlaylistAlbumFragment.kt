@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
@@ -95,16 +96,17 @@ class PlaylistAlbumFragment : BaseFragment() {
         groupSearch.visibility = View.GONE
 
         linearLayoutManager = LinearLayoutManager(context)
-        mAdapterAlbum = PlaylistAlbumAdapter(activity!!, mAlbums)
-        mAdapterSong = AlbumDetailAdapter(mContext!!,mSong, mSongListener)
+        mAdapterAlbum = PlaylistAlbumAdapter(requireActivity(), mAlbums)
+        mAdapterSong = AlbumDetailAdapter(mContext!!, mSong, mSongListener)
         mAdapterSongAdvanced = AlbumDetailAdapter(mContext!!,mSongAdvanced, mSongListener)
         rcPlaylist.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rcPlaylist.isNestedScrollingEnabled = false
         rcPlaylist.adapter = mAdapterAlbum
         rcPlaylist.isNestedScrollingEnabled = false
 
-        mAdapterAlbumAdvanced = PlaylistAlbumAdapter(activity!!, mAlbumsAdvanced)
-        mRcPlaylistAdvanced.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        mAdapterAlbumAdvanced = PlaylistAlbumAdapter(requireActivity(), mAlbumsAdvanced)
+        mRcPlaylistAdvanced.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         mRcPlaylistAdvanced.isNestedScrollingEnabled = false
         mRcPlaylistAdvanced.adapter = mAdapterAlbumAdvanced
         mRcPlaylistAdvanced.isNestedScrollingEnabled = false
@@ -153,7 +155,18 @@ class PlaylistAlbumFragment : BaseFragment() {
             }
         }
 
-        mContext!!.registerReceiver(broadcastReceiverPlaylistAlbumController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext!!.registerReceiver(
+                broadcastReceiverPlaylistAlbumController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext!!.registerReceiver(
+                broadcastReceiverPlaylistAlbumController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
+        }
     }
 
     private fun checkPurchase(isAdvanced: Boolean) {

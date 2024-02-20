@@ -484,7 +484,7 @@ class ProgramDetailFragment : Fragment() {
                                             id = it.id,
                                             track_type = if (trackId >= 0) "mp3" else "rife",
                                             request_type = "remove",
-                                            is_favorite = it.name.uppercase() == FAVORITES.uppercase()
+                                            is_favorite = (it.name.uppercase() == FAVORITES.uppercase() && it.favorited)
                                         )
                                     )
                                 } catch (_: Exception) {

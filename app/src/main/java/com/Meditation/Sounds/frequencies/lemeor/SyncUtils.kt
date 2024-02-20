@@ -4,6 +4,9 @@ import android.util.Log
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.utils.Constants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 suspend fun syncTiers(db: DataBase, response: HomeResponse?) {
     Log.d("LOG", "syncTiers")
@@ -120,14 +123,14 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
 
                     if (r.updated_at > l.updated_at) {
                         db.albumDao().insert(Album(r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
-                                r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, l.isDownloaded, checkUnlocked(r.is_free)))
+                                r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, l.isDownloaded, checkUnlocked(r.is_free),r.unlock_url,r.benefits_text))
                     }
                 }
             }
 
             if (!isFind) {
                 db.albumDao().insert(Album(r.id, r.category_id, r.tier_id, r.name, r.image, r.audio_folder,
-                        r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, true, checkUnlocked(r.is_free)))
+                        r.is_free, r.order, r.order_by, r.updated_at, r.descriptions, r.tracks, r.tag, true, checkUnlocked(r.is_free),r.unlock_url,r.benefits_text))
             }
         }
 
@@ -241,7 +244,7 @@ fun syncPrograms(db: DataBase, response: HomeResponse?, user: User?) {
 
     if (responseData.isNotEmpty()) {
         db.programDao().clear()
-        val list = responseData.filter { it.name.uppercase() == FAVORITES.uppercase()}
+        val list = responseData.filter { it.name.uppercase() == FAVORITES.uppercase() && it.favorited}
         if (list.isEmpty()) {
             db.programDao().insert(
                 Program(

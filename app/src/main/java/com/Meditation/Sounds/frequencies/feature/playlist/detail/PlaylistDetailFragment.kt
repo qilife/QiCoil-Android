@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.ContentObserver
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -620,11 +621,45 @@ class PlaylistDetailFragment : BaseFragment(), Observer<Playlist?> , MusicServic
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mAudioManager = mContext!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        mContext?.registerReceiver(broadCastReceiverAddSong, IntentFilter(Constants.BROADCAST_ADD_SONG))
-        mContext!!.registerReceiver(broadCastReceiverPlaylist, IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST))
-        mContext!!.contentResolver.registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext?.registerReceiver(
+                broadCastReceiverAddSong,
+                IntentFilter(Constants.BROADCAST_ADD_SONG),
+                Context.RECEIVER_EXPORTED
+            )
+            mContext!!.registerReceiver(
+                broadCastReceiverPlaylist,
+                IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext?.registerReceiver(
+                broadCastReceiverAddSong,
+                IntentFilter(Constants.BROADCAST_ADD_SONG)
+            )
+            mContext!!.registerReceiver(
+                broadCastReceiverPlaylist,
+                IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST)
+            )
+        }
+        mContext!!.contentResolver.registerContentObserver(
+            android.provider.Settings.System.CONTENT_URI,
+            true,
+            mSettingsContentObserver
+        )
 
-        mContext!!.registerReceiver(broadCastBackAlbumFromPhone, IntentFilter(Constants.BROADCAST_BACK_ALBUM_FROM_PHONE))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext!!.registerReceiver(
+                broadCastBackAlbumFromPhone,
+                IntentFilter(Constants.BROADCAST_BACK_ALBUM_FROM_PHONE),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext!!.registerReceiver(
+                broadCastBackAlbumFromPhone,
+                IntentFilter(Constants.BROADCAST_BACK_ALBUM_FROM_PHONE)
+            )
+        }
     }
 
     override fun onDestroyView() {

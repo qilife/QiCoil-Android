@@ -230,7 +230,7 @@ class NewProgramFragment : Fragment() {
                                                             ?: 0.0).toDouble() >= 0
                                                     ) "mp3" else "rife",
                                                     request_type = "add",
-                                                    is_favorite = it1.name.uppercase() == FAVORITES.uppercase()
+                                                    is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
                                                 )
                                             )
                                         } catch (_: Exception) {

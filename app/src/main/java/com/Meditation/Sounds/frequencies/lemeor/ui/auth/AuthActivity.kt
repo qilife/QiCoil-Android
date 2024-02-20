@@ -126,7 +126,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                             val eventValues = HashMap<String, Any>()
                             eventValues.put(AFInAppEventParameterName.REVENUE, 0)
                             AppsFlyerLib.getInstance().logEvent(
-                                getApplicationContext(),
+                                applicationContext,
                                 "login",
                                 eventValues
                             )

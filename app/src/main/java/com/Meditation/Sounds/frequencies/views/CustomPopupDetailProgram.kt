@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -46,8 +47,27 @@ class CustomPopupDetailProgram(var mContext: Context, var isFromUser: Boolean,
         width = WindowManager.LayoutParams.WRAP_CONTENT
         height = WindowManager.LayoutParams.WRAP_CONTENT
         view = contentView
-        mContext.registerReceiver(broadcastReceiver, IntentFilter("BROADCAST_CHANGE_DURATION_PROGRAM"))
-        mContext.registerReceiver(broadcastDismissReceiver, IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mContext.registerReceiver(
+                broadcastReceiver,
+                IntentFilter("BROADCAST_CHANGE_DURATION_PROGRAM"),
+                Context.RECEIVER_EXPORTED
+            )
+            mContext.registerReceiver(
+                broadcastDismissReceiver,
+                IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM"),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext.registerReceiver(
+                broadcastReceiver,
+                IntentFilter("BROADCAST_CHANGE_DURATION_PROGRAM")
+            )
+            mContext.registerReceiver(
+                broadcastDismissReceiver,
+                IntentFilter("BROADCAST_DISMISS_POPUP_PROGRAM")
+            )
+        }
         initComponent(contentView)
     }
 

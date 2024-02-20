@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "09eadec8a41a0691d2312d42ba85a1db",
+    "identityHash": "13f4ee87c6cd7e2486060d5b04845a7a",
     "entities": [
       {
         "tableName": "home",
@@ -212,7 +212,7 @@
       },
       {
         "tableName": "album",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `order_by` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, PRIMARY KEY(`id`, `category_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `tier_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `audio_folder` TEXT NOT NULL, `is_free` INTEGER NOT NULL, `order` INTEGER NOT NULL, `order_by` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `descriptions` TEXT, `tracks` TEXT NOT NULL, `tag` TEXT, `isDownloaded` INTEGER NOT NULL, `isUnlocked` INTEGER NOT NULL, `unlock_url` TEXT NOT NULL, `benefits_text` TEXT NOT NULL, PRIMARY KEY(`id`, `category_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -302,6 +302,18 @@
             "fieldPath": "isUnlocked",
             "columnName": "isUnlocked",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unlock_url",
+            "columnName": "unlock_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "benefits_text",
+            "columnName": "benefits_text",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -633,7 +645,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '09eadec8a41a0691d2312d42ba85a1db')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '13f4ee87c6cd7e2486060d5b04845a7a')"
     ]
   }
 }

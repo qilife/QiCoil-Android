@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.WindowManager;
@@ -27,17 +26,14 @@ import com.Meditation.Sounds.frequencies.tasks.UpdatePlaylistInforVer10Task;
 import com.Meditation.Sounds.frequencies.utils.Constants;
 import com.Meditation.Sounds.frequencies.utils.FilesUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
+import com.appsflyer.AppsFlyerLib;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.appsflyer.AppsFlyerLib;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class QApplication extends MultiDexApplication implements ApiListener, Configuration.Provider {
@@ -50,6 +46,7 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     @Override
     public void onCreate() {
         super.onCreate();
+        getCodeCacheDir().setReadOnly();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         MultiDex.install(this);

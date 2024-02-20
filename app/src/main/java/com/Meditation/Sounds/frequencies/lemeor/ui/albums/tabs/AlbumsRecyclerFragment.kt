@@ -22,6 +22,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.PurchaseItemAlbumWebView
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.ItemOffsetDecoration
 import com.facebook.CallbackManager
@@ -29,7 +30,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.share.Sharer
 import com.facebook.share.widget.ShareDialog
-import kotlinx.android.synthetic.main.fragment_albums_category.albums_recycler_view
+import kotlinx.android.synthetic.main.fragment_albums_category.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,10 +181,21 @@ class AlbumsRecyclerFragment : Fragment() {
     }
 
     fun startAlbumDetails(album: Album) {
-        if (album.isUnlocked) {
+        if (!album.isUnlocked && album.unlock_url != null && album.unlock_url!!.isNotEmpty()) {
+            startActivity(
+                PurchaseItemAlbumWebView.newIntent(requireContext(), album.unlock_url!!)
+            )
+        } else if (album.isUnlocked) {
             mListener?.onStartAlbumDetail(album)
         } else {
-            startActivity(NewPurchaseActivity.newIntent(requireContext(), album.category_id, album.tier_id, album.id))
+            startActivity(
+                NewPurchaseActivity.newIntent(
+                    requireContext(),
+                    album.category_id,
+                    album.tier_id,
+                    album.id
+                )
+            )
         }
     }
 

@@ -86,10 +86,17 @@ class DownloadService : LifecycleService() {
         WorkManager.getInstance(application).cancelAllWorkByTag(DownLoadCourseAudioWorkManager.TAG)
         trackDao = DataBase.getInstance(applicationContext).trackDao()
         hasNetwork = Utils.isConnectedToNetwork(this)
-        registerReceiver(
-            networkChangeReceiver,
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                networkChangeReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), Context.RECEIVER_EXPORTED
+            )
+        } else {
+            registerReceiver(
+                networkChangeReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            )
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
