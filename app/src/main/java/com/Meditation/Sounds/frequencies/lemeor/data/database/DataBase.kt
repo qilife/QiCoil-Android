@@ -133,7 +133,6 @@ abstract class DataBase : RoomDatabase() {
                 DataBase::class.java,
                 BuildConfig.DB_NAME
             )
-                .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                 .build()
     }

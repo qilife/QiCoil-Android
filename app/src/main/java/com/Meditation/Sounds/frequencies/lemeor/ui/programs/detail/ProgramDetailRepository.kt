@@ -5,6 +5,9 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProgramDetailRepository(private val localData: DataBase) {
     fun getProgramById(id: Int): LiveData<Program>? {
@@ -15,6 +18,8 @@ class ProgramDetailRepository(private val localData: DataBase) {
         return localData.trackDao().getTrackById(id)
     }
     fun insertRife(rife: Rife) {
-        return localData.rifeDao().insert(rife)
+        CoroutineScope(Dispatchers.IO).launch {
+            localData.rifeDao().insert(rife)
+        }
     }
 }

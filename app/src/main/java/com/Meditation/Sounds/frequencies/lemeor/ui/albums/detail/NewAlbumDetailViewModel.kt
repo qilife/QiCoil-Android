@@ -2,9 +2,10 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NewAlbumDetailViewModel(private val repository: AlbumDetailRepository) : ViewModel() {
@@ -12,7 +13,9 @@ class NewAlbumDetailViewModel(private val repository: AlbumDetailRepository) : V
         return repository.getAlbumsById(id, category_id)
     }
 
-    fun addRife(rife: Rife) = repository.insertRife(rife)
-
-    fun getRife(rife: Rife) = repository.getRife(rife)
+    fun addRife(rife: Rife) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.insertRife(rife)
+        }
+    }
 }

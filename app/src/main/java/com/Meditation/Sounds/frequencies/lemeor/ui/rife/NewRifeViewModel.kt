@@ -3,7 +3,9 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.rife
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
+import kotlinx.coroutines.launch
 
 class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
@@ -16,9 +18,11 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
     fun getRifeList() = repository.getAllRife()
 
-    fun getRifeLocal(): List<Rife> {
-        listRife = repository.getListRife()
-        return listRife
+   fun getRifeLocal(onDone:(List<Rife>)-> Unit){
+       viewModelScope.launch {
+           listRife = repository.getListRife()
+           onDone.invoke(listRife)
+       }
     }
 
     fun search(keySearch: String) {
@@ -37,7 +41,7 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
     fun searchMain(keySearch: String) {
         if (keySearch == "" || keySearch.isEmpty()) {
-            _result.value = arrayListOf<Rife>()
+            _result.value = arrayListOf()
         } else {
             _result.value = listRife.filter { it.title.lowercase().contains(keySearch.lowercase()) }
                 .sortedBy { it.title.lowercase().indexOf(keySearch.lowercase()) != 0 }

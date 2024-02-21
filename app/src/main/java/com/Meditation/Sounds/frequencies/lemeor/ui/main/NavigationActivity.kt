@@ -560,7 +560,9 @@ class NavigationActivity : AppCompatActivity(),
                 }
                 if (user?.id != null) {
                     mViewModel.getRife().observe(this) {
-                        mNewRifeViewModel.getRifeLocal()
+                        mNewRifeViewModel.getRifeLocal{
+
+                        }
                     }
                 }
             }catch (_:Exception){}

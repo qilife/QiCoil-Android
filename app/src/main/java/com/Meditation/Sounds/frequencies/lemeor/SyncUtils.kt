@@ -167,7 +167,7 @@ suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
     }
 }
 
-fun syncTracks(db: DataBase, response: HomeResponse?) {
+suspend fun syncTracks(db: DataBase, response: HomeResponse?) {
     val localData = db.trackDao().getData().toMutableList()
     val responseData: ArrayList<Track> = arrayListOf()
 
@@ -236,7 +236,7 @@ fun syncTracks(db: DataBase, response: HomeResponse?) {
     }
 }
 
-fun syncPrograms(db: DataBase, response: HomeResponse?, user: User?) {
+suspend fun syncPrograms(db: DataBase, response: HomeResponse?, user: User?) {
 //    val localData = db.programDao().getData(false).toMutableList()
     val localMy = db.programDao().getAllData().toMutableList()
 //    val delete = db.programDao().getData(false).toMutableList()
@@ -340,7 +340,7 @@ fun checkUnlocked(isFree: Int): Boolean {
     return isFree == 1
 }
 
-fun syncRife(db: DataBase, response: RifeResponse?) {
+suspend fun syncRife(db: DataBase, response: RifeResponse?) {
     Log.d("LOG", "syncRife")
 
     val responseData = (response?.data ?: listOf()).toMutableList()

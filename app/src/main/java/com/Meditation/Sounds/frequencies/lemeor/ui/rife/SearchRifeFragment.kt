@@ -74,13 +74,15 @@ class SearchRifeFragment : Fragment() {
             adapter = mProgramAdapter
             addItemDecoration(itemDecoration)
         }
-        val list = mViewModel.getRifeLocal().sortedWith(compareBy<Rife> {
+        mViewModel.getRifeLocal{ data->
+            val list  = data.toMutableList().sortedWith(compareBy<Rife> {
             when {
                 it.title.lowercase().firstOrNull()?.isLetter() == true -> 0
                 else -> 1
             }
         }.thenBy { it.title.lowercase() })
-        mProgramAdapter.setListRife(list)
+            mProgramAdapter.setListRife(list)
+        }
     }
 
     private fun openAlbum(rife: Rife) {

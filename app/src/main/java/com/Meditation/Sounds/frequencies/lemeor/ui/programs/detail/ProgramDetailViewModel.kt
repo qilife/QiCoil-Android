@@ -15,6 +15,4 @@ class ProgramDetailViewModel (private val repository: ProgramDetailRepository) :
     suspend fun getTrackById(id: Int): Track? {
         return repository.getTrackById(id)
     }
-
-    fun addRife(rife: Rife) = repository.insertRife(rife)
 }

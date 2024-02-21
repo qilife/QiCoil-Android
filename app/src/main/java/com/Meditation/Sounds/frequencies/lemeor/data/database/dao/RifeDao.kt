@@ -8,23 +8,23 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 @Dao
 interface RifeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(rife: Rife?)
+    suspend fun insert(rife: Rife?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(list: List<Rife>?)
+    suspend fun insertAll(list: List<Rife>?)
 
     @Delete
-    fun deleteListRife(list: List<Rife>?)
+    suspend fun deleteListRife(list: List<Rife>?)
 
     @Query("SELECT * FROM rife ORDER BY `id` ASC")
     fun getListRife(): LiveData<List<Rife>>
 
     @Query("SELECT * FROM rife ORDER BY `id` ASC")
-    fun getData(): List<Rife>
+    suspend fun getData(): List<Rife>
 
     @Query("SELECT * FROM rife WHERE id=:id")
-    fun getRifeById(id: Int) : Rife?
+    suspend fun getRifeById(id: Int) : Rife?
 
     @Query("DELETE FROM rife")
-    fun clear()
+    suspend fun clear()
 }

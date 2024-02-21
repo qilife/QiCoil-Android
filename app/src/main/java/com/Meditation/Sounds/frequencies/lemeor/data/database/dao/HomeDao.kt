@@ -7,11 +7,11 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
 @Dao
 interface HomeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHome(home: HomeResponse)
+    suspend fun insertHome(home: HomeResponse)
 
     @Query("SELECT * FROM home")
     fun getHome() : LiveData<HomeResponse>
 
     @Query("DELETE FROM home")
-    fun clear()
+    suspend fun clear()
 }

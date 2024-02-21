@@ -14,10 +14,10 @@ class AlbumDetailRepository(private val localData: DataBase) {
         return localData.albumDao().getAlbumsByIdOnce(id, category_id)
     }
 
-    fun insertRife(rife: Rife){
+    suspend fun insertRife(rife: Rife){
         return localData.rifeDao().insert(rife)
     }
 
-    fun getRife(rife: Rife) = localData.rifeDao().getRifeById(rife.id)
+    suspend fun getRife(rife: Rife) = localData.rifeDao().getRifeById(rife.id)
 }
 
