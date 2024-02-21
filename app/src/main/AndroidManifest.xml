@@ -24,6 +24,9 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <uses-permission
         android:name="com.google.android.finsky.permision.BIND_GET_INSTALL_REFERRER_SERVICE"
@@ -139,23 +142,26 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".services.AlarmReceiver" />
-        <receiver android:name=".services.INotificationBroascast" />
+        <receiver
+            android:name=".services.AlarmReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".services.INotificationBroascast"
+            android:exported="false" />
 
         <service
             android:name=".lemeor.tools.downloader.DownloadService"
             android:enabled="true"
+            android:foregroundServiceType="dataSync"
             android:exported="false" />
         <service
             android:name=".lemeor.tools.player.PlayerService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </service>
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            tools:ignore="ExportedService" />
         <service
             android:name=".MusicService"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
 
 

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.os.Binder
 import android.os.Build
@@ -106,7 +107,11 @@ class DownloadService : LifecycleService() {
             .setContentTitle("Downloading files...")
             .setSmallIcon(R.mipmap.ic_launcher)
             .build()
-        startForeground(1, notification)
+        if(Build.VERSION.SDK_INT>=29){
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        }else{
+            startForeground(1, notification)
+        }
 
         val tracks: List<Track> = intent?.getParcelableArrayListExtra(EXTRA_TRACKS)!!
         val needToDownloadTrack =

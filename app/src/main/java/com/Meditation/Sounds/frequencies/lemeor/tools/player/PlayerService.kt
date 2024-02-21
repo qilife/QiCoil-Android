@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -196,13 +197,11 @@ class PlayerService : Service() {
                     getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(notificationChannel)
 
-                @Suppress("DEPRECATION") val notification =
-                    Builder(this, NOTIFICATION_DEFAULT_CHANNEL_ID)
-                        .setContentTitle("")
-                        .setNotificationSilent()
-                        .setContentText("").build()
-
-                startForeground(NOTIFICATION_ID, getNotification(currentState))
+                if(Build.VERSION.SDK_INT>=29){
+                    startForeground(NOTIFICATION_ID, getNotification(currentState), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                }else{
+                    startForeground(NOTIFICATION_ID, getNotification(currentState))
+                }
             } catch (_: Exception) {
 
             }
