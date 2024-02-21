@@ -96,12 +96,14 @@ class NewAlbumDetailFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
-        if (event is Rife) {
-            event.let { r ->
-                if (r.id == mRife!!.id) {
-                    program_time.text =
-                        getString(R.string.total_time, convertSecondsToTime(r.playtime))
-                }
+        event?.let { ev ->
+            if (ev is Rife) {
+                try {
+                    if (ev.id == mRife!!.id) {
+                        program_time.text =
+                            getString(R.string.total_time, convertSecondsToTime(ev.playtime))
+                    }
+                } catch (_: Exception) {}
             }
         }
     }

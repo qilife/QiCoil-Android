@@ -17,6 +17,7 @@
         app:fontText="fonts/HelveticaNeue_Bold.otf" />
     <com.Meditation.Sounds.frequencies.views.CustomFontTextView
         android:id="@+id/tvSearch"
+        android:paddingVertical="@dimen/indent_8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
