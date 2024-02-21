@@ -48,7 +48,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     @Override
     public void onCreate() {
         super.onCreate();
-        FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         MultiDex.install(this);
         INSTANCE = this;
@@ -58,14 +57,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
         if (version < APP_VERSION) {
             onUpgradeVersion(version, APP_VERSION);
             SharedPreferenceHelper.getInstance().setInt(SharedPreferenceHelper.SHARED_PREF_APP_VERSION, APP_VERSION);
-        }
-        if (Build.VERSION.SDK_INT >= 24) {
-            try {
-                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-                m.invoke(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         mStacksActivity = new ArrayList<>();
 

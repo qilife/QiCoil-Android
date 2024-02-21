@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.Meditation.Sounds.frequencies.BuildConfig
@@ -1384,7 +1385,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             request.setDescription("Downloading " + fileName)
             request.setVisibleInDownloadsUi(true)
 //            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Quantum/" + "/" + "Quantum_v1.0" + ".apk")
-            request.setDestinationUri(Uri.fromFile(apkFile))
+            request.setDestinationUri(FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), apkFile))
             refid = downloadManager!!.enqueue(request)
         }
     }
@@ -1393,7 +1394,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         if (mLocalApkPath != null) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(
-                Uri.fromFile(File(mLocalApkPath!!)),
+                FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), File(mLocalApkPath!!)),
                 "application/vnd.android.package-archive"
             )
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK; // without this flag android returned a intent error!
