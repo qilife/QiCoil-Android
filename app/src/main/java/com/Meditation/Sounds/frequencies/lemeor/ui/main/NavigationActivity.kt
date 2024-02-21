@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -73,11 +72,6 @@ import com.Meditation.Sounds.frequencies.tasks.GetFlashSaleTask
 import com.Meditation.Sounds.frequencies.utils.*
 import com.Meditation.Sounds.frequencies.utils.CopyAssets.copyAssetFolder
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.gson.Gson
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.android.synthetic.main.activity_navigation.*
@@ -196,9 +190,6 @@ class NavigationActivity : AppCompatActivity(),
     private var albumsSearch = MutableLiveData<List<Album>>()
     private var tracksSearch = MutableLiveData<List<Track>>()
     private var programsSearch = MutableLiveData<List<Program>>()
-    private var rifesSearch = MutableLiveData<List<Rife>>()
-
-    private var mCallbackManager: CallbackManager? = null
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEvent(event: Any?) {
@@ -532,23 +523,6 @@ class NavigationActivity : AppCompatActivity(),
                 )
             )
         }
-
-
-        mCallbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance()
-            .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult) {
-                    Log.d("FACEBOOK", "Login onSuccess")
-                }
-
-                override fun onCancel() {
-                    Log.d("FACEBOOK", "Login onCancel")
-                }
-
-                override fun onError(error: FacebookException) {
-                    Log.d("FACEBOOK", "Login onError")
-                }
-            })
         onButtonNavigationSelected()
     }
 
@@ -987,7 +961,6 @@ class NavigationActivity : AppCompatActivity(),
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mCallbackManager!!.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CODE_BEFORE_INSTALL -> autoInstallNewAPK()
             REQUEST_CODE_AFTER_INSTALL -> deleteAPKFolder()

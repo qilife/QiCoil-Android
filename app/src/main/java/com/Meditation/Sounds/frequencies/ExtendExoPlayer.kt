@@ -10,10 +10,8 @@ import com.Meditation.Sounds.frequencies.models.PlaylistItemSongAndSong
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.StringsUtils
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import com.google.zxing.common.StringUtils
 import java.io.File
 
 class ExtendExoPlayer(var context: Context) {

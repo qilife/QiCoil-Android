@@ -1,14 +1,7 @@
 package com.Meditation.Sounds.frequencies;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.StrictMode;
 import android.util.Log;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
@@ -27,17 +20,15 @@ import com.Meditation.Sounds.frequencies.utils.Constants;
 import com.Meditation.Sounds.frequencies.utils.FilesUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import com.appsflyer.AppsFlyerLib;
-import com.facebook.appevents.AppEventsLogger;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class QApplication extends MultiDexApplication implements ApiListener, Configuration.Provider {
     private static QApplication INSTANCE;
-    private int APP_VERSION = 12;
+    static int APP_VERSION = 12;
     private ArrayList<BaseActivity> mStacksActivity;
 
     public static boolean isActivityDownloadStarted = false;
@@ -46,7 +37,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     public void onCreate() {
         super.onCreate();
         getCodeCacheDir().setReadOnly();
-        AppEventsLogger.activateApp(this);
         MultiDex.install(this);
         INSTANCE = this;
         AppsFlyerLib.getInstance().init("aNPCN6auSrzidSGCeMrg9R", null, this);
@@ -57,27 +47,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
             SharedPreferenceHelper.getInstance().setInt(SharedPreferenceHelper.SHARED_PREF_APP_VERSION, APP_VERSION);
         }
         mStacksActivity = new ArrayList<>();
-
-
-//        new CountDownTimer(30000, 1000) {
-//
-//            public void onTick(long millisUntilFinished) {
-//              //  mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-//                //here you can have your logic to set text to edittext
-//            }
-//
-//            public void onFinish() {
-//                showAlertDialog(INSTANCE);
-//            }
-//
-//        }.start();
-        // showAlertDialog(INSTANCE);
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//               showAlertDialog(INSTANCE);
-//            }
-//        }, 30000);
     }
 
     public void addActivityToStack(BaseActivity activity) {
@@ -123,8 +92,11 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
         if (oldVersion < 12) {
             PlaylistDAO playlistDao = QFDatabase.getDatabase(this).playlistDAO();
             Playlist playlist = playlistDao.getFirstModifiedPlaylist();
-            if (playlist != null && playlist.getTitle() != null && playlist.getTitle().equalsIgnoreCase("Playlist 1")) {
-                playlistDao.updateFromUserFromId(playlist.getId(), 1);
+            if (playlist != null) {
+                playlist.getTitle();
+                if (playlist.getTitle().equalsIgnoreCase("Playlist 1")) {
+                    playlistDao.updateFromUserFromId(playlist.getId(), 1);
+                }
             }
         }
     }
@@ -152,32 +124,7 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
         }
 
     }
-
-    //Dialoge
-    public void showAlertDialog(Context context) {
-        /** define onClickListener for dialog */
-        DialogInterface.OnClickListener listener
-                = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // do some stuff eg: context.onCreate(super)
-            }
-        };
-
-        /** create builder for dialog */
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setCancelable(false)
-                .setMessage("Messag...")
-                .setTitle("Title")
-                .setPositiveButton("OK", listener);
-        /** create dialog & set builder on it */
-        Dialog dialog = builder.create();
-        /** this required special permission but u can use aplication context */
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        /** show dialog */
-        dialog.show();
-    }
-
+    
     @NonNull
     @Override
     public Configuration getWorkManagerConfiguration() {

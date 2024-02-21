@@ -55,11 +55,6 @@ import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
 import com.Meditation.Sounds.frequencies.views.EncryptingProgressDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
@@ -235,8 +230,6 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         mCountDownTimer!!.start()
     }
 
-    private var mCallbackManager: CallbackManager? = null
-
     override fun updateTitlePlayer(title: String, albumId: Long) {//, songId: Long
         item_track_name.text = title
         val albumDao = QFDatabase.getDatabase(this@MainActivity).albumDAO()
@@ -331,22 +324,6 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 deviceId
             )
         }
-
-        mCallbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance()
-            .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult) {
-                    Log.d("FACEBOOK", "Login onSuccess")
-                }
-
-                override fun onCancel() {
-                    Log.d("FACEBOOK", "Login onCancel")
-                }
-
-                override fun onError(error: FacebookException) {
-                    Log.d("FACEBOOK", "Login onError")
-                }
-            })
 
         mLoadingDialog = ProgressDialog(this)
         mLoadingDialog.setMessage(getString(R.string.msg_loading))
@@ -652,12 +629,6 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
         }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        mCallbackManager!!.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
