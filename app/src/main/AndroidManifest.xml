@@ -160,7 +160,11 @@
             android:name=".lemeor.tools.player.PlayerService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"
-            tools:ignore="ExportedService" />
+            tools:ignore="ExportedService" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
         <service
             android:name=".MusicService"
             android:foregroundServiceType="mediaPlayback"

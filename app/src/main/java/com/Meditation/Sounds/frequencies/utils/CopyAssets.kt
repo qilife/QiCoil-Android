@@ -1,9 +1,6 @@
 package com.Meditation.Sounds.frequencies.utils
 
-import android.content.Context
 import android.content.res.AssetManager
-import android.os.Environment
-import android.util.Log
 import java.io.*
 
 object CopyAssets {
@@ -19,7 +16,7 @@ object CopyAssets {
 
     fun AssetManager.copyAssetFolder(srcName: String, dstName: String): Boolean {
         return try {
-            var result = true
+            var result: Boolean
             val fileList = this.list(srcName) ?: return false
             if (fileList.isEmpty()) {
                 result = copyAssetFile(srcName, dstName)
@@ -41,9 +38,13 @@ object CopyAssets {
     }
 
     private fun AssetManager.copyAssetFile(srcName: String, dstName: String): Boolean {
+        val destFile = File(dstName)
+        if(destFile.exists()){
+            return true
+        }
         return try {
             val inStream = this.open(srcName)
-            val outFile = File(dstName)
+            val outFile = File("tmp_$dstName")
             val out: OutputStream = FileOutputStream(outFile)
             val buffer = ByteArray(1024)
             var read: Int
@@ -52,6 +53,7 @@ object CopyAssets {
             }
             inStream.close()
             out.close()
+            outFile.renameTo(destFile)
             true
         } catch (e: IOException) {
             e.printStackTrace()

@@ -31,10 +31,7 @@ import com.android.billingclient.api.*
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
 import kotlinx.android.synthetic.main.activity_new_purchase.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 
@@ -75,7 +72,7 @@ class NewPurchaseActivity : AppCompatActivity() {
         val tierDao = DataBase.getInstance(applicationContext).tierDao()
         val categoryDao = DataBase.getInstance(applicationContext).categoryDao()
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
 
             var screenName = ""
             val albumList = ArrayList<Album>()
@@ -84,12 +81,12 @@ class NewPurchaseActivity : AppCompatActivity() {
                 when (tierId) {
                     4 -> {
                         purchase_continue.text = getText(R.string.tv_apply_now)
-                    }else -> {
+                    }
+                    else -> {
                         purchase_continue.text = getText(R.string.tv_unlock_now)
                     }
                 }
-
-                albumDao.getAlbumsByTierId(tierId)?.let {
+                albumDao.getAlbumsByTierId(tierId).let {
                     if (tierId == 8) {
                         albumList.addAll(it.filter { it.category_id == categoryId })
                     } else {
@@ -99,22 +96,26 @@ class NewPurchaseActivity : AppCompatActivity() {
                 }
                 tierDao.getTierNameById(tierId)?.let { screenName = it }
             } else {
-                if (tierId == QUANTUM_TIER_ID) {
-                    albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
-                    tierDao.getTierNameById(tierId)?.let { screenName = it }
-                } else if (tierId == INNER_CIRCLE_TIER_ID) {
-                    purchase_continue.setText("APPLY NOW")
-                    albumDao.getAlbumsByTierId(tierId)?.let { albumList.addAll(it) }
-                    tierDao.getTierNameById(tierId)?.let { screenName = it }
-                } else {
-                    albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
-                    /* if (Id == 219 || Id == 220) {
-                         albumDao.getAlbumById(Id)?.let { albumList.add(it) }
-                     } else {
-                         albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
-                     }*/
+                when (tierId) {
+                    QUANTUM_TIER_ID -> {
+                        albumDao.getAlbumsByTierId(tierId).let { albumList.addAll(it) }
+                        tierDao.getTierNameById(tierId)?.let { screenName = it }
+                    }
+                    INNER_CIRCLE_TIER_ID -> {
+                        purchase_continue.text = "APPLY NOW"
+                        albumDao.getAlbumsByTierId(tierId).let { albumList.addAll(it) }
+                        tierDao.getTierNameById(tierId)?.let { screenName = it }
+                    }
+                    else -> {
+                        albumDao.getAlbumsByCategory(categoryId).let { albumList.addAll(it) }
+                        /* if (Id == 219 || Id == 220) {
+                                     albumDao.getAlbumById(Id)?.let { albumList.add(it) }
+                                 } else {
+                                     albumDao.getAlbumsByCategory(categoryId)?.let { albumList.addAll(it) }
+                                 }*/
 
-                    categoryDao.getCategoryNameById(categoryId)?.let { screenName = it }
+                        categoryDao.getCategoryNameById(categoryId)?.let { screenName = it }
+                    }
                 }
             }
 
@@ -126,7 +127,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                 val index = albumList.indexOfFirst {
                     it.id == Id
                 }
-                purchase_container.setCurrentItem(index)
+                purchase_container.currentItem = index
 
 
             }
@@ -395,7 +396,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                     val albumDao = DataBase.getInstance(applicationContext).albumDao()
 
 
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         when (mSkuDetails?.sku) {
 
                             QUANTUM_TIER_SUBS_MONTH,

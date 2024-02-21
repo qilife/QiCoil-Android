@@ -13,10 +13,7 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.loadImage
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import kotlinx.android.synthetic.main.item_program_track.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ProgramTrackAdapter(
     private val mContext: Context,
@@ -80,11 +77,11 @@ class ProgramTrackAdapter(
                 )
             }
 
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 val album = DataBase.getInstance(mContext).albumDao()
                     .getAlbumById(track.albumId, track.category_id)
 
-                CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
                     loadImage(mContext, holder.itemView.item_track_image, album!!)
                     holder.itemView.item_track_name.text = convertedTrackName(album, track)
                     holder.itemView.item_album_name.text = album.name

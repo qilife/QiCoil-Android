@@ -27,7 +27,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.asLiveData
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.QApplication
 import com.Meditation.Sounds.frequencies.R
@@ -78,7 +78,6 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -417,10 +416,7 @@ class NavigationActivity : AppCompatActivity(),
         getAllCategories()
 
         if (BuildConfig.IS_FREE) {
-            assets.copyAssetFolder(
-                "tracks",
-                getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator + "tracks"
-            )
+            copyAssetsFiles()
         }
 
         if (!preference(applicationContext).isLogged) {
@@ -431,23 +427,19 @@ class NavigationActivity : AppCompatActivity(),
             showDisclaimerDialog()
         }
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            FlowSearch.fromSearchView(album_search).debounce(500).map { text -> text.trim() }
-                .distinctUntilChanged().flowOn(Dispatchers.IO).collect { result ->
-                    run {
-                        if (result.isNotEmpty()) {
-                            album_search_clear.visibility = View.VISIBLE
-                            view_data.visibility = View.VISIBLE
-                            search(result)
-                        } else {
-                            clearSearch()
-                            album_search_clear.visibility = View.GONE
-                            view_data.visibility = View.GONE
-                            hideKeyboard(applicationContext, album_search)
-                        }
-                    }
+        FlowSearch.fromSearchView(album_search).debounce(500).map { text -> text.trim() }
+            .distinctUntilChanged().asLiveData().observe(this) {
+                if (it.isNotEmpty()) {
+                    album_search_clear.visibility = View.VISIBLE
+                    view_data.visibility = View.VISIBLE
+                    search(it)
+                } else {
+                    clearSearch()
+                    album_search_clear.visibility = View.GONE
+                    view_data.visibility = View.GONE
+                    hideKeyboard(applicationContext, album_search)
                 }
-        }
+            }
 
 //        album_search.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
 //            if (b) {
@@ -462,6 +454,15 @@ class NavigationActivity : AppCompatActivity(),
 
         orientationChangesUI(resources.configuration.orientation)
 
+    }
+
+    private fun copyAssetsFiles() {
+        CoroutineScope(Dispatchers.IO).launch {
+            assets.copyAssetFolder(
+                "tracks",
+                getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator + "tracks"
+            )
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -801,7 +802,7 @@ class NavigationActivity : AppCompatActivity(),
 
     private fun getAllCategories(){
         val categoryDao = DataBase.getInstance(applicationContext).categoryDao()
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val categories = categoryDao.getData()
             withContext(Dispatchers.Main) {
                 searchAdapter.setCategories(categories)

@@ -30,10 +30,10 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_purchase.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class PurchaseActivity : AppCompatActivity() {
 
@@ -310,13 +310,13 @@ class PurchaseActivity : AppCompatActivity() {
                         return@consumeAsync
                     }
 
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         categoryDao.updatePurchaseStatus(true, categoryId)
                         albumDao.setUnlockedStatusByCategoryId(true, categoryId, false)
 
                         val albums = albumDao.getUnlockedAlbums(true)
-                        albums?.forEach { a->
-                            a.tracks.forEach { t->
+                        albums.forEach { a ->
+                            a.tracks.forEach { t ->
                                 trackDao.setTrackUnlocked(true, t.id)
                             }
                         }

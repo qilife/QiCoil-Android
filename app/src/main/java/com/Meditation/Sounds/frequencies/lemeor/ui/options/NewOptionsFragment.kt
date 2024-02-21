@@ -123,7 +123,7 @@ class NewOptionsFragment : Fragment() {
                         } else {
                             val albumDao = DataBase.getInstance(requireContext()).albumDao()
 
-                            GlobalScope.launch {
+                            CoroutineScope(Dispatchers.Main).launch {
                                 subsList.forEach { purchase ->
                                     when (purchase.skus.get(0)) {
                                         SKU_RIFE_MONTHLY,
