@@ -5,9 +5,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput
 import com.Meditation.Sounds.frequencies.services.AlarmReceiver
 import com.google.gson.Gson
@@ -75,7 +73,6 @@ class QcAlarmManager{
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.M)
         @JvmStatic
         fun createNewAlarms(context: Context, currentCal: Calendar, alarmCal: Calendar, interval: Float, flashSaleType: Int) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -95,12 +92,7 @@ class QcAlarmManager{
             var dateFormat = SimpleDateFormat("hh::mm:ss")
             Log.d("MENDATE", ""  + flashSaleType + "-" + dateFormat.format(alarmCal.time))
             val pendingIntent = PendingIntent.getBroadcast(context, countAlarm, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, pendingIntent)
-            } else {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, (interval!! * 24 * 60 * 60 * 1000).toLong(), pendingIntent)
-                //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, (5 * 60 * 1000).toLong(), pendingIntent)
-            }
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmCal.timeInMillis, pendingIntent)
         }
 
         @JvmStatic

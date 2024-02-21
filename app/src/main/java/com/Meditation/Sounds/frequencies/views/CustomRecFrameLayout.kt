@@ -9,22 +9,17 @@ import android.widget.FrameLayout
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.R
 
-
 class CustomRecFrameLayout : FrameLayout {
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (Utils.isTablet(context)) {
             var height = heightMeasureSpec
-            height = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED)
+            height = View.MeasureSpec.makeMeasureSpec(height, MeasureSpec.UNSPECIFIED)
             setMeasuredDimension((height / 2 - context.resources.getDimension(R.dimen.item_offset)).toInt(), (height / 2 - context.resources.getDimension(R.dimen.item_offset)).toInt())
             if (childCount > 0) {
                 val wspec = View.MeasureSpec.makeMeasureSpec(measuredWidth , View.MeasureSpec.EXACTLY)

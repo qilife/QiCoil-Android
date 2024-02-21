@@ -27,7 +27,6 @@ import com.Meditation.Sounds.frequencies.utils.Constants;
 import com.Meditation.Sounds.frequencies.utils.FilesUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import com.appsflyer.AppsFlyerLib;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
 import java.io.File;
@@ -47,7 +46,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     public void onCreate() {
         super.onCreate();
         getCodeCacheDir().setReadOnly();
-        FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         MultiDex.install(this);
         INSTANCE = this;
@@ -57,14 +55,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
         if (version < APP_VERSION) {
             onUpgradeVersion(version, APP_VERSION);
             SharedPreferenceHelper.getInstance().setInt(SharedPreferenceHelper.SHARED_PREF_APP_VERSION, APP_VERSION);
-        }
-        if (Build.VERSION.SDK_INT >= 24) {
-            try {
-                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-                m.invoke(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         mStacksActivity = new ArrayList<>();
 

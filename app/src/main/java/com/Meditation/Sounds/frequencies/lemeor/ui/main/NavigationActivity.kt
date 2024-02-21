@@ -925,7 +925,7 @@ class NavigationActivity : AppCompatActivity(),
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         request.setAllowedOverRoaming(false)
         request.setTitle("[New APK] Quantum Frequencies")
-        request.setDestinationUri(Uri.fromFile(apkFile))
+        request.setDestinationUri(FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), apkFile))
         refId = downloadManager.enqueue(request)
 
         Toast.makeText(
@@ -974,7 +974,7 @@ class NavigationActivity : AppCompatActivity(),
             } else {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(
-                    Uri.fromFile(File(mLocalApkPath!!)),
+                    FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), File(mLocalApkPath!!)),
                     "application/vnd.android.package-archive"
                 )
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
