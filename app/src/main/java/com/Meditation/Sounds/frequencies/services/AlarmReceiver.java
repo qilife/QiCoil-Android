@@ -8,12 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-
 import android.os.Build;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.Meditation.Sounds.frequencies.R;
 import com.Meditation.Sounds.frequencies.api.models.GetFlashSaleOutput;
@@ -25,6 +23,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by DC-MEN on 4/15/2018.
@@ -37,7 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int type = intent.getIntExtra(Constants.ETRAX_FLASH_SALE_TYPE, 0);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh::mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh::mm:ss", Locale.ENGLISH);
         Log.d("MENDATE", "AlarmReceiver-" + type + "-" + dateFormat.format(Calendar.getInstance().getTime()));
         String jsonFlashSale = SharedPreferenceHelper.getInstance().get(Constants.PREF_FLASH_SALE);
         GetFlashSaleOutput flashSale = new Gson().fromJson(jsonFlashSale, GetFlashSaleOutput.class);
@@ -108,10 +107,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void sendNotificaiton(Context context, String message, int type) {
+        String channelId = "Qi Coil Channel ID";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(message)
@@ -122,7 +121,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intentMain = new Intent(context, INotificationBroascast.class);
         intentMain.setAction(Long.toString(System.currentTimeMillis()));
         intentMain.putExtra(Constants.ETRAX_FLASH_SALE_TYPE, type);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intentMain, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intentMain, Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -130,12 +129,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             countNotification = 1;
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            String channelId = "Qi Coil Channel ID";
-            NotificationChannel channel = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                channel = new NotificationChannel(channelId,
-                        "Qi Coil Channel", NotificationManager.IMPORTANCE_DEFAULT);
-            }
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Qi Coil Channel", NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(channel);
             mBuilder.setChannelId(channelId);
         }

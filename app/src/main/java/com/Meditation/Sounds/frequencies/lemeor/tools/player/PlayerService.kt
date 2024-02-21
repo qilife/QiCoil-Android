@@ -1,6 +1,10 @@
 package com.Meditation.Sounds.frequencies.lemeor.tools.player
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,7 +13,14 @@ import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.media.AudioManager.*
+import android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY
+import android.media.AudioManager.AUDIOFOCUS_GAIN
+import android.media.AudioManager.AUDIOFOCUS_LOSS
+import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
+import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK
+import android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+import android.media.AudioManager.OnAudioFocusChangeListener
+import android.media.AudioManager.STREAM_MUSIC
 import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Binder
@@ -19,17 +30,32 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.Toast
-import androidx.core.app.NotificationCompat.*
+import androidx.core.app.NotificationCompat.Action
+import androidx.core.app.NotificationCompat.Builder
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.media.app.NotificationCompat
 import androidx.media.session.MediaButtonReceiver
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.currentPosition
+import com.Meditation.Sounds.frequencies.lemeor.duration
+import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getTrackUrl
+import com.Meditation.Sounds.frequencies.lemeor.isMultiPlay
+import com.Meditation.Sounds.frequencies.lemeor.isUserPaused
+import com.Meditation.Sounds.frequencies.lemeor.max
+import com.Meditation.Sounds.frequencies.lemeor.trackList
 import com.Meditation.Sounds.frequencies.utils.Utils
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -43,7 +69,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 
 class PlayerService : Service() {
@@ -78,7 +105,7 @@ class PlayerService : Service() {
             applicationContext,
             0,
             mediaButtonIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
         )
         MediaSessionCompat(this, "PlayerService", null, pendingIntent).apply {
             setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
@@ -287,7 +314,7 @@ class PlayerService : Service() {
                     }
 
                     mediaSession.isActive = true
-                    if(!isRegisteredBusyReceiver) {
+                    if (!isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = true
                         registerReceiver(
                             becomingNoisyReceiver,
@@ -312,7 +339,7 @@ class PlayerService : Service() {
                     playPosition = exoPlayer.currentPosition
 
                     exoPlayer.playWhenReady = false
-                    if(isRegisteredBusyReceiver) {
+                    if (isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = false
                         unregisterReceiver(becomingNoisyReceiver)
                     }
@@ -332,7 +359,7 @@ class PlayerService : Service() {
             override fun onStop() {
                 if (exoPlayer.playWhenReady) {
                     exoPlayer.playWhenReady = false
-                    if(isRegisteredBusyReceiver) {
+                    if (isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = false
                         unregisterReceiver(becomingNoisyReceiver)
                     }
@@ -449,7 +476,7 @@ class PlayerService : Service() {
                         exoPlayer.seekTo(playPosition)
                     }
                     exoPlayer.play()
-                    if(!isRegisteredBusyReceiver) {
+                    if (!isRegisteredBusyReceiver) {
                         isRegisteredBusyReceiver = true
                         registerReceiver(
                             becomingNoisyReceiver,
@@ -487,7 +514,7 @@ class PlayerService : Service() {
                 metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
                 metadataBuilder.putLong(
                     MediaMetadataCompat.METADATA_KEY_DURATION,
-                    track.duration.takeIf { it>0 }?: exoPlayer.duration
+                    track.duration.takeIf { it > 0 } ?: exoPlayer.duration
                 )
                 mediaSession.setMetadata(metadataBuilder.build())
 //                max.postValue(track.duration)
@@ -531,7 +558,7 @@ class PlayerService : Service() {
                 } else {
                     mediaSessionCallback.onSkipToNext()
                 }
-            }else if (state == ExoPlayer.STATE_READY) {
+            } else if (state == ExoPlayer.STATE_READY) {
                 max.postValue(exoPlayer.duration)
                 metadataBuilder.putLong(
                     MediaMetadataCompat.METADATA_KEY_DURATION,

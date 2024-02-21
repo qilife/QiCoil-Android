@@ -12,7 +12,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.MediaController
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -50,8 +49,8 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
         return inflater.inflate(R.layout.fragment_new_videos, container, false)
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("SetJavaScriptEnabled")
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -63,7 +62,6 @@ class NewVideosFragment : Fragment(), YouTubePlayer.OnInitializedListener {
 
         mPlaylistAdapter = PlaylistAdapter(requireContext(), mListPlaylist)
         mPlaylistAdapter!!.setOnClickListener(object : PlaylistAdapter.Listener {
-            @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             override fun onClickItem(playlist: Playlist, i: Int) {
                 mPlaylistAdapter!!.setSelected(i)
                 getJsonPlaylist(getString(R.string.video_url, playlist.youtube_id, API_KEY+Constants.API_KEY))
