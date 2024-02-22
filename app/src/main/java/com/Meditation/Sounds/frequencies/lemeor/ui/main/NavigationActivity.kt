@@ -63,6 +63,7 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.PurchaseItemAlbumWebView
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.rife.NewRifeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.videos.NewVideosFragment
@@ -821,7 +822,11 @@ class NavigationActivity : AppCompatActivity(),
     }
 
     private fun startAlbumDetails(album: Album) {
-        if (album.isUnlocked) {
+        if (!album.isUnlocked && album.unlock_url != null && album.unlock_url!!.isNotEmpty()) {
+            startActivity(
+                PurchaseItemAlbumWebView.newIntent(this, album.unlock_url!!)
+            )
+        } else if (album.isUnlocked) {
             supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(

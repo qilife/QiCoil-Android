@@ -36,7 +36,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     @Override
     public void onCreate() {
         super.onCreate();
-        getCodeCacheDir().setReadOnly();
         MultiDex.install(this);
         INSTANCE = this;
         AppsFlyerLib.getInstance().init("aNPCN6auSrzidSGCeMrg9R", null, this);

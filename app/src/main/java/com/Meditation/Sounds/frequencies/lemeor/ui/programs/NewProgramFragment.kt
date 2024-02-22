@@ -94,29 +94,6 @@ class NewProgramFragment : Fragment() {
                 }
             }
             program.isUnlocked = isUnlocked
-//            if(program.name.uppercase() == FAVORITES.uppercase()){
-//                program.isUnlocked = true
-//            } else {
-//                val tracks: ArrayList<Track> = ArrayList()
-//
-//                program.records.forEach { r ->
-//                    if (r >= 0) {
-//                        mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
-//                    }
-//                }
-//
-//                var isUnlocked = true
-//
-//                tracks.forEach { t ->
-//
-//                    val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id)
-//
-//                    if (temp_album?.isUnlocked == false) {
-//                        isUnlocked = false
-//                    }
-//                }
-//                program.isUnlocked = isUnlocked
-//            }
         }
         return programList
     }

@@ -52,7 +52,7 @@ class TrialActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val albumList = ArrayList<Album>()
-            albumDao.getAllAlbums()?.let { albumList.addAll(it) }
+            albumDao.getAllAlbums().let { albumList.addAll(it) }
             var isAllPurchase = true
             for (album in albumList) {
                 if(!album.isUnlocked) {

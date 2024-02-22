@@ -152,21 +152,27 @@ data class Rife(
     @Ignore var tag: String = "",
 ) : Parcelable {
     fun getFrequency(): List<Float> {
-        return if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf<Float>()
+        return if (frequencies?.isEmpty() == true || frequencies == "") arrayListOf()
         else {
             val fs = frequencies!!.split('/')
-            fs.filter { it.toDouble() <= Constants.optionsHz[0].second && it.toDouble() >= Constants.optionsHz[0].first }
+            fs.filter { it.doubleOrZero() <= Constants.optionsHz[0].second && it.doubleOrZero() >= Constants.optionsHz[0].first }
                 .map {
-                    it.floatOrError()
+                    it.floatOrZero()
                 }
         }
     }
 }
 
-fun String.floatOrError() = try {
+fun String.floatOrZero() = try {
     toFloat()
 } catch (e: NumberFormatException) {
     0F
+}
+
+fun String.doubleOrZero() = try {
+    toDouble()
+} catch (e: NumberFormatException) {
+    0.0
 }
 
 data class Search(

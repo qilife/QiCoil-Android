@@ -44,7 +44,7 @@ object CopyAssets {
         }
         return try {
             val inStream = this.open(srcName)
-            val outFile = File("tmp_$dstName")
+            val outFile = File(dstName)
             val out: OutputStream = FileOutputStream(outFile)
             val buffer = ByteArray(1024)
             var read: Int
@@ -53,7 +53,6 @@ object CopyAssets {
             }
             inStream.close()
             out.close()
-            outFile.renameTo(destFile)
             true
         } catch (e: IOException) {
             e.printStackTrace()

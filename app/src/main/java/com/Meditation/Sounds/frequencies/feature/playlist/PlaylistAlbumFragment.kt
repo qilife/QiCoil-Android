@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.feature.playlist
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -43,6 +44,7 @@ class PlaylistAlbumFragment : BaseFragment() {
 
     var baseActivity: BaseActivity? = null
     private val broadcastReceiverPlaylistAlbumController = object : BroadcastReceiver() {
+        @SuppressLint("NotifyDataSetChanged")
         override fun onReceive(p0: Context?, intent: Intent?) {
             if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
                 for (i in 0..mAdapterAlbum.mData.size - 1) {
@@ -54,7 +56,7 @@ class PlaylistAlbumFragment : BaseFragment() {
             mAdapterAlbum.notifyDataSetChanged()
 
             if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)) {
-                for (i in 0..mAdapterAlbumAdvanced.mData.size - 1) {
+                for (i in 0 until mAdapterAlbumAdvanced.mData.size) {
                     if (i < mAdapterAlbumAdvanced.mData.size){
                         mAdapterAlbumAdvanced.mData[i].isPurchase = true
                     }
@@ -83,7 +85,6 @@ class PlaylistAlbumFragment : BaseFragment() {
         }
 
         override fun onPlayItemSong(song: Song) {
-            TODO("Not yet implemented")
         }
     }
 
@@ -169,13 +170,14 @@ class PlaylistAlbumFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun checkPurchase(isAdvanced: Boolean) {
         if (isAdvanced) {
-            for (i in 0..mAdapterAlbumAdvanced.mData.size - 1) {
+            for (i in 0 until mAdapterAlbumAdvanced.mData.size) {
                 mAdapterAlbumAdvanced.mData[i].isPurchase = SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
             }
         } else {
-            for (i in 0..mAdapterAlbum.mData.size - 1) {
+            for (i in 0 until mAdapterAlbum.mData.size) {
                 if (mAdapterAlbum.mData.get(i).album_priority < 3) {
                     mAdapterAlbum.mData[i].isPurchase = true
                 } else {
@@ -197,6 +199,7 @@ class PlaylistAlbumFragment : BaseFragment() {
         mAdapterAlbum.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun searchTracks() {
         val database = QFDatabase.getDatabase(mContext!!.applicationContext)
         var positionPurchase = 2
@@ -211,7 +214,7 @@ class PlaylistAlbumFragment : BaseFragment() {
         }
 
         val albumIds = IntArray(positionPurchase)
-        for (i in 0..mAdapterAlbum.mData.size - 1) {
+        for (i in 0 until mAdapterAlbum.mData.size) {
             if (i < positionPurchase) {
                 albumIds[i] = mAdapterAlbum.mData[i].id.toInt()
             } else {
@@ -231,7 +234,7 @@ class PlaylistAlbumFragment : BaseFragment() {
             positionPurchaseAdvanced = mAdapterAlbumAdvanced.mData.size
         }
         val albumAdvancedIds = IntArray(positionPurchaseAdvanced)
-        for (i in 0..mAdapterAlbumAdvanced.mData.size - 1) {
+        for (i in 0 until mAdapterAlbumAdvanced.mData.size) {
             if (i < positionPurchaseAdvanced) {
                 albumAdvancedIds[i] = mAdapterAlbumAdvanced.mData[i].id.toInt()
             } else {
@@ -310,6 +313,7 @@ class PlaylistAlbumFragment : BaseFragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (edtSearch.text.isEmpty()) {
                     mHandler.removeCallbacksAndMessages(null)
