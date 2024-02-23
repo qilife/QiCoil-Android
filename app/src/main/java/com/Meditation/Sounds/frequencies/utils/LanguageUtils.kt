@@ -6,6 +6,8 @@ import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.Meditation.Sounds.frequencies.R
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
 import com.Meditation.Sounds.frequencies.models.Language
 import java.util.*
 
@@ -48,21 +50,11 @@ class LanguageUtils {
         }
 
         fun changeLanguage(context: Context, codeLanguage: String) {
-//            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(codeLanguage)
-//            AppCompatDelegate.setApplicationLocales(appLocale)
+            PreferenceHelper.preference(context).codeLanguage = codeLanguage
             val locale = Locale(codeLanguage)
             Locale.setDefault(locale)
-            val res = context.resources
-            val dm: DisplayMetrics = res.displayMetrics
-            val conf = res.configuration
-            conf.locale = locale
-            res.updateConfiguration(conf, dm)
-        }
-
-        fun getLocaleList(context: Context): LocaleListCompat {
-            return LocaleListCompat.forLanguageTags(getLanguages(context).joinToString(",") {
-                it.code
-            })
+            val otherLanguages = getLanguages(context).filter { it.code!= codeLanguage }.joinToString(",")
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("$codeLanguage,$otherLanguages"))
         }
     }
 }

@@ -36,7 +36,7 @@ android {
             }
         }
         signingConfig signingConfigs.qicoilrelease
-        resConfigs 'en', 'es', 'fr', 'zh'
+        resourceConfigurations += ['en', 'es', 'fr', 'zh']
     }
 
     flavorDimensions "default"
