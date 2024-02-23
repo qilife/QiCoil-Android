@@ -264,6 +264,17 @@
                             font:fontText="fonts/MyriadPro_Semibold.otf" />
                     </RelativeLayout>
 
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/white"
+                        android:popupBackground="@null"
+                        android:dropDownVerticalOffset="@dimen/image_size_25"
+                        android:spinnerMode="dropdown"
+                        tools:listitem="@layout/item_language_spinner" />
+
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

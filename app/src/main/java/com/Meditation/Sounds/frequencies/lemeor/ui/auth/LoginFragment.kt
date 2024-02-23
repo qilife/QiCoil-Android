@@ -9,11 +9,19 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.exception.ApiException
 import com.Meditation.Sounds.frequencies.lemeor.showAlert
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
+import com.Meditation.Sounds.frequencies.models.Language
 import com.Meditation.Sounds.frequencies.utils.Constants
+import com.Meditation.Sounds.frequencies.utils.LanguageUtils
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -37,17 +45,27 @@ class LoginFragment : Fragment() {
     }
 
     private var mListener: OnLoginListener? = null
-    var RC_SIGN_IN = 100
-    var RC_FB_SIGN_IN = 200
-    var id = ""
-    var firstName = ""
-    var middleName = ""
-    var lastName = ""
-    var name = ""
-    var picture = ""
-    var email = ""
-    var accessToken = ""
+    private var RC_SIGN_IN = 100
+    private var id = ""
+    private var name = ""
+    private var email = ""
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+
+
+    private val languages  by lazy {
+       LanguageUtils.getLanguages(requireContext()).toMutableList().sortedBy {
+            if (it.code == PreferenceHelper.preference(requireContext()).codeLanguage) 0 else 1
+        }
+    }
+
+    private val languageAdapter by lazy{
+        CustomSpinnerAdapter(
+            requireActivity(),
+            languages
+        )
+    }
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnLoginListener) {
@@ -77,29 +95,12 @@ class LoginFragment : Fragment() {
         firebaseAnalytics = Firebase.analytics
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
-        if (com.Meditation.Sounds.frequencies.BuildConfig.DEBUG) {
-//            mEdEmailSignIn.setText("tester03@yopmail.com")
-//            mEdPasswordSignIn.setText("123123")
-//        mEdEmailSignIn.setText("manufacturing@qilifestore.com")
-//        mEdPasswordSignIn.setText("12345678")
-//        mEdPasswordSignIn.setText("1234test")
-//        mEdEmailSignIn.setText("pongpopong@gmail.com")
-//        mEdPasswordSignIn.setText("goldfish")
-//            mEdEmailSignIn.setText("janetshelton1913@gmail.com")
-//            mEdPasswordSignIn.setText("12345678")
-//        mEdEmailSignIn.setText("lailani.raphaell@gmail.com")
-//        mEdPasswordSignIn.setText("lailani1234")
-//            mEdEmailSignIn.setText("tester02@yopmail.com")
-//             mEdPasswordSignIn.setText("12345678")
-        }
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
-        val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
-
-        val account = GoogleSignIn.getLastSignedInAccount(activity)
+        val googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         mBtnSignIn.setOnClickListener {
             if (Utils.isConnectedToNetwork(requireContext())) {
@@ -124,10 +125,30 @@ class LoginFragment : Fragment() {
         }
 
         rlgoogle_signin.setOnClickListener {
-            val signInIntent = mGoogleSignInClient.signInIntent
+            val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
+
+        spLanguage.adapter =languageAdapter
+        spLanguage.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+
+                val lang: Language = languages[position]
+                if (lang.code != PreferenceHelper.preference(requireContext()).codeLanguage) {
+                    LanguageUtils.changeLanguage(requireContext(), lang.code)
+                    PreferenceHelper.preference(requireContext()).codeLanguage = lang.code
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
     }
 
     private fun isValidLogin(): Boolean {
@@ -190,4 +211,32 @@ class LoginFragment : Fragment() {
         }
     }
 
+}
+
+class CustomSpinnerAdapter(context: Context, list: List<Language>) :
+    ArrayAdapter<Language>(context, 0, list) {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return initView(position, convertView, parent)
+    }
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return initView(position, convertView, parent)
+    }
+
+    private fun initView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var convertViewNew = convertView
+        if (convertViewNew == null) {
+            convertViewNew = LayoutInflater.from(context)
+                .inflate(R.layout.item_language_spinner, parent, false)
+        }
+        val textViewName = convertViewNew!!.findViewById<TextView>(R.id.tvCountries)
+        val imageView: AppCompatImageView = convertViewNew.findViewById(R.id.imgFlag)
+        val currentItem = getItem(position)
+
+
+        textViewName.text = currentItem?.name ?: "English"
+        imageView.setImageResource(currentItem?.image ?: R.drawable.ic_england_flag)
+        return convertViewNew
+    }
 }

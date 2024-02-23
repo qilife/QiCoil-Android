@@ -1,9 +1,12 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.auth
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -38,9 +41,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
 
     private lateinit var mViewModel: AuthViewModel
 
+    @SuppressLint("MissingSuperCall")
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +56,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 ApiHelper(RetrofitBuilder(applicationContext).apiService),
                 DataBase.getInstance(applicationContext)
             )
-        ).get(AuthViewModel::class.java)
-
+        )[AuthViewModel::class.java]
         replaceFragment(LoginFragment())
     }
 
@@ -70,18 +72,17 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun saveAuthData(resource: Resource<AuthResponse>) {
         preference(applicationContext).isLogged = true
         preference(applicationContext).token = resource.data?.token
         saveUser(applicationContext, resource.data?.user)
         resource.data?.user?.let { user -> updateUnlocked(applicationContext, user, true) }
-        Handler().postDelayed({ EventBus.getDefault().post(SyncDataEvent)}, 2000)
+        EventBus.getDefault().post("showDisclaimer")
+        Handler(Looper.getMainLooper()).postDelayed({ EventBus.getDefault().post(SyncDataEvent)}, 2000)
     }
 
-    @Suppress("DEPRECATION")
     private fun sendDataWithDelay() {
-        Handler().postDelayed({sendData()}, 3000)
+        Handler(Looper.getMainLooper()).postDelayed({sendData()}, 3000)
     }
 
     private fun sendData() {
@@ -92,7 +93,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
             CoroutineScope(Dispatchers.IO).launch {
                 val albumDao = DataBase.getInstance(applicationContext).albumDao()
 
-                albumDao.getAllAlbums()?.find { !it.isUnlocked }?.let {
+                albumDao.getAllAlbums().find { !it.isUnlocked }?.let {
                     runOnUiThread { openAd() }
                 }
             }
@@ -109,9 +110,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
         if (email == "guest") {
             sendDataWithDelay()
             val eventValues = HashMap<String, Any>()
-            eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+            eventValues[AFInAppEventParameterName.REVENUE] = 0
             AppsFlyerLib.getInstance().logEvent(
-                getApplicationContext(),
+                applicationContext,
                 "guest_login",
                 eventValues
             )
@@ -124,7 +125,7 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                             Constants.isGuestLogin = false
                             sendDataWithDelay()
                             val eventValues = HashMap<String, Any>()
-                            eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                            eventValues[AFInAppEventParameterName.REVENUE] = 0
                             AppsFlyerLib.getInstance().logEvent(
                                 applicationContext,
                                 "login",
@@ -163,9 +164,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                         Constants.isGuestLogin = false
                         sendDataWithDelay()
                         val eventValues = HashMap<String, Any>()
-                        eventValues.put(AFInAppEventParameterName.REVENUE, 0)
+                        eventValues[AFInAppEventParameterName.REVENUE] = 0
                         AppsFlyerLib.getInstance().logEvent(
-                            getApplicationContext(),
+                            applicationContext,
                             "register",
                             eventValues
                         )
@@ -231,5 +232,9 @@ class AuthActivity : AppCompatActivity(), OnLoginListener, OnRegistrationListene
                 }
             }
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 }

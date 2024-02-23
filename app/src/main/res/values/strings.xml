@@ -366,4 +366,9 @@
     <string name="subs_purchase_info">Subscribe for %1$s/month or %2$s/year</string>
     <string name="error_hz_exceeded">The Hz is exceeded $s</string>
     <string name="tv_rifes">Rifes</string>
+
+    <string name="lang_en" translatable="false">English</string>
+    <string name="lang_fr" translatable="false">French</string>
+    <string name="lang_zh" translatable="false">China</string>
+    <string name="lang_es" translatable="false">Spanish</string>
 </resources>

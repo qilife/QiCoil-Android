@@ -6,9 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">
-            @color/color_main_activity_navigation
-        </item>
+        <item name="android:statusBarColor" >@color/color_main_activity_navigation</item>
     </style>
 
     <style name="MySeekBarTheme" parent="Widget.AppCompat.SeekBar">

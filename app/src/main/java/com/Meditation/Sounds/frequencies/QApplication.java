@@ -1,9 +1,12 @@
 package com.Meditation.Sounds.frequencies;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.os.LocaleList;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration;
@@ -18,6 +21,7 @@ import com.Meditation.Sounds.frequencies.tasks.UpdateDurationOfAllPlaylistTask;
 import com.Meditation.Sounds.frequencies.tasks.UpdatePlaylistInforVer10Task;
 import com.Meditation.Sounds.frequencies.utils.Constants;
 import com.Meditation.Sounds.frequencies.utils.FilesUtils;
+import com.Meditation.Sounds.frequencies.utils.LanguageUtils;
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper;
 import com.appsflyer.AppsFlyerLib;
 
@@ -37,6 +41,8 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
+//        AppCompatDelegate.setApplicationLocales(LanguageUtils.Companion.getLocaleList(this));
+
         INSTANCE = this;
         AppsFlyerLib.getInstance().init("aNPCN6auSrzidSGCeMrg9R", null, this);
         AppsFlyerLib.getInstance().start(this);
@@ -118,10 +124,6 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
     @Override
     public void onConfigurationChanged(@NonNull android.content.res.Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (!Locale.getDefault().getISO3Language().equals(newConfig.locale.getISO3Language())) {
-            Log.d("tyhoang", "onConfigurationChanged: "+Locale.getDefault().getISO3Language());
-        }
-
     }
     
     @NonNull
@@ -140,5 +142,10 @@ public class QApplication extends MultiDexApplication implements ApiListener, Co
                     .setTaskExecutor(Executors.newSingleThreadExecutor())
                     .build();
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
     }
 }

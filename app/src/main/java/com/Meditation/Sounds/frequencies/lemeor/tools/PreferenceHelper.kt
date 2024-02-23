@@ -17,6 +17,7 @@ object PreferenceHelper {
     private const val IS_LOGGED = "is_logged"
     private const val TOKEN = "token"
     private const val USER = "user"
+    private const val LANGUAGE = "language"
     private const val HOME_RESPONSE = "home_response"
 
     private const val IS_HIGH_QUANTUM = "is_high_quantum"
@@ -55,6 +56,13 @@ object PreferenceHelper {
         set(value) {
             editMe {
                 it.putString(TOKEN, value)
+            }
+        }
+    var SharedPreferences.codeLanguage
+        get() = getString(LANGUAGE, "") ?: "en"
+        set(value) {
+            editMe {
+                it.putString(LANGUAGE, value)
             }
         }
 

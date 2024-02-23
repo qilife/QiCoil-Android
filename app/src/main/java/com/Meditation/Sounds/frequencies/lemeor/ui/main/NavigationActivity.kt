@@ -231,6 +231,11 @@ class NavigationActivity : AppCompatActivity(),
             if (event == SyncDataEvent) {
                 syncData()
             }
+            if (event is String && event == "showDisclaimer") {
+                if (preference(applicationContext).isShowDisclaimer && preference(applicationContext).isLogged) {
+                    showDisclaimerDialog()
+                }
+            }
         }
     }
 
@@ -424,9 +429,6 @@ class NavigationActivity : AppCompatActivity(),
             startActivity(Intent(applicationContext, AuthActivity::class.java))
         }
 
-        if (preference(applicationContext).isShowDisclaimer) {
-            showDisclaimerDialog()
-        }
 
         FlowSearch.fromSearchView(album_search).debounce(500).map { text -> text.trim() }
             .distinctUntilChanged().asLiveData().observe(this) {
@@ -577,17 +579,20 @@ class NavigationActivity : AppCompatActivity(),
     }
 
     private fun showDisclaimerDialog() {
-        val mDisclaimerDialog = DisclaimerDialog(
-            this@NavigationActivity,
-            true,
-            object : DisclaimerDialog.IOnSubmitListener {
-                override fun submit(isCheck: Boolean) {
-                    if (isCheck) {
-                        preference(applicationContext).isShowDisclaimer = false
+        try {
+            val mDisclaimerDialog = DisclaimerDialog(
+                this@NavigationActivity,
+                true,
+                object : DisclaimerDialog.IOnSubmitListener {
+                    override fun submit(isCheck: Boolean) {
+                        if (isCheck) {
+                            preference(applicationContext).isShowDisclaimer = false
+                        }
                     }
-                }
-            })
-        mDisclaimerDialog.show()
+                })
+            mDisclaimerDialog.show()
+        } catch (_: Exception) {
+        }
     }
 
     private fun setFragment(fragment: Fragment) {

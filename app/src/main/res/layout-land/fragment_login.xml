@@ -183,6 +183,17 @@
                             font:fontText="fonts/MyriadPro_Semibold.otf" />
                     </LinearLayout>
 
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:dropDownVerticalOffset="@dimen/image_size_25"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@null"
+                        android:backgroundTint="@color/white"
+                        tools:listitem="@layout/item_language_spinner" />
+
                     <RelativeLayout
                         android:id="@+id/rlgoogle_signin"
                         android:layout_width="@dimen/width_button"
@@ -191,6 +202,7 @@
                         android:visibility="gone"
                         android:background="@drawable/bg_login_button"
                         android:layout_marginTop="@dimen/height_button_half">
+
                         <RelativeLayout
                             android:id="@+id/rlgoogle"
                             android:layout_width="@dimen/indent_48"
