@@ -186,12 +186,10 @@
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spLanguage"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:dropDownVerticalOffset="@dimen/image_size_25"
-                        android:spinnerMode="dropdown"
-                        android:popupBackground="@null"
                         android:backgroundTint="@color/white"
+                        android:popupBackground="@color/color_main_activity_background"
                         tools:listitem="@layout/item_language_spinner" />
 
                     <RelativeLayout
@@ -199,9 +197,9 @@
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
                         android:layout_gravity="center"
-                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/height_button_half"
                         android:background="@drawable/bg_login_button"
-                        android:layout_marginTop="@dimen/height_button_half">
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/rlgoogle"
@@ -234,10 +232,10 @@
                         android:id="@+id/btn_guest"
                         android:layout_width="@dimen/width_button"
                         android:layout_height="@dimen/height_button"
-                        android:visibility="gone"
                         android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/height_button_half"
                         android:background="@drawable/bg_login_button"
-                        android:layout_marginTop="@dimen/height_button_half">
+                        android:visibility="gone">
 
                         <com.Meditation.Sounds.frequencies.views.CustomFontTextView
                             android:layout_width="wrap_content"

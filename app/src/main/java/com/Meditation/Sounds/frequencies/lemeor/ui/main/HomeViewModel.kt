@@ -1,19 +1,27 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
-import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Search
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Status
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.getErrorMsg
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -30,6 +38,35 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
         return repository.getRife()
     }
 
+    fun getListAlbum() = repository.getListAlbum()
+
+    fun getListRife() = repository.getListRife()
+
+    fun getData(pref: SharedPreferences, onResult: (List<Search>, List<Search>) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listIT = mutableListOf<Search>()
+            val listIR = mutableListOf<Search>()
+            var i = 0
+
+            val listT = async { repository.getListT() }.await()
+            val listR = async { repository.getListR() }.await()
+
+            listT.forEach { track ->
+                val album = repository.getAlbumById(track.albumId, track.category_id)
+                listIT.add(Search(i, track.apply {
+                    this.isUnlocked = album?.isUnlocked ?: false
+                }))
+                i++
+            }
+            listR.forEach { rife ->
+                listIR.add(Search(i, rife))
+                i++
+            }
+            withContext(Dispatchers.Main) {
+                onResult.invoke(listIT, listIR)
+            }
+        }
+    }
 
     fun getProfile() = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
@@ -128,11 +165,11 @@ data class Update(
     val id: Int = 0,
     val name: String = "",
     val favorited: Boolean = false,
-    var tracks: List<Double> = listOf()
+    var tracks: List<String> = listOf()
 )
 
 data class UpdateTrack(
-    var track_id: List<Double> = listOf(),
+    var track_id: List<String> = listOf(),
     var id: Int = 0,
     var track_type: String = "mp3",
     var request_type: String = "add",

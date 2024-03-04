@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:font="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_margin="@dimen/indent_8"
     android:background="@drawable/rounded_dark_blue_background"
+    android:orientation="vertical"
     tools:context=".lemeor.ui.programs.detail.ProgramDetailFragment">
 
     <ImageView
@@ -18,7 +19,9 @@
         android:layout_margin="@dimen/margin_item_5"
         android:contentDescription="@null"
         android:padding="5dp"
-        android:src="@drawable/ic_close" />
+        android:src="@drawable/ic_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.Meditation.Sounds.frequencies.views.CustomFontTextView
         android:id="@+id/program_name"
@@ -26,11 +29,12 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/indent_8"
         android:paddingEnd="@dimen/indent_8"
+        android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_25"
-        android:textAllCaps="true"
-        tools:text="Program name"
-        font:fontText="fonts/BebasNeue_Bold.otf" />
+        app:layout_constraintTop_toBottomOf="@id/program_back"
+        font:fontText="fonts/BebasNeue_Bold.otf"
+        tools:text="Program name" />
 
     <com.Meditation.Sounds.frequencies.views.CustomFontTextView
         android:id="@+id/program_time"
@@ -42,28 +46,82 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_nomarl"
         android:textStyle="bold"
-        tools:text="total time"
-        font:fontText="fonts/BebasNeue_Book.otf" />
+        app:layout_constraintTop_toBottomOf="@id/program_name"
+        font:fontText="fonts/BebasNeue_Book.otf"
+        tools:text="total time" />
 
     <Button
         android:id="@+id/program_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="@dimen/indent_16"
+        android:background="@drawable/rounded_btn_play"
+        android:minHeight="35dp"
         android:paddingLeft="@dimen/image_size_40"
         android:paddingRight="@dimen/image_size_40"
-        android:minHeight="35dp"
-        android:background="@drawable/rounded_btn_play"
-        android:layout_gravity="center"
+        android:text="@string/btn_play"
         android:textColor="@android:color/white"
-        android:text="@string/btn_play"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/program_time" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/program_tracks_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_album_track">
-    </androidx.recyclerview.widget.RecyclerView>
-</LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/program_play"
+        tools:itemCount="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_album_track" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/fabOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_addButtonColorNormal="#0F66B0"
+        app:fab_addButtonSize="normal"
+        app:flow_verticalStyle="spread"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_frequencies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_frequencies"
+            android:paddingBottom="15dp"
+            app:flow_verticalAlign="center"
+            fab:fab_colorNormal="@color/color_icon_fab"
+            fab:fab_colorPressed="@color/color_icon_fab"
+            fab:fab_size="mini"
+            fab:fab_title="Custom Frequencies" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_rife"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_navigation_rife"
+            fab:fab_colorNormal="@color/color_icon_fab"
+            android:paddingBottom="15dp"
+            fab:fab_colorPressed="@color/color_icon_fab"
+            fab:fab_size="mini"
+            fab:fab_title="Add rife" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_quantum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_navigation_quantum"
+            fab:fab_colorNormal="@color/color_icon_fab"
+            fab:fab_colorPressed="@color/color_icon_fab"
+            fab:fab_size="mini"
+            fab:fab_title="Add Quantum" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

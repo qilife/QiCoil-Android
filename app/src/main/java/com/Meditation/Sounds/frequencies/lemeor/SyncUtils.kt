@@ -102,7 +102,7 @@ suspend fun syncCategories(db: DataBase, response: HomeResponse?) {
 }
 
 suspend fun syncAlbums(db: DataBase, response: HomeResponse?) {
-    val localData = db.albumDao().getData().toMutableList()
+    val localData = db.albumDao().getAllAlbums().toMutableList()
     val responseData = (response?.albums?: listOf()).toMutableList()
 
     //save tiers to albums

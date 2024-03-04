@@ -24,4 +24,6 @@
     <color name="color_launcher">#2B1653</color>
     <color name="color_green">#059F83</color>
     <color name="color_greyB">#B5B5B5</color>
+    <color name="color_text_fab">#120F16</color>
+    <color name="color_icon_fab">#33A6A3AA</color>
 </resources>

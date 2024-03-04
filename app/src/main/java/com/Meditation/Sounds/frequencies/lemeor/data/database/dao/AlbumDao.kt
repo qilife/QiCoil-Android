@@ -1,7 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.data.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 
@@ -20,25 +19,25 @@ interface AlbumDao {
     suspend fun delete(album: Album)
 
     @Query("SELECT * FROM album WHERE category_id=:id ORDER BY `order` ASC")
-    suspend fun getAlbumsByCategory(id: Int) : List<Album>
+    suspend fun getAlbumsByCategory(id: Int): List<Album>
 
     @Query("SELECT * FROM album WHERE category_id=:id ORDER BY `order` ASC")
-    fun getAlbumsByCategoryLiveData(id: Int) : LiveData<List<Album>>
+    fun getAlbumsByCategoryLiveData(id: Int): LiveData<List<Album>>
 
     @Query("SELECT * FROM album WHERE tier_id=:id ORDER BY `order` ASC")
-    suspend fun getAlbumsByTierId(id: Int) : List<Album>
+    suspend fun getAlbumsByTierId(id: Int): List<Album>
 
     @Query("SELECT * FROM album ORDER BY `order` ASC")
-    suspend fun getAllAlbums() : List<Album>
+    suspend fun getAllAlbums(): List<Album>
 
     @Query("SELECT * FROM album WHERE descriptions LIKE :searchString OR name LIKE :searchString")
     suspend fun searchAlbum(searchString: String): List<Album>
 
     @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id ORDER BY `order` ASC")
-    fun getAlbumsById(id: Int, category_id: Int) : LiveData<Album>
+    fun getAlbumsById(id: Int, category_id: Int): LiveData<Album>
 
     @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id ORDER BY `order` ASC")
-    suspend fun getAlbumsByIdOnce(id: Int, category_id: Int) : Album?
+    suspend fun getAlbumsByIdOnce(id: Int, category_id: Int): Album?
 
     @Query("UPDATE album SET isDownloaded=:isDownloaded WHERE id=:id")
     suspend fun isAlbumDownloaded(isDownloaded: Boolean, id: Int)
@@ -50,13 +49,13 @@ interface AlbumDao {
     suspend fun getUnlockedAlbums(isUnlocked: Boolean): List<Album>
 
     @Query("SELECT * FROM album WHERE id=:id AND category_id=:category_id")
-    suspend fun getAlbumById(id: Int, category_id: Int) : Album?
+    suspend fun getAlbumById(id: Int, category_id: Int): Album?
 
     @Query("SELECT * FROM album WHERE isUnlocked=:isUnlocked ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomAlbum(isUnlocked: Boolean) : Album?
+    suspend fun getRandomAlbum(isUnlocked: Boolean): Album?
 
     @Query("SELECT * FROM album ORDER BY `order` ASC")
-    suspend fun getData() : List<Album>
+    fun getLiveData(): LiveData<List<Album>>
 
     @Query("UPDATE album SET isDownloaded=:isDownloaded,  isUnlocked=:isUnlocked WHERE id=:id")
     suspend fun syncAlbums(isDownloaded: Boolean, isUnlocked: Boolean, id: Int)
@@ -68,13 +67,21 @@ interface AlbumDao {
     suspend fun syncDownloaded(isDownloaded: Boolean, id: Int, category_id: Int)
 
 
-
     // new build 29.03.2021
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE id=:id AND is_free=:isFree AND category_id=:category_id")
-    suspend fun setNewUnlockedById(isUnlocked: Boolean, id: Int, category_id: Int, isFree: Boolean = false)
+    suspend fun setNewUnlockedById(
+        isUnlocked: Boolean,
+        id: Int,
+        category_id: Int,
+        isFree: Boolean = false
+    )
 
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE category_id=:categoryId AND is_free=:isFree")
-    suspend fun setNewUnlockedByCategoryId(isUnlocked: Boolean, categoryId: Int, isFree: Boolean = false)
+    suspend fun setNewUnlockedByCategoryId(
+        isUnlocked: Boolean,
+        categoryId: Int,
+        isFree: Boolean = false
+    )
 
     @Query("UPDATE album SET isUnlocked=:isUnlocked WHERE tier_id=:tierId AND is_free=:isFree")
     suspend fun setNewUnlockedByTierId(isUnlocked: Boolean, tierId: Int, isFree: Boolean = false)

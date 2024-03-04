@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -24,16 +25,19 @@ import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.tools.HudHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isLogged
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.preference
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.saveUser
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.token
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.AuthActivity
+import com.Meditation.Sounds.frequencies.lemeor.ui.auth.CustomSpinnerAdapter
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.options.change_pass.ChangePassActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
+import com.Meditation.Sounds.frequencies.models.Language
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_YEAR_FLASHSALE
@@ -41,6 +45,7 @@ import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_HIGH
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_HIGHER_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_YEARLY_FLASHSALE
+import com.Meditation.Sounds.frequencies.utils.LanguageUtils
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.views.DeleteUserDialog
 import com.Meditation.Sounds.frequencies.views.DisclaimerDialog
@@ -48,6 +53,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.PurchasesResponseListener
+import kotlinx.android.synthetic.main.fragment_login.spLanguage
 import kotlinx.android.synthetic.main.fragment_new_options.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +67,19 @@ class NewOptionsFragment : Fragment() {
 
     private lateinit var mViewModel: NewOptionsViewModel
     private lateinit var mHomeViewModel: HomeViewModel
+
+    private val languages by lazy {
+        LanguageUtils.getLanguages(requireContext()).toMutableList().sortedBy {
+            if (it.code == PreferenceHelper.preference(requireContext()).codeLanguage) 0 else 1
+        }
+    }
+
+    private val languageAdapter by lazy {
+        CustomSpinnerAdapter(
+            requireActivity(),
+            languages
+        )
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_options, container, false)
@@ -287,6 +306,27 @@ class NewOptionsFragment : Fragment() {
                 data = Uri.parse("mailto:support@qilifestore.com")
             }
             startActivity(Intent.createChooser(emailIntent, "Send feedback"))
+        }
+
+        spLanguage.adapter = languageAdapter
+        spLanguage.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?, position: Int, id: Long
+            ) {
+                parent ?: return
+                view ?: return
+
+                val lang: Language = languages[position]
+                if (lang.code != preference(requireContext()).codeLanguage) {
+                    LanguageUtils.changeLanguage(requireContext(), lang.code)
+                    clearData()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
         }
 
         if (BuildConfig.IS_FREE) {

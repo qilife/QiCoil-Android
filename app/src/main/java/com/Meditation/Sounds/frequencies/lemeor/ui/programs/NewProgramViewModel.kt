@@ -2,13 +2,20 @@ package com.Meditation.Sounds.frequencies.lemeor.ui.programs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import androidx.lifecycle.viewModelScope
+import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Search
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel() {
 
-    fun getPrograms(isMy: Boolean) : LiveData<List<Program>> {
+    fun getPrograms(isMy: Boolean): LiveData<List<Program>> {
         return repository.getListProgram()
     }
 
@@ -38,5 +45,77 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
     }
 
 
+    fun addTrackToProgram(id: Int, list: List<Search>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val program = repository.getProgramById(id)
+            val listT = arrayListOf<String>()
+            val listR = arrayListOf<String>()
+            program?.let { p ->
+                list.forEach { s ->
+                    if (s.obj is Track) {
+                        val a = s.obj as Track
+                        a.albumId
+                        p.records.add(a.id.toString())
+                        listT.add(a.id.toString())
+                    } else if (s.obj is Rife) {
+                        val r = s.obj as Rife
+                        r.getFrequency().forEach {fre->
+                            val fr = "${r.id}|${fre}"
+                            p.records.add(fr)
+                            listR.add(fr)
+                        }
+                    }
+                }
 
+                repository.updateProgram(p)
+                if (p.user_id.isNotEmpty()) {
+                    try {
+                        updateTrackToProgram(
+                            UpdateTrack(
+                                track_id = listT,
+                                id = p.id,
+                                "mp3",
+                                request_type = "add",
+                                is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
+                            )
+                        )
+                        updateTrackToProgram(
+                            UpdateTrack(
+                                track_id = listR,
+                                id = p.id,
+                                "rife",
+                                request_type = "add",
+                                is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
+                            )
+                        )
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
+    }
+
+    fun addFrequencyToProgram(id: Int, frequency: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val program = repository.getProgramById(id)
+            program?.let { p ->
+                p.records.add("${-frequency}")
+                repository.updateProgram(p)
+                if (p.user_id.isNotEmpty()) {
+                    try {
+                        updateTrackToProgram(
+                            UpdateTrack(
+                                track_id = listOf("${-frequency}"),
+                                id = p.id,
+                                "rife",
+                                request_type = "add",
+                                is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
+                            )
+                        )
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
+    }
 }

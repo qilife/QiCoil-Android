@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,21 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.api.exception.ApiException
+import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
+import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
+import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
+import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
+import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.hideKeyboard
 import com.Meditation.Sounds.frequencies.lemeor.showAlert
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isFirstSync
+import com.Meditation.Sounds.frequencies.lemeor.ui.main.HomeViewModel
 import com.Meditation.Sounds.frequencies.models.Language
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.LanguageUtils
@@ -31,7 +42,11 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
+import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class LoginFragment : Fragment() {
@@ -50,15 +65,15 @@ class LoginFragment : Fragment() {
     private var name = ""
     private var email = ""
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var mViewModel: HomeViewModel
 
-
-    private val languages  by lazy {
-       LanguageUtils.getLanguages(requireContext()).toMutableList().sortedBy {
+    private val languages by lazy {
+        LanguageUtils.getLanguages(requireContext()).toMutableList().sortedBy {
             if (it.code == PreferenceHelper.preference(requireContext()).codeLanguage) 0 else 1
         }
     }
 
-    private val languageAdapter by lazy{
+    private val languageAdapter by lazy {
         CustomSpinnerAdapter(
             requireActivity(),
             languages
@@ -92,6 +107,12 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
+        )[HomeViewModel::class.java]
         firebaseAnalytics = Firebase.analytics
         mTvSignUp.text = Html.fromHtml(getString(R.string.tv_link_sign_up))
         mTvForgotPassword.text = Html.fromHtml(getString(R.string.tv_forgotten_password))
@@ -130,23 +151,67 @@ class LoginFragment : Fragment() {
         }
 
 
-        spLanguage.adapter =languageAdapter
+        spLanguage.adapter = languageAdapter
         spLanguage.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View, position: Int, id: Long
+                parent: AdapterView<*>?,
+                view: View?, position: Int, id: Long
             ) {
+                parent ?: return
+                view ?: return
 
                 val lang: Language = languages[position]
                 if (lang.code != PreferenceHelper.preference(requireContext()).codeLanguage) {
                     LanguageUtils.changeLanguage(requireContext(), lang.code)
-                    PreferenceHelper.preference(requireContext()).codeLanguage = lang.code
+                    clearData()
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
+            }
+        }
+    }
+
+    private fun clearData() {
+        val database = DataBase.getInstance(requireContext())
+        CoroutineScope(Dispatchers.IO).launch {
+            database.homeDao().clear()
+            database.tierDao().clear()
+            database.categoryDao().clear()
+            database.tagDao().clear()
+            database.albumDao().clear()
+            database.trackDao().clear()
+            database.programDao().clear()
+            database.playlistDao().clear()
+        }
+    }
+
+    private fun syncData() {
+        if (requireActivity().isNetworkAvailable()) {
+            try {
+                mViewModel.getHome("").observe(this) {
+                    when (it.status) {
+                        Resource.Status.SUCCESS -> {
+                            if (PreferenceHelper.preference(requireContext()).isFirstSync) {
+                                PreferenceHelper.preference(requireContext()).isFirstSync = true
+                                if (it.data == null && !BuildConfig.IS_FREE) {
+                                    try {
+                                        mViewModel.loadFromCache(requireContext())
+                                    } catch (_: Exception) {
+                                    }
+                                }
+                            }
+                        }
+
+                        Resource.Status.ERROR -> {
+                        }
+
+                        Resource.Status.LOADING -> {
+                        }
+                    }
+                }
+            } catch (_: Exception) {
             }
         }
     }

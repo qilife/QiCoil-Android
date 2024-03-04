@@ -86,12 +86,12 @@ class PlaylistFragment : BaseFragment() {
                     parent.addFragment(PlaylistDetailFragment.newInstance(playlist, PlaylistItem(), false, false), R.id.frame1)
                 } else {
                     val baseActivity = mContext as BaseActivity
-                    baseActivity?.showDialogSubscriptionFS(0)
+                    baseActivity.showDialogSubscriptionFS(0)
                 }
             }
 
             override fun onDeleteItem(playlist: Playlist) {
-                var alertDialog = AlertMessageDialog(mContext, object : AlertMessageDialog.IOnSubmitListener {
+                val alertDialog = AlertMessageDialog(mContext, object : AlertMessageDialog.IOnSubmitListener {
 
                     override fun submit() {
                         mViewModel.delete(playlist.id)
@@ -205,8 +205,8 @@ class PlaylistFragment : BaseFragment() {
     }
 
     fun loadPlaylist() {
-        mViewModel = ViewModelProviders.of(this).get(PlaylistViewModel::class.java)
-        mViewModel.getAllPlayList().observe(this, {
+        mViewModel = ViewModelProviders.of(this)[PlaylistViewModel::class.java]
+        mViewModel.getAllPlayList().observe(this) {
             if (it != null) {
                 mDataAdded.clear()
                 mData.clear()
@@ -231,7 +231,7 @@ class PlaylistFragment : BaseFragment() {
             mAdapter.setListData(mData)
             mAdapterAdd.setListData(mDataAdded)
             mAdapter.initPurchaseRequest()
-        })
+        }
     }
 
     override fun onDestroy() {

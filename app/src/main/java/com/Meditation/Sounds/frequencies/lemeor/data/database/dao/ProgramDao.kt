@@ -25,13 +25,13 @@ interface ProgramDao {
     fun getPrograms(): LiveData<List<Program>>
 
     @Query("SELECT * FROM program WHERE deleted=0 ORDER BY `order` ASC")
-    fun getListProgram() : LiveData<List<Program>>
+    fun getListProgram(): LiveData<List<Program>>
 
     @Query("SELECT * FROM program WHERE isMy=:isMy ORDER BY `order` ASC")
-    fun getMy(isMy: Boolean) : LiveData<List<Program>>
+    fun getMy(isMy: Boolean): LiveData<List<Program>>
 
     @Query("SELECT * FROM program WHERE id=:id ORDER BY `order` ASC")
-    fun getProgramByIdLive(id: Int) : LiveData<Program>
+    fun getProgramByIdLive(id: Int): LiveData<Program>
 
     @Query("SELECT * FROM program WHERE id=:id")
     suspend fun getProgramById(id: Int): Program?

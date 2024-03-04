@@ -5,6 +5,6 @@ import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 
 class RifeRepository(private val apiHelper: ApiHelper, private val localData: DataBase) {
 
-    fun getAllRife() = localData.rifeDao().getListRife()
+    fun getLiveDataRifes() = localData.rifeDao().getLiveDataRifes()
     suspend fun getListRife() = localData.rifeDao().getData()
 }

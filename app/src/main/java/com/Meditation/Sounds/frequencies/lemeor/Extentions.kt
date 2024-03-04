@@ -44,7 +44,7 @@ val duration = MutableLiveData<Long>()
 
 //for track add to program
 
-var trackIdForProgram: Double? = Constants.defaultHz - 1
+var trackIdForProgram: String = (Constants.defaultHz - 1).toString()
 var albumIdBackProgram: Int? = -1
 var categoryIdBackProgram: Int? = -1
 var typeBack: String = Constants.TYPE_ALBUM
@@ -225,6 +225,13 @@ fun hideKeyboard(context: Context, view: CustomFontEditText) {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
+
+internal fun Fragment.hideKeyboard() {
+    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val currentFocusView = requireActivity().currentFocus ?: return
+    imm.hideSoftInputFromWindow(currentFocusView.windowToken, 0)
+}
+
 
 fun convertSecondsToTime(seconds: Long): String {
     val hours = seconds / 3600

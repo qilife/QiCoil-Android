@@ -40,8 +40,10 @@ class ProgramRepository(private val localData: DataBase, private val apiHelper: 
     suspend fun update(program: Program) {
         localData.programDao().update(program.id,program.deleted)
     }
-
     fun getListProgram() : LiveData<List<Program>>{
         return localData.programDao().getListProgram()
     }
+
+    suspend fun getProgramById(id:Int) = localData.programDao().getProgramById(id)
+    suspend fun updateProgram(program: Program) = localData.programDao().updateProgram(program)
 }

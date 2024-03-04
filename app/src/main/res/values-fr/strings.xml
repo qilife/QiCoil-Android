@@ -31,7 +31,7 @@
     <string name="profile_lbl_disclaimer">Clause de non-responsabilité</string>
     <string name="profile_lbl_about">À propos</string>
     <string name="tv_change_password">Changer le mot de passe</string>
-    <string name="tv_help_support">Aide &amp; Support</string>
+    <string name="tv_help_support">Support d\'aide</string>
     <string name="options_log_out">Se déconnecter</string>
     <string name="options_delete_user">Supprimer l\'utilisateur</string>
     <string name="txt_msg_logout">Êtes-vous sûr de vouloir vous déconnecter?</string>

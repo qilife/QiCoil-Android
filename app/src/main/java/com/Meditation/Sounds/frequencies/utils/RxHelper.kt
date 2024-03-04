@@ -1,19 +1,22 @@
 package com.Meditation.Sounds.frequencies.utils
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Build
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.abs
 
 class CombinedLiveData<T, K, S>(
-    source1: LiveData<T>,
-    source2: LiveData<K>,
-    private val combine: (data1: T?, data2: K?) -> S
+    source1: LiveData<T>, source2: LiveData<K>, private val combine: (data1: T?, data2: K?) -> S
 ) : MediatorLiveData<S>() {
 
     private var data1: T? = null
@@ -138,3 +141,33 @@ class FlowSearch {
     }
 }
 
+fun String.doubleOrString(): Any {
+    return try {
+        when (toDoubleOrNull()) {
+            null -> this
+            else -> toDouble()
+        }
+    } catch (_: NumberFormatException) {
+        this
+    }
+}
+
+fun String.isNotString(): Boolean {
+    return try {
+        when (toDoubleOrNull()) {
+            null -> false
+            else -> toDouble() >= 0
+        }
+    } catch (_: NumberFormatException) {
+        false
+    }
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    Build.VERSION.SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+}
+
+fun Rife.getRifeFormat(value: Double): String {
+    return "$id|${abs(value)}"
+}

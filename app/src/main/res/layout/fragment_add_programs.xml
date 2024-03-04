@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue_background">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnBack"
+        android:layout_width="45dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search"
+        app:srcCompat="@drawable/ic_back_white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/image_size_10"
+        android:layout_marginEnd="@dimen/image_size_10"
+        android:background="@drawable/bg_search_box"
+        app:layout_constraintEnd_toStartOf="@id/btnAdd"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="9dp"
+            android:background="@null"
+            android:ellipsize="end"
+            android:focusableInTouchMode="true"
+            android:hint="Search"
+            android:imeOptions="actionNone"
+            android:includeFontPadding="false"
+            android:inputType="textCapSentences"
+            android:paddingVertical="@dimen/image_size_10"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnClear"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnClear"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="3dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/image_size_10"
+        android:includeFontPadding="false"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:letterSpacing="0"
+        android:minHeight="0dp"
+        android:stateListAnimator="@null"
+        android:text="@string/btn_add"
+        app:layout_constraintBottom_toBottomOf="@id/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toBottomOf="@id/search"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/color_main_activity_background"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextColor="@android:color/darker_gray" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabs"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,3 +21,21 @@ class StringConverter {
         }
     }
 }
+
+class StringArrConverter {
+    companion object {
+        @TypeConverter
+        @JvmStatic
+        fun to(value: String?): ArrayList<String>? {
+            val type = object : TypeToken<ArrayList<String>>() {}.type
+            return Gson().fromJson(value, type)
+        }
+
+        @TypeConverter
+        @JvmStatic
+        fun from(list: ArrayList<String>?): String? {
+            val type = object : TypeToken<ArrayList<String>>() {}.type
+            return Gson().toJson(list, type)
+        }
+    }
+}

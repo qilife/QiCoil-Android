@@ -29,6 +29,8 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
+import com.Meditation.Sounds.frequencies.utils.getRifeFormat
+import com.Meditation.Sounds.frequencies.utils.parcelable
 import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +49,14 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     private var trackDao: TrackDao? = null
     private lateinit var mViewModel: NewProgramViewModel
 
+    private val rife: Rife? by lazy {
+        intent.parcelable<Rife>(EXTRA_RIFE)
+            ?: throw IllegalArgumentException("Must call through newInstance()")
+    }
+    private val trackId: Double by lazy {
+        intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
         if (event == DownloadService.DOWNLOAD_FINISH) {
@@ -61,12 +71,10 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         db = DataBase.getInstance(applicationContext)
         trackDao = db?.trackDao()
         mViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
-                ApiHelper(RetrofitBuilder(this).apiService),
-                DataBase.getInstance(this)
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(this).apiService), DataBase.getInstance(this)
             )
-        ).get(NewProgramViewModel::class.java)
+        )[NewProgramViewModel::class.java]
         initUI()
 
         setUI()
@@ -98,7 +106,6 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
     @SuppressLint("StringFormatInvalid")
     private fun setUI() {
         //  program add two obj(rife and track) "rife limit -22000->0" and "track id integer"
-        val trackId = intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
         if (trackId <= Constants.defaultHz - 1) {
             Toast.makeText(
                 applicationContext,
@@ -137,25 +144,26 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
             val programDao = db?.programDao()
             CoroutineScope(Dispatchers.IO).launch {
                 val program = programDao?.getProgramByName(FAVORITES)
-                val frequency = program?.records?.firstOrNull {
-                    it == trackId
-                }
-                if (frequency != null) {
-                    track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
-                } else {
-                    track_add_favorites.text = getString(R.string.tv_add_to_favorites)
+                program?.let { p ->
+                    val frequency = p.records.firstOrNull {
+                        it == trackId.toString()
+                    }
+                    if (frequency != null) {
+                        track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
+                    } else {
+                        track_add_favorites.text = getString(R.string.tv_add_to_favorites)
+                    }
                 }
             }
             track_add_favorites.visibility = View.VISIBLE
             track_redownload.visibility = View.GONE
-
         }
 
         track_add_program.setOnClickListener {
             trackIdForProgram = if (trackId < 0.0 && trackId >= Constants.defaultHz) {
-                trackId
+                rife?.getRifeFormat(trackId) ?: (Constants.defaultHz - 1).toString()
             } else {
-                track?.id?.toDouble()
+                track?.id.toString()
             }
 
             val intent = Intent()
@@ -165,82 +173,82 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
         track_add_favorites.setOnClickListener {
             val programDao = db?.programDao()
-            if (trackId < 0.0 && trackId >= Constants.defaultHz) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val program = programDao?.getProgramByName(FAVORITES)
-                    val frequency = program?.records?.firstOrNull {
-                        it == trackId
-                    }
-                    withContext(Dispatchers.Main) {
-                        if (frequency != null) {
-                            Toast.makeText(
-                                applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                applicationContext, "Added to Favorites", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                    if (frequency != null) {
-                        program.records.remove(frequency)
-                    } else {
-                        program?.records?.add(trackId)
-                    }
-                    program?.let { it1 ->
-                        programDao.updateProgram(it1)
-                        if (it1.user_id.isNotEmpty()) {
-                            try {
-                                mViewModel.updateTrackToProgram(
-                                    UpdateTrack(
-                                        track_id = listOf(trackId),
-                                        id = it1.id,
-                                        track_type = "rife",
-                                        request_type = if (frequency != null) "remove" else "add",
-                                        is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
+            if (rife != null) {
+                if (trackId < 0.0 && trackId >= Constants.defaultHz) {
+                    val formatRife = rife!!.getRifeFormat(trackId)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val program = programDao?.getProgramByName(FAVORITES)
+                        program?.let { p ->
+                            val frequency = p.records.firstOrNull {
+                                it == formatRife
+                            }
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    if (frequency != null) "Removed from Favorites" else "Added to Favorites",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            p.records.remove(frequency ?: formatRife)
+                            programDao.updateProgram(p)
+                            if (p.user_id.isNotEmpty()) {
+                                try {
+                                    mViewModel.updateTrackToProgram(
+                                        UpdateTrack(
+                                            track_id = listOf(formatRife),
+                                            id = p.id,
+                                            track_type = "rife",
+                                            request_type = if (frequency != null) "remove" else "add",
+                                            is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
+                                        )
                                     )
-                                )
-                            } catch (_: Exception) {
+                                } catch (_: Exception) {
+                                }
                             }
                         }
                     }
                 }
             } else {
-                if (track?.isFavorite!!) {
-                    Toast.makeText(applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT).show()
-                }
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    val program = programDao?.getProgramByName(FAVORITES)
-                    if (track?.isFavorite!!) {
-                        program?.records?.remove(track?.id!!.toDouble())
+                track?.let { t ->
+                    if (t.isFavorite) {
+                        Toast.makeText(
+                            applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        program?.records?.add(track?.id!!.toDouble())
+                        Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT)
+                            .show()
                     }
-                    program?.let { it1 ->
-                        programDao.updateProgram(it1)
-                        if (it1.user_id.isNotEmpty()) {
-                            try {
-                                mViewModel.updateTrackToProgram(
-                                    UpdateTrack(
-                                        track_id = listOf(track?.id!!.toDouble()),
-                                        id = it1.id,
-                                        track_type = if (track?.id!!.toDouble() >= 0) "mp3" else "rife",
-                                        request_type = if (track?.isFavorite!!) "remove" else "add",
-                                        is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val program = programDao?.getProgramByName(FAVORITES)
+                        program?.let { p ->
+                            if (t.isFavorite) {
+                                p.records.remove(t.id.toString())
+                            } else {
+                                p.records.add(t.id.toString())
+                            }
+                            programDao.updateProgram(p)
+                            if (p.user_id.isNotEmpty()) {
+                                try {
+                                    mViewModel.updateTrackToProgram(
+                                        UpdateTrack(
+                                            track_id = listOf(t.id.toString()),
+                                            id = p.id,
+                                            track_type = "mp3",
+                                            request_type = if (t.isFavorite) "remove" else "add",
+                                            is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
+                                        )
                                     )
-                                )
-                            } catch (_: Exception) {
+                                } catch (_: Exception) {
+                                }
                             }
                         }
-                    }
 
-                    trackDao?.isTrackFavorite(!track?.isFavorite!!, track?.id!!)
+                        trackDao?.isTrackFavorite(!t.isFavorite, t.id)
+                    }
                 }
             }
+
             finish()
         }
 

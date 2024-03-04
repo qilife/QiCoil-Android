@@ -1,12 +1,23 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
-import android.util.Log
 import com.Meditation.Sounds.frequencies.QApplication
-import com.Meditation.Sounds.frequencies.lemeor.*
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
-import com.Meditation.Sounds.frequencies.lemeor.data.model.*
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
+import com.Meditation.Sounds.frequencies.lemeor.data.model.HomeResponse
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Status
+import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
+import com.Meditation.Sounds.frequencies.lemeor.data.model.User
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.performGetOperation
+import com.Meditation.Sounds.frequencies.lemeor.syncAlbums
+import com.Meditation.Sounds.frequencies.lemeor.syncCategories
+import com.Meditation.Sounds.frequencies.lemeor.syncPlaylists
+import com.Meditation.Sounds.frequencies.lemeor.syncPrograms
+import com.Meditation.Sounds.frequencies.lemeor.syncRife
+import com.Meditation.Sounds.frequencies.lemeor.syncTags
+import com.Meditation.Sounds.frequencies.lemeor.syncTiers
+import com.Meditation.Sounds.frequencies.lemeor.syncTracks
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.ui.auth.updateUnlocked
 import kotlinx.coroutines.CoroutineScope
@@ -44,7 +55,7 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
         return localData.albumDao().getAlbumById(id, category_id)
     }
 
-    suspend fun searchAlbum(searchString: String): List<Album>{
+    suspend fun searchAlbum(searchString: String): List<Album> {
         return localData.albumDao().searchAlbum(searchString)
     }
 
@@ -86,7 +97,7 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
 
     fun getRife() = performGetOperation(
         databaseQuery = {
-            localData.rifeDao().getListRife()
+            localData.rifeDao().getLiveDataRifes()
 
         },
         networkCall = {
@@ -103,4 +114,11 @@ class HomeRepository(private val apiHelper: ApiHelper, private val localData: Da
     suspend fun deleteProgram(id: String) = apiHelper.deleteProgram(id)
     suspend fun syncProgramsApi(listProgram: List<Update>) =
         apiHelper.syncProgramsToServer(listProgram)
+
+    fun getListAlbum() = localData.albumDao().getLiveData()
+    fun getListRife() = localData.rifeDao().getLiveDataRifes()
+
+    suspend fun getListA() = localData.albumDao().getAllAlbums()
+    suspend fun getListT() = localData.trackDao().getData()
+    suspend fun getListR() = localData.rifeDao().getData()
 }

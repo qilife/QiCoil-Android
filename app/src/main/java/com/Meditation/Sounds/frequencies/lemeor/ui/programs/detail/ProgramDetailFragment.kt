@@ -13,7 +13,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
+import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.categoryIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.currentTrack
+import com.Meditation.Sounds.frequencies.lemeor.currentTrackIndex
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.ProgramDao
@@ -21,27 +25,56 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
+import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.isMultiPlay
+import com.Meditation.Sounds.frequencies.lemeor.isPlayAlbum
+import com.Meditation.Sounds.frequencies.lemeor.isPlayProgram
+import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
+import com.Meditation.Sounds.frequencies.lemeor.playAlbumId
+import com.Meditation.Sounds.frequencies.lemeor.playProgramId
+import com.Meditation.Sounds.frequencies.lemeor.playRife
+import com.Meditation.Sounds.frequencies.lemeor.positionFor
+import com.Meditation.Sounds.frequencies.lemeor.rifeBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.selectedNaviFragment
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
+import com.Meditation.Sounds.frequencies.lemeor.trackList
+import com.Meditation.Sounds.frequencies.lemeor.typeBack
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
+import com.Meditation.Sounds.frequencies.lemeor.ui.programs.dialog.FrequenciesDialogFragment
+import com.Meditation.Sounds.frequencies.lemeor.ui.programs.search.AddProgramsFragment
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
-import kotlinx.android.synthetic.main.fragment_program_detail.*
+import com.Meditation.Sounds.frequencies.utils.doubleOrString
+import com.Meditation.Sounds.frequencies.utils.isNotString
+import com.Meditation.Sounds.frequencies.views.ItemLastOffsetBottomDecoration
+import kotlinx.android.synthetic.main.fragment_program_detail.action_frequencies
+import kotlinx.android.synthetic.main.fragment_program_detail.action_quantum
+import kotlinx.android.synthetic.main.fragment_program_detail.action_rife
+import kotlinx.android.synthetic.main.fragment_program_detail.fabOption
+import kotlinx.android.synthetic.main.fragment_program_detail.program_back
+import kotlinx.android.synthetic.main.fragment_program_detail.program_name
+import kotlinx.android.synthetic.main.fragment_program_detail.program_play
+import kotlinx.android.synthetic.main.fragment_program_detail.program_time
+import kotlinx.android.synthetic.main.fragment_program_detail.program_tracks_recycler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.Collections
 
 
 class ProgramDetailFragment : Fragment() {
@@ -58,6 +91,9 @@ class ProgramDetailFragment : Fragment() {
     private var mTrackAdapter: ProgramTrackAdapter? = null
     private var isFirst = true
     private var timeDelay = 500L
+    private val itemDecoration by lazy {
+        ItemLastOffsetBottomDecoration(resources.getDimensionPixelOffset(R.dimen.dp_70))
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: Any?) {
@@ -66,27 +102,60 @@ class ProgramDetailFragment : Fragment() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 program?.records?.forEachIndexed { index, it ->
-                    if (it >= 0) {
-                        mViewModel.getTrackById(it.toInt())?.let { track ->
-                            tracks.add(track)
+                    when (it.doubleOrString()) {
+                        is Double -> {
+                            val num = it.toInt()
+                            if (num >= 0) {
+                                mViewModel.getTrackById(num)?.let { track ->
+                                    tracks.add(track)
+                                }
+                            } else {
+                                tracks.add(
+                                    MusicRepository.Frequency(
+                                        index,
+                                        "",
+                                        (num * -1).toFloat(),
+                                        -index,
+                                        index,
+                                        false,
+                                        0,
+                                        0,
+                                    )
+                                )
+                            }
                         }
-                    } else {
-                        tracks.add(
-                            MusicRepository.Frequency(
-                                index,
-                                "",
-                                (it * -1).toFloat(),
-                                -index,
-                                index,
-                                false,
-                                0,
-                                0,
-                            )
-                        )
+
+                        is String -> {
+                            try {
+                                val listNum = it.split("|")
+                                val id = listNum.first().toInt()
+                                val num = listNum.last().toInt()
+                                if (num >= 0) {
+                                    mViewModel.getTrackById(num)?.let { track ->
+                                        tracks.add(track)
+                                    }
+                                } else {
+                                    tracks.add(
+                                        MusicRepository.Frequency(
+                                            index,
+                                            "",
+                                            (num * -1).toFloat(),
+                                            -index,
+                                            index,
+                                            false,
+                                            0,
+                                            0,
+                                        )
+                                    )
+                                }
+
+                            } catch (_: Exception) {
+                            }
+                        }
                     }
                 }
 
-                CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
                     mTracks = tracks
                     program_play.text = getString(R.string.btn_play)
                 }
@@ -110,8 +179,7 @@ class ProgramDetailFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_program_detail, container, false)
     }
@@ -122,8 +190,9 @@ class ProgramDetailFragment : Fragment() {
         initUI()
 
         mViewModel.program(programId)?.observe(viewLifecycleOwner) {
-            if(it != null){
+            if (it != null) {
                 program = it
+                program_tracks_recycler.removeItemDecoration(itemDecoration)
                 setUI(it)
             }
         }
@@ -140,40 +209,34 @@ class ProgramDetailFragment : Fragment() {
 
     private fun initUI() {
         mViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
+            this, ViewModelFactory(
                 ApiHelper(RetrofitBuilder(requireContext()).apiService),
                 DataBase.getInstance(requireContext())
             )
-        ).get(ProgramDetailViewModel::class.java)
+        )[ProgramDetailViewModel::class.java]
 
         mNewProgramViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
+            this, ViewModelFactory(
                 ApiHelper(RetrofitBuilder(requireContext()).apiService),
                 DataBase.getInstance(requireContext())
             )
-        ).get(NewProgramViewModel::class.java)
+        )[NewProgramViewModel::class.java]
     }
 
     private fun onBackPressed() {
         var fragment: Fragment?
 
         if (isTrackAdd) {
-            if (typeBack == Constants.TYPE_ALBUM) {
-                fragment = albumIdBackProgram?.let {
+            fragment = if (typeBack == Constants.TYPE_ALBUM) {
+                albumIdBackProgram?.let {
                     NewAlbumDetailFragment.newInstance(
-                        it,
-                        categoryIdBackProgram!!
+                        it, categoryIdBackProgram!!
                     )
                 }
             } else {
-                fragment = rifeBackProgram?.let {
+                rifeBackProgram?.let {
                     NewAlbumDetailFragment.newInstance(
-                        0,
-                        categoryIdBackProgram!!,
-                        type = typeBack,
-                        item = it
+                        0, categoryIdBackProgram!!, type = typeBack, item = it
                     )
                 }
             }
@@ -184,11 +247,9 @@ class ProgramDetailFragment : Fragment() {
             }
         }
 
-        parentFragmentManager
-            .beginTransaction()
+        parentFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
-            .replace(R.id.nav_host_fragment, fragment!!, fragment.javaClass.simpleName)
-            .commit()
+            .replace(R.id.nav_host_fragment, fragment!!, fragment.javaClass.simpleName).commit()
     }
 
     private fun setUI(program: Program) {
@@ -227,49 +288,97 @@ class ProgramDetailFragment : Fragment() {
             override fun onTrackOptions(track: Any, i: Int) {
                 positionFor = i
                 if (track is Track) {
-                    startActivityForResult(PopActivity.newIntent(requireContext(), track.id.toDouble()), 1002)
-                }else if(track is MusicRepository.Frequency) {
-                    startActivityForResult(PopActivity.newIntent(requireContext(), track.frequency.toDouble()), 1002)
+                    startActivityForResult(
+                        PopActivity.newIntent(
+                            requireContext(), track.id.toDouble()
+                        ), 1002
+                    )
+                } else if (track is MusicRepository.Frequency) {
+                    startActivityForResult(
+                        PopActivity.newIntent(
+                            requireContext(), track.frequency.toDouble()
+                        ), 1002
+                    )
                 }
             }
         })
-        program_tracks_recycler.adapter = mTrackAdapter
-
+        program_tracks_recycler.apply {
+            adapter = mTrackAdapter
+            addItemDecoration(itemDecoration)
+        }
         val dao = DataBase.getInstance(requireContext()).albumDao()
         CoroutineScope(Dispatchers.IO).launch {
             program.records.forEachIndexed { index, it ->
-                if (it >= 0) {
-                    mViewModel.getTrackById(it.toInt())?.let { track ->
-                        tracks.add(track)
+                when (it.doubleOrString()) {
+                    is Double -> {
+                        val num = it.toDouble()
+                        if (num >= 0) {
+                            mViewModel.getTrackById(num.toInt())?.let { track ->
+                                tracks.add(track)
+                            }
+                        } else {
+                            tracks.add(
+                                MusicRepository.Frequency(
+                                    index,
+                                    "",
+                                    (num * -1).toFloat(),
+                                    -index,
+                                    index,
+                                    false,
+                                    0,
+                                    0,
+                                )
+                            )
+                        }
                     }
-                } else {
-                    tracks.add(
-                        MusicRepository.Frequency(
-                            index,
-                            "",
-                            (it * -1).toFloat(),
-                            -index,
-                            index,
-                            false,
-                            0,
-                            0,
-                        )
-                    )
-                }
 
+                    is String -> {
+                        try {
+                            val listNum = it.split("|")
+                            val id = listNum.first().toDouble()
+                            val num = listNum.last().toDouble()
+                            if (num >= 0) {
+                                tracks.add(
+                                    MusicRepository.Frequency(
+                                        index,
+                                        "",
+                                        num.toFloat(),
+                                        -index,
+                                        index,
+                                        false,
+                                        0,
+                                        0,
+                                    )
+                                )
+                            } else {
+                                tracks.add(
+                                    MusicRepository.Frequency(
+                                        index,
+                                        "",
+                                        (num * -1).toFloat(),
+                                        -index,
+                                        index,
+                                        false,
+                                        0,
+                                        0,
+                                    )
+                                )
+                            }
+
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
             }
             tracks.filterIsInstance<Track>().forEach {
                 val album = dao.getAlbumById(it.albumId, it.category_id)
                 it.album = album
             }
 
-
             CoroutineScope(Dispatchers.Main).launch {
-                program_time.text =
-                    getString(
-                        R.string.total_time,
-                        getConvertedTime((tracks.size * 300000).toLong())
-                    )
+                program_time.text = getString(
+                    R.string.total_time, getConvertedTime((tracks.size * 300000).toLong())
+                )
                 mTracks = tracks
                 mTrackAdapter?.setData(tracks)
 
@@ -296,6 +405,31 @@ class ProgramDetailFragment : Fragment() {
                 }
             }
         }
+        action_rife.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out)
+                .replace(
+                    R.id.nav_host_fragment,
+                    AddProgramsFragment.newInstance(programId, 1),
+                    AddProgramsFragment.newInstance(programId).javaClass.simpleName
+                ).commit()
+        }
+        action_quantum.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out)
+                .replace(
+                    R.id.nav_host_fragment,
+                    AddProgramsFragment.newInstance(programId),
+                    AddProgramsFragment.newInstance(programId).javaClass.simpleName
+                ).commit()
+        }
+        action_frequencies.setOnClickListener {
+            fabOption.collapse()
+            FrequenciesDialogFragment.newInstance(listener = { f, m ->
+                mNewProgramViewModel.addFrequencyToProgram(programId, f)
+                m.dismiss()
+            }).showAllowingStateLoss(childFragmentManager)
+        }
     }
 
     private fun playOrDownload(tracks: ArrayList<Track>) {
@@ -313,9 +447,7 @@ class ProgramDetailFragment : Fragment() {
                         File(getSaveDir(requireContext(), t.filename, album?.audio_folder ?: ""))
                     val preloaded = File(
                         getPreloadedSaveDir(
-                            requireContext(),
-                            t.filename,
-                            album?.audio_folder ?: ""
+                            requireContext(), t.filename, album?.audio_folder ?: ""
                         )
                     )
 
@@ -425,16 +557,14 @@ class ProgramDetailFragment : Fragment() {
             activity.hidePlayerUI()
 
             CoroutineScope(Dispatchers.IO).launch {
-                val list = program?.records as MutableList<Double>
+                val list = program?.records ?: arrayListOf()
 
                 when {
                     action.equals("track_move_up") -> {
                         if (positionFor == 0) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Toast.makeText(
-                                    requireContext(),
-                                    "Track in first position",
-                                    Toast.LENGTH_SHORT
+                                    requireContext(), "Track in first position", Toast.LENGTH_SHORT
                                 ).show()
                             }
                             return@launch
@@ -446,9 +576,7 @@ class ProgramDetailFragment : Fragment() {
                         if (positionFor == list.size - 1) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Toast.makeText(
-                                    requireContext(),
-                                    "Track in last position",
-                                    Toast.LENGTH_SHORT
+                                    requireContext(), "Track in last position", Toast.LENGTH_SHORT
                                 ).show()
                             }
                             return@launch
@@ -462,27 +590,24 @@ class ProgramDetailFragment : Fragment() {
                                 if (item is Track) {
                                     item.id.let { it1 ->
                                         trackDao.isTrackFavorite(
-                                            false,
-                                            it1
+                                            false, it1
                                         )
                                     }
-                                } else if (item is MusicRepository.Frequency) {
-
                                 }
                             }
                         }
                         val trackId = list[positionFor!!]
                         list.removeAt(positionFor!!)
-                        program?.records = list as ArrayList<Double>
+                        program?.records = list
                         program?.let {
                             programDao.updateProgram(it)
                             if (it.user_id.isNotEmpty()) {
                                 try {
                                     mNewProgramViewModel.updateTrackToProgram(
                                         UpdateTrack(
-                                            track_id = listOf(trackId) ,
+                                            track_id = listOf(trackId),
                                             id = it.id,
-                                            track_type = if (trackId >= 0) "mp3" else "rife",
+                                            track_type = if (trackId.isNotString()) "mp3" else "rife",
                                             request_type = "remove",
                                             is_favorite = (it.name.uppercase() == FAVORITES.uppercase() && it.favorited)
                                         )
@@ -498,9 +623,7 @@ class ProgramDetailFragment : Fragment() {
     }
 
     private suspend fun moveTrack(
-        list: MutableList<Double>,
-        isMoveUp: Boolean,
-        programDao: ProgramDao
+        list: MutableList<String>, isMoveUp: Boolean, programDao: ProgramDao
     ) {
         val positionFrom = positionFor!!
         val positionTo = if (isMoveUp) {
@@ -509,7 +632,8 @@ class ProgramDetailFragment : Fragment() {
             positionFor!! + 1
         }
         Collections.swap(list, positionFrom, positionTo)
-        program?.records = list as ArrayList<Double>
+        program?.records?.clear()
+        program?.records?.addAll(list)
         program?.let { programDao.updateProgram(it) }
     }
 

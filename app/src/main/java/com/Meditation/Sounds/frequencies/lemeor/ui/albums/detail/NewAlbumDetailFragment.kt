@@ -177,7 +177,7 @@ class NewAlbumDetailFragment : Fragment() {
                 ApiHelper(RetrofitBuilder(requireContext()).apiService),
                 DataBase.getInstance(requireContext())
             )
-        ).get(NewAlbumDetailViewModel::class.java)
+        )[NewAlbumDetailViewModel::class.java]
         if (type == Constants.TYPE_ALBUM) {
             trackDao = DataBase.getInstance(requireContext()).trackDao()
             albumDao = DataBase.getInstance(requireContext()).albumDao()

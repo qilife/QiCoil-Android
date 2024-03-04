@@ -17,25 +17,25 @@ class LanguageUtils {
         fun getLanguages(context: Context): List<Language> {
             return listOf(
                 Language(
-                    R.drawable.ic_england_flag,
+                    R.drawable.ic_united_kingdom,
                     "English",
                     context.getString(R.string.lang_en),
                     "en"
                 ),
                 Language(
-                    R.drawable.ic_spain_flag,
+                    R.drawable.ic_spain,
                     "Spanish",
                     context.getString(R.string.lang_es),
                     "es"
                 ),
                 Language(
-                    R.drawable.ic_france_flag,
+                    R.drawable.ic_france,
                     "French",
                     context.getString(R.string.lang_fr),
                     "fr"
                 ),
                 Language(
-                    R.drawable.ic_china_flag,
+                    R.drawable.ic_china,
                     "China",
                     context.getString(R.string.lang_zh),
                     "zh"
@@ -45,7 +45,7 @@ class LanguageUtils {
 
         fun getLanguage(languageCode: String, context: Context): Language {
             return getLanguages(context).firstOrNull { it.code == languageCode } ?: Language(
-                R.drawable.ic_england_flag, "English", context.getString(R.string.lang_en), "en"
+                R.drawable.ic_united_kingdom, "English", context.getString(R.string.lang_en), "en"
             )
         }
 

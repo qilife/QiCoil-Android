@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="25dp"
+            android:gravity="center_horizontal"
+            android:text="Add New Custom Frequency"
+            android:textColor="#0F66B0"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="27dp"
+            android:layout_marginBottom="6dp"
+            android:text="Frequencies (Hz)"
+            android:textColor="#120F16"
+            android:textSize="12sp" />
+
+        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
+            android:id="@+id/edtHz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="27dp"
+            android:background="@drawable/bg_edt"
+            android:clickable="false"
+            android:focusable="false"
+            android:hint="0"
+            android:includeFontPadding="false"
+            android:inputType="number"
+            android:padding="@dimen/indent_16"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="@dimen/text_size_nomarl"
+            app:fontText="fonts/HelveticaNeue_Thin.otf" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:text="7"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="4"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="8"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="5"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="9"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="6"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <!--            android:background="#EBEDF1"-->
+            <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_frequencies"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:letterSpacing="0"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
+                android:stateListAnimator="@null"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:textColor="@drawable/bg_text_frequencies"
+                android:textSize="@dimen/text_size_large_17"
+                app:fontText="fonts/MyriadPro_Regular.otf" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="1"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="0"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="2"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btnDot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="."
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="3"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+
+                <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                    android:id="@+id/btn000"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_frequencies"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0"
+                    android:minHeight="0dp"
+                    android:paddingVertical="14dp"
+                    android:stateListAnimator="@null"
+                    android:text="000"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/bg_text_frequencies"
+                    android:textSize="@dimen/text_size_large_17"
+                    app:fontText="fonts/MyriadPro_Regular.otf" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.Meditation.Sounds.frequencies.views.CustomFontButton
+                android:id="@+id/btnAdd"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#0F66B0"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:letterSpacing="0"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
+                android:stateListAnimator="@null"
+                android:text="Add"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large_17"
+                app:fontText="fonts/MyriadPro_Regular.otf" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

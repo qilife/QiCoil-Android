@@ -76,3 +76,23 @@ class ItemOffsetBottomDecoration(private val mItemOffset: Int) : RecyclerView.It
 
     }
 }
+
+class ItemLastOffsetBottomDecoration(private val mItemOffset: Int) : RecyclerView.ItemDecoration() {
+
+    constructor(
+        context: Context,
+        @DimenRes itemOffsetId: Int
+    ) : this(context.resources.getDimensionPixelSize(itemOffsetId))
+
+    override fun getItemOffsets(
+        outRect: Rect, view: View, parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        val position = parent.getChildAdapterPosition(view)
+        val lastItemPosition = parent.adapter?.itemCount?.minus(1)
+        super.getItemOffsets(outRect, view, parent, state)
+        if (position == lastItemPosition) {
+            outRect.bottom = mItemOffset
+        }
+    }
+}

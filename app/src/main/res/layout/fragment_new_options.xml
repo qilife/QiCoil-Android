@@ -220,8 +220,16 @@
                     android:layout_marginBottom="@dimen/indent_16"
                     android:text="@string/options_sign_in"
                     android:textColor="@android:color/white"
-                    android:visibility="gone"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:popupBackground="@color/dark_blue_background"
+                    tools:listitem="@layout/item_language_spinner" />
 
 
             </LinearLayout>

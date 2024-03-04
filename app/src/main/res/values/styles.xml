@@ -45,4 +45,15 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">@color/color_text_fab</item>
+    </style>
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+    </style>
 </resources>

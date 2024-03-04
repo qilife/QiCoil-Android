@@ -8,9 +8,9 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgFlag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@drawable/ic_english_usa" />
+        android:layout_width="@dimen/indent_24"
+        android:layout_height="@dimen/indent_24"
+        tools:srcCompat="@drawable/ic_united_kingdom" />
 
     <TextView
         android:id="@+id/tvCountries"

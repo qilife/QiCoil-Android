@@ -4,5 +4,5 @@ import androidx.lifecycle.ViewModel
 
 class SearchRifeViewModel(private val repository: RifeRepository) : ViewModel() {
 
-    fun getRifeList() = repository.getAllRife()
+    fun getRifeList() = repository.getLiveDataRifes()
 }

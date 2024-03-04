@@ -16,7 +16,7 @@ class NewRifeViewModel(private val repository: RifeRepository) : ViewModel() {
     val result: LiveData<List<Rife>>
         get() = _result
 
-    fun getRifeList() = repository.getAllRife()
+    fun getRifeList() = repository.getLiveDataRifes()
 
    fun getRifeLocal(onDone:(List<Rife>)-> Unit){
        viewModelScope.launch {

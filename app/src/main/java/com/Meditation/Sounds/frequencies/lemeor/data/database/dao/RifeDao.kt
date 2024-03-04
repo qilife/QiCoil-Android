@@ -17,7 +17,7 @@ interface RifeDao {
     suspend fun deleteListRife(list: List<Rife>?)
 
     @Query("SELECT * FROM rife ORDER BY `id` ASC")
-    fun getListRife(): LiveData<List<Rife>>
+    fun getLiveDataRifes(): LiveData<List<Rife>>
 
     @Query("SELECT * FROM rife ORDER BY `id` ASC")
     suspend fun getData(): List<Rife>

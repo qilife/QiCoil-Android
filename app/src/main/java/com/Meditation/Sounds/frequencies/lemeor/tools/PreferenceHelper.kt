@@ -59,7 +59,7 @@ object PreferenceHelper {
             }
         }
     var SharedPreferences.codeLanguage
-        get() = getString(LANGUAGE, "") ?: "en"
+        get() = getString(LANGUAGE, null) ?: "en"
         set(value) {
             editMe {
                 it.putString(LANGUAGE, value)

@@ -41,7 +41,7 @@ data class HomeResponse(
 @Entity(tableName = "tag")
 data class Tag(
     @PrimaryKey var id: Int = 0,
-    var name: String= "",
+    var name: String = "",
     var order: Int = 0,
     var updated_at: Long = 0L
 )
@@ -115,7 +115,7 @@ data class Program(
     var user_id: String = "",
     var order: Int = 0,
     var updated_at: Long = Date().time,
-    @TypeConverters(DoubleConverter::class) var records: ArrayList<Double> = arrayListOf(),
+    @TypeConverters(StringArrConverter::class) var records: ArrayList<String> = arrayListOf(),
     var isMy: Boolean = true,
     var isUnlocked: Boolean = true,
     var favorited: Boolean = false,

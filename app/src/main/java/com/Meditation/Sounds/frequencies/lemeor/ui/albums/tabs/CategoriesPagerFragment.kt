@@ -16,7 +16,8 @@ import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
 import com.Meditation.Sounds.frequencies.lemeor.hashMapTiers
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.AlbumsRecyclerFragment.AlbumsRecyclerListener
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_categories_pager.*
+import kotlinx.android.synthetic.main.fragment_categories_pager.categories_tabs
+import kotlinx.android.synthetic.main.fragment_categories_pager.categories_view_pager
 
 class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
 
@@ -34,8 +35,10 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
         tierId = arguments?.getInt(ARG_TIER_ID)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_categories_pager, container, false)
     }
 
@@ -46,10 +49,12 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
     }
 
     private fun initUI() {
-        mViewModel = ViewModelProvider(this,
-                ViewModelFactory(
-                        ApiHelper(RetrofitBuilder(requireContext()).apiService),
-                        DataBase.getInstance(requireContext()))
+        mViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
         ).get(AlbumsViewModel::class.java)
 
         tierId?.let {
@@ -68,14 +73,15 @@ class CategoriesPagerFragment : Fragment(), AlbumsRecyclerListener {
                 tierId?.let { hashMapTiers.put(it, tab.position) }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) { }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
 
-            override fun onTabReselected(tab: TabLayout.Tab) { }
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
     }
 
     companion object {
         private const val ARG_TIER_ID = "arg_tiers_id"
+
         @JvmStatic
         fun newInstance(tierId: Int, listener: CategoriesPagerListener): CategoriesPagerFragment {
             return CategoriesPagerFragment().apply {

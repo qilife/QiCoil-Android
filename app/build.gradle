@@ -56,8 +56,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2247
-            versionName "2.2.47"
+            versionCode 2248
+            versionName "2.2.48"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -215,6 +215,8 @@ dependencies {
     // chucker
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     implementation("androidx.media:media:1.6.0")
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'

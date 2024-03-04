@@ -120,37 +120,6 @@ class NavigationActivity : AppCompatActivity(),
             } else if (item.obj is Program) {
                 val program = item.obj as Program
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != Constants.defaultHz - 1) {
-                        val db = DataBase.getInstance(this@NavigationActivity)
-                        val programDao = db.programDao()
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val p = programDao.getProgramById(program.id)
-                            p?.records?.add((trackIdForProgram ?: 0).toDouble())
-                            p?.let { it1 ->
-                                programDao.updateProgram(it1)
-                                if (it1.user_id.isNotEmpty()) {
-                                    try {
-                                        mNewProgramViewModel.updateTrackToProgram(
-                                            UpdateTrack(
-                                                track_id = listOf(
-                                                    (trackIdForProgram ?: 0.0).toDouble()
-                                                ),
-                                                id = it1.id,
-                                                track_type = if ((trackIdForProgram
-                                                        ?: 0.0).toDouble() >= 0
-                                                ) "mp3" else "rife",
-                                                request_type = "add",
-                                                is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
-                                            )
-                                        )
-                                    } catch (_: Exception) {
-                                    }
-                                }
-                            }
-                        }
-                    }
-
                     supportFragmentManager.beginTransaction().setCustomAnimations(
                         R.anim.trans_right_to_left_in,
                         R.anim.trans_right_to_left_out,
@@ -174,15 +143,15 @@ class NavigationActivity : AppCompatActivity(),
             } else if (item.obj is Rife) {
                 val rife = item.obj as Rife
                 supportFragmentManager.beginTransaction().setCustomAnimations(
-                        R.anim.trans_right_to_left_in,
-                        R.anim.trans_right_to_left_out,
-                        R.anim.trans_left_to_right_in,
-                        R.anim.trans_left_to_right_out
-                    ).replace(
-                        R.id.nav_host_fragment,
-                        NewAlbumDetailFragment.newInstance(0, 0, Constants.TYPE_RIFE, rife),
-                        NewAlbumDetailFragment().javaClass.simpleName
-                    ).commit()
+                    R.anim.trans_right_to_left_in,
+                    R.anim.trans_right_to_left_out,
+                    R.anim.trans_left_to_right_in,
+                    R.anim.trans_left_to_right_out
+                ).replace(
+                    R.id.nav_host_fragment,
+                    NewAlbumDetailFragment.newInstance(0, 0, Constants.TYPE_RIFE, rife),
+                    NewAlbumDetailFragment().javaClass.simpleName
+                ).commit()
             }
         }
     }
@@ -287,10 +256,9 @@ class NavigationActivity : AppCompatActivity(),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     downloadNewApkReceiver,
-                    IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                    Context.RECEIVER_EXPORTED
+                    IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_EXPORTED
                 )
-            }else{
+            } else {
                 registerReceiver(
                     downloadNewApkReceiver,
                     IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
@@ -359,7 +327,9 @@ class NavigationActivity : AppCompatActivity(),
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSION) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(applicationContext, "denied", Toast.LENGTH_SHORT).show()
+                if (preference(applicationContext).isLogged) {
+                    Toast.makeText(applicationContext, "denied", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 deleteOldFiles()
             }
@@ -535,7 +505,7 @@ class NavigationActivity : AppCompatActivity(),
         if (isNetworkAvailable()) {
             try {
                 val user = PreferenceHelper.getUser(this)
-                if(user?.id != null){
+                if (user?.id != null) {
                     mViewModel.syncProgramsToServer()
                 }
                 mViewModel.getHome("" + user?.id).observe(this) {
@@ -564,18 +534,18 @@ class NavigationActivity : AppCompatActivity(),
                 }
                 if (user?.id != null) {
                     mViewModel.getRife().observe(this) {
-                        mNewRifeViewModel.getRifeLocal{
+                        mNewRifeViewModel.getRifeLocal {
 
                         }
                     }
                 }
-            }catch (_:Exception){}
+            } catch (_: Exception) {
+            }
         } else {
 //            if (BuildConfig.IS_FREE) {
 //                mViewModel.loadDataLastHomeResponse(this@NavigationActivity)
 //            }
         }
-
     }
 
     private fun showDisclaimerDialog() {
@@ -806,7 +776,7 @@ class NavigationActivity : AppCompatActivity(),
         }
     }
 
-    private fun getAllCategories(){
+    private fun getAllCategories() {
         val categoryDao = DataBase.getInstance(applicationContext).categoryDao()
         CoroutineScope(Dispatchers.IO).launch {
             val categories = categoryDao.getData()
@@ -912,7 +882,13 @@ class NavigationActivity : AppCompatActivity(),
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         request.setAllowedOverRoaming(false)
         request.setTitle("[New APK] Quantum Frequencies")
-        request.setDestinationUri(FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), apkFile))
+        request.setDestinationUri(
+            FileProvider.getUriForFile(
+                applicationContext,
+                getString(R.string.authorities),
+                apkFile
+            )
+        )
         refId = downloadManager.enqueue(request)
 
         Toast.makeText(
@@ -961,7 +937,11 @@ class NavigationActivity : AppCompatActivity(),
             } else {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(
-                    FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), File(mLocalApkPath!!)),
+                    FileProvider.getUriForFile(
+                        applicationContext,
+                        getString(R.string.authorities),
+                        File(mLocalApkPath!!)
+                    ),
                     "application/vnd.android.package-archive"
                 )
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

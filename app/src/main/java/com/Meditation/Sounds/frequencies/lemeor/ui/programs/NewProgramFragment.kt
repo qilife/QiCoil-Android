@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
+import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.categoryIdBackProgram
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -22,18 +24,26 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Program
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
+import com.Meditation.Sounds.frequencies.lemeor.rifeBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.trackIdForProgram
+import com.Meditation.Sounds.frequencies.lemeor.typeBack
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail.ProgramDetailFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.purchase.new_flow.NewPurchaseActivity
 import com.Meditation.Sounds.frequencies.utils.Constants
+import com.Meditation.Sounds.frequencies.utils.isNotString
 import com.Meditation.Sounds.frequencies.views.AlertMessageDialog
-import kotlinx.android.synthetic.main.fragment_new_program.*
+import kotlinx.android.synthetic.main.fragment_new_program.program_back
+import kotlinx.android.synthetic.main.fragment_new_program.program_create_new
+import kotlinx.android.synthetic.main.fragment_new_program.program_title
+import kotlinx.android.synthetic.main.fragment_new_program.programs_recycler_view
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Date
 
 class NewProgramFragment : Fragment() {
 
@@ -56,7 +66,7 @@ class NewProgramFragment : Fragment() {
         mViewModel.getPrograms(isTrackAdd).observe(viewLifecycleOwner) {
             CoroutineScope(Dispatchers.IO).launch {
                 val data = checkUnlocked(it)
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     mProgramAdapter.setData(data)
                 }
             }
@@ -78,8 +88,9 @@ class NewProgramFragment : Fragment() {
             val tracks: ArrayList<Track> = ArrayList()
 
             program.records.forEach { r ->
-                if (r >= 0) {
-                    mViewModel.getTrackById(r.toInt())?.let { track -> tracks.add(track) }
+                if (r.isNotString()) {
+                    mViewModel.getTrackById(r.toDouble().toInt())
+                        ?.let { track -> tracks.add(track) }
                 }
             }
 
@@ -185,29 +196,24 @@ class NewProgramFragment : Fragment() {
         mProgramAdapter.setOnClickListener(object : ProgramAdapter.Listener {
             override fun onClickItem(program: Program, i: Int) {
                 if (program.isUnlocked) {
-                    if (isTrackAdd && trackIdForProgram != Constants.defaultHz - 1) {
+                    if (isTrackAdd && trackIdForProgram != (Constants.defaultHz - 1).toString()) {
                         val db = DataBase.getInstance(requireContext())
                         val programDao = db.programDao()
-
                         CoroutineScope(Dispatchers.IO).launch {
                             try {
-                                val p = programDao.getProgramById(program.id)
-                                p?.records?.add((trackIdForProgram ?: 0.0).toDouble())
-                                p?.let { it1 ->
-                                    programDao.updateProgram(it1)
-                                    if (it1.user_id.isNotEmpty()) {
+                                val programRoom = programDao.getProgramById(program.id)
+                                programRoom?.let { p ->
+                                    p.records.add(trackIdForProgram)
+                                    programDao.updateProgram(p)
+                                    if (p.user_id.isNotEmpty()) {
                                         try {
                                             mViewModel.updateTrackToProgram(
                                                 UpdateTrack(
-                                                    track_id = listOf(
-                                                        (trackIdForProgram ?: 0.0).toDouble()
-                                                    ),
-                                                    id = it1.id,
-                                                    track_type = if ((trackIdForProgram
-                                                            ?: 0.0).toDouble() >= 0
-                                                    ) "mp3" else "rife",
+                                                    track_id = listOf(trackIdForProgram),
+                                                    id = p.id,
+                                                    track_type = if (trackIdForProgram.isNotString()) "mp3" else "rife",
                                                     request_type = "add",
-                                                    is_favorite = (it1.name.uppercase() == FAVORITES.uppercase() && it1.favorited)
+                                                    is_favorite = (p.name.uppercase() == FAVORITES.uppercase() && p.favorited)
                                                 )
                                             )
                                         } catch (_: Exception) {
@@ -239,13 +245,13 @@ class NewProgramFragment : Fragment() {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             program.records.forEach { r ->
-                                if (r >= 0) {
-                                    mViewModel.getTrackById(r.toInt())
+                                if (r.isNotString()) {
+                                    mViewModel.getTrackById(r.toDouble().toInt())
                                         ?.let { track -> tracks.add(track) }
                                 }
                             }
                             tracks.forEach { t ->
-                                val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id);
+                                val temp_album = mViewModel.getAlbumById(t.albumId, t.category_id)
                                 if (temp_album?.isUnlocked == false && album == null) {
                                     album = temp_album
                                     CoroutineScope(Dispatchers.Main).launch {
