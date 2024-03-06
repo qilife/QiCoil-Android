@@ -99,7 +99,7 @@
             fab:fab_colorNormal="@color/color_icon_fab"
             fab:fab_colorPressed="@color/color_icon_fab"
             fab:fab_size="mini"
-            fab:fab_title="Custom Frequencies" />
+            fab:fab_title="@string/tv_cus_frequency" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_rife"
@@ -110,7 +110,7 @@
             android:paddingBottom="15dp"
             fab:fab_colorPressed="@color/color_icon_fab"
             fab:fab_size="mini"
-            fab:fab_title="Add rife" />
+            fab:fab_title="@string/tv_add_rife" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_quantum"
@@ -120,7 +120,7 @@
             fab:fab_colorNormal="@color/color_icon_fab"
             fab:fab_colorPressed="@color/color_icon_fab"
             fab:fab_size="mini"
-            fab:fab_title="Add Quantum" />
+            fab:fab_title="@string/tv_add_quantum" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 

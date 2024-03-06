@@ -301,6 +301,21 @@
     <string name="msg_coming_soon">À venir&#8230;</string>
     <string name="msg_download_data">Téléchargement des données&#8230; S\'il vous plaît, attendez</string>
     <string name="total_time">temps total %1$s</string>
-    <string name="error_hz_exceeded">Le Hz est dépassé $s</string>
+    <string name="error_hz_exceeded">Le Hz est dépassé %1$s</string>
     <string name="tv_rifes">Rifs</string>
+    <string name="tv_track">Piste</string>
+    <string name="tv_from_rife">De Rife</string>
+    <string name="tv_cus_frequency">Fréquences personnalisées</string>
+    <string name="tv_add_rife">Ajouter un randonnée</string>
+    <string name="tv_add_quantum">Ajouter quantum</string>
+    <string name="tv_error_hz">Le Hz est supérieur à %1$s et moins de %2$s</string>
+    <string name="title_cus_frequency">Ajouter une nouvelle fréquence personnalisée</string>
+    <string name="tv_fre_hz">Fréquences (Hz)</string>
+    <string name="tv_add">Ajouter</string>
+    <string name="tv_delete">Supprimer</string>
+    <string name="tv_error_playlist_name">Veuillez saisir le nom de la playlist</string>
+    <string name="tv_track_last_pos">Suivre en dernière position</string>
+    <string name="tv_track_first_pos">Suivre en première position</string>
+    <string name="tv_error_back">Veuillez cliquer à nouveau pour quitter!</string>
+
 </resources>

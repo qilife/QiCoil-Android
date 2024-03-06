@@ -295,6 +295,21 @@
     <string name="msg_coming_soon">即将推出&#8230;</string>
     <string name="msg_download_data">下载数据&#8230; 请稍等</string>
     <string name="total_time">总时间 %1$s</string>
-    <string name="error_hz_exceeded">超过Hz $s</string>
+    <string name="error_hz_exceeded">超过Hz %1$s</string>
     <string name="tv_rifes">步枪</string>
+    <string name="tv_track">追踪</string>
+    <string name="tv_from_rife">来自盛行</string>
+    <string name="tv_cus_frequency">自定义频率</string>
+    <string name="tv_add_rife">添加盛行</string>
+    <string name="tv_add_quantum">添加量子</string>
+    <string name="tv_error_hz">HZ大于%1$s，小于%2$s</string>
+    <string name="title_cus_frequency">添加新的自定义频率</string>
+    <string name="tv_fre_hz">频率（Hz）</string>
+    <string name="tv_add">添加</string>
+    <string name="tv_delete">删除</string>
+    <string name="tv_error_playlist_name">请输入播放列表名称</string>
+    <string name="tv_track_last_pos">在最后位置轨道</string>
+    <string name="tv_track_first_pos">轨道处于第一位置</string>
+    <string name="tv_error_back">请单击再次退出！</string>
+
 </resources>

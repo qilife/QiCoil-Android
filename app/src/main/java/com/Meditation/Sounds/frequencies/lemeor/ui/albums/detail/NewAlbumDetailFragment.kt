@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
@@ -44,6 +45,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
+import kotlin.math.abs
 
 
 class NewAlbumDetailFragment : Fragment() {
@@ -300,7 +302,7 @@ class NewAlbumDetailFragment : Fragment() {
                     )
                 } else {
                     Toast.makeText(
-                        requireContext(), "The Hz is exceeded 22,000", Toast.LENGTH_SHORT
+                        requireContext(), getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()), Toast.LENGTH_SHORT
                     ).show()
                 }
             }

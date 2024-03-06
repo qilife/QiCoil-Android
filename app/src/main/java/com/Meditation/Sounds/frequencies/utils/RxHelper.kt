@@ -7,10 +7,13 @@ import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.ImageView
+import androidx.annotation.RawRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.abs
@@ -170,4 +173,18 @@ inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
 
 fun Rife.getRifeFormat(value: Double): String {
     return "$id|${abs(value)}"
+}
+
+internal fun loadImageWithGif(imageView: ImageView, @RawRes rawRes: Int?) {
+    rawRes ?: return
+    Glide.with(imageView.context).load(rawRes).placeholder(null).into(imageView)
+}
+inline fun <T> Iterable<T>.forEachBreak(predicate: (T) -> Boolean): Boolean {
+    if (this is Collection && isEmpty()) return true
+    for (element in this) {
+        if (!predicate(element)) {
+            return false
+        }
+    }
+    return true
 }

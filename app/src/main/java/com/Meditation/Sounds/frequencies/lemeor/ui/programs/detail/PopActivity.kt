@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -18,9 +19,15 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.TrackOptionsPopUpActivity
 import com.Meditation.Sounds.frequencies.utils.Constants
-import kotlinx.android.synthetic.main.activity_pop.*
+import kotlinx.android.synthetic.main.activity_pop.pop_btn_minus
+import kotlinx.android.synthetic.main.activity_pop.pop_btn_plus
+import kotlinx.android.synthetic.main.activity_pop.pop_tv_duration
+import kotlinx.android.synthetic.main.activity_pop.track_move_down
+import kotlinx.android.synthetic.main.activity_pop.track_move_up
+import kotlinx.android.synthetic.main.activity_pop.track_remove
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class PopActivity : AppCompatActivity() {
 
@@ -69,8 +76,11 @@ class PopActivity : AppCompatActivity() {
             intent.getDoubleExtra(TrackOptionsPopUpActivity.EXTRA_TRACK_ID, Constants.defaultHz - 1)
 
         if (trackId <= Constants.defaultHz - 1) {
-            Toast.makeText(applicationContext, "The Hz is exceeded 28,000", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -103,8 +113,11 @@ class PopActivity : AppCompatActivity() {
         pop_btn_minus.setOnClickListener {
             var d = duration
 
-            if (d > 600000) { d -= 300000 }
-            else { d = 300000 }
+            if (d > 600000) {
+                d -= 300000
+            } else {
+                d = 300000
+            }
 
             pop_tv_duration.text = getConvertedTime(d)
 
@@ -114,8 +127,11 @@ class PopActivity : AppCompatActivity() {
         pop_btn_plus.setOnClickListener {
             var d = duration
 
-            if (d < 86400000) { d += 300000 }
-            else if (d >= 86400000) { d = 86400000 }
+            if (d < 86400000) {
+                d += 300000
+            } else if (d >= 86400000) {
+                d = 86400000
+            }
 
             pop_tv_duration.text = getConvertedTime(d)
 

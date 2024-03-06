@@ -125,7 +125,7 @@ class ProgramTrackAdapter(
             }
 
             holder.itemView.item_track_image.setImageResource(R.drawable.frequency)
-            holder.itemView.item_track_name.text = "Rife"
+            holder.itemView.item_track_name.text = holder.itemView.context.getString(R.string.navigation_lbl_rife)
             holder.itemView.item_album_name.text = track.frequency.toString()
             holder.itemView.item_track_options.setOnClickListener {
                 mListener?.onTrackOptions(

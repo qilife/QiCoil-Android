@@ -1,6 +1,5 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -15,7 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
@@ -23,15 +22,24 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.getConvertedTime
+import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloadService
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
+import com.Meditation.Sounds.frequencies.lemeor.trackIdForProgram
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.UpdateTrack
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramViewModel
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.utils.getRifeFormat
 import com.Meditation.Sounds.frequencies.utils.parcelable
-import kotlinx.android.synthetic.main.activity_pop_up_track_options.*
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.btn_minus
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.btn_plus
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_add_favorites
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_add_program
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.track_redownload
+import kotlinx.android.synthetic.main.activity_pop_up_track_options.tv_duration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,7 +59,7 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
     private val rife: Rife? by lazy {
         intent.parcelable<Rife>(EXTRA_RIFE)
-            ?: throw IllegalArgumentException("Must call through newInstance()")
+//            ?: throw IllegalArgumentException("Must call through newInstance()")
     }
     private val trackId: Double by lazy {
         intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
@@ -103,13 +111,12 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    @SuppressLint("StringFormatInvalid")
     private fun setUI() {
         //  program add two obj(rife and track) "rife limit -22000->0" and "track id integer"
         if (trackId <= Constants.defaultHz - 1) {
             Toast.makeText(
                 applicationContext,
-                getString(R.string.error_hz_exceeded, abs(Constants.defaultHz)),
+                getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()),
                 Toast.LENGTH_SHORT
             ).show()
             return

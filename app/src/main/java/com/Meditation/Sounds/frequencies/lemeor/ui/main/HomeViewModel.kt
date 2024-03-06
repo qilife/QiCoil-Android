@@ -1,11 +1,13 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.main
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.FAVORITES
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
@@ -21,7 +23,6 @@ import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -29,6 +30,12 @@ import retrofit2.HttpException
 class HomeViewModel(private val repository: HomeRepository, private val db: DataBase) :
     ViewModel() {
     //val home = repository.getHome(user_id)
+
+    private var _pairData = MutableLiveData<List<Triple<String, List<Search>, Boolean>>>()
+    val pairData: LiveData<List<Triple<String, List<Search>, Boolean>>> get() = _pairData
+
+    private var _searchState = MutableLiveData<List<Triple<String, List<Search>, Boolean>>>()
+    val searchState: LiveData<List<Triple<String, List<Search>, Boolean>>> get() = _searchState
 
     fun getHome(id: String): LiveData<Resource<HomeResponse>> {
         return repository.getHome(id)
@@ -39,32 +46,114 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
     }
 
     fun getListAlbum() = repository.getListAlbum()
+    fun getListTrack() = repository.getListTrack()
 
     fun getListRife() = repository.getListRife()
 
-    fun getData(pref: SharedPreferences, onResult: (List<Search>, List<Search>) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val listIT = mutableListOf<Search>()
-            val listIR = mutableListOf<Search>()
-            var i = 0
+    fun setSearchKeyword(
+        key: String,
+        idPager: Int,
+        context: Context,
+        onSearch: (List<Triple<String, List<Search>, Boolean>>) -> Unit
+    ) {
+        try {
+            if (idPager == 0) {
+                _searchState.value?.let {
+                    val s = it.first().second.filter { item ->
+                        return@filter if (item.obj is Track) {
+                            val track = item.obj as Track
+                            track.name.lowercase().contains(key.lowercase())
+                        } else false
+                    }
+                    val list = arrayListOf<Triple<String, List<Search>, Boolean>>()
+                    list.add(
+                        Triple(context.getString(R.string.tv_track), s, it.first().third)
+                    )
+                    list.add(
+                        Triple(
+                            context.getString(R.string.navigation_lbl_rife),
+                            it.last().second,
+                            it.last().third
+                        )
+                    )
+                    onSearch.invoke(list)
+                }
+            } else if (idPager == 1) {
+                _searchState.value?.let {
+                    val s = it.last().second.filter { item ->
+                        return@filter if (item.obj is Rife) {
+                            val track = item.obj as Rife
+                            track.title.lowercase().contains(key.lowercase())
+                        } else false
+                    }
+                    val list = arrayListOf<Triple<String, List<Search>, Boolean>>()
+                    list.add(
+                        Triple(
+                            context.getString(R.string.tv_track),
+                            it.first().second,
+                            it.first().third
+                        )
+                    )
+                    list.add(
+                        Triple(
+                            context.getString(R.string.navigation_lbl_rife),
+                            s,
+                            it.last().third
+                        )
+                    )
+                    onSearch.invoke(list)
+                }
+            }
+        } catch (_: Exception) {
+        }
+    }
 
-            val listT = async { repository.getListT() }.await()
-            val listR = async { repository.getListR() }.await()
-
-            listT.forEach { track ->
-                val album = repository.getAlbumById(track.albumId, track.category_id)
-                listIT.add(Search(i, track.apply {
-                    this.isUnlocked = album?.isUnlocked ?: false
-                }))
-                i++
+    fun getLiveData(owner: LifecycleOwner, context: Context) {
+        val list = arrayListOf<Triple<String, List<Search>, Boolean>>()
+        list.add(Triple(context.getString(R.string.tv_track), arrayListOf(), true))
+        list.add(Triple(context.getString(R.string.navigation_lbl_rife), arrayListOf(), true))
+        var index = 0
+        getListTrack().observe(owner) { listT ->
+            CoroutineScope(Dispatchers.IO).launch {
+                val listIT = listT.mapNotNull { parcelable ->
+                    val track = parcelable as? Track
+                    if (track != null) {
+                        val album = getAlbumById(
+                            track.albumId, track.category_id
+                        )
+                        Search(
+                            ++index,
+                            track.apply {
+                                this.isUnlocked = album?.isUnlocked ?: false
+                                this.album = album
+                            })
+                    } else {
+                        null
+                    }
+                }
+                list.firstOrNull()?.let { firstItem ->
+                    list[0] = Triple(firstItem.first, listIT, listIT.isEmpty())
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    _pairData.value = list
+                    _searchState.value = list
+                }
             }
-            listR.forEach { rife ->
-                listIR.add(Search(i, rife))
-                i++
+        }
+        getListRife().observe(owner) { listR ->
+            val listIR = listR.mapNotNull { parcelable ->
+                val rife = parcelable as? Rife
+                if (rife != null) {
+                    Search(++index, rife)
+                } else {
+                    null
+                }
             }
-            withContext(Dispatchers.Main) {
-                onResult.invoke(listIT, listIR)
+            list.lastOrNull()?.let { firstItem ->
+                list[1] = Triple(firstItem.first, listIR, listIR.isEmpty())
             }
+            _pairData.value = list
+            _searchState.value = list
         }
     }
 
@@ -107,8 +196,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
         val cache: HomeResponse = Gson().fromJson(
             context.assets.open("db_caсhe.json").bufferedReader().use { reader ->
                 reader.readText()
-            },
-            HomeResponse::class.java
+            }, HomeResponse::class.java
         )
 
         CoroutineScope(Dispatchers.IO).launch { repository.localSave(cache) }

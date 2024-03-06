@@ -17,11 +17,13 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail.NewAlbumDetailF
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_new_rife.*
+import kotlinx.android.synthetic.main.fragment_new_rife.btnSearch
+import kotlinx.android.synthetic.main.fragment_new_rife.rife_tabs
+import kotlinx.android.synthetic.main.fragment_new_rife.rife_view_pager
 
 class NewRifeFragment : Fragment() {
     private lateinit var mViewModel: NewRifeViewModel
-    var rifePagerAdapter: RifePagerAdapter? = null
+    private var rifePagerAdapter: RifePagerAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,7 +47,7 @@ class NewRifeFragment : Fragment() {
                 ApiHelper(RetrofitBuilder(requireContext()).apiService),
                 DataBase.getInstance(requireContext())
             )
-        ).get(NewRifeViewModel::class.java)
+        )[NewRifeViewModel::class.java]
 
         rifePagerAdapter = RifePagerAdapter(
             activity as NavigationActivity,

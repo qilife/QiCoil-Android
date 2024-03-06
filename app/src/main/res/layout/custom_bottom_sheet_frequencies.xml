@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="25dp"
             android:gravity="center_horizontal"
-            android:text="Add New Custom Frequency"
+            android:text="@string/title_cus_frequency"
             android:textColor="#0F66B0"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="27dp"
             android:layout_marginBottom="6dp"
-            android:text="Frequencies (Hz)"
+            android:text="@string/tv_fre_hz"
             android:textColor="#120F16"
             android:textSize="12sp" />
 
@@ -213,7 +213,7 @@
                 android:minHeight="0dp"
                 android:paddingVertical="10dp"
                 android:stateListAnimator="@null"
-                android:text="Delete"
+                android:text="@string/tv_delete"
                 android:textAllCaps="false"
                 android:textColor="@drawable/bg_text_frequencies"
                 android:textSize="@dimen/text_size_large_17"
@@ -379,7 +379,7 @@
                 android:minHeight="0dp"
                 android:paddingVertical="10dp"
                 android:stateListAnimator="@null"
-                android:text="Add"
+                android:text="@string/tv_add"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_large_17"

@@ -295,6 +295,21 @@
     <string name="msg_coming_soon">Muy pronto&#8230;</string>
     <string name="msg_download_data">Descarga de datos&#8230; Espere por favor</string>
     <string name="total_time">Espere por favor %1$s</string>
-    <string name="error_hz_exceeded">Se excede el HZ $s</string>
+    <string name="error_hz_exceeded">Se excede el HZ %1$s</string>
     <string name="tv_rifes">Rifes</string>
+    <string name="tv_track">Pista</string>
+    <string name="tv_from_rife">De la matriz</string>
+    <string name="tv_cus_frequency">Frecuencias personalizadas</string>
+    <string name="tv_add_rife">Añadir Rife</string>
+    <string name="tv_add_quantum">Agregar cuándo</string>
+    <string name="tv_error_hz">El Hz es mayor que %1$s y menos de %2$s</string>
+    <string name="title_cus_frequency">Agregar nueva frecuencia personalizada</string>
+    <string name="tv_fre_hz">Frecuencias (Hz)</string>
+    <string name="tv_add">Agregar</string>
+    <string name="tv_delete">Borrar</string>
+    <string name="tv_error_playlist_name">Por favor ingrese el nombre de la lista de reproducción</string>
+    <string name="tv_track_last_pos">Rastrear en la última posición</string>
+    <string name="tv_track_first_pos">Rastrear en la primera posición</string>
+    <string name="tv_error_back">¡Haga clic nuevamente para salir!</string>
+
 </resources>

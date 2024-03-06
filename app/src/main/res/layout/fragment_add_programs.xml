@@ -28,21 +28,20 @@
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.Meditation.Sounds.frequencies.views.CustomFontEditText
             android:id="@+id/searchHint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="9dp"
             android:background="@null"
-            android:ellipsize="end"
             android:focusableInTouchMode="true"
-            android:hint="Search"
-            android:imeOptions="actionNone"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionDone"
             android:includeFontPadding="false"
-            android:inputType="textCapSentences"
+            android:inputType="text"
             android:paddingVertical="@dimen/image_size_10"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/color_gray"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnClear"
@@ -57,6 +56,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="3dp"
+            android:tint="@color/color_gray"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,18 +65,21 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.Meditation.Sounds.frequencies.views.CustomFontButton
         android:id="@+id/btnAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="@dimen/image_size_10"
+        android:background="@drawable/ic_add"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:letterSpacing="0"
         android:minHeight="0dp"
         android:stateListAnimator="@null"
-        android:text="@string/btn_add"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size_large_17"
         app:layout_constraintBottom_toBottomOf="@id/search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/search" />
@@ -99,6 +102,5 @@
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabs"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tabs" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,6 +44,10 @@ class ProgramRepository(private val localData: DataBase, private val apiHelper: 
         return localData.programDao().getListProgram()
     }
 
+    fun getListTrack() : LiveData<List<Track>>{
+        return localData.trackDao().getTracks()
+    }
+
     suspend fun getProgramById(id:Int) = localData.programDao().getProgramById(id)
     suspend fun updateProgram(program: Program) = localData.programDao().updateProgram(program)
 }

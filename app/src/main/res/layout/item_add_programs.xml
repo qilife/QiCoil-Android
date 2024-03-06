@@ -1,20 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/indent_16">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvId"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvLayout"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="#D6D6D6"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="1"
+        app:cardBackgroundColor="@color/color_gray"
+        app:cardCornerRadius="@dimen/margin_item_5"
+        app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/imgViewAlbum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_album_placeholder"
+            app:siBorderColor="@color/transparent"
+            app:siBorderWidth="0dp"
+            app:siRadius="0dp"
+            app:siSquare="true" />
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/imgLock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_album_lock_2"
+            app:siBorderColor="@color/transparent"
+            app:siBorderWidth="0dp"
+            app:siRadius="@dimen/corner_radius_album"
+            android:visibility="visible"
+            app:siSquare="true" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@id/imgView"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="fitCenter"
+            tools:srcCompat="@drawable/frequency" />
+    </androidx.cardview.widget.CardView>
+
+    <!--    <androidx.appcompat.widget.AppCompatTextView-->
+    <!--        android:id="@+id/tvId"-->
+    <!--        android:layout_width="45dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        android:background="#D6D6D6"-->
+    <!--        android:gravity="center"-->
+    <!--        android:includeFontPadding="false"-->
+    <!--        android:text="1"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvName"
@@ -29,8 +66,8 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/tvDes"
         app:layout_constraintEnd_toStartOf="@+id/cbItem"
-        app:layout_constraintStart_toEndOf="@id/tvId"
-        app:layout_constraintTop_toTopOf="@id/tvId" />
+        app:layout_constraintStart_toEndOf="@id/cvLayout"
+        app:layout_constraintTop_toTopOf="@id/cvLayout" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDes"
@@ -38,21 +75,21 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/indent_16"
         android:ellipsize="end"
-        android:gravity="left"
+        android:gravity="start"
         android:includeFontPadding="false"
         android:maxLines="1"
-        android:text="From 'Album name'"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/tvId"
+        app:layout_constraintBottom_toBottomOf="@id/cvLayout"
         app:layout_constraintEnd_toStartOf="@+id/cbItem"
-        app:layout_constraintStart_toEndOf="@id/tvId"
+        app:layout_constraintStart_toEndOf="@id/cvLayout"
         app:layout_constraintTop_toBottomOf="@id/tvName" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/cbItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:buttonTint="@drawable/bg_check_box_filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvId" />
+        app:layout_constraintTop_toTopOf="@id/cvLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

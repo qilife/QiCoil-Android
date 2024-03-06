@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="facebook_app_id" translatable="false">239929504671619</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb239929504671619</string>
 
@@ -244,7 +244,7 @@
     <string name="tv_title_subscription">Subscription automatically renews unless auto-renew is turned off at least 24 hours before current period ends. payment is charged to your GooglePlay account. Manage subscriptions and turn off auto-renewal in GooglePlay settings.</string>
     <string name="tv_title_subscription_new">This subscription automatically renews unless auto-renew is turned off at least 24-hours before current period ends. Payment is charged to your GooglePlay account. Manage subscriptions and turn off auto renewal in GooglePlay account settings.</string>
     <string name="flash_sale_50_off">Flash Sale - 50% OFF</string>
-    <string name="tv_forgotten_password" >&lt;u&gt;Forgotten password?&lt;/u&gt;</string>
+    <string name="tv_forgotten_password">&lt;u&gt;Forgotten password?&lt;/u&gt;</string>
     <string name="tv_link_sign_in">&lt;u&gt; Sign in.&lt;/u&gt;</string>
     <string name="tv_link_sign_up">&lt;u&gt; Sign up.&lt;/u&gt;</string>
     <string name="tv_signUp">Don\'t have an account?</string>
@@ -364,8 +364,22 @@
     <string name="tv_apply_now">APPLY NOW</string>
     <string name="tv_count_frequencies">%s frequencies / 00:03:00</string>
     <string name="subs_purchase_info">Subscribe for %1$s/month or %2$s/year</string>
-    <string name="error_hz_exceeded">The Hz is exceeded $s</string>
+    <string name="error_hz_exceeded">The Hz is exceeded %1$s</string>
     <string name="tv_rifes">Rifes</string>
+    <string name="tv_track">Track</string>
+    <string name="tv_from_rife">From Rife</string>
+    <string name="tv_cus_frequency">Custom Frequencies</string>
+    <string name="tv_add_rife">Add Rife</string>
+    <string name="tv_add_quantum">Add Quantum</string>
+    <string name="tv_error_hz">The Hz is greater than %1$s and less than %2$s</string>
+    <string name="title_cus_frequency">Add New Custom Frequency</string>
+    <string name="tv_fre_hz">Frequencies (Hz)</string>
+    <string name="tv_add">Add</string>
+    <string name="tv_delete">Delete</string>
+    <string name="tv_error_playlist_name">Please enter playlist name</string>
+    <string name="tv_track_last_pos">Track in last position</string>
+    <string name="tv_track_first_pos">Track in first position</string>
+    <string name="tv_error_back">Please click BACK again to exit!</string>
 
     <string name="lang_en" translatable="false">English</string>
     <string name="lang_fr" translatable="false">French</string>

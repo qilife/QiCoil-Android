@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/indent_8"
-    android:padding="@dimen/indent_8"
     android:background="@drawable/rounded_dark_blue_background"
     android:orientation="vertical"
+    android:padding="@dimen/indent_8"
     tools:context=".lemeor.ui.programs.NewProgramFragment">
 
     <LinearLayout
@@ -56,15 +56,15 @@
         android:id="@+id/program_create_new"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/indent_8"
         android:orientation="horizontal"
+        android:padding="@dimen/indent_8"
         tools:ignore="UseCompoundDrawables">
 
         <com.Meditation.Sounds.frequencies.views.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/indent_8"
             android:layout_marginEnd="@dimen/indent_8"
+            android:layout_marginRight="@dimen/indent_8"
             android:text="@string/tv_create_new"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_21"
@@ -86,11 +86,30 @@
         android:layout_marginRight="@dimen/indent_8"
         android:background="@android:color/white" />
 
+    <FrameLayout
+        android:id="@+id/loadingFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_blue_background"
+        android:clickable="true"
+        android:elevation="2dp"
+        android:focusable="true">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivImage"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+    </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/programs_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_program"/>
+        tools:listitem="@layout/item_program" />
 
 </LinearLayout>

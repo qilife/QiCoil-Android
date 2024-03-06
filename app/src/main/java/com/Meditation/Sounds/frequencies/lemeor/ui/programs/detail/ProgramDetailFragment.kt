@@ -104,9 +104,9 @@ class ProgramDetailFragment : Fragment() {
                 program?.records?.forEachIndexed { index, it ->
                     when (it.doubleOrString()) {
                         is Double -> {
-                            val num = it.toInt()
+                            val num = it.toDouble()
                             if (num >= 0) {
-                                mViewModel.getTrackById(num)?.let { track ->
+                                mViewModel.getTrackById(num.toInt())?.let { track ->
                                     tracks.add(track)
                                 }
                             } else {
@@ -564,7 +564,9 @@ class ProgramDetailFragment : Fragment() {
                         if (positionFor == 0) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Toast.makeText(
-                                    requireContext(), "Track in first position", Toast.LENGTH_SHORT
+                                    requireContext(),
+                                    getString(R.string.tv_track_first_pos),
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
                             return@launch
@@ -576,7 +578,9 @@ class ProgramDetailFragment : Fragment() {
                         if (positionFor == list.size - 1) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Toast.makeText(
-                                    requireContext(), "Track in last position", Toast.LENGTH_SHORT
+                                    requireContext(),
+                                    getString(R.string.tv_track_last_pos),
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
                             return@launch
@@ -632,9 +636,10 @@ class ProgramDetailFragment : Fragment() {
             positionFor!! + 1
         }
         Collections.swap(list, positionFrom, positionTo)
-        program?.records?.clear()
-        program?.records?.addAll(list)
-        program?.let { programDao.updateProgram(it) }
+        program?.let {
+            it.records = list as java.util.ArrayList<String>
+            programDao.updateProgram(it)
+        }
     }
 
     companion object {

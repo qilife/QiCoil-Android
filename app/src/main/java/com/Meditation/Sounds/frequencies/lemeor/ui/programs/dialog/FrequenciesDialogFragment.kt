@@ -47,23 +47,33 @@ class FrequenciesDialogFragment(private val listener: (Double, FrequenciesDialog
         btn000.setClickNumber("000")
 
         btnDot.setOnClickListener {
-            if (tv.indexOf(".") < 0 && tv.length < 12 && tv.toString().formatNumber() != "0") {
-                liveTv.postValue(
-                    tv.append(".")
-                )
+            if (tv.indexOf(".") < 0 && tv.length < 12) {
+                if (tv.toString().formatNumber() == "0") {
+                    liveTv.postValue(
+                        tv.append("0.")
+                    )
+                } else {
+                    liveTv.postValue(
+                        tv.append(".")
+                    )
+                }
             }
         }
 
         btnAdd.setOnClickListener {
             try {
-                val num = tv.toString().toDouble()
-                if (num in 1.0..22000.0) {
-                    listener.invoke(num, this)
+                if (tv.isEmpty()) {
+                    showToast(getString(R.string.tv_error_hz, "1", "22000"))
                 } else {
-                    showToast("The Hz is exceeded 22,000")
+                    val num = tv.toString().toDouble()
+                    if (num in 1.0..22000.0) {
+                        listener.invoke(num, this)
+                    } else {
+                        showToast(getString(R.string.tv_error_hz, "1", "22000"))
+                    }
                 }
             } catch (_: NumberFormatException) {
-                showToast("The Hz is exceeded 22,000")
+                showToast(getString(R.string.tv_error_hz, "1", "22000"))
             }
         }
 
@@ -99,18 +109,18 @@ class FrequenciesDialogFragment(private val listener: (Double, FrequenciesDialog
             }
 
         } else {
-            ""
+            "0"
         }
     }
 
     private fun String.formatDouble(): String {
         return if (this.isNotEmpty()) {
-            val number = this.toDouble()
             if (tv.indexOf(".") >= 0) {
                 val pr = tv.split(".")
                 val s = "%,.0f".format(pr.first().toDouble())
                 "$s.${pr.last()}"
             } else {
+                val number = this.toDouble()
                 "%,.0f".format(number)
             }
         } else {

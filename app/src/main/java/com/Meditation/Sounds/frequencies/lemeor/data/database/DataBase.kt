@@ -126,7 +126,7 @@ abstract class DataBase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 val cursor = database.query("SELECT * FROM program")
                 val idColumnIndex = cursor.getColumnIndex("id")
-                val recordsColumnIndex = cursor.getColumnIndex("time")
+                val recordsColumnIndex = cursor.getColumnIndex("records")
                 while (cursor.moveToNext()) {
                     val id = cursor.getInt(idColumnIndex)
                     val records = cursor.getString(recordsColumnIndex)

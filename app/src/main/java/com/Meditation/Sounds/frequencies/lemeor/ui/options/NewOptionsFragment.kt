@@ -15,14 +15,40 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.db.QFDatabase.Companion.getDatabase
-import com.Meditation.Sounds.frequencies.lemeor.*
-import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.*
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BRAIN
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_DMT
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_FITNESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_MANIFESTING
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_NAD
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_NMN
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_PROTECTION
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WISDOM
+import com.Meditation.Sounds.frequencies.lemeor.InstructionsActivity
+import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL
+import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_MONTH
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.Resource
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.hashMapTiers
+import com.Meditation.Sounds.frequencies.lemeor.isPlayAlbum
+import com.Meditation.Sounds.frequencies.lemeor.isPlayProgram
+import com.Meditation.Sounds.frequencies.lemeor.showAlert
 import com.Meditation.Sounds.frequencies.lemeor.tools.HudHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
@@ -54,10 +80,20 @@ import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.PurchasesResponseListener
 import kotlinx.android.synthetic.main.fragment_login.spLanguage
-import kotlinx.android.synthetic.main.fragment_new_options.*
+import kotlinx.android.synthetic.main.fragment_new_options.options_about
+import kotlinx.android.synthetic.main.fragment_new_options.options_change_pass
+import kotlinx.android.synthetic.main.fragment_new_options.options_delete_user
+import kotlinx.android.synthetic.main.fragment_new_options.options_disclaimer
+import kotlinx.android.synthetic.main.fragment_new_options.options_flash_sale
+import kotlinx.android.synthetic.main.fragment_new_options.options_help
+import kotlinx.android.synthetic.main.fragment_new_options.options_instruction
+import kotlinx.android.synthetic.main.fragment_new_options.options_log_out
+import kotlinx.android.synthetic.main.fragment_new_options.options_restore_purchase
+import kotlinx.android.synthetic.main.fragment_new_options.options_sign_in
+import kotlinx.android.synthetic.main.fragment_new_options.options_subscription
+import kotlinx.android.synthetic.main.fragment_new_options.options_user_name
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
@@ -76,12 +112,13 @@ class NewOptionsFragment : Fragment() {
 
     private val languageAdapter by lazy {
         CustomSpinnerAdapter(
-            requireActivity(),
-            languages
+            requireActivity(), languages
         )
     }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_new_options, container, false)
     }
 
@@ -92,10 +129,11 @@ class NewOptionsFragment : Fragment() {
     }
 
     private fun initUI() {
-        mViewModel = ViewModelProvider(this,
-                ViewModelFactory(
-                        ApiHelper(RetrofitBuilder(requireContext()).apiService),
-                        DataBase.getInstance(requireContext()))
+        mViewModel = ViewModelProvider(
+            this, ViewModelFactory(
+                ApiHelper(RetrofitBuilder(requireContext()).apiService),
+                DataBase.getInstance(requireContext())
+            )
         ).get(NewOptionsViewModel::class.java)
 
         mHomeViewModel = ViewModelProvider(
@@ -115,10 +153,9 @@ class NewOptionsFragment : Fragment() {
         }
 
         options_restore_purchase.setOnClickListener {
-            val billingClient: BillingClient = BillingClient.newBuilder(requireContext())
-                    .setListener { _, _ -> }
-                    .enablePendingPurchases()
-                    .build()
+            val billingClient: BillingClient =
+                BillingClient.newBuilder(requireContext()).setListener { _, _ -> }
+                    .enablePendingPurchases().build()
             billingClient.startConnection(object : BillingClientStateListener {
                 override fun onBillingSetupFinished(billingResult: BillingResult) {
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
@@ -128,16 +165,22 @@ class NewOptionsFragment : Fragment() {
                         //val inappList: List<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList!!
 
 
-                        val subsList: MutableList<com.android.billingclient.api.Purchase> = ArrayList()
-                        val inappList: MutableList<com.android.billingclient.api.Purchase> = ArrayList()
+                        val subsList: MutableList<com.android.billingclient.api.Purchase> =
+                            ArrayList()
+                        val inappList: MutableList<com.android.billingclient.api.Purchase> =
+                            ArrayList()
 
-                        billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS, PurchasesResponseListener { billingResult, mutableList -> subsList })
+                        billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS,
+                            PurchasesResponseListener { billingResult, mutableList -> subsList })
 
-                        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, PurchasesResponseListener { billingResult, mutableList -> inappList })
+                        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP,
+                            PurchasesResponseListener { billingResult, mutableList -> inappList })
 
                         if (subsList.isEmpty() && inappList.isEmpty()) {
                             if (context != null) {
-                                Toast.makeText(context, "No purchases available", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context, "No purchases available", Toast.LENGTH_SHORT
+                                ).show()
                             }
                         } else {
                             val albumDao = DataBase.getInstance(requireContext()).albumDao()
@@ -145,109 +188,162 @@ class NewOptionsFragment : Fragment() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 subsList.forEach { purchase ->
                                     when (purchase.skus.get(0)) {
-                                        SKU_RIFE_MONTHLY,
-                                        SKU_RIFE_YEARLY_FLASHSALE,
-                                        SKU_RIFE_ADVANCED_MONTHLY,
-                                        SKU_RIFE_ADVANCED_YEAR_FLASHSALE,
-                                        SKU_RIFE_HIGHER_MONTHLY,
-                                        SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE,
-                                        QUANTUM_TIER_SUBS_MONTH,
-                                        QUANTUM_TIER_SUBS_ANNUAL -> {
-                                            albumDao.setNewUnlockedByTierId(true, NewPurchaseActivity.QUANTUM_TIER_ID)
+                                        SKU_RIFE_MONTHLY, SKU_RIFE_YEARLY_FLASHSALE, SKU_RIFE_ADVANCED_MONTHLY, SKU_RIFE_ADVANCED_YEAR_FLASHSALE, SKU_RIFE_HIGHER_MONTHLY, SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE, QUANTUM_TIER_SUBS_MONTH, QUANTUM_TIER_SUBS_ANNUAL -> {
+                                            albumDao.setNewUnlockedByTierId(
+                                                true, NewPurchaseActivity.QUANTUM_TIER_ID
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_BRAIN.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BRAIN.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_BRAIN.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_WISDOM.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_WISDOM.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_WISDOM.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_MANIFESTING.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_PROTECTION.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_PROTECTION.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_PROTECTION.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_FITNESS.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_FITNESS.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_DMT.sku -> {
                                             //albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.Id)
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_DMT.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_NAD.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_NAD.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_NMN.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true, HIGHER_QUANTUM_TIER_INAPP_NMN.categoryId
+                                            )
                                         }
 
                                         HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.sku -> {
-                                            albumDao.setNewUnlockedByCategoryId(true, HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.categoryId)
+                                            albumDao.setNewUnlockedByCategoryId(
+                                                true,
+                                                HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM.categoryId
+                                            )
                                         }
                                     }
                                 }
                             }
-                            Toast.makeText(requireContext(), "Purchases have been restored", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(), "Purchases have been restored", Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -260,23 +356,32 @@ class NewOptionsFragment : Fragment() {
             })
         }
 
-        options_instruction.setOnClickListener { startActivity(Intent(requireContext(), InstructionsActivity::class.java)) }
+        options_instruction.setOnClickListener {
+            startActivity(
+                Intent(
+                    requireContext(), InstructionsActivity::class.java
+                )
+            )
+        }
 
         options_disclaimer.setOnClickListener {
-            val dialog = DisclaimerDialog(requireContext(), false,
-                    object : DisclaimerDialog.IOnSubmitListener {
-                        override fun submit(isCheck: Boolean) {}
-                    })
+            val dialog = DisclaimerDialog(
+                requireContext(),
+                false,
+                object : DisclaimerDialog.IOnSubmitListener {
+                    override fun submit(isCheck: Boolean) {}
+                })
             dialog.show()
             dialog.setButtonText(getString(R.string.txt_ok))
         }
 
         options_about.setOnClickListener {
             activity?.let {
-                AlertDialog.Builder(it)
-                        .setTitle(R.string.profile_lbl_about)
-                        .setMessage(getString(R.string.app_name) + getString(R.string.options_version, BuildConfig.VERSION_NAME))
-                        .setPositiveButton(R.string.txt_ok, null).show()
+                AlertDialog.Builder(it).setTitle(R.string.profile_lbl_about).setMessage(
+                        getString(R.string.app_name) + getString(
+                            R.string.options_version, BuildConfig.VERSION_NAME
+                        )
+                    ).setPositiveButton(R.string.txt_ok, null).show()
             }
         }
 
@@ -297,7 +402,9 @@ class NewOptionsFragment : Fragment() {
         }
 
         options_sign_in.setOnClickListener {
-            startActivityForResult(Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH)
+            startActivityForResult(
+                Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH
+            )
         }
 
         options_help.setOnClickListener {
@@ -309,11 +416,9 @@ class NewOptionsFragment : Fragment() {
         }
 
         spLanguage.adapter = languageAdapter
-        spLanguage.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
+        spLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?, position: Int, id: Long
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 parent ?: return
                 view ?: return
@@ -321,6 +426,10 @@ class NewOptionsFragment : Fragment() {
                 val lang: Language = languages[position]
                 if (lang.code != preference(requireContext()).codeLanguage) {
                     LanguageUtils.changeLanguage(requireContext(), lang.code)
+                    val activity = activity as NavigationActivity
+                    isPlayAlbum = false
+                    isPlayProgram = false
+                    activity.hidePlayerUI()
                     clearData()
                 }
             }
@@ -350,11 +459,11 @@ class NewOptionsFragment : Fragment() {
 
     private fun onDeleteUserClick() {
         val dialogBuilder = AlertDialog.Builder(requireActivity())
-        dialogBuilder.setMessage(getString(R.string.txt_msg_deleteuser))
-                .setCancelable(false)
-                .setNegativeButton(getString(R.string.txt_no), null)
-                .setPositiveButton(getString(R.string.txt_yes)) { dialog, _ ->
-                    val dialog = DeleteUserDialog(activity, object : DeleteUserDialog.IOnSubmitListener {
+        dialogBuilder.setMessage(getString(R.string.txt_msg_deleteuser)).setCancelable(false)
+            .setNegativeButton(getString(R.string.txt_no), null)
+            .setPositiveButton(getString(R.string.txt_yes)) { dialog, _ ->
+                val dialog =
+                    DeleteUserDialog(activity, object : DeleteUserDialog.IOnSubmitListener {
                         override fun submit(password: String) {
                             mViewModel.deleteUser(password).observe(viewLifecycleOwner) {
                                 it?.let { resource ->
@@ -368,11 +477,13 @@ class NewOptionsFragment : Fragment() {
                                             onLogoutSuccess()
                                             dialog.dismiss()
                                         }
+
                                         Resource.Status.ERROR -> {
                                             activity?.let { HudHelper.hide() }
                                             Toast.makeText(context, it.message, Toast.LENGTH_LONG)
                                                 .show()
                                         }
+
                                         Resource.Status.LOADING -> {
                                             activity?.let { activity -> HudHelper.show(activity) }
                                         }
@@ -382,8 +493,8 @@ class NewOptionsFragment : Fragment() {
                             }
                         }
                     })
-                    dialog.show()
-                }.show()
+                dialog.show()
+            }.show()
     }
 
     private fun onLogoutSuccess() {
@@ -405,7 +516,9 @@ class NewOptionsFragment : Fragment() {
         saveUser(requireContext(), null)
         initUI()
 
-        startActivityForResult(Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH)
+        startActivityForResult(
+            Intent(requireContext(), AuthActivity::class.java), REQUEST_CODE_AUTH
+        )
     }
 
     private fun clearData() {
@@ -424,36 +537,36 @@ class NewOptionsFragment : Fragment() {
 
     private fun onLogoutClick() {
         val dialogBuilder = AlertDialog.Builder(requireActivity())
-        dialogBuilder.setMessage(getString(R.string.txt_msg_logout))
-                .setCancelable(false)
-                .setNegativeButton(getString(R.string.txt_cancel), null)
-                .setPositiveButton(getString(R.string.txt_ok)) { dialog, _ ->
+        dialogBuilder.setMessage(getString(R.string.txt_msg_logout)).setCancelable(false)
+            .setNegativeButton(getString(R.string.txt_cancel), null)
+            .setPositiveButton(getString(R.string.txt_ok)) { dialog, _ ->
 
-                    if (options_user_name.text.equals("Guest")) {
-                        onLogoutSuccess()
-                        dialog.dismiss()
-                    } else {
-                        mHomeViewModel.syncProgramsToServer()
-                        mViewModel.logout().observe(viewLifecycleOwner) {
-                            it?.let { resource ->
-                                when (resource.status) {
-                                    Resource.Status.SUCCESS -> {
-                                        onLogoutSuccess()
-                                        dialog.dismiss()
-                                    }
-                                    Resource.Status.ERROR -> {
-                                        activity?.let { HudHelper.hide() }
-                                        Toast.makeText(context, it.message, Toast.LENGTH_LONG)
-                                            .show()
-                                    }
-                                    Resource.Status.LOADING -> {
-                                        activity?.let { activity -> HudHelper.show(activity) }
-                                    }
+                if (options_user_name.text.equals("Guest")) {
+                    onLogoutSuccess()
+                    dialog.dismiss()
+                } else {
+                    mHomeViewModel.syncProgramsToServer()
+                    mViewModel.logout().observe(viewLifecycleOwner) {
+                        it?.let { resource ->
+                            when (resource.status) {
+                                Resource.Status.SUCCESS -> {
+                                    onLogoutSuccess()
+                                    dialog.dismiss()
+                                }
+
+                                Resource.Status.ERROR -> {
+                                    activity?.let { HudHelper.hide() }
+                                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                                }
+
+                                Resource.Status.LOADING -> {
+                                    activity?.let { activity -> HudHelper.show(activity) }
                                 }
                             }
                         }
                     }
-                }.show()
+                }
+            }.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

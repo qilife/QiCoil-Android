@@ -85,8 +85,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
 
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(
-            className: ComponentName,
-            service: IBinder
+            className: ComponentName, service: IBinder
         ) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             val binder = service as MusicService.MusicBinder
@@ -123,10 +122,10 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         override fun onReceive(ctxt: Context, intent: Intent) {
             val referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (refid == referenceId) {
-                val mBuilder = NotificationCompat.Builder(this@MainActivity)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("[New APK] " + this@MainActivity.getString(R.string.app_name))
-                    .setContentText("Download completed")
+                val mBuilder =
+                    NotificationCompat.Builder(this@MainActivity).setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("[New APK] " + this@MainActivity.getString(R.string.app_name))
+                        .setContentText("Download completed")
                 val notificationManager =
                     getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(455, mBuilder.build())
@@ -139,11 +138,10 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
     var mIsFromBroadcastReceiverPurchase = false
     private val broadcastReceiverPurchase = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
-            if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)
-                || SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
-                || SharedPreferenceHelper.getInstance()
-                    .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
-                || SharedPreferenceHelper.getInstance()
+            if (SharedPreferenceHelper.getInstance()
+                    .getBool(Constants.KEY_PURCHASED) || SharedPreferenceHelper.getInstance()
+                    .getBool(Constants.KEY_PURCHASED_ADVANCED) || SharedPreferenceHelper.getInstance()
+                    .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE) || SharedPreferenceHelper.getInstance()
                     .getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)
             ) {
                 if (mDisclaimerDialog == null || !mDisclaimerDialog!!.isShowing) {
@@ -162,8 +160,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
     private val broadCastReceiverPlaylistController = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
             if (intent != null && intent.getBooleanExtra(
-                    Constants.EXTRAX_HIDDEN_CONTROLLER,
-                    false
+                    Constants.EXTRAX_HIDDEN_CONTROLLER, false
                 )
             ) {
                 showPlayerController(false)
@@ -175,8 +172,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         override fun onReceive(p0: Context?, intent: Intent?) {
             if (mUpgrateMp3FileDialog == null || !mUpgrateMp3FileDialog!!.isShowing) {
                 val upgrateMp3FileDialog = AlertDialog.Builder(this@MainActivity)
-                    .setMessage(R.string.txt_warning_frequencies_frequencies)
-                    .setCancelable(false)
+                    .setMessage(R.string.txt_warning_frequencies_frequencies).setCancelable(false)
                     .setPositiveButton(R.string.txt_ok) { _, _ ->
                         DeleteAllTrackSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     }
@@ -242,13 +238,11 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                         if (imageAlbum!!.startsWith("http")) {
                             Glide.with(this)
                                 .applyDefaultRequestOptions(RequestOptions().placeholder(R.drawable.ic_album_placeholder))
-                                .load(imageAlbum)
-                                .into(imgAlbum!!)
+                                .load(imageAlbum).into(imgAlbum!!)
                         } else {
                             Glide.with(this)
                                 .applyDefaultRequestOptions(RequestOptions().placeholder(R.drawable.ic_album_placeholder))
-                                .load(imageAlbum)
-                                .into(imgAlbum!!)
+                                .load(imageAlbum).into(imgAlbum!!)
                         }
                     } else {
                         imgAlbum?.setBackgroundResource(R.drawable.ic_album_default_small)
@@ -268,12 +262,12 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
                 broadcastReceiverPurchase,
-                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED), Context.RECEIVER_EXPORTED
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                Context.RECEIVER_EXPORTED
             )
         } else {
             registerReceiver(
-                broadcastReceiverPurchase,
-                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+                broadcastReceiverPurchase, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
             )
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -298,7 +292,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         GetFlashSaleTask(this, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    @SuppressLint("HardwareIds")
+    @SuppressLint("HardwareIds", "UnspecifiedRegisterReceiverFlag")
     override fun initComponents() {
         //Save Device ID
         var deviceId = SharedPreferenceHelper.getInstance()[Constants.KEY_DEVICE_ID]
@@ -320,20 +314,17 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 deviceId = "testKey:12345678"
             }
             SharedPreferenceHelper.getInstance().set(
-                Constants.KEY_DEVICE_ID,
-                deviceId
+                Constants.KEY_DEVICE_ID, deviceId
             )
         }
 
         mLoadingDialog = ProgressDialog(this)
         mLoadingDialog.setMessage(getString(R.string.msg_loading))
         mLoadingDialog.setCancelable(false)
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this)[MainActivityViewModel::class.java]
 
         contentResolver.registerContentObserver(
-            Settings.System.CONTENT_URI,
-            true,
-            mSettingsContentObserver
+            Settings.System.CONTENT_URI, true, mSettingsContentObserver
         )
 
         mViewGroupCurrent = viewGroupAlbums
@@ -366,21 +357,25 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST),
                 RECEIVER_EXPORTED
             )
-            registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),RECEIVER_EXPORTED)
+            registerReceiver(
+                onDownloadComplete,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                RECEIVER_EXPORTED
+            )
             registerReceiver(
                 broadCastReDownloadMp3Files,
                 IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3),
                 RECEIVER_EXPORTED
             )
-        }else{
+        } else {
             registerReceiver(
-                broadCastReDownloadMp3Files,
-                IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3)
+                broadCastReDownloadMp3Files, IntentFilter(Constants.ACTION_RE_DOWNLOAD_MP3)
             )
-            registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
             registerReceiver(
-                broadCastReceiverPlaylistController,
-                IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST)
+                onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            )
+            registerReceiver(
+                broadCastReceiverPlaylistController, IntentFilter(Constants.BROADCAST_PLAY_PLAYLIST)
             )
         }
 
@@ -397,23 +392,19 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
 
     private fun loadData() {
         val currentVersion = SharedPreferenceHelper.getInstance().get(Constants.PREF_VERSION_APP)
-        if (!SharedPreferenceHelper.getInstance().isShowDisclaimer || currentVersion == null
-            || (!currentVersion.equals(
-                BuildConfig.VERSION_NAME,
-                ignoreCase = true
+        if (!SharedPreferenceHelper.getInstance().isShowDisclaimer || currentVersion == null || (!currentVersion.equals(
+                BuildConfig.VERSION_NAME, ignoreCase = true
             ))
         ) {
             if (currentVersion == null || (!currentVersion.equals(
-                    BuildConfig.VERSION_NAME,
-                    ignoreCase = true
+                    BuildConfig.VERSION_NAME, ignoreCase = true
                 ))
             ) {
                 SharedPreferenceHelper.getInstance().isShowDisclaimer = false
             }
             SharedPreferenceHelper.getInstance()
                 .set(Constants.PREF_VERSION_APP, BuildConfig.VERSION_NAME)
-            mDisclaimerDialog = DisclaimerDialog(
-                this@MainActivity,
+            mDisclaimerDialog = DisclaimerDialog(this@MainActivity,
                 true,
                 object : DisclaimerDialog.IOnSubmitListener {
                     override fun submit(isCheck: Boolean) {
@@ -431,8 +422,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
 
     private fun checkPermissionAndSyncData() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
 //            if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
@@ -464,16 +454,13 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             checkingNewData()
         } else {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                10
+                this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10
             )
         }
     }
 
     private fun checkingNewData() {
-        val dataFolder = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)
-        /*val dataFolderAdvanced = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
+        val dataFolder = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER)/*val dataFolderAdvanced = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER)
         val dataFolderHigherAbundance = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
         val dataFolderHigherQuantum = File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER)
 
@@ -484,12 +471,11 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         if (dataFolder.exists() && dataFolder.listFiles()?.isNotEmpty() == true) {
             requestData()
         } else {
-            val upgrateMp3FileDialog = AlertDialog.Builder(this)
-                .setMessage(R.string.txt_warning_frequencies_frequencies)
-                .setCancelable(false)
-                .setPositiveButton(R.string.txt_ok) { _, _ ->
-                    DeleteAllTrackSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                }
+            val upgrateMp3FileDialog =
+                AlertDialog.Builder(this).setMessage(R.string.txt_warning_frequencies_frequencies)
+                    .setCancelable(false).setPositiveButton(R.string.txt_ok) { _, _ ->
+                        DeleteAllTrackSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                    }
             mUpgrateMp3FileDialog = upgrateMp3FileDialog.show()
         }
     }
@@ -517,44 +503,37 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             if (File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER).exists()) {
                 FilesUtils.deleteRecursive(
                     File(
-                        FilesUtils.getSdcardStore(),
-                        Constants.DEFAULT_DATA_FOLDER
+                        FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_FOLDER
                     )
                 )
             }
             if (File(
-                    FilesUtils.getSdcardStore(),
-                    Constants.DEFAULT_DATA_ADVANCED_FOLDER
+                    FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER
                 ).exists()
             ) {
                 FilesUtils.deleteRecursive(
                     File(
-                        FilesUtils.getSdcardStore(),
-                        Constants.DEFAULT_DATA_ADVANCED_FOLDER
+                        FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ADVANCED_FOLDER
                     )
                 )
             }
             if (File(
-                    FilesUtils.getSdcardStore(),
-                    Constants.DEFAULT_DATA_ABUNDANCE_FOLDER
+                    FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER
                 ).exists()
             ) {
                 FilesUtils.deleteRecursive(
                     File(
-                        FilesUtils.getSdcardStore(),
-                        Constants.DEFAULT_DATA_ABUNDANCE_FOLDER
+                        FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER
                     )
                 )
             }
             if (File(
-                    FilesUtils.getSdcardStore(),
-                    Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
+                    FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
                 ).exists()
             ) {
                 FilesUtils.deleteRecursive(
                     File(
-                        FilesUtils.getSdcardStore(),
-                        Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
+                        FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
                     )
                 )
             }
@@ -593,14 +572,12 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                     val fileHigherAbundance =
                         File(FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_ABUNDANCE_FOLDER)
                     val fileHigherQuantum = File(
-                        FilesUtils.getSdcardStore(),
-                        Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
+                        FilesUtils.getSdcardStore(), Constants.DEFAULT_DATA_HIGHER_QUANTUM_FOLDER
                     )
-                    needToDownloadData = !file.exists() || file.listFiles()?.isEmpty() ?: true
-                            || !fileAdvanced.exists() || fileAdvanced.listFiles()?.isEmpty() ?: true
-                            || !fileHigherAbundance.exists() || fileHigherAbundance.listFiles()
-                        ?.isEmpty() ?: true
-                            || !fileHigherQuantum.exists() || fileHigherQuantum.listFiles()
+                    needToDownloadData = !file.exists() || file.listFiles()
+                        ?.isEmpty() ?: true || !fileAdvanced.exists() || fileAdvanced.listFiles()
+                        ?.isEmpty() ?: true || !fileHigherAbundance.exists() || fileHigherAbundance.listFiles()
+                        ?.isEmpty() ?: true || !fileHigherQuantum.exists() || fileHigherQuantum.listFiles()
                         ?.isEmpty() ?: true
                     val userJson = SharedPreferenceHelper.getInstance().get(Constants.PREF_PROFILE)
                     if (userJson != null) {
@@ -609,23 +586,17 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                         )
                     } else {
                         SyncMusicTask(
-                            this@MainActivity,
-                            this@MainActivity,
-                            this@MainActivity
+                            this@MainActivity, this@MainActivity, this@MainActivity
                         ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     }
                 } else {
                     SyncMusicTask(
-                        this@MainActivity,
-                        this@MainActivity,
-                        this@MainActivity
+                        this@MainActivity, this@MainActivity, this@MainActivity
                     ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                 }
             } else {
                 SyncMusicTask(
-                    this@MainActivity,
-                    this@MainActivity,
-                    this@MainActivity
+                    this@MainActivity, this@MainActivity, this@MainActivity
                 ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
         }
@@ -675,9 +646,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 10) {
@@ -732,10 +701,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                     if (newY >= screenHeight - view.height) {
                         newY = (screenHeight - view.height).toFloat()
                     }
-                    view.animate()?.x(newX)
-                        ?.y(newY)
-                        ?.setDuration(0)
-                        ?.start()
+                    view.animate()?.x(newX)?.y(newY)?.setDuration(0)?.start()
                 }
             }
             drawer_layout.invalidate()
@@ -964,16 +930,13 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
     }
 
     override fun updateDurationPlayer(
-        duration: Int,
-        currentDuration: Int,
-        song: PlaylistItemSongAndSong
+        duration: Int, currentDuration: Int, song: PlaylistItemSongAndSong
     ) {
-        sbDurationMain.post(object : Runnable {
-            override fun run() {
-                sbDurationMain.setProgress(currentDuration, if (duration != 0) duration else 1)
-            }
-
-        })
+        sbDurationMain.post {
+            sbDurationMain.setProgress(
+                currentDuration, if (duration != 0) duration else 1
+            )
+        }
         tvCurrentDurationMain.text =
             StringsUtils.toString(if (currentDuration > duration) duration.toLong() else currentDuration.toLong())
         tvDurationMain.text = StringsUtils.toString(duration.toLong() - currentDuration.toLong())
@@ -1021,20 +984,16 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         if (task is GetAPKNewVersionTask) {
             return
         }
-        if (mLoadingDialog.isShowing)
-            mLoadingDialog.dismiss()
+        if (mLoadingDialog.isShowing) mLoadingDialog.dismiss()
 
         if (task is GetNewAlbumsTask) {
             if (needToDownloadData) {
-                AlertDialog.Builder(this)
-                    .setMessage(R.string.msg_download_data)
+                AlertDialog.Builder(this).setMessage(R.string.msg_download_data)
                     .setPositiveButton(R.string.txt_try_again) { _, _ ->
                         GetNewAlbumsTask(this, this).execute()
-                    }
-                    .setNegativeButton(R.string.txt_cancel) { _, _ ->
+                    }.setNegativeButton(R.string.txt_cancel) { _, _ ->
                         getDefaultPlaylistFromServer()
-                    }
-                    .show()
+                    }.show()
             }
         }
         if (task is SyncMusicTask) {
@@ -1046,24 +1005,20 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 GetNewAlbumsTask(this, this).execute()
             } else {
                 UpdateDurationOfAllPlaylistTask(
-                    this@MainActivity.application,
-                    null
+                    this@MainActivity.application, null
                 ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
         }
         if (task is GetDefaultPlaylistTask || task is GetProfileTask) {
             SyncMusicTask(
-                this@MainActivity,
-                this@MainActivity,
-                this@MainActivity
+                this@MainActivity, this@MainActivity, this@MainActivity
             ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
     }
 
     fun getDefaultPlaylistFromServer() {
         GetDefaultPlaylistTask(
-            this@MainActivity,
-            this@MainActivity
+            this@MainActivity, this@MainActivity
         ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
@@ -1074,9 +1029,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                 SharedPreferenceHelper.getInstance()
                     .set(Constants.PREF_PROFILE, Gson().toJson(output.data))
 
-                if (output.data.isMaster == 1 && output.data.isPremium == 1
-                    && output.data.isHighAbundance == 1 && output.data.isHighQuantum == 1
-                ) {
+                if (output.data.isMaster == 1 && output.data.isPremium == 1 && output.data.isHighAbundance == 1 && output.data.isHighQuantum == 1) {
                     SharedPreferenceHelper.getInstance().setBool(Constants.IS_UNLOCK_ALL, true)
                 } else {
                     SharedPreferenceHelper.getInstance().setBool(Constants.IS_UNLOCK_ALL, false)
@@ -1121,16 +1074,12 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             }
             GetAllAlbumTask(this, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             SyncMusicTask(
-                this@MainActivity,
-                this@MainActivity,
-                this@MainActivity
+                this@MainActivity, this@MainActivity, this@MainActivity
             ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
         if (task is GetNewAlbumsTask) {
-            if (mLoadingDialog.isShowing)
-                mLoadingDialog.dismiss()
-            @Suppress("UNCHECKED_CAST")
-            val newAlbums = data as ArrayList<Album>
+            if (mLoadingDialog.isShowing) mLoadingDialog.dismiss()
+            @Suppress("UNCHECKED_CAST") val newAlbums = data as ArrayList<Album>
             //Download done if size = 0
             SharedPreferenceHelper.getInstance()
                 .setBool(Constants.IS_DOWNLOADED_ALL_ALBUM, newAlbums.size == 0)
@@ -1159,8 +1108,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
 //                        //SyncMusicTask(this@MainActivity, this@MainActivity, this@MainActivity).execute()
 //                    }
 //                })
-                mDownloadMusicManager = DownloadMusicManager(
-                    this@MainActivity,
+                mDownloadMusicManager = DownloadMusicManager(this@MainActivity,
                     newAlbums,
                     object : DownloadMusicManager.Callback {
                         override fun onError(throwable: Throwable) {
@@ -1170,26 +1118,22 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                                     isDownloadingData = false
                                     GetNewAlbumsTask(this@MainActivity, this@MainActivity).execute()
                                     viewGroupDownload.visibility = View.GONE
-                                }
-                                .setNegativeButton(R.string.txt_cancel) { _, _ ->
+                                }.setNegativeButton(R.string.txt_cancel) { _, _ ->
                                     getDefaultPlaylistFromServer()
                                     isDownloadingData = false
                                     viewGroupDownload.visibility = View.GONE
-                                }
-                                .show()
+                                }.show()
                         }
 
                         override fun onPercentRatio(
-                            ratio: String,
-                            currentStep: Int,
-                            totalStep: Int
+                            ratio: String, currentStep: Int, totalStep: Int
                         ) {
-                            mTvDownloadPercent.post(Runnable {
+                            mTvDownloadPercent.post {
                                 mTvDownloadPercent.text = ratio
                                 if (currentStep == totalStep) {
                                     mDownloadMusicManager?.dismissDialog()
                                 }
-                            })
+                            }
                         }
 
                         override fun onSuccess() {
@@ -1236,8 +1180,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
                     }
                 }
                 UpdateDurationOfAllPlaylistTask(
-                    this@MainActivity.application,
-                    null
+                    this@MainActivity.application, null
                 ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
 
@@ -1248,10 +1191,10 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             if (output.code == 200) {
                 if (output.apks != null && output.apks.size > 0) {
                     val currentVer = "v" + BuildConfig.VERSION_NAME
-                    val apkUrl = output.apks.get(0)
+                    val apkUrl = output.apks[0]
                     val pathSplit = apkUrl.split("/")
-                    if (pathSplit.size > 0) {
-                        val fileName = pathSplit.get(pathSplit.size - 1)
+                    if (pathSplit.isNotEmpty()) {
+                        val fileName = pathSplit[pathSplit.size - 1]
                         val newVersion = fileName.replace("Quantum_", "").replace(".apk", "")
                         if (!newVersion.equals(currentVer, ignoreCase = true)) {
                             dialogConfirmUpdateApk(apkUrl, fileName)
@@ -1345,8 +1288,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         try {
             android.app.AlertDialog.Builder(this)
                 .setTitle(R.string.txt_warning_update_newversion_title)
-                .setMessage(R.string.txt_warning_update_newversion)
-                .setCancelable(false)
+                .setMessage(R.string.txt_warning_update_newversion).setCancelable(false)
                 .setPositiveButton(R.string.txt_agree) { _, _ ->
                     downloadAPK(apkUrl, fileName)
                 }.setNegativeButton(R.string.txt_disagree) { _, _ ->
@@ -1356,7 +1298,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         }
     }
 
-    fun downloadAPK(apkUrl: String, fileName: String) {
+    private fun downloadAPK(apkUrl: String, fileName: String) {
         val apkFolder = File(CACHE_APK_FOLDER, Constants.APKS_FOLDER)
         val apkFile = File(apkFolder, fileName)
         mLocalApkPath = apkFile.path
@@ -1364,9 +1306,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             autoInstallNewAPK()
         } else {
             Toast.makeText(
-                this@MainActivity,
-                getString(R.string.txt_downloading_dot),
-                Toast.LENGTH_LONG
+                this@MainActivity, getString(R.string.txt_downloading_dot), Toast.LENGTH_LONG
             ).show()
 
             FilesUtils.deleteFileInDir(apkFolder)
@@ -1379,7 +1319,11 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             request.setDescription("Downloading " + fileName)
             request.setVisibleInDownloadsUi(true)
 //            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Quantum/" + "/" + "Quantum_v1.0" + ".apk")
-            request.setDestinationUri(FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), apkFile))
+            request.setDestinationUri(
+                FileProvider.getUriForFile(
+                    applicationContext, getString(R.string.authorities), apkFile
+                )
+            )
             refid = downloadManager!!.enqueue(request)
         }
     }
@@ -1388,10 +1332,12 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         if (mLocalApkPath != null) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(
-                FileProvider.getUriForFile(applicationContext,getString(R.string.authorities), File(mLocalApkPath!!)),
-                "application/vnd.android.package-archive"
+                FileProvider.getUriForFile(
+                    applicationContext, getString(R.string.authorities), File(mLocalApkPath!!)
+                ), "application/vnd.android.package-archive"
             )
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK; // without this flag android returned a intent error!
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK; // without this flag android returned a intent error!
             startActivity(intent);
         }
     }
@@ -1408,7 +1354,7 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
         }
 
         this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.tv_error_back), Toast.LENGTH_SHORT).show()
 
         Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }

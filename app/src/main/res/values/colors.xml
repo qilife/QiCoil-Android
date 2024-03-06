@@ -26,4 +26,5 @@
     <color name="color_greyB">#B5B5B5</color>
     <color name="color_text_fab">#120F16</color>
     <color name="color_icon_fab">#33A6A3AA</color>
+    <color name="color_check_box">#EA00FF</color>
 </resources>
