@@ -25,9 +25,15 @@ import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.dialog_change_pasword.*
+import kotlinx.android.synthetic.main.dialog_change_pasword.mEdConfirmNewPassword
+import kotlinx.android.synthetic.main.dialog_change_pasword.mEdNewPassword
+import kotlinx.android.synthetic.main.dialog_change_pasword.mEdOldPassword
+import kotlinx.android.synthetic.main.dialog_change_pasword.mImvDismiss
+import kotlinx.android.synthetic.main.dialog_change_pasword.mTvTitleTop
+import kotlinx.android.synthetic.main.dialog_change_pasword.mViewBtnChangePassword
 
-class DialogChangePassword(private val mContext: Context) : Dialog(mContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen), ApiListener<Any> {
+class DialogChangePassword(private val mContext: Context) :
+    Dialog(mContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen), ApiListener<Any> {
     var baseActivity: BaseActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,11 +71,15 @@ class DialogChangePassword(private val mContext: Context) : Dialog(mContext, and
             if (Utils.isConnectedToNetwork(mContext)) {
                 if (isValidChangePassword()) {
                     baseActivity?.showLoading(true)
-                    ChangePasswordTask(mContext,
-                            ChangePasswordInput(SharedPreferenceHelper.getInstance().get(Constants.PREF_PASSWORD),
-                                    mEdNewPassword.text.toString(),
-                                    mEdConfirmNewPassword.text.toString()), this)
-                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                    ChangePasswordTask(
+                        mContext,
+                        ChangePasswordInput(
+                            SharedPreferenceHelper.getInstance().get(Constants.PREF_PASSWORD),
+                            mEdNewPassword.text.toString(),
+                            mEdConfirmNewPassword.text.toString()
+                        ), this
+                    )
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                 }
             } else {
                 baseActivity?.showAlert(mContext.getString(R.string.err_network_available))
@@ -86,8 +96,19 @@ class DialogChangePassword(private val mContext: Context) : Dialog(mContext, and
             val output = data as BaseOutput
             if (output.success) {
                 baseActivity?.hideKeyBoard()
-                Toast.makeText(mContext, mContext.getString(R.string.tv_forgot_password_success), Toast.LENGTH_SHORT).show()
-                LoginTask(mContext, LoginInput(SharedPreferenceHelper.getInstance().get(Constants.PREF_EMAIL), mEdNewPassword.text.toString()), this).execute()
+                Toast.makeText(
+                    mContext,
+                    mContext.getString(R.string.tv_forgot_password_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+                LoginTask(
+                    mContext,
+                    LoginInput(
+                        SharedPreferenceHelper.getInstance().get(Constants.PREF_EMAIL),
+                        mEdNewPassword.text.toString()
+                    ),
+                    this
+                ).execute()
             } else {
                 if (output.errorCode != null) {
 //                    SharedPreferenceHelper.getInstance()[(Constants.PREF_PROFILE)] = null
@@ -99,8 +120,10 @@ class DialogChangePassword(private val mContext: Context) : Dialog(mContext, and
         } else if (task is LoginTask) {
             val output = data as LoginOutput
             if (output.success && output.data != null) {
-                SharedPreferenceHelper.getInstance().set(Constants.PREF_SESSION_ID, "Bearer " + output.data.token)
-                SharedPreferenceHelper.getInstance().set(Constants.PREF_PROFILE, Gson().toJson(output.data.profile))
+                SharedPreferenceHelper.getInstance()
+                    .set(Constants.PREF_SESSION_ID, "Bearer " + output.data.token)
+                SharedPreferenceHelper.getInstance()
+                    .set(Constants.PREF_PROFILE, Gson().toJson(output.data.profile))
                 val profile = output.data.profile
 
                 if (profile.isMaster == 1) {
@@ -109,22 +132,29 @@ class DialogChangePassword(private val mContext: Context) : Dialog(mContext, and
                     SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED, false)
                 }
                 if (profile.isPremium == 1) {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_ADVANCED, true)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_ADVANCED, true)
                 } else {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_ADVANCED, false)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_ADVANCED, false)
                 }
                 if (profile.isHighAbundance == 1) {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE, true)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE, true)
                 } else {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE, false)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE, false)
                 }
                 if (profile.isHighQuantum == 1) {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_HIGH_QUANTUM, true)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_HIGH_QUANTUM, true)
                 } else {
-                    SharedPreferenceHelper.getInstance().setBool(Constants.KEY_PURCHASED_HIGH_QUANTUM, false)
+                    SharedPreferenceHelper.getInstance()
+                        .setBool(Constants.KEY_PURCHASED_HIGH_QUANTUM, false)
                 }
 
-                SharedPreferenceHelper.getInstance().set(Constants.PREF_PASSWORD, mEdNewPassword.text.toString())
+                SharedPreferenceHelper.getInstance()
+                    .set(Constants.PREF_PASSWORD, mEdNewPassword.text.toString())
                 val intent = Intent(Constants.BROADCAST_ACTION_PURCHASED)
                 mContext.sendBroadcast(intent)
                 //stop music
@@ -157,36 +187,38 @@ class DialogChangePassword(private val mContext: Context) : Dialog(mContext, and
 
     private fun isValidChangePassword(): Boolean {
         if (mEdOldPassword.text.toString().isEmpty()) {
-            mEdOldPassword.error = "Please enter Old Password!"
+            mEdOldPassword.error = mContext.getString(R.string.tv_please_enter_old_pass)
             return false
         }
         if (mEdOldPassword.text.toString().length < 6) {
-            mEdOldPassword.error = "Old Password cannot be less than 6 characters!"
+            mEdOldPassword.error = mContext.getString(R.string.tv_err_old_pass_characters)
             return false
         }
         if (mEdNewPassword.text.toString().isEmpty()) {
-            mEdNewPassword.error = "Please enter New password!"
+            mEdNewPassword.error = mContext.getString(R.string.tv_please_enter_new_pass)
             return false
         }
         if (mEdNewPassword.text.toString().length < 6) {
-            mEdNewPassword.error = "New password cannot be less than 6 characters!"
+            mEdNewPassword.error = mContext.getString(R.string.tv_err_new_pass_characters)
             return false
         }
         if (mEdConfirmNewPassword.text.toString().isEmpty()) {
-            mEdConfirmNewPassword.error = "Please enter Confirm new password!"
+            mEdConfirmNewPassword.error = mContext.getString(R.string.tv_please_enter_confirm_pass)
             return false
         }
         if (mEdConfirmNewPassword.text.toString().length < 6) {
-            mEdConfirmNewPassword.error = "Confirm new password cannot be less than 6 characters!"
+            mEdConfirmNewPassword.error =
+                mContext.getString(R.string.tv_err_confirm_pass_characters)
             return false
         }
         if (mEdConfirmNewPassword.text.toString() != mEdNewPassword.text.toString()) {
-            mEdConfirmNewPassword.error = "Please check Confirm new password!"
+            mEdConfirmNewPassword.error =
+                mContext.getString(R.string.tv_please_enter_confirm_new_pass)
             return false
         }
         val oldPassword = SharedPreferenceHelper.getInstance().get(Constants.PREF_PASSWORD)
         if (mEdOldPassword.text.toString() != oldPassword) {
-            mEdOldPassword.error = "Old password is incorrect!"
+            mEdOldPassword.error = mContext.getString(R.string.tv_incorrect_old_pass)
             return false
         }
         return true

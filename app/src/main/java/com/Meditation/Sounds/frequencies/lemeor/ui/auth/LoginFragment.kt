@@ -218,15 +218,15 @@ class LoginFragment : Fragment() {
 
     private fun isValidLogin(): Boolean {
         if (mEdEmailSignIn.text.toString().trim().isEmpty()) {
-            mEdEmailSignIn.error = "Please enter Email!"
+            mEdEmailSignIn.error = getString(R.string.tv_please_enter_email)
             return false
         }
         if (!isValidEmail(mEdEmailSignIn.text.toString())) {
-            mEdEmailSignIn.error = "Invalid email!"
+            mEdEmailSignIn.error = getString(R.string.tv_invalid_email)
             return false
         }
         if (mEdPasswordSignIn.text.toString().trim().isEmpty()) {
-            mEdPasswordSignIn.error = "Please enter Password!"
+            mEdPasswordSignIn.error = getString(R.string.tv_please_enter_pass)
             return false
         }
         return true

@@ -23,17 +23,41 @@ import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_ADVANCED_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_HIGHER_MONTHLY
 import com.Meditation.Sounds.frequencies.utils.Constants.Companion.SKU_RIFE_MONTHLY
-import com.android.billingclient.api.*
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClient.BillingResponseCode
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesResponseListener
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_purchase.*
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceI
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceII
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceII_buy_now
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceII_price
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceI_buy_now
+import kotlinx.android.synthetic.main.activity_purchase.subs_abundanceI_price
+import kotlinx.android.synthetic.main.activity_purchase.subs_back
+import kotlinx.android.synthetic.main.activity_purchase.subs_bottom_layout
+import kotlinx.android.synthetic.main.activity_purchase.subs_continue
+import kotlinx.android.synthetic.main.activity_purchase.subs_free
+import kotlinx.android.synthetic.main.activity_purchase.subs_info
+import kotlinx.android.synthetic.main.activity_purchase.subs_master
+import kotlinx.android.synthetic.main.activity_purchase.subs_master_buy_now
+import kotlinx.android.synthetic.main.activity_purchase.subs_master_price
+import kotlinx.android.synthetic.main.activity_purchase.subs_starter_buy_now
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Random
 
 class PurchaseActivity : AppCompatActivity() {
 
@@ -43,7 +67,8 @@ class PurchaseActivity : AppCompatActivity() {
 
     private var selectedList = ArrayList<TextView>()
     private var pricesList = ArrayList<TextView>()
-    private var fragmentList = arrayListOf(StarterFragment(), MasterFragment(), Abundance1Fragment(), Abundance2Fragment())
+    private var fragmentList =
+        arrayListOf(StarterFragment(), MasterFragment(), Abundance1Fragment(), Abundance2Fragment())
     private var index = Random().nextInt(fragmentList.size - 1) + 1
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
@@ -93,40 +118,62 @@ class PurchaseActivity : AppCompatActivity() {
     }
 
     private fun setTermsSpan() {
-        val text = "Terms and Privacy Policy"
-        val mSpannableText = SpannableString(text)
-        val clickPrivacy = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-            }
+        try {
+            val text = getString(R.string.tv_term_and_privacy)
+            val list = text.split("|")
+            if (list.size == 3) {
+                val listLength = list.map { it.length }
+                val mSpannableText = SpannableString(text.replace("|", ""))
+                val clickPrivacy = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-        val clickTerms = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-            }
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                val clickTerms = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                mSpannableText.setSpan(
+                    clickTerms,
+                    0,
+                    listLength[0],
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                mSpannableText.setSpan(
+                    clickPrivacy,
+                    listLength[0] + listLength[1],
+                    mSpannableText.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                subs_info.text =
+                    TextUtils.concat(
+                        getString(R.string.tv_title_subscription_new),
+                        " ",
+                        mSpannableText
+                    )
+                subs_info.movementMethod = LinkMovementMethod.getInstance()
             }
+        } catch (_: Exception) {
         }
-        mSpannableText.setSpan(clickTerms, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        mSpannableText.setSpan(clickPrivacy, 10, mSpannableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        subs_info.text = TextUtils.concat(getString(R.string.tv_title_subscription_new), " ", mSpannableText)
-        subs_info.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setFragment(fragment: Fragment, id: Int) {
@@ -134,10 +181,12 @@ class PurchaseActivity : AppCompatActivity() {
 
         setSelected(id)
 
-        supportFragmentManager.beginTransaction().replace(R.id.subs_container,
-                fragment,
-                fragment.javaClass.simpleName)
-                .commit()
+        supportFragmentManager.beginTransaction().replace(
+            R.id.subs_container,
+            fragment,
+            fragment.javaClass.simpleName
+        )
+            .commit()
 
         if (id == 0) {
             subs_bottom_layout.visibility = View.GONE
@@ -162,9 +211,9 @@ class PurchaseActivity : AppCompatActivity() {
     //region Billing System
     private fun setUpBillingClient() {
         billingClient = BillingClient.newBuilder(applicationContext)
-                .setListener(purchaseUpdateListener)
-                .enablePendingPurchases()
-                .build()
+            .setListener(purchaseUpdateListener)
+            .enablePendingPurchases()
+            .build()
         startConnection()
     }
 
@@ -189,10 +238,12 @@ class PurchaseActivity : AppCompatActivity() {
                                 Constants.SKU_RIFE_YEARLY_FLASHSALE -> {
                                     categoryId = 1
                                 }
+
                                 SKU_RIFE_ADVANCED_MONTHLY,
                                 Constants.SKU_RIFE_ADVANCED_YEAR_FLASHSALE -> {
                                     categoryId = 2
                                 }
+
                                 SKU_RIFE_HIGHER_MONTHLY,
                                 Constants.SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE -> {
                                     categoryId = 3
@@ -200,7 +251,11 @@ class PurchaseActivity : AppCompatActivity() {
                             }
 
                             if (categoryId == null) {
-                                Toast.makeText(applicationContext, "Critical error!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Critical error!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 return@forEach
                             }
 
@@ -219,10 +274,12 @@ class PurchaseActivity : AppCompatActivity() {
         })
     }
 
-    private fun getPurchases() : List<Purchase> {
+    private fun getPurchases(): List<Purchase> {
         //return billingClient?.queryPurchases(BillingClient.SkuType.SUBS)?.purchasesList!!
         val subsList: List<Purchase> = ArrayList()
-        billingClient?.queryPurchasesAsync(BillingClient.SkuType.SUBS, PurchasesResponseListener { billingResult, mutableList -> subsList })
+        billingClient?.queryPurchasesAsync(
+            BillingClient.SkuType.SUBS,
+            PurchasesResponseListener { billingResult, mutableList -> subsList })
 
         return subsList
     }
@@ -258,34 +315,38 @@ class PurchaseActivity : AppCompatActivity() {
     }
 
     private val purchaseUpdateListener =
-            PurchasesUpdatedListener { billingResult, purchases ->
-                Log.e("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
+        PurchasesUpdatedListener { billingResult, purchases ->
+            Log.e("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
 
-                if (billingResult.responseCode == BillingResponseCode.OK && purchases != null) {
-                    firebaseAnalytics.logEvent("In_App_Purchase") {
-                         param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase Complete")
-                    }
-                    for (purchase in purchases) {
-                        handleConsumedPurchases(purchase)
-                    }
-                } else if (billingResult.responseCode == BillingResponseCode.USER_CANCELED) {
-                    // Handle an error caused by a user cancelling the purchase flow.
-                    firebaseAnalytics.logEvent("In_App_Purchase") {
-                        param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase CANCELED")
-                    }
-                } else {
-                    // Handle any other error codes.
+            if (billingResult.responseCode == BillingResponseCode.OK && purchases != null) {
+                firebaseAnalytics.logEvent("In_App_Purchase") {
+                    param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase Complete")
                 }
+                for (purchase in purchases) {
+                    handleConsumedPurchases(purchase)
+                }
+            } else if (billingResult.responseCode == BillingResponseCode.USER_CANCELED) {
+                // Handle an error caused by a user cancelling the purchase flow.
+                firebaseAnalytics.logEvent("In_App_Purchase") {
+                    param(FirebaseAnalytics.Param.CONTENT_TYPE, "Purchase CANCELED")
+                }
+            } else {
+                // Handle any other error codes.
             }
+        }
 
     private fun handleConsumedPurchases(purchase: Purchase) {
         Log.e("TAG_INAPP", "handleConsumablePurchasesAsync foreach it is $purchase")
-        val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+        val consumeParams =
+            ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient?.consumeAsync(consumeParams) { billingResult, purchaseToken ->
             when (billingResult.responseCode) {
                 BillingResponseCode.OK -> {
                     // Handle the success of the consume operation.
-                    Log.e("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
+                    Log.e(
+                        "TAG_INAPP",
+                        "Update the appropriate tables/databases to grant user the items"
+                    )
                     val db = DataBase.getInstance(applicationContext)
                     val categoryDao = db.categoryDao()
                     val albumDao = db.albumDao()
@@ -297,16 +358,19 @@ class PurchaseActivity : AppCompatActivity() {
                         SKU_RIFE_MONTHLY -> {
                             categoryId = 1
                         }
+
                         SKU_RIFE_ADVANCED_MONTHLY -> {
                             categoryId = 2
                         }
+
                         SKU_RIFE_HIGHER_MONTHLY -> {
                             categoryId = 3
                         }
                     }
 
                     if (categoryId == null) {
-                        Toast.makeText(applicationContext, "Critical error!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Critical error!", Toast.LENGTH_SHORT)
+                            .show()
                         return@consumeAsync
                     }
 
@@ -321,7 +385,9 @@ class PurchaseActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } else -> {
+                }
+
+                else -> {
                     Log.e("TAG_INAPP", billingResult.debugMessage)
                 }
             }
@@ -333,7 +399,7 @@ class PurchaseActivity : AppCompatActivity() {
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged) {
                 val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                        .setPurchaseToken(purchase.purchaseToken).build()
+                    .setPurchaseToken(purchase.purchaseToken).build()
                 billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                     val billingResponseCode = billingResult.responseCode
                     val billingDebugMessage = billingResult.debugMessage
@@ -349,12 +415,12 @@ class PurchaseActivity : AppCompatActivity() {
     private fun pay() {
         mSkuDetails?.let {
             val flowParams = BillingFlowParams.newBuilder()
-                    .setSkuDetails(it)
-                    .build()
+                .setSkuDetails(it)
+                .build()
             billingClient?.launchBillingFlow(this, flowParams)?.responseCode
-        }?:noSKUMessage()
+        } ?: noSKUMessage()
     }
 
-    private fun noSKUMessage() { } //???
+    private fun noSKUMessage() {} //???
     //endregion
 }

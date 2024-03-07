@@ -1,6 +1,5 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.albums.detail
 
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
@@ -24,10 +23,27 @@ import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.data.remote.ApiHelper
 import com.Meditation.Sounds.frequencies.lemeor.data.utils.ViewModelFactory
+import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.isMultiPlay
+import com.Meditation.Sounds.frequencies.lemeor.isPlayAlbum
+import com.Meditation.Sounds.frequencies.lemeor.isPlayProgram
+import com.Meditation.Sounds.frequencies.lemeor.isTrackAdd
+import com.Meditation.Sounds.frequencies.lemeor.loadImage
+import com.Meditation.Sounds.frequencies.lemeor.playAlbumId
+import com.Meditation.Sounds.frequencies.lemeor.playProgramId
+import com.Meditation.Sounds.frequencies.lemeor.playRife
+import com.Meditation.Sounds.frequencies.lemeor.playtimeRife
+import com.Meditation.Sounds.frequencies.lemeor.rifeBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.selectedNaviFragment
+import com.Meditation.Sounds.frequencies.lemeor.tierPosition
+import com.Meditation.Sounds.frequencies.lemeor.tierPositionSelected
 import com.Meditation.Sounds.frequencies.lemeor.tools.downloader.DownloaderActivity
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerSelected
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.PlayerService
+import com.Meditation.Sounds.frequencies.lemeor.trackList
+import com.Meditation.Sounds.frequencies.lemeor.typeBack
 import com.Meditation.Sounds.frequencies.lemeor.ui.albums.tabs.TiersPagerFragment
 import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
@@ -105,7 +121,8 @@ class NewAlbumDetailFragment : Fragment() {
                         program_time.text =
                             getString(R.string.total_time, convertSecondsToTime(ev.playtime))
                     }
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -302,7 +319,9 @@ class NewAlbumDetailFragment : Fragment() {
                     )
                 } else {
                     Toast.makeText(
-                        requireContext(), getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()), Toast.LENGTH_SHORT
+                        requireContext(),
+                        getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -329,10 +348,8 @@ class NewAlbumDetailFragment : Fragment() {
             // param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
         }
         if (Utils.isConnectedToNetwork(requireContext())) {
-
             val tracks = ArrayList<Track>()
             val trackDao = DataBase.getInstance(requireContext()).trackDao()
-
             CoroutineScope(Dispatchers.IO).launch {
                 album.tracks.forEach { t ->
                     val file = File(getSaveDir(requireContext(), t.filename, album.audio_folder))
@@ -367,6 +384,12 @@ class NewAlbumDetailFragment : Fragment() {
                 }
 
             }
+        } else {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.err_network_available),
+                Toast.LENGTH_SHORT
+            ).show()
         }
         play(album)
         EventBus.getDefault().post(PlayerSelected(0))

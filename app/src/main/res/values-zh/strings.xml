@@ -178,7 +178,6 @@
     <string name="txt_edit_playlist">编辑播放列表</string>
     <string name="txt_edit_playlist_name_success">成功编辑了播放列表的名字</string>
     <string name="tv_duration">期间</string>
-    <string name="tst_download_successful">下载成功</string>
     <string name="txt_downloading_dot">下载…</string>
     <string name="txt_downloading">下载</string>
     <string name="tv_downloading">下载</string>
@@ -311,5 +310,25 @@
     <string name="tv_track_last_pos">在最后位置轨道</string>
     <string name="tv_track_first_pos">轨道处于第一位置</string>
     <string name="tv_error_back">请单击再次退出！</string>
+    <string name="tv_please_enter_old_pass">请输入旧密码！</string>
+    <string name="tv_err_old_pass_characters">旧密码不能少于6个字符！</string>
+    <string name="tv_please_enter_new_pass">请输入新密码！</string>
+    <string name="tv_err_new_pass_characters">新密码不能少于6个字符！</string>
+    <string name="tv_please_enter_confirm_pass">请输入确认新密码！</string>
+    <string name="tv_err_confirm_pass_characters">确认新密码不能少于6个字符！</string>
+    <string name="tv_please_enter_confirm_new_pass">请检查确认新密码！</string>
+    <string name="tv_please_enter_email">请输入电子邮件！</string>
+    <string name="tv_invalid_email">不合规电邮！</string>
+    <string name="tv_please_enter_pass">请输入密码！</string>
+    <string name="tv_download_completed">下载完成</string>
+    <string name="tv_new_apk">[新APK] %1$s</string>
+    <string name="tv_downloading_file">下载文件…</string>
+    <string name="tv_term_and_privacy">术语|和|隐私政策</string>
+    <string name="tv_err_pass_characters">密码不能少于6个字符！</string>
+    <string name="tv_please_enter_confirm_password">请输入确认密码！</string>
+    <string name="tv_please_check_confirm_password">请检查确认密码！</string>
+    <string name="tv_invalid_email_add">您的电子邮件地址无效！</string>
+    <string name="tv_please_enter_name">请输入名称！</string>
+    <string name="tv_incorrect_old_pass">旧密码不正确！</string>
 
 </resources>

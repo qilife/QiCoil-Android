@@ -1,16 +1,29 @@
 package com.Meditation.Sounds.frequencies.lemeor.tools.player
 
-import android.app.*
+import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.media.AudioManager.*
+import android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY
+import android.media.AudioManager.AUDIOFOCUS_GAIN
+import android.media.AudioManager.AUDIOFOCUS_LOSS
+import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
+import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK
+import android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+import android.media.AudioManager.OnAudioFocusChangeListener
+import android.media.AudioManager.STREAM_MUSIC
 import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Binder
@@ -20,8 +33,10 @@ import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.widget.Toast
-import androidx.core.app.NotificationCompat.*
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat.Action
+import androidx.core.app.NotificationCompat.Builder
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.media.app.NotificationCompat
@@ -29,12 +44,26 @@ import androidx.media.session.MediaButtonReceiver
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.generators.SoundGenerator
 import com.Meditation.Sounds.frequencies.generators.model.WaveTypes
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.currentPosition
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
-import com.Meditation.Sounds.frequencies.utils.Utils
-import com.google.android.exoplayer2.*
+import com.Meditation.Sounds.frequencies.lemeor.duration
+import com.Meditation.Sounds.frequencies.lemeor.getPreloadedSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
+import com.Meditation.Sounds.frequencies.lemeor.getTrackUrl
+import com.Meditation.Sounds.frequencies.lemeor.isMultiPlay
+import com.Meditation.Sounds.frequencies.lemeor.isUserPaused
+import com.Meditation.Sounds.frequencies.lemeor.max
+import com.Meditation.Sounds.frequencies.lemeor.playRife
+import com.Meditation.Sounds.frequencies.lemeor.playtimeRife
+import com.Meditation.Sounds.frequencies.lemeor.trackList
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
 import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -48,7 +77,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 
 class PlayerService : Service() {
@@ -197,9 +227,13 @@ class PlayerService : Service() {
                     getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(notificationChannel)
 
-                if(Build.VERSION.SDK_INT>=29){
-                    startForeground(NOTIFICATION_ID, getNotification(currentState), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-                }else{
+                if (Build.VERSION.SDK_INT >= 29) {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        getNotification(currentState),
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                    )
+                } else {
                     startForeground(NOTIFICATION_ID, getNotification(currentState))
                 }
             } catch (_: Exception) {
@@ -308,7 +342,7 @@ class PlayerService : Service() {
             override fun onPlay() {
                 val track = musicRepository?.getCurrent()
                 track?.let { item ->
-                    if(item is Track){
+                    if (item is Track) {
                         soundFrequency.stopPlayback()
                         if (!exoPlayer.playWhenReady) {
                             try {
@@ -344,7 +378,7 @@ class PlayerService : Service() {
                             }
 
                             mediaSession.isActive = true
-                            if(!isRegisteredBusyReceiver) {
+                            if (!isRegisteredBusyReceiver) {
                                 isRegisteredBusyReceiver = true
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     registerReceiver(
@@ -352,7 +386,7 @@ class PlayerService : Service() {
                                         IntentFilter(ACTION_AUDIO_BECOMING_NOISY),
                                         Context.RECEIVER_EXPORTED
                                     )
-                                }else{
+                                } else {
                                     registerReceiver(
                                         becomingNoisyReceiver,
                                         IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
@@ -361,7 +395,7 @@ class PlayerService : Service() {
                             }
                             exoPlayer.playWhenReady = true
                         }
-                    }else {
+                    } else {
                         exoPlayer.stop()
                         try {
                             ContextCompat.startForegroundService(
@@ -396,7 +430,7 @@ class PlayerService : Service() {
                         }
 
                         mediaSession.isActive = true
-                        if(!isRegisteredBusyReceiver) {
+                        if (!isRegisteredBusyReceiver) {
                             isRegisteredBusyReceiver = true
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 registerReceiver(
@@ -404,7 +438,7 @@ class PlayerService : Service() {
                                     IntentFilter(ACTION_AUDIO_BECOMING_NOISY),
                                     Context.RECEIVER_EXPORTED
                                 )
-                            }else{
+                            } else {
                                 registerReceiver(
                                     becomingNoisyReceiver,
                                     IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
@@ -552,13 +586,6 @@ class PlayerService : Service() {
                         uri = Uri.parse(
                             getTrackUrl(item.album, item.filename)
                         )
-                        if (!Utils.isConnectedToNetwork(applicationContext)) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.err_network_available),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
                     }
                     uri?.let {
                         if (currentUri?.toString() != uri.toString() || (exoPlayer.playbackState != PlaybackState.STATE_PAUSED && exoPlayer.playbackState != PlaybackState.STATE_PLAYING)) {
@@ -704,7 +731,7 @@ class PlayerService : Service() {
                 } else {
                     mediaSessionCallback.onSkipToNext()
                 }
-            }else if (state == ExoPlayer.STATE_READY) {
+            } else if (state == ExoPlayer.STATE_READY) {
                 max.postValue(exoPlayer.duration)
                 metadataBuilder.putLong(
                     MediaMetadataCompat.METADATA_KEY_DURATION,
@@ -739,6 +766,13 @@ class PlayerService : Service() {
                 }
 
                 PlaybackStateCompat.STATE_PAUSED -> {
+                    if (ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        return
+                    }
                     NotificationManagerCompat.from(this@PlayerService)
                         .notify(NOTIFICATION_ID, getNotification(playbackState))
                     stopForeground(false)

@@ -124,8 +124,13 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             if (refid == referenceId) {
                 val mBuilder =
                     NotificationCompat.Builder(this@MainActivity).setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("[New APK] " + this@MainActivity.getString(R.string.app_name))
-                        .setContentText("Download completed")
+                        .setContentTitle(
+                            getString(
+                                R.string.tv_new_apk,
+                                getString(R.string.app_name)
+                            )
+                        )
+                        .setContentText(getString(R.string.tv_download_completed))
                 val notificationManager =
                     getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(455, mBuilder.build())
@@ -1315,8 +1320,13 @@ class MainActivity : BaseActivity(), MusicService.Callback, ApiListener<Any>,
             val request = DownloadManager.Request(Download_Uri)
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             request.setAllowedOverRoaming(false)
-            request.setTitle("[New APK] " + getString(R.string.app_name))
-            request.setDescription("Downloading " + fileName)
+            request.setTitle(
+                getString(
+                    R.string.tv_new_apk,
+                    getString(R.string.app_name)
+                )
+            )
+            request.setDescription(getString(R.string.tv_downloading) + " " + fileName)
             request.setVisibleInDownloadsUi(true)
 //            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Quantum/" + "/" + "Quantum_v1.0" + ".apk")
             request.setDestinationUri(

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -16,11 +15,11 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.tools.FlashSale
-import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.isFlashSalePurchased
 import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.preference
 import com.Meditation.Sounds.frequencies.utils.Constants
@@ -28,10 +27,8 @@ import com.android.billingclient.api.*
 import kotlinx.android.synthetic.main.activity_flash_sale.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterface {
 
@@ -39,7 +36,8 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
     private var mSkuDetails: SkuDetails? = null
     private var mSkuDetailsList: List<SkuDetails>? = null
 
-    private var fragmentList = arrayListOf(StarterFragment(), MasterFragment(), Abundance1Fragment(), Abundance2Fragment())
+    private var fragmentList =
+        arrayListOf(StarterFragment(), MasterFragment(), Abundance1Fragment(), Abundance2Fragment())
     private var index = Random().nextInt(fragmentList.size - 1) + 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,57 +62,82 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
     }
 
     private fun setTermsSpan() {
-        val text = "Terms and Privacy Policy"
-        val mSpannableText = SpannableString(text)
-        val clickPrivacy = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-            }
+        try {
+            val text = getString(R.string.tv_term_and_privacy)
+            val list = text.split("|")
+            if (list.size == 3) {
+                val listLength = list.map { it.length }
+                val mSpannableText = SpannableString(text.replace("|", ""))
+                val clickPrivacy = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-        val clickTerms = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-            }
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                val clickTerms = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+
+                mSpannableText.setSpan(
+                    clickTerms,
+                    0,
+                    listLength[0],
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                mSpannableText.setSpan(
+                    clickPrivacy,
+                    listLength[0] + listLength[1],
+                    mSpannableText.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                flash_sale_subs_info.text =
+                    TextUtils.concat(
+                        getString(R.string.tv_title_subscription_new),
+                        " ",
+                        mSpannableText
+                    )
+                flash_sale_subs_info.movementMethod = LinkMovementMethod.getInstance()
             }
+        } catch (_: Exception) {
         }
-        mSpannableText.setSpan(clickTerms, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        mSpannableText.setSpan(clickPrivacy, 10, mSpannableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        flash_sale_subs_info.text = TextUtils.concat(getString(R.string.tv_title_subscription_new), " ", mSpannableText)
-        flash_sale_subs_info.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setFragment(fragment: Fragment, id: Int) {
         index = id
 
-        supportFragmentManager.beginTransaction().replace(R.id.flash_sale_subs_container,
-                fragment,
-                fragment.javaClass.simpleName)
-                .commit()
+        supportFragmentManager.beginTransaction().replace(
+            R.id.flash_sale_subs_container,
+            fragment,
+            fragment.javaClass.simpleName
+        )
+            .commit()
     }
 
     //region Billing System
     private fun setUpBillingClient() {
         billingClient = BillingClient.newBuilder(applicationContext)
-                .setListener(purchaseUpdateListener)
-                .enablePendingPurchases()
-                .build()
+            .setListener(purchaseUpdateListener)
+            .enablePendingPurchases()
+            .build()
         startConnection()
     }
 
@@ -157,24 +180,28 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
     }
 
     private val purchaseUpdateListener =
-            PurchasesUpdatedListener { billingResult, purchases ->
-                Log.e("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
+        PurchasesUpdatedListener { billingResult, purchases ->
+            Log.e("TAG_INAPP", "billingResult responseCode : ${billingResult.responseCode}")
 
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-                    for (purchase in purchases) {
-                        handleConsumedPurchases(purchase)
-                    }
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                for (purchase in purchases) {
+                    handleConsumedPurchases(purchase)
                 }
             }
+        }
 
     private fun handleConsumedPurchases(purchase: Purchase) {
         Log.e("TAG_INAPP", "handleConsumablePurchasesAsync foreach it is $purchase")
-        val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+        val consumeParams =
+            ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient?.consumeAsync(consumeParams) { billingResult, purchaseToken ->
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     // Handle the success of the consume operation.
-                    Log.e("TAG_INAPP", "Update the appropriate tables/databases to grant user the items")
+                    Log.e(
+                        "TAG_INAPP",
+                        "Update the appropriate tables/databases to grant user the items"
+                    )
 
                     val db = DataBase.getInstance(applicationContext)
                     val categoryDao = db.categoryDao()
@@ -187,16 +214,19 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
                         Constants.SKU_RIFE_YEARLY_FLASHSALE -> {
                             categoryId = 1
                         }
+
                         Constants.SKU_RIFE_ADVANCED_YEAR_FLASHSALE -> {
                             categoryId = 2
                         }
+
                         Constants.SKU_RIFE_HIGHER_ANNUAL_FLASH_SALE -> {
                             categoryId = 3
                         }
                     }
 
                     if (categoryId == null) {
-                        Toast.makeText(applicationContext, "Critical error!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Critical error!", Toast.LENGTH_SHORT)
+                            .show()
                         return@consumeAsync
                     }
 
@@ -204,14 +234,16 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
                         categoryDao.updatePurchaseStatus(true, categoryId)
                         albumDao.setUnlockedStatusByCategoryId(true, categoryId, false)
 
-                        albumDao.getUnlockedAlbums(true).forEach { a->
-                            a.tracks.forEach { t->
+                        albumDao.getUnlockedAlbums(true).forEach { a ->
+                            a.tracks.forEach { t ->
                                 trackDao.setTrackUnlocked(true, t.id)
                             }
                         }
                     }
 
-                } else -> {
+                }
+
+                else -> {
                     Log.e("TAG_INAPP", billingResult.debugMessage)
                 }
             }
@@ -223,7 +255,7 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged) {
                 val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                        .setPurchaseToken(purchase.purchaseToken).build()
+                    .setPurchaseToken(purchase.purchaseToken).build()
                 billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                     val billingResponseCode = billingResult.responseCode
                     val billingDebugMessage = billingResult.debugMessage
@@ -244,13 +276,13 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
 
         mSkuDetails?.let {
             val flowParams = BillingFlowParams.newBuilder()
-                    .setSkuDetails(it)
-                    .build()
+                .setSkuDetails(it)
+                .build()
             billingClient?.launchBillingFlow(this, flowParams)?.responseCode
-        }?:noSKUMessage()
+        } ?: noSKUMessage()
     }
 
-    private fun noSKUMessage() { } //???
+    private fun noSKUMessage() {} //???
 
     override fun onFlashSaleTick(hours: String, minutes: String, seconds: String) {
         tvHours.text = hours
@@ -258,7 +290,9 @@ class FlashSaleActivity : AppCompatActivity(), FlashSale.FlashSaleScreenInterfac
         tvSeconds.text = seconds
     }
 
-    override fun onFlashSaleFinish() { finish() }
+    override fun onFlashSaleFinish() {
+        finish()
+    }
     //endregion
 
 }

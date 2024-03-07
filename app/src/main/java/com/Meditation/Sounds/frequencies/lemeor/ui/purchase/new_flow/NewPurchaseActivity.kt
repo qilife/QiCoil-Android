@@ -20,18 +20,55 @@ import androidx.appcompat.app.AppCompatActivity
 import com.Meditation.Sounds.frequencies.BuildConfig
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.InappPurchase
-import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.*
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_HAPPINESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LOVE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_LUCK
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_ABUNDANCE_SUCCESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_AYAHUASCA
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BEAUTY_I
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BEAUTY_II
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_BRAIN
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_DIGITAL_IVM
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_DMT
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_FITNESS
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_LIFE_FORCE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_MANIFESTING
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_NAD
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_NMN
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_PROTECTION
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_SKIN_CARE
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_TRANSFORMATION_MEDITATION
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_I
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_II
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WELLNESS_III
+import com.Meditation.Sounds.frequencies.lemeor.InappPurchase.HIGHER_QUANTUM_TIER_INAPP_WISDOM
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_ANNUAL_7_DAY_TRIAL
 import com.Meditation.Sounds.frequencies.lemeor.QUANTUM_TIER_SUBS_MONTH
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.views.BottomSheetWebView
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AppsFlyerLib
-import kotlinx.android.synthetic.main.activity_new_purchase.*
-import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_back
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_container
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_continue
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_info
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_price
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_screen_name
+import kotlinx.android.synthetic.main.activity_new_purchase.purchase_terms
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -82,6 +119,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                     4 -> {
                         purchase_continue.text = getText(R.string.tv_apply_now)
                     }
+
                     else -> {
                         purchase_continue.text = getText(R.string.tv_unlock_now)
                     }
@@ -101,11 +139,13 @@ class NewPurchaseActivity : AppCompatActivity() {
                         albumDao.getAlbumsByTierId(tierId).let { albumList.addAll(it) }
                         tierDao.getTierNameById(tierId)?.let { screenName = it }
                     }
+
                     INNER_CIRCLE_TIER_ID -> {
                         purchase_continue.text = "APPLY NOW"
                         albumDao.getAlbumsByTierId(tierId).let { albumList.addAll(it) }
                         tierDao.getTierNameById(tierId)?.let { screenName = it }
                     }
+
                     else -> {
                         albumDao.getAlbumsByCategory(categoryId).let { albumList.addAll(it) }
                         /* if (Id == 219 || Id == 220) {
@@ -144,14 +184,17 @@ class NewPurchaseActivity : AppCompatActivity() {
                     4 -> {
                         bottomSheetWebView.showWithUrl("https://qilifestore.com/collections/inner-circle-members-area")
                     }
+
                     1 -> {
                         bottomSheetWebView.showWithUrl("https://qilifestore.com/products/ultimate-quantum-frequency-bundle")
                     }
+
                     3 -> {
                         bottomSheetWebView.showWithUrl("https://qilifestore.com/products/ultimate-higher-quantum-frequencies-collection")
                     }
+
                     8 -> {
-                        when(categoryId){
+                        when (categoryId) {
                             //Genesis
                             48 -> {
                                 bottomSheetWebView.showWithUrl("https://qilifestore.com/products/genesis-frequency-pack")
@@ -170,6 +213,7 @@ class NewPurchaseActivity : AppCompatActivity() {
                             }
                         }
                     }
+
                     else -> {
                         bottomSheetWebView.showWithUrl("https://qilifestore.com/products/professional-rife-frequency-collection-mp3-466-audio-files")
                     }
@@ -200,51 +244,64 @@ class NewPurchaseActivity : AppCompatActivity() {
     }
 
     private fun setTermsSpan() {
-        val text = "Terms and Privacy Policy"
-        val mSpannableText = SpannableString(text)
-        val clickPrivacy = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
+        try {
+            val text = getString(R.string.tv_term_and_privacy)
+            val list = text.split("|")
+            if (list.size == 3) {
+                val listLength = list.map { it.length }
+                val mSpannableText = SpannableString(text.replace("|", ""))
+                val clickPrivacy = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                val clickTerms = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                mSpannableText.setSpan(
+                    clickTerms,
+                    0,
+                    listLength[0],
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                mSpannableText.setSpan(
+                    clickPrivacy,
+                    listLength[0] + listLength[1],
+                    mSpannableText.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                if (tierId == QUANTUM_TIER_ID || tierId == HIGHER_QUANTUM_TIER_ID) {
+                    purchase_info.text = getString(R.string.tv_title_subscription_new)
+                } else {
+                    purchase_info.visibility = View.GONE
+                }
+                purchase_terms.text = mSpannableText
+                purchase_terms.movementMethod = LinkMovementMethod.getInstance()
             }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
+        } catch (_: Exception) {
         }
-        val clickTerms = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-        mSpannableText.setSpan(clickTerms, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        mSpannableText.setSpan(
-            clickPrivacy,
-            10,
-            mSpannableText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        if (tierId == QUANTUM_TIER_ID || tierId == HIGHER_QUANTUM_TIER_ID) {
-            purchase_info.text = getString(R.string.tv_title_subscription_new)
-        } else {
-            purchase_info.visibility = View.GONE
-        }
-        purchase_terms.text = mSpannableText
-        purchase_terms.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setUpBillingClient() {
@@ -301,7 +358,8 @@ class NewPurchaseActivity : AppCompatActivity() {
                     // Google Play by calling the startConnection() method.
                 }
             })
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 
     private fun queryAvailableProducts() {
@@ -563,6 +621,7 @@ class NewPurchaseActivity : AppCompatActivity() {
 
                     finish()
                 }
+
                 else -> {
                     Log.e("TAG_INAPP", billingResult.debugMessage)
                 }

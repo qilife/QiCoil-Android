@@ -238,7 +238,6 @@
     <string name="txt_flash_sale">Venta express</string>
     <string name="search_hint">Buscar</string>
     <string name="lbl_categories">Categorías</string>
-    <string name="tst_download_successful">Descargar exitoso</string>
     <string name="purchase_dialog_btn_month">Mes</string>
     <string name="purchase_dialog_btn_annual">Anual</string>
     <string name="download_error">Error de descarga</string>
@@ -311,5 +310,25 @@
     <string name="tv_track_last_pos">Rastrear en la última posición</string>
     <string name="tv_track_first_pos">Rastrear en la primera posición</string>
     <string name="tv_error_back">¡Haga clic nuevamente para salir!</string>
+    <string name="tv_please_enter_old_pass">¡Ingrese la contraseña antigua!</string>
+    <string name="tv_err_old_pass_characters">¡La contraseña antigua no puede ser menos de 6 caracteres!</string>
+    <string name="tv_please_enter_new_pass">¡Ingrese la nueva contraseña!</string>
+    <string name="tv_err_new_pass_characters">¡La nueva contraseña no puede ser menos de 6 caracteres!</string>
+    <string name="tv_please_enter_confirm_pass">¡Ingrese Confirmar la nueva contraseña!</string>
+    <string name="tv_err_confirm_pass_characters">¡Confirmar que la nueva contraseña no puede ser menos de 6 caracteres!</string>
+    <string name="tv_please_enter_confirm_new_pass">Por favor, consulte Confirmar nueva contraseña!</string>
+    <string name="tv_please_enter_email">¡Ingrese el correo electrónico!</string>
+    <string name="tv_invalid_email">¡Email inválido!</string>
+    <string name="tv_please_enter_pass">¡Por favor, ingrese contraseña!</string>
+    <string name="tv_download_completed">Descarga completa</string>
+    <string name="tv_new_apk">[Nuevo APK] %1$s</string>
+    <string name="tv_downloading_file">Descargando archivos…</string>
+    <string name="tv_term_and_privacy">Términos| y |política de privacidad</string>
+    <string name="tv_err_pass_characters">¡La contraseña no puede ser menos de 6 caracteres!</string>
+    <string name="tv_please_enter_confirm_password">¡Ingrese la contraseña de confirmación!</string>
+    <string name="tv_please_check_confirm_password">¡Consulte la contraseña de confirmación!</string>
+    <string name="tv_invalid_email_add">¡Tu dirección de correo electrónico no es válida!</string>
+    <string name="tv_please_enter_name">¡Ingrese el nombre!</string>
+    <string name="tv_incorrect_old_pass">¡Antigua contraseña es incorrecta!</string>
 
 </resources>

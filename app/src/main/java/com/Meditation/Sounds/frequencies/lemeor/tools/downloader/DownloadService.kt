@@ -24,6 +24,8 @@ import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.getSaveDir
 import com.Meditation.Sounds.frequencies.lemeor.getTrackUrl
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper
+import com.Meditation.Sounds.frequencies.lemeor.tools.PreferenceHelper.codeLanguage
 import com.Meditation.Sounds.frequencies.utils.Utils
 import com.Meditation.Sounds.frequencies.work.DownLoadCourseAudioWorkManager
 import kotlinx.coroutines.CoroutineScope
@@ -90,12 +92,12 @@ class DownloadService : LifecycleService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
                 networkChangeReceiver,
-                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), Context.RECEIVER_EXPORTED
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                Context.RECEIVER_EXPORTED
             )
         } else {
             registerReceiver(
-                networkChangeReceiver,
-                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                networkChangeReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
             )
         }
     }
@@ -104,12 +106,11 @@ class DownloadService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
         createNotificationChannel()
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Downloading files...")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .build()
-        if(Build.VERSION.SDK_INT>=29){
+            .setContentTitle(getString(R.string.tv_downloading_file))
+            .setSmallIcon(R.mipmap.ic_launcher).build()
+        if (Build.VERSION.SDK_INT >= 29) {
             startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        }else{
+        } else {
             startForeground(1, notification)
         }
 
@@ -118,8 +119,7 @@ class DownloadService : LifecycleService() {
             this.tracks.filter { downloadErrorTracks.contains(it.id) }.toMutableList()
         this.tracks = this.tracks.filter { !downloadErrorTracks.contains(it.id) }.toMutableList()
         tracks.forEach {
-            if (!this.tracks.any { track -> track.id == it.id }
-                && !downloadErrorTracks.contains(it.id)) {
+            if (!this.tracks.any { track -> track.id == it.id } && !downloadErrorTracks.contains(it.id)) {
                 needToDownloadTrack.add(it)
             }
         }
@@ -143,10 +143,7 @@ class DownloadService : LifecycleService() {
 
                 EventBus.getDefault().post(
                     DownloadInfo(
-                        "",
-                        0,
-                        getCompletedFileCount(),
-                        this@DownloadService.tracks.size
+                        "", 0, getCompletedFileCount(), this@DownloadService.tracks.size
                     )
                 )
                 if (this@DownloadService.tracks.isEmpty()) {
@@ -164,8 +161,7 @@ class DownloadService : LifecycleService() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
-                CHANNEL_ID, "Download Service Channel",
-                NotificationManager.IMPORTANCE_LOW
+                CHANNEL_ID, "Download Service Channel", NotificationManager.IMPORTANCE_LOW
             ).apply {
                 setSound(null, null)
             }
@@ -187,10 +183,15 @@ class DownloadService : LifecycleService() {
         val completedFiles: Int = getCompletedFileCount()
 
         if (completedFiles == totalFiles) {
+            val message = when (PreferenceHelper.preference(applicationContext).codeLanguage) {
+                "es" -> getString(R.string.tst_download_successful_es)
+                "fr" -> getString(R.string.tst_download_successful_fr)
+                "zh" -> getString(R.string.tst_download_successful_zh)
+                else -> getString(R.string.tst_download_successful_en)
+            }
+
             Toast.makeText(
-                applicationContext,
-                getString(R.string.tst_download_successful),
-                Toast.LENGTH_SHORT
+                applicationContext, message, Toast.LENGTH_SHORT
             ).show()
 
             EventBus.getDefault().post(DOWNLOAD_FINISH)
@@ -221,9 +222,7 @@ class DownloadService : LifecycleService() {
         tracks.forEach {
             if (File(
                     getSaveDir(
-                        applicationContext,
-                        it.filename,
-                        it.album?.audio_folder ?: ""
+                        applicationContext, it.filename, it.album?.audio_folder ?: ""
                     )
                 ).exists()
             ) {
@@ -267,10 +266,7 @@ class DownloadService : LifecycleService() {
                         updateUIWithProgress()
                         EventBus.getDefault().post(
                             DownloadInfo(
-                                "$trackId",
-                                100,
-                                getCompletedFileCount(),
-                                tracks.size
+                                "$trackId", 100, getCompletedFileCount(), tracks.size
                             )
                         )
                         downloadNext(false)
@@ -280,13 +276,11 @@ class DownloadService : LifecycleService() {
 //                            if (!downloadErrorTracks.any { trackId == it }) {
                             tracks.firstOrNull { trackId == it.id }?.let {
                                 downloadErrorTracks.add(it.id)
-                                EventBus.getDefault()
-                                    .post(
-                                        DownloadTrackErrorEvent(
-                                            trackId,
-                                            getTrackUrl(it.album, it.filename)
-                                        )
+                                EventBus.getDefault().post(
+                                    DownloadTrackErrorEvent(
+                                        trackId, getTrackUrl(it.album, it.filename)
                                     )
+                                )
 //                                }
                             }
                             checkDoneDownloaded()
@@ -304,10 +298,7 @@ class DownloadService : LifecycleService() {
                             fileProgressMap[trackId] = progress
                             EventBus.getDefault().post(
                                 DownloadInfo(
-                                    "$trackId",
-                                    progress,
-                                    getCompletedFileCount(),
-                                    tracks.size
+                                    "$trackId", progress, getCompletedFileCount(), tracks.size
                                 )
                             )
                         }

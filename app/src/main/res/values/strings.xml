@@ -331,7 +331,10 @@
     <string name="downloader_quantity">Downloading (%1$d/%2$d)</string>
     <string name="downloader_quantity_collapse" translatable="false">%1$d/%2$d</string>
 
-    <string name="tst_download_successful">Download successful</string>
+    <string name="tst_download_successful_en" translatable="false">Download successful</string>
+    <string name="tst_download_successful_zh" translatable="false">下载成功</string>
+    <string name="tst_download_successful_es" translatable="false">Descargar exitoso</string>
+    <string name="tst_download_successful_fr" translatable="false">Télécharger réussi</string>
 
     <string name="inapp_purchase_info">One Time Payment of: %1$s</string>
     <string name="purchase_dialog_btn_month">Month</string>
@@ -380,6 +383,27 @@
     <string name="tv_track_last_pos">Track in last position</string>
     <string name="tv_track_first_pos">Track in first position</string>
     <string name="tv_error_back">Please click BACK again to exit!</string>
+    <string name="tv_please_enter_old_pass">Please enter Old Password!</string>
+    <string name="tv_err_old_pass_characters">Old Password cannot be less than 6 characters!</string>
+    <string name="tv_please_enter_new_pass">Please enter New password!</string>
+    <string name="tv_err_new_pass_characters">New password cannot be less than 6 characters!</string>
+    <string name="tv_please_enter_confirm_pass">Please enter Confirm new password!</string>
+    <string name="tv_err_confirm_pass_characters">Confirm new password cannot be less than 6 characters!</string>
+    <string name="tv_please_enter_confirm_new_pass">Please check Confirm new password!</string>
+    <string name="tv_please_enter_email">Please enter Email!</string>
+    <string name="tv_invalid_email">Invalid email!</string>
+    <string name="tv_please_enter_pass">Please enter Password!</string>
+    <string name="tv_download_completed">Download completed</string>
+    <string name="tv_new_apk">[New APK] %1$s</string>
+    <string name="tv_downloading_file">Downloading files…</string>
+    <string name="tv_term_and_privacy">Terms| and |Privacy Policy</string>
+    <string name="tv_err_pass_characters">Password cannot be less than 6 characters!</string>
+    <string name="tv_please_enter_confirm_password">Please enter Confirm Password!</string>
+    <string name="tv_please_check_confirm_password">Please check Confirm Password!</string>
+    <string name="tv_invalid_email_add">Your email address is invalid!</string>
+    <string name="tv_please_enter_name">Please enter Name!</string>
+    <string name="tv_incorrect_old_pass">Old password is incorrect!</string>
+
 
     <string name="lang_en" translatable="false">English</string>
     <string name="lang_fr" translatable="false">French</string>

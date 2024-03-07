@@ -73,7 +73,6 @@
     <string name="download_error">Erreur de téléchargement</string>
     <string name="purchase_dialog_btn_month">Mois</string>
     <string name="purchase_dialog_btn_annual">Annuel</string>
-    <string name="tst_download_successful">Télécharger réussi</string>
     <string name="lbl_categories">Catégories</string>
     <string name="txt_flash_sale">Vente flash</string>
     <string name="program_favorites">Favoris</string>
@@ -317,5 +316,25 @@
     <string name="tv_track_last_pos">Suivre en dernière position</string>
     <string name="tv_track_first_pos">Suivre en première position</string>
     <string name="tv_error_back">Veuillez cliquer à nouveau pour quitter!</string>
+    <string name="tv_please_enter_old_pass">Veuillez saisir l\'ancien mot de passe!</string>
+    <string name="tv_err_old_pass_characters">Le vieux mot de passe ne peut pas être inférieur à 6 caractères!</string>
+    <string name="tv_please_enter_new_pass">Veuillez saisir un nouveau mot de passe!</string>
+    <string name="tv_err_new_pass_characters">Le nouveau mot de passe ne peut pas être inférieur à 6 caractères!</string>
+    <string name="tv_please_enter_confirm_pass">Veuillez entrer confirmer le nouveau mot de passe!</string>
+    <string name="tv_err_confirm_pass_characters">Confirmer que le nouveau mot de passe ne peut pas être inférieur à 6 caractères!</string>
+    <string name="tv_please_enter_confirm_new_pass">Veuillez vérifier confirmer le nouveau mot de passe!</string>
+    <string name="tv_please_enter_email">Veuillez saisir le courrier électronique!</string>
+    <string name="tv_invalid_email">Email invalide!</string>
+    <string name="tv_please_enter_pass">Veuillez entrer le mot de passe!</string>
+    <string name="tv_download_completed">Télécharger terminé</string>
+    <string name="tv_new_apk">[Nouveau APK] %1$s</string>
+    <string name="tv_downloading_file">Téléchargement des fichiers…</string>
+    <string name="tv_term_and_privacy">Conditions| et |politique de confidentialité</string>
+    <string name="tv_err_pass_characters">Le mot de passe ne peut pas être inférieur à 6 caractères!</string>
+    <string name="tv_please_enter_confirm_password">Veuillez entrer le mot de passe confirmer!</string>
+    <string name="tv_please_check_confirm_password">Veuillez vérifier le mot de passe confirmer!</string>
+    <string name="tv_invalid_email_add">Votre adresse email est invalide!</string>
+    <string name="tv_please_enter_name">Veuillez entrer le nom!</string>
+    <string name="tv_incorrect_old_pass">Ancien mot de passe est incorrect!</string>
 
 </resources>

@@ -30,26 +30,55 @@ import com.Meditation.Sounds.frequencies.feature.base.BaseActivity
 import com.Meditation.Sounds.frequencies.models.Album
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.SharedPreferenceHelper
-import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.*
-import java.util.*
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mImvDismiss
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mPriceAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mPriceBasic
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mPriceHigher
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewImageAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewImageBasic
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewImageFree
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewSubscriptionAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewSubscriptionBasic
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewSubscriptionFree
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewSubscriptionHigher
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewTitleAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewTitleBasic
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.mViewTitleFree
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.rcImageHigher
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.starter_recycler_view
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.subs_continue
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.subs_info
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.subs_price
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewBuyNowAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewBuyNowBasic
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewBuyNowHigher
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewPriceAbundance
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewPriceAdvanced
+import kotlinx.android.synthetic.main.dialog_subscription_no_flash_sale.viewPriceMaster
+import java.util.Random
 
-class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext!!, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+class SubscriptionDialogNormal(private val mContext: Context?) :
+    Dialog(mContext!!, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
     var baseActivity: BaseActivity? = null
     private lateinit var mViewModel: AlbumsViewModel
     private var mSpannableText: SpannableString? = null
     private var mTypeAlbum = -1
     private var mTitleHigherAdapter: TitleAdapter? = null
-//    private var mAlbumHigherAdapter: Abundance2Adapter? = null
+
+    //    private var mAlbumHigherAdapter: Abundance2Adapter? = null
     private var mAlbumHighers = ArrayList<Album>()
     private var mTitleHighers = ArrayList<String>()
 
     private val broadcastReceiverSubscriptionController = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
             if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)
-                    && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
-                    && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)
-                    && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)) {
+                && SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
+                && SharedPreferenceHelper.getInstance()
+                    .getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)
+                && SharedPreferenceHelper.getInstance()
+                    .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+            ) {
                 dismiss()
             }
         }
@@ -79,10 +108,12 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
         this.window?.attributes = wlp
         setCancelable(false)
         val isMaster = SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)
-        val isAdvanced = SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
+        val isAdvanced =
+            SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)
         var isHigher = false
         if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
-                || SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)) {
+            || SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_QUANTUM)
+        ) {
             isHigher = true
         }
         if (isMaster) {
@@ -112,9 +143,16 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
         initComponents()
         addListener()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mContext.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),Context.RECEIVER_EXPORTED)
-        }else{
-            mContext.registerReceiver(broadcastReceiverSubscriptionController, IntentFilter(Constants.BROADCAST_ACTION_PURCHASED))
+            mContext.registerReceiver(
+                broadcastReceiverSubscriptionController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED),
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            mContext.registerReceiver(
+                broadcastReceiverSubscriptionController,
+                IntentFilter(Constants.BROADCAST_ACTION_PURCHASED)
+            )
         }
     }
 
@@ -126,12 +164,14 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
     override fun dismiss() {
         try {
             mContext!!.unregisterReceiver(broadcastReceiverSubscriptionController)
-        } catch (_: IllegalArgumentException) { }
+        } catch (_: IllegalArgumentException) {
+        }
         super.dismiss()
     }
 
     fun initComponents() {
-        mViewModel = ViewModelProviders.of(mContext as BaseActivity).get(AlbumsViewModel::class.java)
+        mViewModel =
+            ViewModelProviders.of(mContext as BaseActivity).get(AlbumsViewModel::class.java)
         mViewModel.getAlbumsHigherAbundance().observe(mContext) {
             if (it != null) {
                 mAlbumHighers = it as ArrayList<Album>
@@ -139,38 +179,8 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
 //                mAlbumHigherAdapter?.notifyDataSetChanged()
             }
         }
-        val text = "Terms and Privacy Policy"
-        mSpannableText = SpannableString(text)
-        val clickPrivacy = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                baseActivity!!.startActivity(i)
-            }
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-        val clickTerms = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                baseActivity!!.startActivity(i)
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-        mSpannableText?.setSpan(clickTerms, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        mSpannableText?.setSpan(clickPrivacy, 10, mSpannableText!!.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        setTermsSpan()
 
         mTitleHigherAdapter = TitleAdapter(mTitleHighers)
         starter_recycler_view.layoutManager = LinearLayoutManager(mContext)
@@ -180,9 +190,12 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
 //        rcImageHigher.layoutManager = GridLayoutManager(mContext, 3)
 //        rcImageHigher.adapter = mAlbumHigherAdapter
 
-        mPriceBasic.text = SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_1_MONTH)
-        mPriceAdvanced.text = SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_ADVANCED_MONTHLY)
-        mPriceHigher.text = SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_HIGHER_MONTHLY)
+        mPriceBasic.text =
+            SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_1_MONTH)
+        mPriceAdvanced.text = SharedPreferenceHelper.getInstance()
+            .getPriceByCurrency(Constants.PRICE_ADVANCED_MONTHLY)
+        mPriceHigher.text =
+            SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_HIGHER_MONTHLY)
 
         when (mTypeAlbum) {
             0 -> {
@@ -195,14 +208,19 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 rcImageHigher.visibility = View.GONE
                 starter_recycler_view.visibility = View.GONE
 
-                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_1_MONTH)
-                subs_info.text = TextUtils.concat(mContext.getString(R.string.tv_title_subscription_new), " ", mSpannableText)
+                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance()
+                    .getPriceByCurrency(Constants.PRICE_1_MONTH)
+                subs_info.text = TextUtils.concat(
+                    mContext.getString(R.string.tv_title_subscription_new),
+                    " ",
+                    mSpannableText
+                )
                 subs_info.movementMethod = LinkMovementMethod.getInstance()
 
                 if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
                     viewBuyNowBasic.visibility = View.VISIBLE
                     viewBuyNowBasic.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceMaster.visibility  = View.INVISIBLE
+                    viewPriceMaster.visibility = View.INVISIBLE
                     subs_continue.setBackgroundResource(R.drawable.bg_button_current_plan)
                     subs_continue.text = mContext.getString(R.string.tv_current_plan)
                     subs_continue.visibility = View.VISIBLE
@@ -211,7 +229,7 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 } else {
                     viewBuyNowBasic.visibility = View.VISIBLE
                     viewBuyNowBasic.text = mContext.getString(R.string.tv_subscription_now)
-                    viewPriceMaster.visibility  = View.VISIBLE
+                    viewPriceMaster.visibility = View.VISIBLE
                     subs_price.visibility = View.VISIBLE
                     subs_info.visibility = View.VISIBLE
                     subs_continue.setBackgroundResource(R.drawable.bg_continue_subscription)
@@ -222,24 +240,29 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                     }
                 }
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_ADVANCED)
+                ) {
                     viewBuyNowAdvanced.visibility = View.VISIBLE
                     viewBuyNowAdvanced.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAdvanced.visibility  = View.INVISIBLE
+                    viewPriceAdvanced.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowAdvanced.visibility = View.INVISIBLE
-                    viewPriceAdvanced.visibility  = View.VISIBLE
+                    viewPriceAdvanced.visibility = View.VISIBLE
                 }
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+                ) {
                     viewBuyNowHigher.visibility = View.VISIBLE
                     viewBuyNowHigher.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAbundance.visibility  = View.INVISIBLE
+                    viewPriceAbundance.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowHigher.visibility = View.INVISIBLE
-                    viewPriceAbundance.visibility  = View.VISIBLE
+                    viewPriceAbundance.visibility = View.VISIBLE
                 }
             }
+
             1 -> {
                 mViewImageBasic.visibility = View.GONE
                 mViewImageFree.visibility = View.GONE
@@ -250,14 +273,21 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 rcImageHigher.visibility = View.GONE
                 starter_recycler_view.visibility = View.GONE
 
-                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_ADVANCED_MONTHLY)
-                subs_info.text = TextUtils.concat(mContext.getString(R.string.tv_title_subscription_new), " ", mSpannableText)
+                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance()
+                    .getPriceByCurrency(Constants.PRICE_ADVANCED_MONTHLY)
+                subs_info.text = TextUtils.concat(
+                    mContext.getString(R.string.tv_title_subscription_new),
+                    " ",
+                    mSpannableText
+                )
                 subs_info.movementMethod = LinkMovementMethod.getInstance()
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_ADVANCED)
+                ) {
                     viewBuyNowAdvanced.visibility = View.VISIBLE
                     viewBuyNowAdvanced.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAdvanced.visibility  = View.INVISIBLE
+                    viewPriceAdvanced.visibility = View.INVISIBLE
                     subs_price.visibility = View.GONE
                     subs_info.visibility = View.GONE
                     subs_continue.visibility = View.VISIBLE
@@ -268,7 +298,7 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                     subs_info.visibility = View.VISIBLE
                     viewBuyNowAdvanced.visibility = View.VISIBLE
                     viewBuyNowAdvanced.text = mContext.getString(R.string.tv_subscription_now)
-                    viewPriceAdvanced.visibility  = View.VISIBLE
+                    viewPriceAdvanced.visibility = View.VISIBLE
                     subs_continue.setBackgroundResource(R.drawable.bg_continue_subscription)
                     subs_continue.text = mContext.getString(R.string.tv_continue)
                     subs_continue.visibility = View.VISIBLE
@@ -280,22 +310,25 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
                     viewBuyNowBasic.visibility = View.VISIBLE
                     viewBuyNowBasic.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceMaster.visibility  = View.INVISIBLE
+                    viewPriceMaster.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowBasic.visibility = View.INVISIBLE
-                    viewPriceMaster.visibility  = View.VISIBLE
+                    viewPriceMaster.visibility = View.VISIBLE
                 }
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+                ) {
                     viewBuyNowHigher.visibility = View.VISIBLE
                     viewBuyNowHigher.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAbundance.visibility  = View.INVISIBLE
+                    viewPriceAbundance.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowHigher.visibility = View.INVISIBLE
-                    viewPriceAbundance.visibility  = View.VISIBLE
+                    viewPriceAbundance.visibility = View.VISIBLE
                 }
             }
-            2->{
+
+            2 -> {
                 mViewImageBasic.visibility = View.GONE
                 mViewImageFree.visibility = View.GONE
                 mViewImageAdvanced.visibility = View.GONE
@@ -305,14 +338,21 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 rcImageHigher.visibility = View.VISIBLE
                 starter_recycler_view.visibility = View.VISIBLE
 
-                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance().getPriceByCurrency(Constants.PRICE_HIGHER_MONTHLY)
-                subs_info.text = TextUtils.concat(mContext.getString(R.string.tv_title_subscription_new), " ", mSpannableText)
+                subs_price.text = "Monthly Payment of " + SharedPreferenceHelper.getInstance()
+                    .getPriceByCurrency(Constants.PRICE_HIGHER_MONTHLY)
+                subs_info.text = TextUtils.concat(
+                    mContext.getString(R.string.tv_title_subscription_new),
+                    " ",
+                    mSpannableText
+                )
                 subs_info.movementMethod = LinkMovementMethod.getInstance()
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+                ) {
                     viewBuyNowHigher.visibility = View.VISIBLE
                     viewBuyNowHigher.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAbundance.visibility  = View.INVISIBLE
+                    viewPriceAbundance.visibility = View.INVISIBLE
                     subs_price.visibility = View.GONE
                     subs_info.visibility = View.GONE
                     subs_continue.visibility = View.VISIBLE
@@ -323,7 +363,7 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                     subs_info.visibility = View.VISIBLE
                     viewBuyNowHigher.visibility = View.VISIBLE
                     viewBuyNowHigher.text = mContext.getString(R.string.tv_subscription_now)
-                    viewPriceAbundance.visibility  = View.VISIBLE
+                    viewPriceAbundance.visibility = View.VISIBLE
                     subs_continue.setBackgroundResource(R.drawable.bg_continue_subscription)
                     subs_continue.text = mContext.getString(R.string.tv_continue)
                     subs_continue.visibility = View.VISIBLE
@@ -336,22 +376,75 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
                 if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
                     viewBuyNowBasic.visibility = View.VISIBLE
                     viewBuyNowBasic.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceMaster.visibility  = View.INVISIBLE
+                    viewPriceMaster.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowBasic.visibility = View.INVISIBLE
-                    viewPriceMaster.visibility  = View.VISIBLE
+                    viewPriceMaster.visibility = View.VISIBLE
                 }
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_ADVANCED)
+                ) {
                     viewBuyNowAdvanced.visibility = View.VISIBLE
                     viewBuyNowAdvanced.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAdvanced.visibility  = View.INVISIBLE
+                    viewPriceAdvanced.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowAdvanced.visibility = View.INVISIBLE
-                    viewPriceAdvanced.visibility  = View.VISIBLE
+                    viewPriceAdvanced.visibility = View.VISIBLE
                 }
             }
         }
 
+    }
+    private fun setTermsSpan() {
+        try {
+            val text = context.getString(R.string.tv_term_and_privacy)
+            val list = text.split("|")
+            if (list.size == 3) {
+                val listLength = list.map { it.length }
+                mSpannableText = SpannableString(text.replace("|", ""))
+                val clickPrivacy = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/privacy"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        baseActivity!!.startActivity(i)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                val clickTerms = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val url = "http://www.tattoobookapp.com/quantumwavebiotechnology/terms"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        baseActivity!!.startActivity(i)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = Color.WHITE
+                        ds.typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
+                mSpannableText?.setSpan(
+                    clickTerms,
+                    0,
+                    listLength[0],
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                mSpannableText?.setSpan(
+                    clickPrivacy,
+                    listLength[0] + listLength[1],
+                    mSpannableText!!.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        } catch (_: Exception) {
+        }
     }
 
     private fun random(): Int {
@@ -378,31 +471,35 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
             subs_info.visibility = View.INVISIBLE
             subs_continue.visibility = View.INVISIBLE
             if (mContext != null) {
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_ADVANCED)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_ADVANCED)
+                ) {
                     viewBuyNowAdvanced.visibility = View.VISIBLE
                     viewBuyNowAdvanced.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAdvanced.visibility  = View.INVISIBLE
+                    viewPriceAdvanced.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowAdvanced.visibility = View.INVISIBLE
-                    viewPriceAdvanced.visibility  = View.VISIBLE
+                    viewPriceAdvanced.visibility = View.VISIBLE
                 }
 
                 if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED)) {
                     viewBuyNowBasic.visibility = View.VISIBLE
                     viewBuyNowBasic.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceMaster.visibility  = View.INVISIBLE
+                    viewPriceMaster.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowBasic.visibility = View.INVISIBLE
-                    viewPriceMaster.visibility  = View.VISIBLE
+                    viewPriceMaster.visibility = View.VISIBLE
                 }
 
-                if (SharedPreferenceHelper.getInstance().getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)) {
+                if (SharedPreferenceHelper.getInstance()
+                        .getBool(Constants.KEY_PURCHASED_HIGH_ABUNDANCE)
+                ) {
                     viewBuyNowHigher.visibility = View.VISIBLE
                     viewBuyNowHigher.text = mContext.getString(R.string.tv_current_plan)
-                    viewPriceAbundance.visibility  = View.INVISIBLE
+                    viewPriceAbundance.visibility = View.INVISIBLE
                 } else {
                     viewBuyNowHigher.visibility = View.INVISIBLE
-                    viewPriceAbundance.visibility  = View.VISIBLE
+                    viewPriceAbundance.visibility = View.VISIBLE
                 }
             }
         }
