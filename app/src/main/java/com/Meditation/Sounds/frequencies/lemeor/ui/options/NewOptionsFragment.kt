@@ -378,10 +378,10 @@ class NewOptionsFragment : Fragment() {
         options_about.setOnClickListener {
             activity?.let {
                 AlertDialog.Builder(it).setTitle(R.string.profile_lbl_about).setMessage(
-                        getString(R.string.app_name) + getString(
-                            R.string.options_version, BuildConfig.VERSION_NAME
-                        )
-                    ).setPositiveButton(R.string.txt_ok, null).show()
+                    getString(R.string.app_name) + getString(
+                        R.string.options_version, BuildConfig.VERSION_NAME
+                    )
+                ).setPositiveButton(R.string.txt_ok, null).show()
             }
         }
 
@@ -422,15 +422,26 @@ class NewOptionsFragment : Fragment() {
             ) {
                 parent ?: return
                 view ?: return
-
                 val lang: Language = languages[position]
-                if (lang.code != preference(requireContext()).codeLanguage) {
-                    LanguageUtils.changeLanguage(requireContext(), lang.code)
-                    val activity = activity as NavigationActivity
-                    isPlayAlbum = false
-                    isPlayProgram = false
-                    activity.hidePlayerUI()
-                    clearData()
+                if (Utils.isConnectedToNetwork(requireContext())) {
+                    if (lang.code != preference(requireContext()).codeLanguage) {
+                        mHomeViewModel.syncProgramsToServer {
+                            val activity = activity as NavigationActivity
+                            isPlayAlbum = false
+                            isPlayProgram = false
+                            activity.hidePlayerUI()
+                            LanguageUtils.changeLanguage(requireContext(), lang.code)
+                            clearData()
+                        }
+                    }
+                } else {
+                    if (lang.code != preference(requireContext()).codeLanguage) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.err_network_available),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 

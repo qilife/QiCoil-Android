@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Search
@@ -14,7 +15,10 @@ import kotlinx.android.synthetic.main.view_categories_add_programs.view.ivImage
 import kotlinx.android.synthetic.main.view_categories_add_programs.view.loadingFrame
 import kotlinx.android.synthetic.main.view_categories_add_programs.view.rcvSearch
 
-class AddProgramsAdapter(private val onChanged: (List<Search>) -> Unit) :
+class AddProgramsAdapter(
+    private val fm: FragmentActivity,
+    private val onChanged: (List<Search>) -> Unit
+) :
     RecyclerView.Adapter<AddProgramsAdapter.ViewHolder>() {
 
     private var listContents: List<Triple<String, List<Search>, Boolean>> = listOf()
@@ -56,7 +60,7 @@ class AddProgramsAdapter(private val onChanged: (List<Search>) -> Unit) :
         recyclerView.apply {
             adapter = ItemAddProgramsAdapter(mListSelected = listSelected, onSelected = { _ ->
                 onChanged.invoke(listSelected)
-            }).apply {
+            }, fm = fm).apply {
                 this.submitList(list)
             }
             itemAnimator = null

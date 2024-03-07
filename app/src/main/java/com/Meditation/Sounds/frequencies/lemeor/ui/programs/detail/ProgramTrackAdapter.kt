@@ -1,5 +1,6 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.programs.detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,18 +8,22 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.convertedTrackName
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
 import com.Meditation.Sounds.frequencies.lemeor.loadImage
 import com.Meditation.Sounds.frequencies.lemeor.tools.player.MusicRepository
-import kotlinx.android.synthetic.main.item_program_track.view.*
-import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.item_program_track.view.divider
+import kotlinx.android.synthetic.main.item_program_track.view.item_album_name
+import kotlinx.android.synthetic.main.item_program_track.view.item_track_image
+import kotlinx.android.synthetic.main.item_program_track.view.item_track_name
+import kotlinx.android.synthetic.main.item_program_track.view.item_track_options
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProgramTrackAdapter(
-    private val mContext: Context,
-    private var mData: List<Any>,
-    private var isMy: Boolean
+    private val mContext: Context, private var mData: List<Any>, private var isMy: Boolean
 ) : RecyclerView.Adapter<ProgramTrackAdapter.ViewHolder>() {
 
     interface Listener {
@@ -33,7 +38,9 @@ class ProgramTrackAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_program_track, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_program_track, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -52,27 +59,23 @@ class ProgramTrackAdapter(
             if (track.isSelected) {
                 holder.itemView.item_track_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        R.color.colorPrimary
+                        mContext, R.color.colorPrimary
                     )
                 )
                 holder.itemView.item_album_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        R.color.colorPrimary
+                        mContext, R.color.colorPrimary
                     )
                 )
             } else {
                 holder.itemView.item_track_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        android.R.color.white
+                        mContext, android.R.color.white
                     )
                 )
                 holder.itemView.item_album_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        android.R.color.white
+                        mContext, android.R.color.white
                     )
                 )
             }
@@ -83,15 +86,14 @@ class ProgramTrackAdapter(
 
                 withContext(Dispatchers.Main) {
                     loadImage(mContext, holder.itemView.item_track_image, album!!)
-                    holder.itemView.item_track_name.text = convertedTrackName(album, track)
+                    holder.itemView.item_track_name.text = track.name
                     holder.itemView.item_album_name.text = album.name
                 }
             }
 
             holder.itemView.item_track_options.setOnClickListener {
                 mListener?.onTrackOptions(
-                    track,
-                    position
+                    track, position
                 )
             }
             holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position) }
@@ -99,38 +101,34 @@ class ProgramTrackAdapter(
             if (track.isSelected) {
                 holder.itemView.item_track_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        R.color.colorPrimary
+                        mContext, R.color.colorPrimary
                     )
                 )
                 holder.itemView.item_album_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        R.color.colorPrimary
+                        mContext, R.color.colorPrimary
                     )
                 )
             } else {
                 holder.itemView.item_track_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        android.R.color.white
+                        mContext, android.R.color.white
                     )
                 )
                 holder.itemView.item_album_name.setTextColor(
                     ContextCompat.getColor(
-                        mContext,
-                        android.R.color.white
+                        mContext, android.R.color.white
                     )
                 )
             }
 
             holder.itemView.item_track_image.setImageResource(R.drawable.frequency)
-            holder.itemView.item_track_name.text = holder.itemView.context.getString(R.string.navigation_lbl_rife)
+            holder.itemView.item_track_name.text =
+                holder.itemView.context.getString(R.string.navigation_lbl_rife)
             holder.itemView.item_album_name.text = track.frequency.toString()
             holder.itemView.item_track_options.setOnClickListener {
                 mListener?.onTrackOptions(
-                    track,
-                    position
+                    track, position
                 )
             }
             holder.itemView.setOnClickListener { mListener?.onTrackClick(track, position) }
@@ -145,16 +143,17 @@ class ProgramTrackAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(trackList: List<Any>?) {
         mData = trackList as ArrayList<Any>
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setSelected(selectedPosition: Int) {
         if (selectedPosition > mData.size - 1) {
             return
         }
-
         mData.forEach {
             if (it is Track) {
                 it.isSelected = false

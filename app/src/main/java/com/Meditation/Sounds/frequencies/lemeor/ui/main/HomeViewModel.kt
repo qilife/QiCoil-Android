@@ -209,7 +209,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
         }
     }
 
-    fun syncProgramsToServer() = viewModelScope.launch {
+    fun syncProgramsToServer(onDone :(()->Unit)? = null) = viewModelScope.launch {
         try {
 //            val localData = db.programDao().getData(true).toMutableList()
             val localAllData = db.programDao().getAllData().toMutableList()
@@ -243,6 +243,7 @@ class HomeViewModel(private val repository: HomeRepository, private val db: Data
                         }
                     }
                 }
+                onDone?.invoke()
             }
         } catch (_: Exception) {
         }

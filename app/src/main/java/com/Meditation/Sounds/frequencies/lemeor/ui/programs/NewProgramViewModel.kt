@@ -46,7 +46,7 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
     }
 
 
-    fun addTrackToProgram(id: Int, list: List<Search>, onDone: () -> Unit) {
+    fun addTrackToProgram(id: Int, list: List<Search>, onDone: (() -> Unit)? = null) {
         viewModelScope.launch(Dispatchers.IO) {
             val program = repository.getProgramById(id)
             val listT = arrayListOf<String>()
@@ -90,7 +90,7 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
                             )
                         )
                         withContext(Dispatchers.Main) {
-                            onDone.invoke()
+                            onDone?.invoke()
                         }
                     } catch (_: Exception) {
                     }
@@ -128,8 +128,8 @@ class NewProgramViewModel(private val repository: ProgramRepository) : ViewModel
             repository.getListTrack(),
             combine = { listA, listT ->
                 return@CombinedLiveData listA?.isNotEmpty() ?: false && listT?.isNotEmpty() ?: false
-            }).observe(owner) {
-            if (it) {
+            }).observe(owner) { isCompletedData ->
+            if (isCompletedData) {
                 repository.getListProgram().observe(owner) { list ->
                     viewModelScope.launch(Dispatchers.IO) {
                         val programs = async { checkUnlocked(list) }

@@ -39,14 +39,14 @@ class AddProgramsFragment : BaseFragment() {
     }
     private val isRife: Int by lazy {
         arguments?.getInt(ARG_IS_RIFE)
-            ?: throw IllegalArgumentException("Must call through newInstance()")
+            ?: 0
     }
     private var page = 0
     private lateinit var mViewModel: HomeViewModel
     private lateinit var mNewProgramViewModel: NewProgramViewModel
     private val listSelected = arrayListOf<Search>()
     private val adapter by lazy {
-        AddProgramsAdapter {
+        AddProgramsAdapter(requireActivity()) {
             listSelected.clear()
             listSelected.addAll(it)
         }
@@ -86,9 +86,8 @@ class AddProgramsFragment : BaseFragment() {
         }
         btnAdd.safeOnClickListener {
             if (listSelected.isNotEmpty()) {
-                mNewProgramViewModel.addTrackToProgram(programId, listSelected) {
-                    onBackPressed()
-                }
+                onBackPressed()
+                mNewProgramViewModel.addTrackToProgram(programId, listSelected)
             }
         }
         FlowSearch.fromSearchView(searchHint).debounce(200).map { text -> text.trim() }

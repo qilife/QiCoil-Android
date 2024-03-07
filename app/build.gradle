@@ -56,8 +56,8 @@ android {
         }
         quantum {
             applicationId "com.quantumfrequencies"
-            versionCode 2248
-            versionName "2.2.48"
+            versionCode 2249
+            versionName "2.2.49"
 
             buildConfigField "String", "PREF_TITLE", '"quantum_cache"'
             buildConfigField "String", "DB_NAME", '"quantum"'
@@ -91,7 +91,7 @@ android {
         }
     }
 
-    configurations.all {
+    configurations.configureEach {
         resolutionStrategy.force 'androidx.annotation:annotation:1.5.0'
     }
 
@@ -99,6 +99,10 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'com.Meditation.Sounds.frequencies'
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {

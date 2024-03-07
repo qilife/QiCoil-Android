@@ -126,19 +126,19 @@ class SubscriptionDialogNormal(private val mContext: Context?) : Dialog(mContext
     override fun dismiss() {
         try {
             mContext!!.unregisterReceiver(broadcastReceiverSubscriptionController)
-        } catch (e: IllegalArgumentException) { }
+        } catch (_: IllegalArgumentException) { }
         super.dismiss()
     }
 
     fun initComponents() {
         mViewModel = ViewModelProviders.of(mContext as BaseActivity).get(AlbumsViewModel::class.java)
-        mViewModel.getAlbumsHigherAbundance().observe(mContext, {
+        mViewModel.getAlbumsHigherAbundance().observe(mContext) {
             if (it != null) {
                 mAlbumHighers = it as ArrayList<Album>
 //                mAlbumHigherAdapter?.data = it
 //                mAlbumHigherAdapter?.notifyDataSetChanged()
             }
-        })
+        }
         val text = "Terms and Privacy Policy"
         mSpannableText = SpannableString(text)
         val clickPrivacy = object : ClickableSpan() {
