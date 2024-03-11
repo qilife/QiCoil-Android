@@ -10,16 +10,16 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.rife.tabs.ProgramPageFragment
 class RifePagerAdapter(
     private val activity: NavigationActivity,
     private val fm: FragmentManager,
-    private val nf : NewRifeFragment
+    private val nf: NewRifeFragment
 ) : FragmentPagerAdapter(fm) {
 
     private val rifeList: ArrayList<String> = arrayListOf()
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> ProgramPageFragment.newInstance(position, nf)
-            1 -> FrequencyPageFragment.newInstance(position)
-            else -> ProgramPageFragment.newInstance(position, nf)
+            0 -> ProgramPageFragment.newInstance(nf)
+            1 -> FrequencyPageFragment.newInstance()
+            else -> ProgramPageFragment.newInstance(nf)
         }
     }
 

@@ -188,3 +188,8 @@ inline fun <T> Iterable<T>.forEachBreak(predicate: (T) -> Boolean): Boolean {
     }
     return true
 }
+public inline fun <T> Iterable<T>.firstIndexOrNull(predicate: (index: Int, T) -> Boolean): T? {
+    var index = 0
+    for (element in this) if (predicate(index++,element)) return element
+    return null
+}

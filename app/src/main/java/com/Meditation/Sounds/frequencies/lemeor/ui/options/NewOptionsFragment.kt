@@ -179,7 +179,9 @@ class NewOptionsFragment : Fragment() {
                         if (subsList.isEmpty() && inappList.isEmpty()) {
                             if (context != null) {
                                 Toast.makeText(
-                                    context, "No purchases available", Toast.LENGTH_SHORT
+                                    context,
+                                    getString(R.string.tv_no_purchases_available),
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
                         } else {
@@ -342,7 +344,9 @@ class NewOptionsFragment : Fragment() {
                                 }
                             }
                             Toast.makeText(
-                                requireContext(), "Purchases have been restored", Toast.LENGTH_SHORT
+                                requireContext(),
+                                getString(R.string.tv_purchases_have_been_restored),
+                                Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
@@ -482,7 +486,7 @@ class NewOptionsFragment : Fragment() {
                                         Resource.Status.SUCCESS -> {
                                             Toast.makeText(
                                                 context,
-                                                "Your account deleted successfully!",
+                                                getString(R.string.tv_account_deleted_success),
                                                 Toast.LENGTH_LONG
                                             ).show()
                                             onLogoutSuccess()

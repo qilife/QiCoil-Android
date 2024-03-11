@@ -1,6 +1,5 @@
 package com.Meditation.Sounds.frequencies.lemeor.ui.rife.tabs
 
-import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
@@ -24,9 +23,6 @@ import kotlinx.android.synthetic.main.fragment_program_page.srlRife
 class ProgramPageFragment : BaseFragment() {
     private lateinit var mViewModel: NewRifeViewModel
     private lateinit var mHomeViewModel: HomeViewModel
-    private val rifeId by lazy {
-        arguments?.getInt(ARG_RIFE_ID)
-    }
     private val sectionItemDecoration by lazy {
         RecyclerSectionItemDecoration(
             resources.getDimensionPixelSize(R.dimen.height_calander_icon),
@@ -137,15 +133,10 @@ class ProgramPageFragment : BaseFragment() {
     }
 
     companion object {
-        private const val ARG_RIFE_ID = "arg_rife_id"
-
         @JvmStatic
-        fun newInstance(rifeId: Int, fm: NewRifeFragment): ProgramPageFragment {
+        fun newInstance(fm: NewRifeFragment): ProgramPageFragment {
             return ProgramPageFragment().apply {
                 mainFm = fm
-                arguments = Bundle().apply {
-                    putInt(ARG_RIFE_ID, rifeId)
-                }
             }
         }
     }

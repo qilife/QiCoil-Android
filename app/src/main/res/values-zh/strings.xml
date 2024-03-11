@@ -331,5 +331,11 @@
     <string name="tv_please_enter_name">请输入名称！</string>
     <string name="tv_incorrect_old_pass">旧密码不正确！</string>
     <string name="tv_empty_list">空列表</string>
+    <string name="tv_stop">停止</string>
+    <string name="tv_removed_favorite">从收藏夹中删除</string>
+    <string name="tv_add_favorite">添加到收藏夹</string>
+    <string name="tv_account_deleted_success">您的帐户成功删除了！</string>
+    <string name="tv_no_purchases_available">没有可用的购买</string>
+    <string name="tv_purchases_have_been_restored">购买已恢复</string>
 
 </resources>

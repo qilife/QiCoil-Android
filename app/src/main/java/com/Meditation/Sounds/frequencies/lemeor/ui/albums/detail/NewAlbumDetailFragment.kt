@@ -13,11 +13,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Meditation.Sounds.frequencies.R
-import com.Meditation.Sounds.frequencies.lemeor.*
+import com.Meditation.Sounds.frequencies.lemeor.albumIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.categoryIdBackProgram
+import com.Meditation.Sounds.frequencies.lemeor.convertSecondsToTime
+import com.Meditation.Sounds.frequencies.lemeor.currentTrack
+import com.Meditation.Sounds.frequencies.lemeor.currentTrackIndex
 import com.Meditation.Sounds.frequencies.lemeor.data.api.RetrofitBuilder
 import com.Meditation.Sounds.frequencies.lemeor.data.database.DataBase
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.AlbumDao
-import com.Meditation.Sounds.frequencies.lemeor.data.database.dao.TrackDao
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Album
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Rife
 import com.Meditation.Sounds.frequencies.lemeor.data.model.Track
@@ -49,14 +51,21 @@ import com.Meditation.Sounds.frequencies.lemeor.ui.main.NavigationActivity
 import com.Meditation.Sounds.frequencies.lemeor.ui.programs.NewProgramFragment
 import com.Meditation.Sounds.frequencies.utils.Constants
 import com.Meditation.Sounds.frequencies.utils.Utils
+import com.Meditation.Sounds.frequencies.utils.firstIndexOrNull
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_new_album_detail.*
+import kotlinx.android.synthetic.main.fragment_new_album_detail.album_back
+import kotlinx.android.synthetic.main.fragment_new_album_detail.album_image
+import kotlinx.android.synthetic.main.fragment_new_album_detail.album_play
+import kotlinx.android.synthetic.main.fragment_new_album_detail.album_tracks_recycler
+import kotlinx.android.synthetic.main.fragment_new_album_detail.program_time
+import kotlinx.android.synthetic.main.fragment_new_album_detail.tvDescription
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -81,17 +90,56 @@ class NewAlbumDetailFragment : Fragment() {
             ?: throw IllegalArgumentException("Must call through newInstance()")
     }
 
-    var mRife: Rife? = null
-
     private lateinit var mViewModel: NewAlbumDetailViewModel
-    private var mTrackAdapter: AlbumTrackAdapter? = null
+    private var mAlbum: Album? = null
+    private var mRife: Rife? = null
 
-    private var mRifeAdapter: RifeAdapter? = null
+    private val trackAdapter by lazy {
+        AlbumTrackAdapter(onClickItem = { _, pos, _ ->
+            isMultiPlay = false
+            mAlbum?.play()
+            Handler(Looper.getMainLooper()).postDelayed({
+                EventBus.getDefault().post(PlayerSelected(pos))
+                timeDelay = 200L
+            }, timeDelay)
+        }, onClickOptions = { t, _ ->
+            startActivityForResult(
+                TrackOptionsPopUpActivity.newIntent(
+                    requireContext(), t.id.toDouble()
+                ), 1001
+            )
+        })
+    }
+
+    private val rifeAdapter by lazy {
+        RifeAdapter(onClickItem = { f, pos ->
+            if (-f.frequency.toDouble() >= Constants.defaultHz) {
+                isMultiPlay = false
+                mRife?.play()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    EventBus.getDefault().post(PlayerSelected(pos))
+                    timeDelay = 200L
+                }, timeDelay)
+            }
+        }, onClickOptions = { f, _ ->
+            if (-f.frequency.toDouble() >= Constants.defaultHz) {
+                startActivityForResult(
+                    TrackOptionsPopUpActivity.newIntent(
+                        requireContext(), -f.frequency.toDouble(), rife = mRife
+                    ), 1001
+                )
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    private var trackDao: TrackDao? = null
-    private var albumDao: AlbumDao? = null
     private var isFirst = true
     private var timeDelay = 500L
 
@@ -116,12 +164,11 @@ class NewAlbumDetailFragment : Fragment() {
     fun onEvent(event: Any?) {
         event?.let { ev ->
             if (ev is Rife) {
-                try {
-                    if (ev.id == mRife!!.id) {
+                mRife?.let { m ->
+                    if (ev.id == m.id) {
                         program_time.text =
                             getString(R.string.total_time, convertSecondsToTime(ev.playtime))
                     }
-                } catch (_: Exception) {
                 }
             }
         }
@@ -134,17 +181,19 @@ class NewAlbumDetailFragment : Fragment() {
         initUI()
         program_time.visibility = View.GONE
         if (type == Constants.TYPE_ALBUM) {
-            mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    album = it
-                    setUI(it)
+            album_tracks_recycler.adapter = trackAdapter
+            mViewModel.album(albumId, categoryId)?.observe(viewLifecycleOwner) { a ->
+                if (a != null) {
+                    mAlbum = a
+                    a.initView()
                 }
             }
         } else if (type == Constants.TYPE_RIFE) {
-            if (mRife != null) {
+            album_tracks_recycler.adapter = rifeAdapter
+            mRife?.let { r ->
                 program_time.visibility = View.VISIBLE
                 if (playRife != null) {
-                    if (playRife!!.id == mRife!!.id && playtimeRife > 0L) {
+                    if (playRife!!.id == r.id && playtimeRife > 0L) {
                         program_time.text = getString(
                             R.string.total_time, convertSecondsToTime(playtimeRife)
                         )
@@ -160,10 +209,9 @@ class NewAlbumDetailFragment : Fragment() {
                         convertSecondsToTime((mRife!!.getFrequency().size * 3 * 60).toLong())
                     )
                 }
-                setUI(mRife!!)
+                r.initView()
             }
         }
-
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
@@ -197,143 +245,75 @@ class NewAlbumDetailFragment : Fragment() {
                 DataBase.getInstance(requireContext())
             )
         )[NewAlbumDetailViewModel::class.java]
-        if (type == Constants.TYPE_ALBUM) {
-            trackDao = DataBase.getInstance(requireContext()).trackDao()
-            albumDao = DataBase.getInstance(requireContext()).albumDao()
-        }
     }
 
-    private fun setUI(album: Album) {
+    private fun Album.initView() {
         currentTrackIndex.observe(viewLifecycleOwner) {
-            album.tracks.forEachIndexed { index, _ ->
-                if (index == it && playAlbumId == albumId) {
-                    mTrackAdapter?.setSelected(index)
-                }
+            val track =
+                tracks.firstIndexOrNull { index, _ -> index == it && playAlbumId == albumId }
+            track?.let { item ->
+                trackAdapter.setSelectedItem(item)
             }
         }
-        tvDescription.text = album.benefits_text
+        trackAdapter.submitList(tracks)
+        tvDescription.text = benefits_text
         album_back.setOnClickListener { onBackPressed() }
 
         album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
 
-        loadImage(requireContext(), album_image, album)
+        loadImage(requireContext(), album_image, this)
 
         album_play.setOnClickListener {
-            if (album.tracks.isNotEmpty()) {
-                playAndDownload(album)
+            if (tracks.isNotEmpty()) {
+                playAndDownload(this)
             }
         }
-
-        mTrackAdapter = AlbumTrackAdapter(requireContext(), album.tracks, album)
-
-        mTrackAdapter?.setOnClickListener(object : AlbumTrackAdapter.Listener {
-            override fun onTrackClick(track: Track, i: Int, isDownloaded: Boolean) {
-                isMultiPlay = false
-                mTrackAdapter?.setSelected(i)
-                play(album)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    EventBus.getDefault().post(PlayerSelected(i))
-                    timeDelay = 200L
-                }, timeDelay)
-            }
-
-            override fun onTrackOptions(track: Track, i: Int) {
-                startActivityForResult(
-                    TrackOptionsPopUpActivity.newIntent(
-                        requireContext(), track.id.toDouble()
-                    ), 1001
-                )
-            }
-        })
-        album_tracks_recycler.adapter = mTrackAdapter
 
         if (currentTrack.value != null) {
             val track = currentTrack.value
             if (track is MusicRepository.Track) {
-                val indexSelected = album.tracks.indexOfFirst { it.id == track.trackId }
-                if (indexSelected >= 0) {
-                    mTrackAdapter?.setSelected(indexSelected)
+                tracks.firstOrNull { it.id == track.trackId }?.let {
+                    trackAdapter.setSelectedItem(it)
                 }
             }
         }
-
     }
 
-    private fun setUI(rife: Rife) {
-//        track_options.visibility = View.VISIBLE
-//        track_options.setOnClickListener {
-//            startActivityForResult(
-//                TrackOptionsPopUpActivity.newIntent(
-//                    requireContext(), -2800.0,
-//                    rife = mRife
-//                ), 1001
-//            )
-//        }
-        currentTrackIndex.observe(viewLifecycleOwner) {
-            rife.getFrequency().forEachIndexed { index, _ ->
-                if (index == it && playAlbumId == rife.id) {
-                    mRifeAdapter?.setSelected(index)
-                }
-            }
-        }
-
-        album_back.setOnClickListener { onBackPressed() }
-
-        album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
-        album_image.setImageResource(R.drawable.frequency)
-
-        tvDescription.text = rife.description
-
-        album_play.setOnClickListener {
-            if (rife.getFrequency().isNotEmpty()) {
-                play(rife)
-            }
-        }
-        val local = rife.getFrequency().mapIndexed { index, s ->
+    private fun Rife.initView() {
+        val local = getFrequency().mapIndexed { index, s ->
             MusicRepository.Frequency(
                 index,
-                rife.title,
+                title,
                 s,
-                rife.id,
+                id,
                 index,
                 false,
                 0,
                 0,
             )
         }
-        mRifeAdapter = RifeAdapter(requireContext(), local, listener = { frequency, index, option ->
-            if (option == 0 && -frequency.frequency.toDouble() >= Constants.defaultHz) {
-                isMultiPlay = false
-                mRifeAdapter?.setSelected(index)
-                play(rife)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    EventBus.getDefault().post(PlayerSelected(index))
-                    timeDelay = 200L
-                }, timeDelay)
-            } else if (option == 1) {
-                if (-frequency.frequency.toDouble() >= Constants.defaultHz) {
-                    startActivityForResult(
-                        TrackOptionsPopUpActivity.newIntent(
-                            requireContext(), -frequency.frequency.toDouble(), rife = mRife
-                        ), 1001
-                    )
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_hz_exceeded, abs(Constants.defaultHz).toString()),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        currentTrackIndex.observe(viewLifecycleOwner) {
+            val frequency = local.firstIndexOrNull { index, _ -> index == it && playAlbumId == id }
+            frequency?.let { item ->
+                rifeAdapter.setSelectedItem(item)
             }
-        })
-        album_tracks_recycler.adapter = mRifeAdapter
-
+        }
+        rifeAdapter.submitList(local)
+        album_back.setOnClickListener { onBackPressed() }
+        album_image.radius = resources.getDimensionPixelOffset(R.dimen.corner_radius_album)
+        album_image.setImageResource(R.drawable.frequency)
+        tvDescription.text = description
+        album_play.setOnClickListener {
+            if (getFrequency().isNotEmpty()) {
+                play()
+            }
+        }
         if (currentTrack.value != null) {
             val item = currentTrack.value
             if (item is MusicRepository.Frequency) {
                 val indexSelected = item.index
-                if (indexSelected >= 0 && playAlbumId == rife.id) {
-                    mRifeAdapter?.setSelected(indexSelected)
+                if (indexSelected >= 0 && playAlbumId == id) {
+                    rifeAdapter.setSelectedItem(item)
                 }
             }
         }
@@ -362,7 +342,8 @@ class NewAlbumDetailFragment : Fragment() {
                         tracks.add(t)
                     }
                     t.album = Album(
-                        album.id, album.category_id,
+                        album.id,
+                        album.category_id,
                         album.tier_id,
                         album.name,
                         album.image,
@@ -370,9 +351,14 @@ class NewAlbumDetailFragment : Fragment() {
                         album.is_free,
                         album.order,
                         album.order_by,
-                        album.updated_at, null, listOf(), null,
-                        isDownloaded = false, isUnlocked = false,
-                        album.unlock_url, album.benefits_text
+                        album.updated_at,
+                        null,
+                        listOf(),
+                        null,
+                        isDownloaded = false,
+                        isUnlocked = false,
+                        album.unlock_url,
+                        album.benefits_text
                     )
 
                 }
@@ -386,55 +372,45 @@ class NewAlbumDetailFragment : Fragment() {
             }
         } else {
             Toast.makeText(
-                requireContext(),
-                getString(R.string.err_network_available),
-                Toast.LENGTH_SHORT
+                requireContext(), getString(R.string.err_network_available), Toast.LENGTH_SHORT
             ).show()
         }
-        play(album)
+        album.play()
         EventBus.getDefault().post(PlayerSelected(0))
     }
 
-    fun play(album: Album) {
+    @Suppress("UNCHECKED_CAST")
+    fun Album.play() {
         playRife = null
         val activity = activity as NavigationActivity
 
-        if (isPlayProgram || playAlbumId != album.id) {
+        if (isPlayProgram || playAlbumId != id) {
             activity.hidePlayerUI()
         }
 
         isPlayAlbum = true
-        playAlbumId = album.id
+        playAlbumId = id
         isPlayProgram = false
         playProgramId = -1
 
-        val data: ArrayList<MusicRepository.Music> = ArrayList()
-        val local = album.tracks
-        val db = DataBase.getInstance(requireContext())
-
         CoroutineScope(Dispatchers.IO).launch {
-            local.forEach {
+            val data = tracks.mapIndexedNotNull { _, t ->
                 try {
-                    val track = db.trackDao().getTrackById(it.id)
-                    if (track != null) {
-                        data.add(
-                            MusicRepository.Track(
-                                it.id,
-                                it.name,
-                                album.name,
-                                album.id,
-                                album,
-                                R.drawable.launcher,
-                                track.duration,
-                                0,
-                                it.filename
-                            )
-                        )
-                    }
+                    MusicRepository.Track(
+                        t.id,
+                        t.name,
+                        name,
+                        id,
+                        this@play,
+                        R.drawable.launcher,
+                        t.duration,
+                        0,
+                        t.filename
+                    )
                 } catch (ex: Exception) {
-                    ex.printStackTrace()
+                    null
                 }
-            }
+            } as ArrayList<MusicRepository.Music>
             if (isFirst) {
                 trackList?.clear()
                 trackList = data
@@ -449,47 +425,43 @@ class NewAlbumDetailFragment : Fragment() {
         }
     }
 
-    fun play(rife: Rife) {
+    @Suppress("UNCHECKED_CAST")
+    fun Rife.play() {
         if (playRife != null) {
-            if (playRife!!.id != mRife!!.id) {
-                playRife = mRife
+            if (playRife!!.id != id) {
+                playRife = this
             }
         } else {
-            playRife = mRife
+            playRife = this
         }
         val activity = activity as NavigationActivity
 
-        if (isPlayProgram || playAlbumId != rife.id) {
+        if (isPlayProgram || playAlbumId != id) {
             activity.hidePlayerUI()
         }
 
         isPlayAlbum = true
-        playAlbumId = rife.id
+        playAlbumId = id
         isPlayProgram = false
         playProgramId = -1
 
-        val data: ArrayList<MusicRepository.Music> = ArrayList()
-        val local = rife.getFrequency()
-
         CoroutineScope(Dispatchers.IO).launch {
-            local.forEachIndexed { index, s ->
+            val data = getFrequency().mapIndexedNotNull { index, s ->
                 try {
-                    data.add(
-                        MusicRepository.Frequency(
-                            index,
-                            rife.title,
-                            s.toFloat(),
-                            rife.id,
-                            index,
-                            false,
-                            0,
-                            0,
-                        )
+                    MusicRepository.Frequency(
+                        index,
+                        title,
+                        s,
+                        id,
+                        index,
+                        false,
+                        0,
+                        0,
                     )
                 } catch (ex: Exception) {
-                    ex.printStackTrace()
+                    null
                 }
-            }
+            } as ArrayList<MusicRepository.Music>
             if (isFirst) {
                 trackList?.clear()
                 trackList = data
@@ -500,8 +472,9 @@ class NewAlbumDetailFragment : Fragment() {
                 requireActivity().startService(mIntent)
                 isFirst = false
             }
-
-            CoroutineScope(Dispatchers.Main).launch { activity.showPlayerUI() }
+            withContext(Dispatchers.Main) {
+                activity.showPlayerUI()
+            }
         }
     }
 
@@ -534,19 +507,15 @@ class NewAlbumDetailFragment : Fragment() {
         const val ARG_ALBUM_ID = "arg_album"
         const val ARG_CATEGORY_ID = "arg_category"
         const val ARG_TYPE = "arg_type"
-        var album: Album? = null
 
         @JvmStatic
         fun newInstance(
-            id: Int,
-            category_id: Int,
-            type: String = Constants.TYPE_ALBUM,
-            item: Rife? = null
+            id: Int, categoryId: Int, type: String = Constants.TYPE_ALBUM, item: Rife? = null
         ) = NewAlbumDetailFragment().apply {
             mRife = item
             arguments = Bundle().apply {
                 putInt(ARG_ALBUM_ID, id)
-                putInt(ARG_CATEGORY_ID, category_id)
+                putInt(ARG_CATEGORY_ID, categoryId)
                 putString(ARG_TYPE, type)
             }
         }

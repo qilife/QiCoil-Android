@@ -404,6 +404,12 @@
     <string name="tv_please_enter_name">Please enter Name!</string>
     <string name="tv_incorrect_old_pass">Old password is incorrect!</string>
     <string name="tv_empty_list">Empty List</string>
+    <string name="tv_stop">Stop</string>
+    <string name="tv_removed_favorite">Removed from Favorites</string>
+    <string name="tv_add_favorite">Added to Favorites</string>
+    <string name="tv_account_deleted_success">Your account deleted successfully!</string>
+    <string name="tv_no_purchases_available">No purchases available</string>
+    <string name="tv_purchases_have_been_restored">Purchases have been restored</string>
 
 
     <string name="lang_en" translatable="false">English</string>

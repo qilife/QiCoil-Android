@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.item_program_track.view.item_track_options
 
 class ProgramTrackAdapter(
     private val onClickItem: (item: Search) -> Unit,
-    private val onCLickOptions: (item: Search) -> Unit
+    private val onClickOptions: (item: Search) -> Unit
 ) : ListAdapter<Search, ProgramTrackAdapter.ViewHolder>(SearchDiffCallback()) {
     private var selectedItem: Search? = null
     var isMy = false
@@ -48,25 +48,29 @@ class ProgramTrackAdapter(
             } else {
                 itemView.divider.visibility = View.VISIBLE
             }
+            itemView.updateView(item, position)
             itemView.item_track_options.setOnClickListener {
-                onCLickOptions.invoke(item)
+                onClickOptions.invoke(item)
             }
             itemView.setOnClickListener {
                 setSelectedItem(item)
                 onClickItem.invoke(item)
             }
-            when (item.obj) {
-                is Track -> {
-                    val t = item.obj as Track
-                    t.isSelected = position == selectedItem?.id
-                    itemView.updateUIForTrack(t)
-                }
+        }
+    }
 
-                is MusicRepository.Frequency -> {
-                    val f = item.obj as MusicRepository.Frequency
-                    f.isSelected = position == selectedItem?.id
-                    itemView.updateUIForFrequency(f)
-                }
+    private fun View.updateView(item: Search, position: Int) {
+        when (item.obj) {
+            is Track -> {
+                val t = item.obj as Track
+                t.isSelected = position == selectedItem?.id
+                updateUIForTrack(t)
+            }
+
+            is MusicRepository.Frequency -> {
+                val f = item.obj as MusicRepository.Frequency
+                f.isSelected = position == selectedItem?.id
+                updateUIForFrequency(f)
             }
         }
     }
@@ -110,7 +114,12 @@ class ProgramTrackAdapter(
         selectedItem = item
         notifyDataSetChanged()
     }
-    fun getItemSelected() = selectedItem
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitData(list: List<Search>) {
+        submitList(list)
+        notifyDataSetChanged()
+    }
 
     private class SearchDiffCallback : DiffUtil.ItemCallback<Search>() {
         override fun areItemsTheSame(oldItem: Search, newItem: Search): Boolean {

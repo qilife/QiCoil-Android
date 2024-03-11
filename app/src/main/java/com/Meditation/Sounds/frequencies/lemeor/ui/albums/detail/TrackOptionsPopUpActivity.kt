@@ -59,7 +59,6 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
 
     private val rife: Rife? by lazy {
         intent.parcelable<Rife>(EXTRA_RIFE)
-//            ?: throw IllegalArgumentException("Must call through newInstance()")
     }
     private val trackId: Double by lazy {
         intent.getDoubleExtra(EXTRA_TRACK_ID, Constants.defaultHz - 1)
@@ -152,8 +151,9 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val program = programDao?.getProgramByName(FAVORITES)
                 program?.let { p ->
+                    val formatRife = rife?.getRifeFormat(trackId)
                     val frequency = p.records.firstOrNull {
-                        it == trackId.toString()
+                        it == (formatRife ?: trackId.toString())
                     }
                     if (frequency != null) {
                         track_add_favorites.text = getString(R.string.tv_remove_from_favorite)
@@ -192,11 +192,14 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(
                                     applicationContext,
-                                    if (frequency != null) "Removed from Favorites" else "Added to Favorites",
+                                    if (frequency != null) getString(R.string.tv_removed_favorite) else getString(
+                                        R.string.tv_add_favorite
+                                    ),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                            p.records.remove(frequency ?: formatRife)
+                            if (frequency != null) p.records.remove(frequency)
+                            else p.records.add(formatRife)
                             programDao.updateProgram(p)
                             if (p.user_id.isNotEmpty()) {
                                 try {
@@ -217,14 +220,11 @@ class TrackOptionsPopUpActivity : AppCompatActivity() {
                 }
             } else {
                 track?.let { t ->
-                    if (t.isFavorite) {
-                        Toast.makeText(
-                            applicationContext, "Removed from Favorites", Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(applicationContext, "Added to Favorites", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    Toast.makeText(
+                        applicationContext,
+                        if (t.isFavorite) getString(R.string.tv_removed_favorite) else getString(R.string.tv_add_favorite),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     CoroutineScope(Dispatchers.IO).launch {
                         val program = programDao?.getProgramByName(FAVORITES)

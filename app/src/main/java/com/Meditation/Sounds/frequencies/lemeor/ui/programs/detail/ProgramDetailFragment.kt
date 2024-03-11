@@ -100,7 +100,7 @@ class ProgramDetailFragment : BaseFragment() {
                     timeDelay = 200L
                 }, timeDelay)
             },
-            onCLickOptions = { item ->
+            onClickOptions = { item ->
                 positionFor = item.id
                 if (item.obj is Track) {
                     val t = item.obj as Track
@@ -163,6 +163,11 @@ class ProgramDetailFragment : BaseFragment() {
             )
         )[NewProgramViewModel::class.java]
 
+        program_tracks_recycler.apply {
+            adapter = programTrackAdapter
+            addItemDecoration(itemDecoration)
+        }
+
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
         view?.setOnKeyListener { _, keyCode, event ->
@@ -224,8 +229,7 @@ class ProgramDetailFragment : BaseFragment() {
             if (it != null && it.id != 0) {
                 programTrackAdapter.isMy = it.isMy
                 program = it
-                program_tracks_recycler.removeItemDecoration(itemDecoration)
-                setUI(it)
+                initView(it)
             }
         }
     }
@@ -268,17 +272,13 @@ class ProgramDetailFragment : BaseFragment() {
             .replace(R.id.nav_host_fragment, fragment!!, fragment.javaClass.simpleName).commit()
     }
 
-    private fun setUI(program: Program) {
+    private fun initView(program: Program) {
         program_name.text = program.name
 
-        program_tracks_recycler.apply {
-            adapter = programTrackAdapter
-            addItemDecoration(itemDecoration)
-        }
         mViewModel.convertData(program) { list ->
             tracks.clear()
             tracks.addAll(list)
-
+            programTrackAdapter.submitData(tracks)
             program_time.text = getString(
                 R.string.total_time, getConvertedTime(tracks.sumOf {
                     if (it.obj is Track) 300000L
@@ -287,8 +287,6 @@ class ProgramDetailFragment : BaseFragment() {
             )
             mTracks?.clear()
             mTracks?.addAll(tracks.map { it.obj })
-            programTrackAdapter.submitList(tracks)
-
             if (currentTrack.value != null) {
                 val track = currentTrack.value
                 if (track is MusicRepository.Track) {
@@ -457,8 +455,8 @@ class ProgramDetailFragment : BaseFragment() {
                     }
 
                     action.equals("track_remove") -> {
-                        positionFor?.let {
-                            mTracks?.get(it)?.let { item ->
+                        positionFor?.let { pos ->
+                            mTracks?.get(pos)?.let { item ->
                                 if (item is Track) {
                                     item.id.let { it1 ->
                                         trackDao.isTrackFavorite(
@@ -467,24 +465,24 @@ class ProgramDetailFragment : BaseFragment() {
                                     }
                                 }
                             }
-                        }
-                        val trackId = list[positionFor!!]
-                        list.removeAt(positionFor!!)
-                        program?.records = list
-                        program?.let {
-                            programDao.updateProgram(it)
-                            if (it.user_id.isNotEmpty()) {
-                                try {
-                                    mNewProgramViewModel.updateTrackToProgram(
-                                        UpdateTrack(
-                                            track_id = listOf(trackId),
-                                            id = it.id,
-                                            track_type = if (trackId.isNotString()) "mp3" else "rife",
-                                            request_type = "remove",
-                                            is_favorite = (it.name.uppercase() == FAVORITES.uppercase() && it.favorited)
+                            val trackId = list[pos]
+                            list.removeAt(pos)
+                            program?.records = list
+                            program?.let {
+                                programDao.updateProgram(it)
+                                if (it.user_id.isNotEmpty()) {
+                                    try {
+                                        mNewProgramViewModel.updateTrackToProgram(
+                                            UpdateTrack(
+                                                track_id = listOf(trackId),
+                                                id = it.id,
+                                                track_type = if (trackId.isNotString()) "mp3" else "rife",
+                                                request_type = "remove",
+                                                is_favorite = (it.name.uppercase() == FAVORITES.uppercase() && it.favorited)
+                                            )
                                         )
-                                    )
-                                } catch (_: Exception) {
+                                    } catch (_: Exception) {
+                                    }
                                 }
                             }
                         }

@@ -337,5 +337,11 @@
     <string name="tv_please_enter_name">Veuillez entrer le nom!</string>
     <string name="tv_incorrect_old_pass">Ancien mot de passe est incorrect!</string>
     <string name="tv_empty_list">Liste vide</string>
+    <string name="tv_stop">Arrêt</string>
+    <string name="tv_removed_favorite">Retiré des favoris</string>
+    <string name="tv_add_favorite">Ajouté aux favoris</string>
+    <string name="tv_account_deleted_success">¡Su cuenta se eliminó con éxito!</string>
+    <string name="tv_no_purchases_available">Aucun achat disponible</string>
+    <string name="tv_purchases_have_been_restored">Les achats ont été restaurés</string>
 
 </resources>

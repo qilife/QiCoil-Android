@@ -15,14 +15,19 @@ import com.Meditation.Sounds.frequencies.utils.extensions.getCurrent
 import com.Meditation.Sounds.frequencies.utils.extensions.getPercent
 import com.Meditation.Sounds.frequencies.utils.extensions.getProgress
 import com.Meditation.Sounds.frequencies.views.ItemOffsetRightDecoration
-import kotlinx.android.synthetic.main.fragment_frequency_page.*
+import kotlinx.android.synthetic.main.fragment_frequency_page.btnAdd
+import kotlinx.android.synthetic.main.fragment_frequency_page.btnMinus
+import kotlinx.android.synthetic.main.fragment_frequency_page.btnPlay
+import kotlinx.android.synthetic.main.fragment_frequency_page.rcvOptions
+import kotlinx.android.synthetic.main.fragment_frequency_page.sbHz
+import kotlinx.android.synthetic.main.fragment_frequency_page.sbTune
+import kotlinx.android.synthetic.main.fragment_frequency_page.tvCurrent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
 class FrequencyPageFragment : Fragment() {
-    private var rifeId: Int? = null
     private val mFrequencyAdapter = FrequencyAdapter { i ->
         minValue = Constants.optionsHz[i].first
         maxValue = Constants.optionsHz[i].second
@@ -38,7 +43,6 @@ class FrequencyPageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rifeId = arguments?.getInt(ARG_RIFE_ID)
         EventBus.getDefault().register(this)
     }
 
@@ -46,13 +50,12 @@ class FrequencyPageFragment : Fragment() {
     fun onEvent(event: Any?) {
         if (event is String && event == "play Album") {
             viewModel.stopAlways()
-            btnPlay.text = "Play"
+            btnPlay.text = getString(R.string.play)
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_frequency_page, container, false)
     }
@@ -66,11 +69,9 @@ class FrequencyPageFragment : Fragment() {
 
     private fun onObserve() {
         viewModel.apply {
-            CombinedLiveData(
-                hz, tune, combine = { hz, tune ->
-                    (hz ?: 0).toFloat() + (tune ?: 0).toFloat()
-                }
-            ).observe(viewLifecycleOwner) { current ->
+            CombinedLiveData(hz, tune, combine = { hz, tune ->
+                (hz ?: 0).toFloat() + (tune ?: 0).toFloat()
+            }).observe(viewLifecycleOwner) { current ->
                 viewModel.swipeTune = current in minValue..maxValue
                 if (current in minValue..maxValue) {
                     updateCurrent(current)
@@ -90,50 +91,47 @@ class FrequencyPageFragment : Fragment() {
     }
 
     private fun onSubscriber() {
-        sbHz.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar, p1: Int, p2: Boolean) {
-                    viewModel.apply {
-                        updateHz(sbHz.getProgress(minValue, maxValue, p1))
+        sbHz.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar, p1: Int, p2: Boolean) {
+                viewModel.apply {
+                    updateHz(sbHz.getProgress(minValue, maxValue, p1))
+                    updateTune(resetTune())
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+
+            }
+        })
+
+        sbTune.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, p2: Boolean) {
+                viewModel.apply {
+                    lastValidProgress = if (swipeTune) {
+                        progress
+                    } else {
                         updateTune(resetTune())
+                        sbTune.progress
                     }
-                }
-
-                override fun onStartTrackingTouch(p0: SeekBar) {
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-
+                    updateTune(sbTune.getProgress(-5.0, 5.0, progress))
                 }
             }
-        )
 
-        sbTune.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, p2: Boolean) {
-                    viewModel.apply {
-                        lastValidProgress = if (swipeTune) {
-                            progress
-                        } else {
-                            updateTune(resetTune())
-                            sbTune.progress
-                        }
-                        updateTune(sbTune.getProgress(-5.0, 5.0, progress))
-                    }
-                }
-
-                override fun onStartTrackingTouch(p0: SeekBar) {
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-
-                }
+            override fun onStartTrackingTouch(p0: SeekBar) {
             }
-        )
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+
+            }
+        })
 
         btnPlay.setOnClickListener {
             EventBus.getDefault().post("play Rife")
-            btnPlay.text = if (viewModel.playOrStop()) "Stop" else "Play"
+            btnPlay.text =
+                if (viewModel.playOrStop()) getString(R.string.tv_stop) else getString(R.string.play)
         }
 
         btnMinus.setOnClickListener {
@@ -152,7 +150,7 @@ class FrequencyPageFragment : Fragment() {
 
     private fun resetTune() = sbTune.getCurrent(-5.0, 5.0, 0.5)
     private fun initView() {
-        viewModel = ViewModelProviders.of(this).get(FrequencyViewModel::class.java)
+        viewModel = ViewModelProviders.of(this)[FrequencyViewModel::class.java]
 
         val itemDecoration = ItemOffsetRightDecoration(
             requireContext(),
@@ -181,15 +179,9 @@ class FrequencyPageFragment : Fragment() {
     }
 
     companion object {
-        private const val ARG_RIFE_ID = "arg_rife_id"
-
         @JvmStatic
-        fun newInstance(rifeId: Int): FrequencyPageFragment {
-            return FrequencyPageFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_RIFE_ID, rifeId)
-                }
-            }
+        fun newInstance(): FrequencyPageFragment {
+            return FrequencyPageFragment().apply {}
         }
     }
 }
