@@ -336,5 +336,6 @@
     <string name="tv_invalid_email_add">Votre adresse email est invalide!</string>
     <string name="tv_please_enter_name">Veuillez entrer le nom!</string>
     <string name="tv_incorrect_old_pass">Ancien mot de passe est incorrect!</string>
+    <string name="tv_empty_list">Liste vide</string>
 
 </resources>

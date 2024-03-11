@@ -403,6 +403,7 @@
     <string name="tv_invalid_email_add">Your email address is invalid!</string>
     <string name="tv_please_enter_name">Please enter Name!</string>
     <string name="tv_incorrect_old_pass">Old password is incorrect!</string>
+    <string name="tv_empty_list">Empty List</string>
 
 
     <string name="lang_en" translatable="false">English</string>

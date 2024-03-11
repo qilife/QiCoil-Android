@@ -330,5 +330,6 @@
     <string name="tv_invalid_email_add">您的电子邮件地址无效！</string>
     <string name="tv_please_enter_name">请输入名称！</string>
     <string name="tv_incorrect_old_pass">旧密码不正确！</string>
+    <string name="tv_empty_list">空列表</string>
 
 </resources>
